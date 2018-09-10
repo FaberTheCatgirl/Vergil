@@ -17,6 +17,9 @@
 #include "boost/filesystem.hpp"
 #include <codecvt>
 #include <Shlobj.h>
+#include "../Blam/Math/RealMatrix4x3.hpp"
+#include "../Blam/Math/RealQuaternion.hpp"
+#include <Blam/Memory/DatumHandle.hpp>
 
 namespace
 {
@@ -39,6 +42,7 @@ namespace
 	void __cdecl HsPrintHook(const char *message);
 	void ContrailFixHook();
 	void HillColorHook();
+	void __fastcall campaign_scoring_sub_6E59A0(char *scoreboard, void *, Blam::DatumHandle handle, int a3, short a4, int a5, char a6);
 
 	std::vector<Patches::Core::ShutdownCallback> shutdownCallbacks;
 	std::string MapsFolder;
@@ -55,6 +59,7 @@ namespace
 
 	std::vector<Patches::Core::MapLoadedCallback> mapLoadedCallbacks;
 	std::vector<Patches::Core::GameStartCallback> gameStartCallbacks;
+	Blam::Math::RealMatrix4x3 *__cdecl sub_5B6E80_hook(int a1, int a2, Blam::Math::RealMatrix4x3 *a3, bool a4);
 }
 
 namespace Patches::Core
@@ -157,6 +162,11 @@ namespace Patches::Core
 		Hook(0x658061, ContrailFixHook).Apply();
 		// prevent hill zone luminosity from dropping below the visible threshold
 		Hook(0x5D6B1C, HillColorHook).Apply();
+		
+		Hook(0x1BB839, sub_5B6E80_hook, HookFlags::IsCall).Apply();
+		Hook(0x1BE27F, sub_5B6E80_hook, HookFlags::IsCall).Apply();
+		
+		Hook(0x2E59A0, campaign_scoring_sub_6E59A0).Apply();
 		
 
 #ifndef _DEBUG
@@ -527,4 +537,104 @@ namespace
 			retn
 		}
 	}
+	Blam::Math::RealMatrix4x3 *__cdecl sub_5B6E80_hook(int a1, int a2, Blam::Math::RealMatrix4x3 *a3, bool a4)
+	{
+    using namespace Blam;
+    using namespace Blam::Math;
+    static const auto matrix4x3_sub_5B2800 = (float *(__cdecl *)(RealMatrix4x3 *, RealMatrix4x3 *, RealMatrix4x3 *))0x5B2800;
+    static const auto particle_sub_5B6C40 = (void *(__cdecl *)(int, int, void *, char))0x5B6C40;
+    static const auto matrix4x3_quaternion_sub_A4BD70 = (RealQuaternion *(__cdecl *)(RealQuaternion *, int))0xA4BD70;
+    auto *particles = *(DataArrayBase **)ElDorito::Instance().GetMainTls(0x37C);
+    auto index1 = *(int *)(a1 + 48);
+    auto index2 = *(short *)(a2 + 2);
+    if (index1 == -1 || index2 == -1)
+    {
+      DatumHandle particleHandle = *(DatumHandle *)(a1 + 72);
+      DatumBase *particleDatum = nullptr;
+      if (particles != nullptr &&
+        particleHandle != DatumHandle::Null &&
+        (particleDatum = particles->GetAddress(particleHandle)) != nullptr &&
+        ((int *)particleDatum)[3] != -1)
+      {
+        memcpy(a3, (const void *)(a2 + 12), 0x34u);
+        RealQuaternion v11;
+        auto v8 = matrix4x3_quaternion_sub_A4BD70(&v11, ((int *)particleDatum)[3]);
+        a3->Position = *(RealVector3D *)&v11;
+        return a3;
+      }
+      else
+      {
+        return (RealMatrix4x3 *)(a2 + 12);
+      }
+    }
+    else
+    {
+      RealMatrix4x3 matrix;
+      particle_sub_5B6C40(a1, index2, &matrix, a4);
+      matrix4x3_sub_5B2800(&matrix, (RealMatrix4x3 *)(a2 + 12), (RealMatrix4x3 *)a3);
+      return a3;
+    }
+  }
+  void __fastcall campaign_scoring_sub_6E59A0(char *scoreboard, void *, Blam::DatumHandle handle, int a3, short a4, int a5, char a6)
+  {
+    static const auto data_array_sub_55B710 = reinterpret_cast<unsigned long(__cdecl *)(Blam::DataArrayBase *, Blam::DatumHandle)>(0x55B710);
+    static const auto game_get_current_engine = reinterpret_cast<int(*)()>(0x5CE150);
+    static const auto game_is_team_game = reinterpret_cast<bool(__cdecl *)()>(0x5565E0);
+    static const auto scoreboard_sub_6E5A90 = reinterpret_cast<void(__thiscall *)(char *, unsigned int, int, short, int)>(0x6E5A90);
+
+    if (!scoreboard)
+      return;
+
+    auto *scoreboard_unknown = &scoreboard[2 * (a3 + 26 * handle.Index)];
+    auto v7 = a4 + *((short *)scoreboard_unknown + 2);
+
+    short v8;
+
+    if (v7 <= -30000 || v7 < 30000)
+    {
+      v8 = -30000;
+      if (v7 > -30000)
+        v8 = a4 + *((short *)scoreboard_unknown + 2);
+    }
+    else
+    {
+      v8 = 30000;
+    }
+
+    *((short *)scoreboard_unknown + 2) = v8;
+
+    auto v9 = 0;
+
+    if (handle.Index >= 0x20u)
+      v9 = 1 << *((char *)&handle.Handle);
+
+    auto v10 = v9 ^ (1 << *((char *)&handle.Handle));
+
+    if (handle.Index >= 0x40u)
+      v9 ^= 1 << *((char *)&handle.Handle);
+
+    auto v13 = v10;
+    auto v14 = v9;
+
+    ((char (__cdecl *)(void *))0x4B2A70)(&v13);
+
+    if (a5 != -1)
+      ((void (__cdecl *)(int, int, int, int))0x5704A0)(handle.Index, -1, a5, *((signed __int16 *)scoreboard_unknown + 2));
+
+    if (a6)
+    {
+      if (game_get_current_engine() && game_is_team_game())
+      {
+        auto v11 = data_array_sub_55B710(ElDorito::Instance().GetMainTls(0x40).Read<Blam::DataArray<Blam::Players::PlayerDatum> *>(), handle);
+
+        if (v11)
+        {
+          auto v12 = *(unsigned long *)(v11 + 0xC8);
+
+          if (v12 >= 0 && v12 < 8)
+            scoreboard_sub_6E5A90(scoreboard, v12, a3, a4, a5);
+        }
+      }
+    }
+  }
 }

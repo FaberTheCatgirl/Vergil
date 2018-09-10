@@ -71,6 +71,7 @@
     <ClCompile Include="Source\Forge\PrematchCamera.cpp" />
     <ClCompile Include="Source\Patches\BottomlessClip.cpp" />
     <ClCompile Include="Source\Patches\Camera.cpp" />
+    <ClCompile Include="Source\Patches\Campaign.cpp" />
     <ClCompile Include="Source\Patches\DamageSystem.cpp" />
     <ClCompile Include="Source\Patches\DirectXHook.cpp" />
     <ClCompile Include="Source\ElDorito.cpp" />
@@ -267,6 +268,7 @@
     <ClInclude Include="Source\Forge\PrematchCamera.hpp" />
     <ClInclude Include="Source\Patches\BottomlessClip.hpp" />
     <ClInclude Include="Source\Patches\Camera.hpp" />
+    <ClInclude Include="Source\Patches\Campaign.hpp" />
     <ClInclude Include="Source\Patches\DamageSystem.hpp" />
     <ClInclude Include="Source\Patches\DirectXHook.hpp" />
     <ClInclude Include="Source\ElDorito.hpp" />

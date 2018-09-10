@@ -36,6 +36,7 @@
 #include "Patches\DamageSystem.hpp"
 #include "Patches\PlayerScale.hpp"
 #include "Game\Armor.hpp"
+#include "Patches\Campaign.hpp"
 
 #include <fstream>
 
@@ -78,6 +79,7 @@ namespace Patches
 		Maps::ApplyAll();
 		GameEngineSettings::ApplyAll();
 		DamageSystem::ApplyAll();
+		Campaign::ApplyAll();
 
 		Network::PlayerPropertiesExtender::Instance().Add(std::make_shared<Game::Armor::ArmorExtension>());
 

@@ -63,6 +63,9 @@ namespace Modules
 		Command* VarSignalServerPort;
 		Command* VarSendChatToRconClients;
 		Command* VarHttpServerCacheTime;
+		Command* VarInsertionPoint;
+		Command* VarInsertionPointClient;
+
 
 		//Veto System Commands
 		Command* VarNumberOfVetoVotes;
