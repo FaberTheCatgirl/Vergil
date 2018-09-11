@@ -193,9 +193,11 @@
     <ClInclude Include="new\hs\hs.hpp" />
     <ClInclude Include="new\input\input.hpp" />
     <ClInclude Include="new\memory\data.hpp" />
+    <ClInclude Include="new\memory\resources.hpp" />
     <ClInclude Include="new\objects\object_data.hpp" />
     <ClInclude Include="new\objects\object_types.hpp" />
     <ClInclude Include="new\players\player_data.hpp" />
+    <ClInclude Include="new\structures\scenario_structure_bsp.hpp" />
     <ClInclude Include="new\tag_files\tag_definitions.hpp" />
     <ClInclude Include="new\tag_files\tag_groups.hpp" />
     <ClInclude Include="Source\Blam\BitStream.hpp" />

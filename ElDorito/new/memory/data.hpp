@@ -107,4 +107,23 @@ namespace blam
 		datum &operator*() const { return *operator->(); }
 	};
 	static_assert(sizeof(data_iterator<datum_header>) == sizeof(data_iterator_header));
+
+	enum class data_address_type : long
+	{
+		memory,
+		definition,
+		resource
+	};
+	static_assert(sizeof(data_address_type) == 0x4);
+
+	union data_address
+	{
+		dword value;
+		struct
+		{
+			data_address_type type : 3;
+			long offset : 29;
+		};
+	};
+	static_assert(sizeof(data_address) == 0x4);
 }

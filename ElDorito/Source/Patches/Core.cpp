@@ -25,6 +25,9 @@
 #include <Blam\Memory\TlsData.hpp>
 #include <Blam\Tags\Effects\DecalSystem.hpp>
 
+#include <memory\resources.hpp>
+#include <structures\scenario_structure_bsp.hpp>
+
 namespace
 {
 	void GameTickHook();
@@ -51,6 +54,7 @@ namespace
 	void __cdecl sub_6948C0_hook(int a1);
 	void *__cdecl RenderGeometryApiResourceDefinition_GetVertexBuffer_Hook(Blam::Geometry::RenderGeometryApiResourceDefinition *definition, int vertexBufferIndex);
 	bool __cdecl sub_A5DB60_hook(unsigned __int8 *a1);
+	bool __cdecl sub_750C60_hook(int structure_bsp_index, int a2, int instanced_geometry_instance_index, int unknown_6th_index, int a5, char a6, char a7, char *a8, int a9);
 
 	std::vector<Patches::Core::ShutdownCallback> shutdownCallbacks;
 	std::string MapsFolder;
@@ -173,7 +177,9 @@ namespace Patches::Core
 		// render geometry hacks
 		Hook(0x5DF980, RenderGeometryApiResourceDefinition_GetVertexBuffer_Hook).Apply();
 		Hook(0x65DB60, sub_A5DB60_hook).Apply();
-
+		Hook(0x2D3289, sub_750C60_hook, HookFlags::IsCall).Apply();
+		Hook(0x351FC9, sub_750C60_hook, HookFlags::IsCall).Apply();
+		
 		// decal system crash hook
 		Hook(0x2947FE, sub_6948C0_hook, HookFlags::IsCall).Apply();
 
@@ -645,6 +651,14 @@ namespace
 		return definition->VertexBuffers[vertexBufferIndex].RuntimeAddress;
 	}
 
+	void *__cdecl RenderGeometryApiResourceDefinition_GetIndexBuffer_Hook(Blam::Geometry::RenderGeometryApiResourceDefinition *definition, int indexBufferIndex)
+	{
+		if (!definition || indexBufferIndex < 0 || indexBufferIndex >= definition->IndexBuffers.Count)
+			return nullptr;
+
+		return definition->IndexBuffers[indexBufferIndex].RuntimeAddress;
+	}
+
 	bool __cdecl sub_A5DB60_hook(unsigned __int8 *a1)
 	{
 		static const auto sub_A245C0 = reinterpret_cast<bool(__cdecl *)(int, int, int, int)>(0xA245C0);
@@ -657,4 +671,89 @@ namespace
 		return sub_A245C0(dword_1694C70[dword_1694C90[*a1]], *((unsigned long *)a1 + 1), 0, a1[1]);
 	}
 
+	bool __cdecl sub_750C60_hook(int structure_bsp_index, int a2, int instanced_geometry_instance_index, int unknown_6th_index, int a5, char a6, char a7, char *a8, int a9)
+	{
+		static const auto scenerio_get_instance_bsp_collision = (blam::global_collision_bsp_instance *(__cdecl *)(int scenario_sbsp_index, int instanced_geometry_index))0x4E9640;
+		static const auto scenario_get_structure_bsp_definition = (blam::scenario_structure_bsp_definition *(__cdecl *)(int structure_bsp_index))0x4E96D0;
+		static const auto pageable_resource_get = (void *(__cdecl *)(blam::pageable_resource **))0x563E10;
+		static const auto sub_750C60 = (bool(__cdecl *)(int structure_bsp_index, int, int instanced_geometry_instance_index, int unknown_6th_index, int, char, char, char *, int))0x750C60;
+		static const auto structure_bsp_get_unknown_sub_A2EEC0 = (void *(__cdecl *)(int structure_bsp_index))0xA2EEC0;
+		static const auto structure_bsp_get_unknown_sub_A2EDC0 = (void *(__cdecl *)(int structure_bsp_index))0xA2EED0;
+		static const auto structure_bsp_get_render_geometry = (Blam::Geometry::RenderGeometry *(__cdecl *)(int structure_bsp_index))0xA2EF00;
+
+		if (structure_bsp_index == -1)
+			return false;
+
+		auto *bsp_definition = scenario_get_structure_bsp_definition(structure_bsp_index);
+		auto *bsp_geometry = structure_bsp_get_render_geometry(structure_bsp_index);
+		auto *bsp_geometry_resource = (Blam::Geometry::RenderGeometryApiResourceDefinition *)pageable_resource_get((blam::pageable_resource **)&bsp_geometry->Pageable);
+		auto *bsp_pathfinding = (blam::structure_bsp_cache_file_tag_resources *)pageable_resource_get(&bsp_definition->pathfinding_resource);
+
+		if (!bsp_geometry || !bsp_geometry || !bsp_geometry_resource || !bsp_pathfinding)
+			return false;
+
+		auto *v10 = structure_bsp_get_unknown_sub_A2EEC0(structure_bsp_index);
+		
+		if (!a6 && !v10)
+			return false;
+
+		if (bsp_pathfinding->unknown_6ths.address == nullptr ||
+			bsp_pathfinding->unknown_6ths.count <= 0 ||
+			unknown_6th_index < 0 ||
+			unknown_6th_index >= bsp_pathfinding->unknown_6ths.count)
+		{
+			return false;
+		}
+
+		auto *unknown_6ths = (blam::structure_bsp_unknown_6th *)bsp_pathfinding->unknown_6ths.address;
+		auto *unknown_6th = &unknown_6ths[unknown_6th_index];
+
+		if (unknown_6th->plane_index < 0 || (unknown_6th->plane_index + unknown_6th->plane_count) >= bsp_pathfinding->planes.count)
+			return false;
+
+		auto *planes = (blam::structure_bsp_plane *)bsp_pathfinding->planes.address;
+		auto *clusters = (blam::structure_bsp_cluster *)bsp_definition->clusters.address;
+		auto *instances = (blam::structure_bsp_instanced_geometry *)bsp_definition->instanced_geometry_instances.address;
+
+		for (auto i = 0; i < unknown_6th->plane_count; i++)
+		{
+			auto *plane = &planes[unknown_6th->plane_index + i];
+
+			Blam::Geometry::RenderMesh *mesh = nullptr;
+
+			if (instanced_geometry_instance_index == -1)
+			{
+				if (!clusters || plane->cluster_index2 < 0 || plane->cluster_index2 >= bsp_definition->clusters.count)
+					return false;
+
+				auto *cluster = &clusters[plane->cluster_index2];
+
+				if (cluster->mesh_index < 0 || cluster->mesh_index >= bsp_geometry->Meshes.Count)
+					return false;
+
+				mesh = &bsp_geometry->Meshes[cluster->mesh_index];
+			}
+			else
+			{
+				if (!instances || instanced_geometry_instance_index < 0 || instanced_geometry_instance_index >= bsp_definition->instanced_geometry_instances.count)
+					return false;
+
+				auto *instance = &instances[instanced_geometry_instance_index];
+				auto *instance_collision = scenerio_get_instance_bsp_collision(structure_bsp_index, instance->instance_definition);
+
+				if (instance_collision->mesh_index < 0 || instance_collision->mesh_index >= bsp_geometry->Meshes.Count)
+					return false;
+
+				mesh = &bsp_geometry->Meshes[instance_collision->mesh_index];
+			}
+
+			if (mesh->VertexBufferIndices[0] < 0 || mesh->VertexBufferIndices[0] >= bsp_geometry_resource->VertexBuffers.Count)
+				return false;
+
+			if (mesh->IndexBufferIndices[0] < 0 || mesh->IndexBufferIndices[0] >= bsp_geometry_resource->IndexBuffers.Count)
+				return false;
+		}
+
+		return sub_750C60(structure_bsp_index, a2, instanced_geometry_instance_index, unknown_6th_index, a5, a6, a7, a8, a9);
+	}
 }

@@ -1045,6 +1045,8 @@
     <ClInclude Include="Source\Blam\BlamTypes.hpp" />
     <ClInclude Include="Source\Blam\Padding.hpp" />
     <ClInclude Include="Source\Patches\Campaign.hpp" />
+    <ClInclude Include="new\memory\resources.hpp" />
+    <ClInclude Include="new\structures\scenario_structure_bsp.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Source\ElDorito.rc" />
