@@ -18,8 +18,7 @@ namespace Blam::Tags::Scenario
 
 	inline Scenario *GetCurrentScenario()
 	{
-		auto scenario = Pointer::Base(0x1EAAEB4);
-		return scenario.Read<Scenario *>();
+		return *(Scenario **)0x022AAEB4;
 	}
 
 	struct Scenario : TagGroup<'scnr'>

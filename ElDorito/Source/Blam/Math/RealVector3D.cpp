@@ -2,6 +2,7 @@
 #include "RealQuaternion.hpp"
 #include <cmath>
 #include <cassert>
+#include <limits>
 
 namespace Blam::Math
 {
@@ -180,6 +181,9 @@ namespace Blam::Math
 		assert(len2 != 0);
 
 		return v / len2;
+		if (len2 > std::numeric_limits<float>::epsilon())
+			return v / len2;
+		return { 0, 0, 0 };
 	}
 
 	RealVector3D RealVector3D::Cross(const RealVector3D& a, const RealVector3D& b)

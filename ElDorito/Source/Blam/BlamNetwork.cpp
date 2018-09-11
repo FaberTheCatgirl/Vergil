@@ -3,7 +3,6 @@
 
 #include "BlamNetwork.hpp"
 #include "../Pointer.hpp"
-#include "../Discord/DiscordRPC.h"
 
 namespace
 {
@@ -141,6 +140,20 @@ namespace Blam::Network
 		return (gameVariant->TeamGame & 1) != 0;
 	}
 
+	bool Session::GetPeerAddress(int peerIndex, NetworkAddress &address) const
+	{
+		if (peerIndex >= 0 && peerIndex < 17)
+		{
+			auto channelIndex = MembershipInfo.PeerChannels[peerIndex].ChannelIndex;
+			if (channelIndex >= 0)
+			{
+				address = Observer->Channels[channelIndex].Address;
+				return true;
+			}
+		}
+		return false;
+	}
+
 	NetworkAddress Session::GetPeerAddress(int peerIndex) const
 	{
 		if (peerIndex != MembershipInfo.LocalPeerIndex)
@@ -217,7 +230,7 @@ namespace Blam::Network
 		return SendDirectedMessage(this, address, id, packetSize, packet);
 	}
 
-	bool MessageGateway::Ping(NetworkAddress &address, uint16_t id)
+	bool MessageGateway::Ping(const NetworkAddress &address, uint16_t id)
 	{
 		auto packet = MakePingPacket(id);
 		return SendDirectedMessage(address, ePacketIDPing, sizeof(packet), &packet);
@@ -257,12 +270,7 @@ namespace Blam::Network
 	bool SetNetworkMode(int mode)
 	{
 		auto Set_Network_Mode = (bool(__cdecl*)(int))(0x00A7F950);
-		bool success = Set_Network_Mode(mode);
-
-		//Let Discord Know
-		Discord::DiscordRPC::Instance().UpdatePresence(mode);
-
-		return success;
+		return Set_Network_Mode(mode);
 	}
 	
 	bool Disconnect()

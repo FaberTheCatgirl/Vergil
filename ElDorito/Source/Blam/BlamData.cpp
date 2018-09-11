@@ -74,4 +74,5 @@ namespace Blam
 	{
 		return reinterpret_cast<int(__cdecl*)(int, int, int)>(0x55AAB0)(datumCount, datumSize, alignmentBits);
 	}
+
 }

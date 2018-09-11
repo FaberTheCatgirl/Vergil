@@ -3,7 +3,6 @@
 #include <iterator>
 #include <type_traits>
 #include "Tags\Tag.hpp"
-
 #include "Memory\DatumHandle.hpp"
 
 namespace Blam
@@ -187,6 +186,7 @@ namespace Blam
 
 		// Gets a const iterator pointing to the end of this data array.
 		ConstDataIterator<TDatum> cend() const { return end(); }
+
 	};
 	static_assert(sizeof(DataArray<DatumBase>) == sizeof(DataArrayBase), "Invalid DataArray size");
 
@@ -235,4 +235,52 @@ namespace Blam
 		bool operator!=(const ConstDataIterator<TDatum> &rhs) const { return !(*this == rhs); }
 	};
 	static_assert(sizeof(ConstDataIterator<DatumBase>) == sizeof(DataIteratorBase), "Invalid ConstDataIterator size");
+
+	template<typename TDatum>
+	DatumHandle AllocateDatum(DataArray<TDatum> *dataArray) {
+
+		auto index = dataArray->NextIndex;
+
+		if (dataArray->NextIndex >= dataArray->FirstUnallocated)
+			goto INDEX_PROBLEM;
+
+		while ((1 << (index & 0x1F)) & dataArray->ActiveIndices[index >> 5]) {
+			if (++index >= dataArray->FirstUnallocated)
+				goto INDEX_PROBLEM;
+		}
+
+		if (index == -1)
+		{
+		INDEX_PROBLEM:
+			if (dataArray->FirstUnallocated >= dataArray->MaxCount)
+				return DatumHandle(-1);
+
+			index = dataArray->FirstUnallocated;
+
+			if (dataArray->FirstUnallocated == -1)
+				return DatumHandle(-1);
+		}
+
+		// The value in index is now valid
+
+		auto v4 = &dataArray->ActiveIndices[index >> 5];
+
+		*v4 |= 1 << (index & 0x1F);
+		++dataArray->ActualCount;
+		dataArray->NextIndex = index + 1;
+		memset(&((TDatum*)(dataArray->Data))[index], 0, dataArray->DatumSize);
+		if (dataArray->NextSalt == -1)
+			dataArray->NextSalt = -32768;
+
+		uint16_t salt = dataArray->NextSalt++;
+
+		return DatumHandle((uint16_t)index, salt);
+	}
+
+	template<typename TDatum>
+	DataArray<TDatum>* SetInvalid(DataArray<TDatum> *dataArray) {
+		dataArray->IsValid = false;
+		return dataArray
+	}
+
 }

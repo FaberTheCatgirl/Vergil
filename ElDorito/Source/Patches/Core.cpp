@@ -19,7 +19,11 @@
 #include <Shlobj.h>
 #include "../Blam/Math/RealMatrix4x3.hpp"
 #include "../Blam/Math/RealQuaternion.hpp"
-#include <Blam/Memory/DatumHandle.hpp>
+
+#include <Blam\Geometry\RenderGeometry.hpp>
+#include <Blam\Memory\DatumHandle.hpp>
+#include <Blam\Memory\TlsData.hpp>
+#include <Blam\Tags\Effects\DecalSystem.hpp>
 
 namespace
 {
@@ -42,7 +46,11 @@ namespace
 	void __cdecl HsPrintHook(const char *message);
 	void ContrailFixHook();
 	void HillColorHook();
-	void __fastcall campaign_scoring_sub_6E59A0(char *scoreboard, void *, Blam::DatumHandle handle, int a3, short a4, int a5, char a6);
+
+	Blam::Math::RealMatrix4x3 *__cdecl sub_5B6E80_hook(int a1, int a2, Blam::Math::RealMatrix4x3 *a3, bool a4);
+	void __cdecl sub_6948C0_hook(int a1);
+	void *__cdecl RenderGeometryApiResourceDefinition_GetVertexBuffer_Hook(Blam::Geometry::RenderGeometryApiResourceDefinition *definition, int vertexBufferIndex);
+	bool __cdecl sub_A5DB60_hook(unsigned __int8 *a1);
 
 	std::vector<Patches::Core::ShutdownCallback> shutdownCallbacks;
 	std::string MapsFolder;
@@ -59,7 +67,6 @@ namespace
 
 	std::vector<Patches::Core::MapLoadedCallback> mapLoadedCallbacks;
 	std::vector<Patches::Core::GameStartCallback> gameStartCallbacks;
-	Blam::Math::RealMatrix4x3 *__cdecl sub_5B6E80_hook(int a1, int a2, Blam::Math::RealMatrix4x3 *a3, bool a4);
 }
 
 namespace Patches::Core
@@ -162,12 +169,17 @@ namespace Patches::Core
 		Hook(0x658061, ContrailFixHook).Apply();
 		// prevent hill zone luminosity from dropping below the visible threshold
 		Hook(0x5D6B1C, HillColorHook).Apply();
-		
+
+		// render geometry hacks
+		Hook(0x5DF980, RenderGeometryApiResourceDefinition_GetVertexBuffer_Hook).Apply();
+		Hook(0x65DB60, sub_A5DB60_hook).Apply();
+
+		// decal system crash hook
+		Hook(0x2947FE, sub_6948C0_hook, HookFlags::IsCall).Apply();
+
+		// particle crash hook
 		Hook(0x1BB839, sub_5B6E80_hook, HookFlags::IsCall).Apply();
 		Hook(0x1BE27F, sub_5B6E80_hook, HookFlags::IsCall).Apply();
-		
-		Hook(0x2E59A0, campaign_scoring_sub_6E59A0).Apply();
-		
 
 #ifndef _DEBUG
 		// Dirty disk error at 0x0xA9F6D0 is disabled in this build
@@ -425,7 +437,7 @@ namespace
 	void __fastcall EdgeDropHook(void* thisptr, void* unused, int a2, int a3, int a4, float* a5)
 	{
 		static auto& modulePlayer = Modules::ModulePlayer::Instance();
-		
+
 		Pointer(a3)(0xAC).WriteFast<float>(0.5f);
 
 		static auto sub_724BB0 = (void(__thiscall*)(void* thisptr, int a2, int a3, int a4, float* a5))(0x724BB0);
@@ -502,9 +514,9 @@ namespace
 			jg render
 			push 0xA580BE
 			retn
-			render:
+			render :
 			push 0xA58067
-			retn
+				retn
 		}
 	}
 
@@ -527,7 +539,7 @@ namespace
 			lea edi, [ebp - 0x1C]
 			push ebx
 			push ecx
-			push edi	
+			push edi
 			call HillColor
 			pop edi
 			pop ecx
@@ -537,104 +549,112 @@ namespace
 			retn
 		}
 	}
+
 	Blam::Math::RealMatrix4x3 *__cdecl sub_5B6E80_hook(int a1, int a2, Blam::Math::RealMatrix4x3 *a3, bool a4)
 	{
-    using namespace Blam;
-    using namespace Blam::Math;
-    static const auto matrix4x3_sub_5B2800 = (float *(__cdecl *)(RealMatrix4x3 *, RealMatrix4x3 *, RealMatrix4x3 *))0x5B2800;
-    static const auto particle_sub_5B6C40 = (void *(__cdecl *)(int, int, void *, char))0x5B6C40;
-    static const auto matrix4x3_quaternion_sub_A4BD70 = (RealQuaternion *(__cdecl *)(RealQuaternion *, int))0xA4BD70;
-    auto *particles = *(DataArrayBase **)ElDorito::Instance().GetMainTls(0x37C);
-    auto index1 = *(int *)(a1 + 48);
-    auto index2 = *(short *)(a2 + 2);
-    if (index1 == -1 || index2 == -1)
-    {
-      DatumHandle particleHandle = *(DatumHandle *)(a1 + 72);
-      DatumBase *particleDatum = nullptr;
-      if (particles != nullptr &&
-        particleHandle != DatumHandle::Null &&
-        (particleDatum = particles->GetAddress(particleHandle)) != nullptr &&
-        ((int *)particleDatum)[3] != -1)
-      {
-        memcpy(a3, (const void *)(a2 + 12), 0x34u);
-        RealQuaternion v11;
-        auto v8 = matrix4x3_quaternion_sub_A4BD70(&v11, ((int *)particleDatum)[3]);
-        a3->Position = *(RealVector3D *)&v11;
-        return a3;
-      }
-      else
-      {
-        return (RealMatrix4x3 *)(a2 + 12);
-      }
-    }
-    else
-    {
-      RealMatrix4x3 matrix;
-      particle_sub_5B6C40(a1, index2, &matrix, a4);
-      matrix4x3_sub_5B2800(&matrix, (RealMatrix4x3 *)(a2 + 12), (RealMatrix4x3 *)a3);
-      return a3;
-    }
-  }
-  void __fastcall campaign_scoring_sub_6E59A0(char *scoreboard, void *, Blam::DatumHandle handle, int a3, short a4, int a5, char a6)
-  {
-    static const auto data_array_sub_55B710 = reinterpret_cast<unsigned long(__cdecl *)(Blam::DataArrayBase *, Blam::DatumHandle)>(0x55B710);
-    static const auto game_get_current_engine = reinterpret_cast<int(*)()>(0x5CE150);
-    static const auto game_is_team_game = reinterpret_cast<bool(__cdecl *)()>(0x5565E0);
-    static const auto scoreboard_sub_6E5A90 = reinterpret_cast<void(__thiscall *)(char *, unsigned int, int, short, int)>(0x6E5A90);
+		using namespace Blam;
+		using namespace Blam::Math;
 
-    if (!scoreboard)
-      return;
+		static const auto matrix4x3_sub_5B2800 = (float *(__cdecl *)(RealMatrix4x3 *, RealMatrix4x3 *, RealMatrix4x3 *))0x5B2800;
+		static const auto particle_sub_5B6C40 = (void *(__cdecl *)(int, int, void *, char))0x5B6C40;
+		static const auto matrix4x3_quaternion_sub_A4BD70 = (RealQuaternion *(__cdecl *)(RealQuaternion *, int))0xA4BD70;
 
-    auto *scoreboard_unknown = &scoreboard[2 * (a3 + 26 * handle.Index)];
-    auto v7 = a4 + *((short *)scoreboard_unknown + 2);
+		auto *particles = *(DataArrayBase **)ElDorito::Instance().GetMainTls(0x37C);
 
-    short v8;
+		auto index1 = *(int *)(a1 + 48);
+		auto index2 = *(short *)(a2 + 2);
 
-    if (v7 <= -30000 || v7 < 30000)
-    {
-      v8 = -30000;
-      if (v7 > -30000)
-        v8 = a4 + *((short *)scoreboard_unknown + 2);
-    }
-    else
-    {
-      v8 = 30000;
-    }
+		if (index1 == -1 || index2 == -1)
+		{
+			DatumHandle particleHandle = *(DatumHandle *)(a1 + 72);
+			DatumBase *particleDatum = nullptr;
 
-    *((short *)scoreboard_unknown + 2) = v8;
+			if (particles != nullptr &&
+				particleHandle != DatumHandle::Null &&
+				(particleDatum = particles->GetAddress(particleHandle)) != nullptr &&
+				((int *)particleDatum)[3] != -1)
+			{
+				memcpy(a3, (const void *)(a2 + 12), 0x34u);
 
-    auto v9 = 0;
+				RealQuaternion v11;
+				auto v8 = matrix4x3_quaternion_sub_A4BD70(&v11, ((int *)particleDatum)[3]);
 
-    if (handle.Index >= 0x20u)
-      v9 = 1 << *((char *)&handle.Handle);
+				a3->Position = *(RealVector3D *)&v11;
 
-    auto v10 = v9 ^ (1 << *((char *)&handle.Handle));
+				return a3;
+			}
+			else
+			{
+				return (RealMatrix4x3 *)(a2 + 12);
+			}
+		}
+		else
+		{
+			RealMatrix4x3 matrix;
+			particle_sub_5B6C40(a1, index2, &matrix, a4);
+			matrix4x3_sub_5B2800(&matrix, (RealMatrix4x3 *)(a2 + 12), (RealMatrix4x3 *)a3);
+			return a3;
+		}
+	}
 
-    if (handle.Index >= 0x40u)
-      v9 ^= 1 << *((char *)&handle.Handle);
+	void __cdecl sub_6948C0_hook(int a1)
+	{
+		const auto sub_694430 = (int(__fastcall *)(void * /*this*/, void * /*unused*/, int))0x694430;
 
-    auto v13 = v10;
-    auto v14 = v9;
+		auto *tls = (Blam::Memory::tls_data *)ElDorito::Instance().GetMainTls();
 
-    ((char (__cdecl *)(void *))0x4B2A70)(&v13);
+		if (tls->decal_system == nullptr || *(long *)0x46DE700 <= 0)
+			return;
 
-    if (a5 != -1)
-      ((void (__cdecl *)(int, int, int, int))0x5704A0)(handle.Index, -1, a5, *((signed __int16 *)scoreboard_unknown + 2));
+		for (int v1 = 0, *v2 = (int *)0x46DE718; v1 < *(long *)0x46DE700; v1++, v2 += 0x25D)
+		{
+			if (v2[0x258] == 0)
+				continue;
 
-    if (a6)
-    {
-      if (game_get_current_engine() && game_is_team_game())
-      {
-        auto v11 = data_array_sub_55B710(ElDorito::Instance().GetMainTls(0x40).Read<Blam::DataArray<Blam::Players::PlayerDatum> *>(), handle);
+			auto v3 = *v2;
+			auto decalDatumIndex = *(unsigned short *)(v3 + 8);
 
-        if (v11)
-        {
-          auto v12 = *(unsigned long *)(v11 + 0xC8);
+			if (decalDatumIndex == 0xBABA)
+				continue;
 
-          if (v12 >= 0 && v12 < 8)
-            scoreboard_sub_6E5A90(scoreboard, v12, a3, a4, a5);
-        }
-      }
-    }
-  }
+			auto decalTagIndex = (*tls->decal_system)[decalDatumIndex].tag_index;
+
+			if (decalTagIndex == -1)
+				continue;
+
+			auto *decs = Blam::Tags::TagInstance(decalTagIndex & 0xFFFF).GetDefinition<Blam::Tags::Effects::DecalSystem>();
+
+			auto decalBlockIndex = *(DWORD *)(v3 + 4);
+
+			if (decalBlockIndex == 0xBABA)
+				continue;
+
+			if (a1 == decs->Decal[decalBlockIndex].Unknown)
+			{
+				if (tls->decal_system != nullptr)
+					sub_694430((void *)*v2, nullptr, 0);
+			}
+		}
+	}
+
+	void *__cdecl RenderGeometryApiResourceDefinition_GetVertexBuffer_Hook(Blam::Geometry::RenderGeometryApiResourceDefinition *definition, int vertexBufferIndex)
+	{
+		if (!definition || vertexBufferIndex < 0 || vertexBufferIndex >= definition->VertexBuffers.Count)
+			return nullptr;
+
+		return definition->VertexBuffers[vertexBufferIndex].RuntimeAddress;
+	}
+
+	bool __cdecl sub_A5DB60_hook(unsigned __int8 *a1)
+	{
+		static const auto sub_A245C0 = reinterpret_cast<bool(__cdecl *)(int, int, int, int)>(0xA245C0);
+		static const auto dword_1694C70 = reinterpret_cast<unsigned long *>(0x1694C70);
+		static const auto dword_1694C90 = reinterpret_cast<unsigned long *>(0x1694C90);
+
+		if (!a1)
+			return false;
+
+		return sub_A245C0(dword_1694C70[dword_1694C90[*a1]], *((unsigned long *)a1 + 1), 0, a1[1]);
+	}
+
 }

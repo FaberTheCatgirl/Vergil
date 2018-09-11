@@ -1,7 +1,12 @@
 #pragma once
 
+namespace
+{
+	extern int g_insertion_point;
+}
+
 namespace Patches::Campaign
 {
 	void ApplyAll();
-	void SetInsertion(int insertion);
+	void SetInsertionPoint(int insertion);
 };

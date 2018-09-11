@@ -292,7 +292,7 @@ namespace Blam::Network
 		// Sends a ping to a network address. ID can be anything.
 		// Once a pong is received back, callbacks registered with
 		// Patches::Network::OnPong() will be invoked.
-		bool Ping(NetworkAddress &address, uint16_t id);
+		bool Ping(const NetworkAddress &address, uint16_t id);
 	};
 	static_assert(sizeof(MessageGateway) == 0x688, "Invalid c_network_message_gateway size");
 
@@ -331,6 +331,7 @@ namespace Blam::Network
 		bool HasTeams() const;
 
 		// Gets the network address of a peer.
+		bool Session::GetPeerAddress(int peerIndex, NetworkAddress &address) const;
 		NetworkAddress GetPeerAddress(int peerIndex) const;
 
 		NetworkAddress GetServerIPAddress() const;

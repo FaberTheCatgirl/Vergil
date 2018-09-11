@@ -805,7 +805,7 @@ namespace
 	bool InsertionPointChanged(const std::vector<std::string>& Arguments, std::string& returnInfo)
 	{
 		auto &serverModule = Modules::ModuleServer::Instance();
-		Patches::Campaign::SetInsertion(serverModule.VarInsertionPoint->ValueInt);
+		Patches::Campaign::SetInsertionPoint(serverModule.VarInsertionPoint->ValueInt);
 		return true;
 	}
 
