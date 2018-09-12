@@ -51,12 +51,7 @@ namespace
 	void ContrailFixHook();
 	void HillColorHook();
 
-	Blam::Math::RealMatrix4x3 *__cdecl sub_5B6E80_hook(int a1, int a2, Blam::Math::RealMatrix4x3 *a3, bool a4);
 	void __cdecl sub_6948C0_hook(int a1);
-	void *__cdecl RenderGeometryApiResourceDefinition_GetVertexBuffer_Hook(Blam::Geometry::RenderGeometryApiResourceDefinition *definition, int vertexBufferIndex);
-	char __cdecl sub_9F0190_hook(void *a1);
-	bool __cdecl sub_A5DB60_hook(unsigned __int8 *a1);
-	int __cdecl sub_A73640_hook(char a1);
 	bool __cdecl sub_750C60_hook(int structure_bsp_index, int a2, int instanced_geometry_instance_index, int unknown_6th_index, int a5, char a6, char a7, char *a8, int a9);
 
 	std::vector<Patches::Core::ShutdownCallback> shutdownCallbacks;
@@ -177,20 +172,10 @@ namespace Patches::Core
 		// prevent hill zone luminosity from dropping below the visible threshold
 		Hook(0x5D6B1C, HillColorHook).Apply();
 
-		// render geometry hacks
-		Hook(0x5DF980, RenderGeometryApiResourceDefinition_GetVertexBuffer_Hook).Apply();
-		Hook(0x65DB60, sub_A5DB60_hook).Apply();
+		// hacks
 		Hook(0x2D3289, sub_750C60_hook, HookFlags::IsCall).Apply();
 		Hook(0x351FC9, sub_750C60_hook, HookFlags::IsCall).Apply();
-		
-		// decal system crash hook
 		Hook(0x2947FE, sub_6948C0_hook, HookFlags::IsCall).Apply();
-
-		// particle crash hooks
-		Hook(0x1BB839, sub_5B6E80_hook, HookFlags::IsCall).Apply();
-		Hook(0x1BE27F, sub_5B6E80_hook, HookFlags::IsCall).Apply();
-		Hook(0x5F0190, sub_9F0190_hook).Apply();
-		Hook(0x673640, sub_A73640_hook).Apply();
 
 #ifndef _DEBUG
 		// Dirty disk error at 0x0xA9F6D0 is disabled in this build
@@ -561,53 +546,6 @@ namespace
 		}
 	}
 
-	Blam::Math::RealMatrix4x3 *__cdecl sub_5B6E80_hook(int a1, int a2, Blam::Math::RealMatrix4x3 *a3, bool a4)
-	{
-		using namespace Blam;
-		using namespace Blam::Math;
-
-		static const auto matrix4x3_sub_5B2800 = (float *(__cdecl *)(RealMatrix4x3 *, RealMatrix4x3 *, RealMatrix4x3 *))0x5B2800;
-		static const auto particle_sub_5B6C40 = (void *(__cdecl *)(int, int, void *, char))0x5B6C40;
-		static const auto matrix4x3_quaternion_sub_A4BD70 = (RealQuaternion *(__cdecl *)(RealQuaternion *, int))0xA4BD70;
-
-		auto *particles = *(DataArrayBase **)ElDorito::Instance().GetMainTls(0x37C);
-
-		auto index1 = *(int *)(a1 + 48);
-		auto index2 = *(short *)(a2 + 2);
-
-		if (index1 == -1 || index2 == -1)
-		{
-			DatumHandle particleHandle = *(DatumHandle *)(a1 + 72);
-			DatumBase *particleDatum = nullptr;
-
-			if (particles != nullptr &&
-				particleHandle != DatumHandle::Null &&
-				(particleDatum = particles->GetAddress(particleHandle)) != nullptr &&
-				((int *)particleDatum)[3] != -1)
-			{
-				memcpy(a3, (const void *)(a2 + 12), 0x34u);
-
-				RealQuaternion v11;
-				auto v8 = matrix4x3_quaternion_sub_A4BD70(&v11, ((int *)particleDatum)[3]);
-
-				a3->Position = *(RealVector3D *)&v11;
-
-				return a3;
-			}
-			else
-			{
-				return (RealMatrix4x3 *)(a2 + 12);
-			}
-		}
-		else
-		{
-			RealMatrix4x3 matrix;
-			particle_sub_5B6C40(a1, index2, &matrix, a4);
-			matrix4x3_sub_5B2800(&matrix, (RealMatrix4x3 *)(a2 + 12), (RealMatrix4x3 *)a3);
-			return a3;
-		}
-	}
-
 	void __cdecl sub_6948C0_hook(int a1)
 	{
 		const auto sub_694430 = (int(__fastcall *)(void * /*this*/, void * /*unused*/, int))0x694430;
@@ -646,103 +584,6 @@ namespace
 					sub_694430((void *)*v2, nullptr, 0);
 			}
 		}
-	}
-
-	void *__cdecl RenderGeometryApiResourceDefinition_GetVertexBuffer_Hook(Blam::Geometry::RenderGeometryApiResourceDefinition *definition, int vertexBufferIndex)
-	{
-		if (!definition || vertexBufferIndex < 0 || vertexBufferIndex >= definition->VertexBuffers.Count)
-			return nullptr;
-
-		return definition->VertexBuffers[vertexBufferIndex].RuntimeAddress;
-	}
-
-	void *__cdecl RenderGeometryApiResourceDefinition_GetIndexBuffer_Hook(Blam::Geometry::RenderGeometryApiResourceDefinition *definition, int indexBufferIndex)
-	{
-		if (!definition || indexBufferIndex < 0 || indexBufferIndex >= definition->IndexBuffers.Count)
-			return nullptr;
-
-		return definition->IndexBuffers[indexBufferIndex].RuntimeAddress;
-	}
-
-	char __cdecl sub_9F0190_hook(void *a1)
-	{
-		using namespace blam;
-
-		static const auto tag_loaded = (void *(__cdecl *)(tag group_tag, unsigned short tag_index))0x503510;
-		static const auto sub_A4DBE0 = (bool(__fastcall *)(void *a1, void *))0xA4DBE0;
-
-		if (*(byte *)0x18F3A8C && *(byte *)0x18F3A8F && *(byte *)0x191614A && *((datum_index *)a1 + 4) != _datum_index_none)
-		{
-			auto *tls = (Blam::Memory::tls_data *)ElDorito::Instance().GetMainTls();
-
-			if (!tls->particle_system)
-				return false;
-
-			auto *particle_system = &(*tls->particle_system)[*((int *)a1 + 1)];
-			
-			auto *particle = (blam::particle *)tag_loaded('prt3', particle_system->particle_tag_index);
-
-			if (!particle)
-				return false;
-
-			auto *geometry = (Blam::Geometry::RenderGeometry *)tag_loaded('pmdf', (unsigned short)(particle->particle_model.tag_index & 0xFFFF));
-
-			if (!geometry || geometry->Meshes.Count == 0 || !geometry->Meshes.Elements)
-				return false;
-		}
-
-		return sub_A4DBE0(a1, nullptr);
-	}
-
-	bool __cdecl sub_A5DB60_hook(unsigned __int8 *a1)
-	{
-		static const auto sub_A245C0 = reinterpret_cast<bool(__cdecl *)(int, int, int, int)>(0xA245C0);
-		static const auto dword_1694C70 = reinterpret_cast<unsigned long *>(0x1694C70);
-		static const auto dword_1694C90 = reinterpret_cast<unsigned long *>(0x1694C90);
-
-		if (!a1)
-			return false;
-
-		return sub_A245C0(dword_1694C70[dword_1694C90[*a1]], *((unsigned long *)a1 + 1), 0, a1[1]);
-	}
-
-	int __cdecl sub_A73640_hook(char a1)
-	{
-		static const auto sub_A247E0 = (int(__cdecl *)(int a1))0xA247E0;
-		static const auto sub_A231E0 = (int(__cdecl *)(int a1, int a2))0xA231E0;
-		static const auto sub_A232D0 = (int(__cdecl *)(int a1))0xA232D0;
-		static const auto sub_A2EFE0 = (char(*)())0xA2EFE0;
-		static const auto sub_A20150 = (char(*)(void))0xA20150;
-		static const auto sub_A52700 = (char(*)())0xA52700;
-		static const auto dword_191B560 = (unsigned long *)0x191B560;
-		static const auto word_191B590 = (unsigned short *)0x191B590;
-		static const auto word_521620C = (unsigned short *)0x521620C;
-		static const auto dword_5216230 = (unsigned long *)0x5216230;
-		static const auto byte_5216250 = (unsigned char *)0x5216250;
-
-		if (a1)
-			sub_A247E0(1);
-		
-		sub_A231E0(0, 7);
-		sub_A232D0(2);
-		
-		if (!sub_A2EFE0() || sub_A20150())
-			sub_A52700();
-		
-		auto result = 3 * *dword_191B560;
-		auto v2 = word_521620C[3 * *dword_191B560];
-
-		for (auto i = *dword_5216230; v2 < i; ++v2)
-		{
-			auto v4 = &byte_5216250[164 * word_191B590[v2]];
-			auto v5 = *((int(__cdecl **)(unsigned long, unsigned long))v4 + 38);
-			auto v6 = *((unsigned long *)v4 + 39);
-			auto v7 = *((unsigned long *)v4 + 40);
-
-			result = v5(v6, v7);
-		}
-
-		return result;
 	}
 
 	bool __cdecl sub_750C60_hook(int structure_bsp_index, int a2, int instanced_geometry_instance_index, int unknown_6th_index, int a5, char a6, char a7, char *a8, int a9)
