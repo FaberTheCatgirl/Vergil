@@ -1047,6 +1047,9 @@
     <ClInclude Include="Source\Patches\Campaign.hpp" />
     <ClInclude Include="new\memory\resources.hpp" />
     <ClInclude Include="new\structures\scenario_structure_bsp.hpp" />
+    <ClInclude Include="new\effects\particles.hpp" />
+    <ClInclude Include="new\tag_files\tag_mapping.hpp" />
+    <ClInclude Include="new\shaders\render_method.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Source\ElDorito.rc" />

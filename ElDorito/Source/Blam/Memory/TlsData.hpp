@@ -142,6 +142,33 @@ namespace Blam::Memory
 	};
 	static_assert(sizeof(s_decal_datum) == 0x50);
 
+	struct s_particle_system_datum : Blam::DatumBase
+	{
+		short particle_tag_index;
+		long unknown4;
+		long unknown8;
+		long unknownC;
+		long unknown10;
+		long unknown14;
+		long unknown18;
+		long unknown1C;
+		long unknown20;
+		long unknown24;
+		long unknown28;
+		long unknown2C;
+		long unknown30;
+		long unknown34;
+		long unknown38;
+		long unknown3C;
+		long unknown40;
+		long unknown44;
+		long unknown48;
+		long unknown4C;
+		long unknown50;
+		long unknown54;
+	};
+	static_assert(sizeof(s_particle_system_datum) == 0x58);
+
 	struct tls_data
 	{
 		char *unknown0;
@@ -368,7 +395,7 @@ namespace Blam::Memory
 		char *object_list_data;
 		char *camera_script_globals;
 		Blam::DataArrayBase *particles;
-		char *particle_system;
+		Blam::DataArray<s_particle_system_datum> *particle_system;
 		char *contrail_system;
 		char *contrail;
 		char *contrail_location;

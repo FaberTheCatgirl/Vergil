@@ -188,6 +188,7 @@
     <ClInclude Include="new\cseries\cseries.hpp" />
     <ClInclude Include="new\cseries\integer_math.hpp" />
     <ClInclude Include="new\cseries\real_math.hpp" />
+    <ClInclude Include="new\effects\particles.hpp" />
     <ClInclude Include="new\game\game_globals.hpp" />
     <ClInclude Include="new\game\game_mode.hpp" />
     <ClInclude Include="new\hs\hs.hpp" />
@@ -197,9 +198,11 @@
     <ClInclude Include="new\objects\object_data.hpp" />
     <ClInclude Include="new\objects\object_types.hpp" />
     <ClInclude Include="new\players\player_data.hpp" />
+    <ClInclude Include="new\shaders\render_method.hpp" />
     <ClInclude Include="new\structures\scenario_structure_bsp.hpp" />
     <ClInclude Include="new\tag_files\tag_definitions.hpp" />
     <ClInclude Include="new\tag_files\tag_groups.hpp" />
+    <ClInclude Include="new\tag_files\tag_mapping.hpp" />
     <ClInclude Include="Source\Blam\BitStream.hpp" />
     <ClInclude Include="Source\Blam\BlamData.hpp" />
     <ClInclude Include="Source\Blam\BlamEvents.hpp" />

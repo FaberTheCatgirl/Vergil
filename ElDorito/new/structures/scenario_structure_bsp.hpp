@@ -7,7 +7,7 @@
 
 namespace blam
 {
-	enum structure_bsp_flags : short
+	enum structure_bsp_flags : word_flags
 	{
 		_bsp_has_instance_groups = 0x1,
 		_bsp_surface_to_triangle_mapping_remapped = 0x2,
@@ -17,7 +17,7 @@ namespace blam
 		_bsp_serialized_havok_data_converted_to_target_platform = 0x20,
 	};
 
-	enum structure_bsp_content_policy_flags : short
+	enum structure_bsp_content_policy_flags : word_flags
 	{
 		_bsp_has_working_pathfinding = 0x1,
 		_bsp_convex_decomposition_enabled = 0x2,
@@ -30,7 +30,7 @@ namespace blam
 	};
 	static_assert(sizeof(structure_bsp_plane) == 0x4);
 
-	enum structure_bsp_instanced_geometry_flags : short
+	enum structure_bsp_instanced_geometry_flags : word_flags
 	{
 		_structure_bsp_instanced_geometry_contains_split_lighting_parts = 0x1,
 		_structure_bsp_instanced_geometry_render_only = 0x2,
@@ -50,7 +50,7 @@ namespace blam
 		_structure_bsp_instanced_geometry_disable_bullet_collision = 0x8000,
 	};
 
-	enum scenery_pathfinding_policy : __int16
+	enum scenery_pathfinding_policy : short
 	{
 		_scenery_pathfinding_cut_out = 0x0,
 		_scenery_pathfinding_static = 0x1,
@@ -58,7 +58,7 @@ namespace blam
 		_scenery_pathfinding_none = 0x3,
 	};
 
-	enum scenery_lightmapping_policy : __int16
+	enum scenery_lightmapping_policy : short
 	{
 		_scenery_lightmapping_per_vertex = 0x0,
 		_scenery_lightmapping_per_pixel_not_implemented = 0x1,
@@ -287,8 +287,8 @@ namespace blam
 		tag_block unknown1;
 		tag_block bsp3d_nodes;
 		tag_block planes;
-		unsigned __int16 mesh_index;
-		__int16 compression_index;
+		unsigned short mesh_index;
+		short compression_index;
 		real unknown4;
 		tag_block unknown5;
 		real unknown6;

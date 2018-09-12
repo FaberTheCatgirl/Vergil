@@ -25,6 +25,7 @@
 #include <Blam\Memory\TlsData.hpp>
 #include <Blam\Tags\Effects\DecalSystem.hpp>
 
+#include <effects\particles.hpp>
 #include <memory\resources.hpp>
 #include <structures\scenario_structure_bsp.hpp>
 
@@ -53,7 +54,9 @@ namespace
 	Blam::Math::RealMatrix4x3 *__cdecl sub_5B6E80_hook(int a1, int a2, Blam::Math::RealMatrix4x3 *a3, bool a4);
 	void __cdecl sub_6948C0_hook(int a1);
 	void *__cdecl RenderGeometryApiResourceDefinition_GetVertexBuffer_Hook(Blam::Geometry::RenderGeometryApiResourceDefinition *definition, int vertexBufferIndex);
+	char __cdecl sub_9F0190_hook(void *a1);
 	bool __cdecl sub_A5DB60_hook(unsigned __int8 *a1);
+	int __cdecl sub_A73640_hook(char a1);
 	bool __cdecl sub_750C60_hook(int structure_bsp_index, int a2, int instanced_geometry_instance_index, int unknown_6th_index, int a5, char a6, char a7, char *a8, int a9);
 
 	std::vector<Patches::Core::ShutdownCallback> shutdownCallbacks;
@@ -183,9 +186,11 @@ namespace Patches::Core
 		// decal system crash hook
 		Hook(0x2947FE, sub_6948C0_hook, HookFlags::IsCall).Apply();
 
-		// particle crash hook
+		// particle crash hooks
 		Hook(0x1BB839, sub_5B6E80_hook, HookFlags::IsCall).Apply();
 		Hook(0x1BE27F, sub_5B6E80_hook, HookFlags::IsCall).Apply();
+		Hook(0x5F0190, sub_9F0190_hook).Apply();
+		Hook(0x673640, sub_A73640_hook).Apply();
 
 #ifndef _DEBUG
 		// Dirty disk error at 0x0xA9F6D0 is disabled in this build
@@ -659,6 +664,36 @@ namespace
 		return definition->IndexBuffers[indexBufferIndex].RuntimeAddress;
 	}
 
+	char __cdecl sub_9F0190_hook(void *a1)
+	{
+		using namespace blam;
+
+		static const auto tag_loaded = (void *(__cdecl *)(tag group_tag, unsigned short tag_index))0x503510;
+		static const auto sub_A4DBE0 = (bool(__fastcall *)(void *a1, void *))0xA4DBE0;
+
+		if (*(byte *)0x18F3A8C && *(byte *)0x18F3A8F && *(byte *)0x191614A && *((datum_index *)a1 + 4) != _datum_index_none)
+		{
+			auto *tls = (Blam::Memory::tls_data *)ElDorito::Instance().GetMainTls();
+
+			if (!tls->particle_system)
+				return false;
+
+			auto *particle_system = &(*tls->particle_system)[*((int *)a1 + 1)];
+			
+			auto *particle = (blam::particle *)tag_loaded('prt3', particle_system->particle_tag_index);
+
+			if (!particle)
+				return false;
+
+			auto *geometry = (Blam::Geometry::RenderGeometry *)tag_loaded('pmdf', (unsigned short)(particle->particle_model.tag_index & 0xFFFF));
+
+			if (!geometry || geometry->Meshes.Count == 0 || !geometry->Meshes.Elements)
+				return false;
+		}
+
+		return sub_A4DBE0(a1, nullptr);
+	}
+
 	bool __cdecl sub_A5DB60_hook(unsigned __int8 *a1)
 	{
 		static const auto sub_A245C0 = reinterpret_cast<bool(__cdecl *)(int, int, int, int)>(0xA245C0);
@@ -669,6 +704,45 @@ namespace
 			return false;
 
 		return sub_A245C0(dword_1694C70[dword_1694C90[*a1]], *((unsigned long *)a1 + 1), 0, a1[1]);
+	}
+
+	int __cdecl sub_A73640_hook(char a1)
+	{
+		static const auto sub_A247E0 = (int(__cdecl *)(int a1))0xA247E0;
+		static const auto sub_A231E0 = (int(__cdecl *)(int a1, int a2))0xA231E0;
+		static const auto sub_A232D0 = (int(__cdecl *)(int a1))0xA232D0;
+		static const auto sub_A2EFE0 = (char(*)())0xA2EFE0;
+		static const auto sub_A20150 = (char(*)(void))0xA20150;
+		static const auto sub_A52700 = (char(*)())0xA52700;
+		static const auto dword_191B560 = (unsigned long *)0x191B560;
+		static const auto word_191B590 = (unsigned short *)0x191B590;
+		static const auto word_521620C = (unsigned short *)0x521620C;
+		static const auto dword_5216230 = (unsigned long *)0x5216230;
+		static const auto byte_5216250 = (unsigned char *)0x5216250;
+
+		if (a1)
+			sub_A247E0(1);
+		
+		sub_A231E0(0, 7);
+		sub_A232D0(2);
+		
+		if (!sub_A2EFE0() || sub_A20150())
+			sub_A52700();
+		
+		auto result = 3 * *dword_191B560;
+		auto v2 = word_521620C[3 * *dword_191B560];
+
+		for (auto i = *dword_5216230; v2 < i; ++v2)
+		{
+			auto v4 = &byte_5216250[164 * word_191B590[v2]];
+			auto v5 = *((int(__cdecl **)(unsigned long, unsigned long))v4 + 38);
+			auto v6 = *((unsigned long *)v4 + 39);
+			auto v7 = *((unsigned long *)v4 + 40);
+
+			result = v5(v6, v7);
+		}
+
+		return result;
 	}
 
 	bool __cdecl sub_750C60_hook(int structure_bsp_index, int a2, int instanced_geometry_instance_index, int unknown_6th_index, int a5, char a6, char a7, char *a8, int a9)
