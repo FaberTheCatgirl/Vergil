@@ -24,6 +24,7 @@
 #include <Blam\Memory\DatumHandle.hpp>
 #include <Blam\Memory\TlsData.hpp>
 #include <Blam\Tags\Effects\DecalSystem.hpp>
+#include <Utils\Logger.hpp>
 
 #include <effects\particles.hpp>
 #include <memory\resources.hpp>
@@ -53,6 +54,7 @@ namespace
 
 	void __cdecl sub_6948C0_hook(int a1);
 	bool __cdecl sub_750C60_hook(int structure_bsp_index, int a2, int instanced_geometry_instance_index, int unknown_6th_index, int a5, char a6, char a7, char *a8, int a9);
+	void *__cdecl data_array_get_hook(Blam::DataArrayBase *array, Blam::DatumHandle handle);
 
 	std::vector<Patches::Core::ShutdownCallback> shutdownCallbacks;
 	std::string MapsFolder;
@@ -176,6 +178,7 @@ namespace Patches::Core
 		Hook(0x2D3289, sub_750C60_hook, HookFlags::IsCall).Apply();
 		Hook(0x351FC9, sub_750C60_hook, HookFlags::IsCall).Apply();
 		Hook(0x2947FE, sub_6948C0_hook, HookFlags::IsCall).Apply();
+		Hook(0x15B6D0, data_array_get_hook).Apply();
 
 #ifndef _DEBUG
 		// Dirty disk error at 0x0xA9F6D0 is disabled in this build
@@ -670,5 +673,19 @@ namespace
 		}
 
 		return sub_750C60(structure_bsp_index, a2, instanced_geometry_instance_index, unknown_6th_index, a5, a6, a7, a8, a9);
+	}
+
+	void *__cdecl data_array_get_hook(Blam::DataArrayBase *array, Blam::DatumHandle handle)
+	{
+		if (array && handle != Blam::DatumHandle::Null && handle.Index < array->FirstUnallocated)
+		{
+			auto *datum = array->GetAddress(handle);
+			auto salt = datum->GetSalt();
+
+			if (salt && salt == handle.Salt)
+				return datum;
+		}
+
+		return nullptr;
 	}
 }
