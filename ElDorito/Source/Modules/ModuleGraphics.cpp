@@ -5,6 +5,7 @@
 #include "../ElDorito.hpp"
 #include "../Blam/BlamTypes.hpp"
 #include "../Patches/Ui.hpp"
+#include "../Patches/Camera.hpp"
 #include "../ThirdParty/rapidjson/stringbuffer.h"
 #include "../ThirdParty/rapidjson/writer.h"
 #include <boost/regex.hpp>
@@ -187,6 +188,13 @@ namespace
 		returnInfo = buffer.GetString();
 		return true;
 	}
+
+	bool CommandIncreaseLOD(const std::vector<std::string>& Arguments, std::string& returnInfo)
+	{
+		returnInfo = Patches::Camera::IncreaseLOD();
+
+		return true;
+	}
 }
 
 namespace Modules
@@ -222,6 +230,8 @@ namespace Modules
 		VarLetterbox = AddVariableInt("Letterbox", "letterbox", "A cinematic letterbox.", eCommandFlagsNone, 0, VariableLetterboxUpdate);
 		VarLetterbox->ValueIntMin = 0;
 		VarLetterbox->ValueIntMax = 1;
+
+		AddCommand("IncreaseLOD", "increase_lod", "ncreases the maximum lod", eCommandFlagsNone, CommandIncreaseLOD);
 
 		VarUIScaling = AddVariableInt("UIScaling", "uiscaling", "Enables proper UI scaling to match your monitor's resolution.", eCommandFlagsArchived, 1, VariableUIScalingUpdate);
 		VarUIScaling->ValueIntMin = 0;

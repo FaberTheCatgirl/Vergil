@@ -8,6 +8,8 @@ namespace
 	float GetScriptedCameraFovHook();
 	void DeadCameraFovHook();
 	void __fastcall c_following_camera__update_hook(void *ptr, void *unused, int localPlayerIndex, int a4, uint8_t *state);
+
+	bool LodIncreased = false;
 }
 
 namespace Patches::Camera
@@ -19,13 +21,29 @@ namespace Patches::Camera
 		Pointer(0x016724DC).Write(uint32_t(&c_following_camera__update_hook));
 	}
 
-	void IncreaseLOD()
+	const char *IncreaseLOD()
 	{
+		std::string result;
+
 		// LOD patches compliments of zedd
 		// Patch for lod dword_176DB40 (2.0) -> dword_176DB50 (10.0)
-		Patch(0x665EB7 + 4, { 0x50 }).Apply();
 		// Patch to apply cine lod to everything
-		Patch::NopFill(Pointer::Base(0x61962C), 2);
+		if (!LodIncreased)
+		{
+			memset(Pointer(0xA65EBB), 0x50, 1);
+			memset(Pointer(0xA1962C), 0x90, 2);
+			LodIncreased = true;
+			result = "Lod increased: true";
+		}
+		else
+		{
+			memset(Pointer(0xA65EBB), 0x40, 1);
+			memset(Pointer(0xA1962C), 0x74, 1);
+			memset(Pointer(0xA1962D), 0x10, 1);
+			LodIncreased = false;
+			result = "Lod increased: false";
+		}
+		return result.c_str();
 	}
 }
 
