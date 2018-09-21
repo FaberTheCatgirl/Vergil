@@ -231,7 +231,7 @@ namespace Modules
 		VarLetterbox->ValueIntMin = 0;
 		VarLetterbox->ValueIntMax = 1;
 
-		AddCommand("IncreaseLOD", "increase_lod", "ncreases the maximum lod", eCommandFlagsNone, CommandIncreaseLOD);
+		AddCommand("IncreaseLOD", "increase_lod", "Increases the maximum lod", eCommandFlagsNone, CommandIncreaseLOD);
 
 		VarUIScaling = AddVariableInt("UIScaling", "uiscaling", "Enables proper UI scaling to match your monitor's resolution.", eCommandFlagsArchived, 1, VariableUIScalingUpdate);
 		VarUIScaling->ValueIntMin = 0;
