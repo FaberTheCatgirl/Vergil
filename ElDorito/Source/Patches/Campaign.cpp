@@ -6,17 +6,13 @@
 #include "../Blam/BlamData.hpp"
 #include "../Blam/BlamPlayers.hpp"
 #include "../Blam/Memory/DatumHandle.hpp"
-#include "../Blam/Memory/TlsData.hpp"
+
+#include <game\game_globals.hpp>
 
 namespace
 {
-	int g_difficulty_level = Blam::eCampaignDifficultyLevelNormal;
-	int g_insertion_point = Blam::eCampaignInsertionPointMissionStart;
-	int g_metagame_scoring_option = Blam::eCampaignMetagameScoringOptionOff;
-	int g_metagame_enabled = false;
-	int g_survival_mode_enabled = false;
-
-	void *__cdecl level_data_get();
+	int g_insertion_point = 0;
+	int __cdecl game_insertion_point_get();
 
 	void __fastcall campaign_scoring_sub_6E59A0(char *scoreboard, void *, Blam::DatumHandle handle, int a3, short a4, int a5, char a6);
 }
@@ -26,54 +22,25 @@ namespace Patches::Campaign
 	void ApplyAll() 
 	{
 		Hook(0x2E59A0, campaign_scoring_sub_6E59A0).Apply();
-		Hook(0x1322D0, level_data_get).Apply();
-	}
-
-	void SetDifficultyLevel(int difficulty_level)
-	{
-		g_difficulty_level = difficulty_level;
+		Hook(0x131840, game_insertion_point_get).Apply();
 	}
 
 	void SetInsertionPoint(int insertion_point)
 	{
 		g_insertion_point = insertion_point;
 	}
-
-	void SetMetagameScoringOption(int metagame_scoring_option)
-	{
-		g_metagame_scoring_option = metagame_scoring_option;
-	}
-
-	void SetMetagameEnabled(bool metagame_enabled)
-	{
-		g_metagame_enabled = metagame_enabled;
-	}
-
-	void SetSurvivalModeEnabled(bool survival_mode_enabled)
-	{
-		g_survival_mode_enabled = survival_mode_enabled;
-	}
 }
 
 namespace
 {
-	void *__cdecl level_data_get()
+	int __cdecl game_insertion_point_get()
 	{
-		auto *tls = (Blam::Memory::tls_data *)ElDorito::Instance().GetMainTls();
-		auto level_data = &tls->game_globals->level_data;
-		if (!level_data)
-			return false;
+		auto *game_globals = blam::game_globals_get();
 
-		if (level_data->MapType == Blam::eMapTypeCampaign)
-		{
-			level_data->CampaignDifficultyLevel = (Blam::CampaignDifficultyLevel)g_difficulty_level;
-			level_data->CampaignInsertionPoint = (Blam::CampaignInsertionPoint)g_insertion_point;
-			level_data->CampaignMetagameScoringOption = (Blam::CampaignMetagameScoringOption)g_metagame_scoring_option;
-			level_data->CampaignMetagameEnabled = g_metagame_enabled;
-			level_data->SurvivalModeEnabled = g_survival_mode_enabled;
-		}
+		if (game_globals->current_game_mode == blam::game_mode::campaign)
+			return g_insertion_point;
 
-		return (void *)level_data;
+		return 0;
 	}
 
 	void __fastcall campaign_scoring_sub_6E59A0(char *scoreboard, void *, Blam::DatumHandle handle, int a3, short a4, int a5, char a6)
