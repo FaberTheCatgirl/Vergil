@@ -1,37 +1,160 @@
 #pragma once
 #include <cstdint>
 
+#include "../BlamTypes.hpp"
+
 namespace Blam
 {
+	struct Preferences;
+
+	inline Preferences *GetPreferences()
+	{
+		return *(Preferences **)0x022C0128;
+	}
+
 	struct Preferences
 	{
+		struct ScreenResolution
+		{
+			int32_t Width, Height;
+		};
+
+		struct GamemodeData
+		{
+			struct CampaignData
+			{
+				uint8_t Unknown0;
+				uint8_t Unknown1;
+				uint8_t Unknown2;
+				uint8_t Unknown3;
+				uint32_t CampaignId;
+				uint32_t MapId;
+				uint16_t CampaignInsertionPoint;
+				uint16_t UnknownE;
+				uint32_t CampaignDifficultyLevel;
+				uint32_t CampaignMetagameScoringOption;
+				uint32_t CampaignSkullsPrimary;
+				uint32_t CampaignSkullsSecondary;
+				char Unknown20[0x78];
+				char Unknown98[0x80];
+				char Unknown118[0x80];
+			};
+			static_assert(sizeof(CampaignData) == 0x198);
+			struct MatchMakingData
+			{
+				uint8_t Unknown0;
+				uint8_t Unknown1;
+				uint16_t Unknown2;
+				uint8_t Unknown4;
+				uint8_t Unknown5;
+				uint16_t MatchMakingHopper;
+			};
+			static_assert(sizeof(MatchMakingData) == 0x8);
+			struct MultiplayerData
+			{
+				uint8_t Unknown0;
+				uint8_t Unknown1;
+				uint8_t Unknown2;
+				uint8_t Unknown3;
+				uint8_t GameVariant[0x264];
+				uint8_t Unknown4[0x210];
+				uint8_t MapVariant[0xE090];
+				uint8_t UnknownE508[0x210];
+			};
+			static_assert(sizeof(MultiplayerData) == 0xE718);
+			struct ForgeData
+			{
+				uint8_t Unknown0;
+				uint8_t Unknown1;
+				uint8_t Unknown2;
+				uint8_t Unknown3;
+				uint32_t Unknown4;
+				uint8_t MapVariant[0xE090];
+				uint8_t UnknownE098[0x210];
+			};
+			static_assert(sizeof(ForgeData) == 0xE2A8);
+			struct TheaterData
+			{
+				struct SavedFilmDescription
+				{
+					uint32_t CampaignId;
+					uint32_t MapId;
+
+					// This seems like it'd be correct going by `CampaignData` but I've nothing to confirm it
+					uint16_t CampaignInsertionPoint;
+					uint16_t UnknownE;
+					uint32_t CampaignDifficultyLevel;
+					uint32_t CampaignMetagameScoringOption;
+					uint32_t CampaignSkullsPrimary;
+					uint32_t CampaignSkullsSecondary;
+					uint8_t Unknown16[0x1FA];
+
+					// Leaving these here incase the above is incorrect
+					//uint8_t Unknown8[8];
+					//uint32_t Unknown10;
+					//uint16_t Unknown14;
+					//uint8_t Unknown16[0x1FE];
+
+					uint16_t Unknown214;
+					uint8_t Unknown216[0x42];
+					uint8_t Unknown258[0xBA];
+					uint32_t Unknown316;
+					uint32_t Unknown31A;
+				};
+				static_assert(sizeof(SavedFilmDescription) == 0x31C);
+
+				uint8_t Unknown0;
+				uint8_t Unknown1;
+				uint8_t Unknown2;
+				uint8_t Unknown3;
+				uint8_t Unknown4[0x10];
+				SavedFilmDescription SavedFilmDescription;
+				Blam::LevelData LevelData;
+				uint8_t Unknown24E78[8];
+			};
+			static_assert(sizeof(TheaterData) == 0x24E80);
+
+			CampaignData Campaign;
+			CampaignData FireFight; // FireFight seems to be keeping to the same struct as Campaign, I'll use that instead
+			MatchMakingData MatchMaking;
+			MultiplayerData Multiplayer;
+			ForgeData Forge;
+			TheaterData Theater;
+		};
+		static_assert(sizeof(GamemodeData) == 0x41B78);
+
+		struct SoundsControls
+		{
+			uint32_t MasterVolume;
+			uint32_t SfxVolume;
+			uint32_t MusicVolume;
+			uint32_t VoiceVolume;
+			uint32_t VoiceChatControl;
+			uint32_t VoiceChatVolume;
+		};
+
 		uint8_t Unknown00;
 		uint8_t IsDirty;
 		uint8_t Unknown[0x1E];
-		uint8_t Unknown20[0x78];
-		uint8_t Unknown98[0x78];
-		uint32_t Unknown110;
-		uint32_t Unknown114;
-		uint8_t Unknown118[0x80];
-		uint8_t Unknown198[0x198]; // campaign?
-		uint32_t Unknown330;
-		uint32_t Unknown334;
-		uint8_t Unknown338[0xE718]; // game varaint at 0x33c
-		uint8_t UnknownEA50[0xE2A8]; // map variant at 0xEA58
-		uint8_t Unknown1CCF8[0x24E80];
-		uint8_t Unknown41B78[0x4C];
+		uint32_t Unknown20;
+		uint32_t Language;
+		uint32_t Unknown28;
+		ScreenResolution ScreenResolutionList;
+		uint32_t MinorVersion;
+		uint32_t Unknown38;
+		uint32_t Unknown3C;
+		uint32_t LastLoadedLobby; // String Id
+		uint32_t Unknown44;
+		GamemodeData GamemodeData;
 		uint32_t Unknown41BC0;
-		uint8_t Unknown41BC5;
-		uint8_t Unknown41BC6;
-		uint8_t Unknown41BC7;
-		uint8_t Unknown41BC8;
+		uint32_t Unknown41BC4;
+		uint32_t DefaultVideoSettings;
 		uint8_t Fullscreen;
 		uint32_t Unknown41BD0;
 		uint32_t Contrast;
 		uint32_t Brightness;
 		uint32_t Unknown41BDC;
-		uint32_t ScreenResolutionWidth;
-		uint32_t ScreenResolutionHeight;
+		ScreenResolution ScreenResolution;
 		uint32_t Unknown41BE8;
 		uint32_t Unknown41BEC;
 		uint32_t TextureResolution;
@@ -61,12 +184,7 @@ namespace Blam
 		uint32_t Unknown41C44;
 		uint32_t Unknown41C48;
 		uint32_t Unknown41C4C;
-		uint32_t MasterVolume;
-		uint32_t SfxVolume;
-		uint32_t MusicVolume;
-		uint32_t VoiceVolume;
-		uint32_t VoiceChatControl;
-		uint32_t VoiceChatVolume;
+		SoundsControls SoundsControls;
 		uint8_t ToggleCrouch;
 		uint8_t HUDShake;
 		uint8_t Unknown41C6A;
