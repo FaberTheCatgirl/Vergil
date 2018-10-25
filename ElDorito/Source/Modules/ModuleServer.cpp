@@ -31,7 +31,6 @@
 #include "../Server/Voting.hpp"
 #include "../Utils/Logger.hpp"
 #include "../Discord/DiscordRPC.h"
-#include "../Patches/Campaign.hpp"
 
 namespace
 {
@@ -802,12 +801,6 @@ namespace
 		returnInfo = ss.str();
 		return true;
 	}
-	bool InsertionPointChanged(const std::vector<std::string>& Arguments, std::string& returnInfo)
-	{
-		auto &serverModule = Modules::ModuleServer::Instance();
-		Patches::Campaign::SetInsertionPoint(serverModule.VarInsertionPoint->ValueInt);
-		return true;
-	}
 
 	bool CommandServerListPlayersJSON(const std::vector<std::string>& Arguments, std::string& returnInfo)
 	{
@@ -1464,10 +1457,6 @@ namespace Modules
 		VarHttpServerCacheTime = AddVariableInt("Http.CacheTime", "http.cache_time", "Time in seconds the server should cache the http server response", eCommandFlagsArchived, 5);
 		VarHttpServerCacheTime->ValueIntMin = 0;
 		VarHttpServerCacheTime->ValueIntMax = 20;
-		
-		VarInsertionPoint = AddVariableInt("InsertionPoint", "insertion", "Rally Point", static_cast<CommandFlags>(eCommandFlagsArchived | eCommandFlagsReplicated), 0);
-		VarInsertionPointClient = AddVariableInt("InsertionPointClient", "insertion_client", "", eCommandFlagsInternal, 0, InsertionPointChanged);
-		Server::VariableSynchronization::Synchronize(VarInsertionPoint, VarInsertionPointClient);
 
 
 #ifdef _DEBUG

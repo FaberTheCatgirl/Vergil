@@ -81,6 +81,7 @@
     <ClCompile Include="Source\Discord\DiscordRPC.cpp" />
     <ClCompile Include="Source\Forge\ForgeVolumes.cpp" />
     <ClCompile Include="Source\Forge\PrematchCamera.cpp" />
+    <ClCompile Include="Source\Modules\ModuleCampaign.cpp" />
     <ClCompile Include="Source\Patches\BottomlessClip.cpp" />
     <ClCompile Include="Source\Patches\Camera.cpp" />
     <ClCompile Include="Source\Patches\Campaign.cpp" />
@@ -315,6 +316,7 @@
     <ClInclude Include="Source\Discord\DiscordRPC.h" />
     <ClInclude Include="Source\Forge\ForgeVolumes.hpp" />
     <ClInclude Include="Source\Forge\PrematchCamera.hpp" />
+    <ClInclude Include="Source\Modules\ModuleCampaign.hpp" />
     <ClInclude Include="Source\Patches\BottomlessClip.hpp" />
     <ClInclude Include="Source\Patches\Camera.hpp" />
     <ClInclude Include="Source\Patches\Campaign.hpp" />

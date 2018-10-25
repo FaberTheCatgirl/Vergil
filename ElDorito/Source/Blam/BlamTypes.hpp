@@ -516,7 +516,7 @@ namespace Blam
 		uint8_t Unknown64; // default 0xFE
 		uint8_t Unknown65; // default 0xFE
 		// theres a lot more bytes too
-	} BLAM_GAME_VARIANT, *PBLAM_GAME_VARIANT;
+	} GameVariant, BLAM_GAME_VARIANT, *PBLAM_GAME_VARIANT;
 
 
 	struct MapVariant

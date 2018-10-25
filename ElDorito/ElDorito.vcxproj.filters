@@ -623,6 +623,9 @@
     <ClCompile Include="Source\Blam\Tags\Objects\Object.cpp">
       <Filter>Blam\Tags\Objects</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Modules\ModuleCampaign.cpp">
+      <Filter>Modules</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\ChatCommands\ChatCommand.hpp">
@@ -1457,6 +1460,9 @@
     </ClInclude>
     <ClInclude Include="Source\Blam\Tags\Enum.hpp">
       <Filter>Blam\Tags</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Modules\ModuleCampaign.hpp">
+      <Filter>Modules</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
