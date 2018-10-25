@@ -6,54 +6,366 @@
 
 namespace Blam
 {
-	enum GameType : uint32_t
+	enum SkullFlags : int32_t
 	{
 		None = 0,
-		CTF,
-		Slayer,
-		Oddball,
-		KOTH,
-		Forge,
-		VIP,
-		Juggernaut,
-		Territories,
-		Assault,
-		Infection,
-		GameTypeCount
+		Iron = 1 << 0,
+		BlackEye = 1 << 1,
+		ToughLuck = 1 << 2,
+		Catch = 1 << 3,
+		Fog = 1 << 4,
+		Famine = 1 << 5,
+		Thunderstorm = 1 << 6,
+		Tilt = 1 << 7,
+		Mythic = 1 << 8,
+		Assassin = 1 << 9,
+		Blind = 1 << 10,
+		Superman = 1 << 11,
+		BirthdayParty = 1 << 12,
+		Daddy = 1 << 13,
+		ThirdPerson = 1 << 14,
+		DirectorsCut = 1 << 15
+	};
+	enum Skull : int32_t
+	{
+		eSkullNone = 0,
+		eSkullIron,
+		eSkullBlackEye,
+		eSkullToughLuck,
+		eSkullCatch,
+		eSkullFog,
+		eSkullFamine,
+		eSkullThunderstorm,
+		eSkullTilt,
+		eSkullMythic,
+		eSkullAssassin,
+		eSkullBlind,
+		eSkullSuperman,
+		eSkullBirthdayParty,
+		eSkullDaddy,
+		eSkullThirdPerson,
+		eSkullDirectorsCut,
+
+		eSkullCount
+	};
+	const std::string SkullNames[eSkullCount]
+	{
+		"None",
+		"Iron",
+		"Black Eye",
+		"Tough Luck",
+		"Catch",
+		"Fog",
+		"Famine",
+		"Thunderstorm",
+		"Tilt",
+		"Mythic",
+		"Assassin",
+		"Blind",
+		"Superman",
+		"Birthday Party",
+		"Daddy",
+		"Third Person",
+		"Directors Cut"
 	};
 
-	const std::string GameTypeNames[GameTypeCount] =
+	enum GameType : int32_t
 	{
-		"none",
+		eGameTypeBase = 0,
+		eGameTypeCTF,
+		eGameTypeSlayer,
+		eGameTypeOddball,
+		eGameTypeKOTH,
+		eGameTypeForge,
+		eGameTypeVIP,
+		eGameTypeJuggernaut,
+		eGameTypeTerritories,
+		eGameTypeAssault,
+		eGameTypeInfection,
+
+		eGameTypeCount
+	};
+	const std::string GameTypeNames[eGameTypeCount] =
+	{
+		"Base",
+		"CTF",
+		"Slayer",
+		"Oddball",
+		"Koth",
+		"Forge",
+		"VIP",
+		"Juggernaut",
+		"Territories",
+		"Assault",
+		"Infection"
+	};
+	const std::string GameTypeExtensions[eGameTypeCount] =
+	{
 		"ctf",
 		"slayer",
 		"oddball",
 		"koth",
-		"forge",
 		"vip",
-		"juggernaut",
-		"territories",
+		"jugg",
+		"terries",
 		"assault",
-		"infection"
+		"zombiez"
 	};
 
-	enum GameMode : uint32_t
+	enum MapType : int32_t
 	{
-		InvalidMode = 0,
-		Campaign,
-		Multiplayer,
-		Mainmenu,
-		Shared, // not sure
-		GameModeCount
+		eMapTypeNone = 0,
+
+		eMapTypeCampaign,
+		eMapTypeMultiplayer,
+		eMapTypeMainmenu,
+		eMapTypeShared, // not sure
+
+		eMapTypeCount
+	};
+	const std::string MapTypeNames[eMapTypeCount] =
+	{
+		"None",
+		"Campaign",
+		"Multiplayer",
+		"Mainmenu",
+		"Shared"
 	};
 
-	const std::string GameModeNames[GameModeCount] =
+	enum LobbyType : int16_t
 	{
-		"none",
-		"campaign",
-		"multiplayer",
-		"mainmenu",
-		"shared"
+		eLobbyTypeCampaign = 0,
+		eLobbyTypeMatchmaking,
+		eLobbyTypeMultiplayer,
+		eLobbyTypeForge,
+		eLobbyTypeTheater,
+		eLobbyTypeFireFight,
+
+		eLobbyTypeCount
+	};
+	const std::string LobbyTypeNames[eLobbyTypeCount] =
+	{
+		"Campaign",
+		"Matchmaking",
+		"Multiplayer",
+		"Forge",
+		"Theater",
+		"FireFight"
+	};
+
+	enum GameSimulation : int8_t
+	{
+		eGameSimulationNone = 0,
+		eGameSimulationLocal,
+		eGameSimulationSyncClient,
+		eGameSimulationSyncServer,
+		eGameSimulationDistClient,
+		eGameSimulationDistServer,
+
+		eGameSimulationCount
+	};
+	const std::string GameSimulationNames[eGameSimulationCount]
+	{
+		"None",
+		"Local",
+		"Sync-Client",
+		"Sync-Server",
+		"Dist-Client",
+		"Dist-Server"
+	};
+
+	enum GamePlayback : int16_t
+	{
+		eGamePlaybackNone = 0,
+		eGamePlaybackLocal,
+		eGamePlaybackNetworkServer,
+		eGamePlaybackNetworkClient,
+
+		eGamePlaybackCount
+	};
+	const std::string GamePlaybackNames[eGamePlaybackCount]
+	{
+		"None",
+		"Local",
+		"Network-Server",
+		"Network-Client"
+	};
+
+	enum CampaignDifficultyLevel : int16_t
+	{
+		eCampaignDifficultyLevelEasy = 0,
+		eCampaignDifficultyLevelNormal,
+		eCampaignDifficultyLevelHeroic,
+		eCampaignDifficultyLevelLegendary,
+
+		eCampaignDifficultyLevelCount
+	};
+	const std::string GameDifficultNames[eCampaignDifficultyLevelCount]
+	{
+		"Easy",
+		"Normal",
+		"Heroic",
+		"Legendary"
+	};
+
+	enum CampaignInsertionPoint : int16_t
+	{
+		eCampaignInsertionPointMissionStart = 0,
+		eCampaignInsertionPointRallyPointAlpha,
+		eCampaignInsertionPointRallyPointBravo,
+		eCampaignInsertionPointRallyPointCharlie,
+		eCampaignInsertionPointRallyPointDelta,
+		eCampaignInsertionPointRallyPointEcho,
+		eCampaignInsertionPointRallyPointFoxtrot,
+		eCampaignInsertionPointRallyPointGolf,
+		eCampaignInsertionPointRallyPointHotel,
+
+		eCampaignInsertionPointRallyPointCount
+	};
+	const std::string CampaignInsertionPointNames[eCampaignInsertionPointRallyPointCount]
+	{
+		"Mission Start",
+		"Rally Point Alpha",
+		"Rally Point Bravo",
+		"Rally Point Charlie",
+		"Rally Point Delta",
+		"Rally Point Echo",
+		"Rally Point Foxtrot",
+		"Rally Point Golf",
+		"Rally Point Hotel"
+	};
+
+	enum CampaignMetagameScoringOption : int16_t
+	{
+		eCampaignMetagameScoringOptionOff = 0,
+		eCampaignMetagameScoringOptionTeam,
+		eCampaignMetagameScoringOptionFreeForAll,
+
+		eCampaignMetagameScoringOptionCount
+	};
+	const std::string CampaignMetagameScoringOptionNames[eCampaignMetagameScoringOptionCount]
+	{
+		"Off",
+		"Team",
+		"Free For All"
+	};
+
+	struct LevelData
+	{
+		MapType MapType;
+		GameSimulation GameSimulation;
+		int16_t FrameLimit;
+		int32_t GameInstance;
+		int16_t wordC[2];
+		int32_t RandomSeed;
+		int32_t Language;
+		int32_t DeterminismVersion;
+		int32_t CampaignId;
+		int32_t MapId;
+		char ScenarioPath[256];
+
+		uint32_t dword124;
+
+		int16_t ZonesetIndex;
+
+		uint8_t byte12A;
+		uint8_t byte12B;
+		uint8_t byte12C;
+		uint8_t byte14D;
+		uint8_t byte12E;
+		uint8_t byte12F;
+
+		GamePlayback GamePlayback;
+
+		uint8_t byte132;
+		uint8_t byte133;
+		uint32_t dword134;
+		uint32_t dword138;
+
+		CampaignDifficultyLevel CampaignDifficultyLevel;
+		CampaignInsertionPoint CampaignInsertionPoint;
+		CampaignMetagameScoringOption CampaignMetagameScoringOption;
+
+		uint8_t CampaignMetagameEnabled;
+		uint8_t SurvivalModeEnabled;
+
+		uint8_t byte144;
+		uint8_t byte145;
+		uint8_t byte146[0x78];
+		int16_t byte10A;
+		uint8_t byte10C[0x80];
+
+		// these might be bit flags
+		uint32_t CampaignSkullsPrimary;
+		uint32_t CampaignSkullsSecondary;
+
+		uint8_t byte248[0x80];
+		uint8_t byte2AC;
+		uint8_t byte2AD[7];
+		uint8_t byte2B4[92];
+		char GameVariant[0x264];
+		char MapVariant[0xE090];
+		uint8_t MachineArray[0x128];
+		uint8_t InitialParticipantsArray[0x16400];
+	};
+	static_assert(sizeof(LevelData) == 0x24B48);
+
+	enum NetworkMode : int16_t
+	{
+		eNetworkModeOpenToPublic = 0,
+		eNetworkModeOpenToFriends,
+		eNetworkModeInviteOnly,
+		eNetworkModeSystemLink,
+		eNetworkModeOffline,
+
+		eNetworkModeCount
+	};
+	const std::string NetworkModeNames[eNetworkModeCount]
+	{
+		"Open To Public (Xbox Live)",
+		"Open To Friends (Xbox Live)",
+		"Invite Only (Xbox Live)",
+		"System Link",
+		"Offline",
+	};
+
+	enum PeerConnectionState
+	{
+		ePeerConnectionStateNone = 0,
+		ePeerConnectionStateRejoining,
+		ePeerConnectionStateReserved,
+		ePeerConnectionStateDisconnected,
+		ePeerConnectionStateConnected,
+		ePeerConnectionStateJoining,
+		ePeerConnectionStateJoined,
+		ePeerConnectionStateWaiting,
+		ePeerConnectionStateEstablished,
+
+		ePeerConnectionStateCount
+	};
+
+	enum LifeCycleState
+	{
+		eLifeCycleStateNone = 0,
+		eLifeCycleStatePreGame,
+		eLifeCycleStateStartGame,
+		eLifeCycleStateInGame,
+		eLifeCycleStateEndGameWriteStats,
+		eLifeCycleStateLeaving,
+		eLifeCycleStateJoining,
+		eLifeCycleStateMatchmakingStart,
+		eLifeCycleStateMatchmakingFindMatchClient,
+		eLifeCycleStateMatchmakingFindMatch,
+		eLifeCycleStateMatchmakingFindAndAssembleMatch,
+		eLifeCycleStateMatchmakingAssembleMatch,
+		eLifeCycleStateMatchmakingArbitration,
+		eLifeCycleStateMatchmakingSelectHost,
+		eLifeCycleStateMatchmakingPrepareMap,
+		eLifeCycleStateInMatch,
+		eLifeCycleStateEndMatchWriteStats,
+		eLifeCycleStatePostMatch,
+
+		eLifeCycleStateCount
 	};
 
 	typedef struct _BLAM_CONTENT_HEADER

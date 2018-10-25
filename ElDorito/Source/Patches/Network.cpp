@@ -214,7 +214,7 @@ namespace Patches::Network
 					writer.String(mapName.c_str());
 					writer.Key("variant");
 					writer.String(Utils::String::ThinString(variantName).c_str());
-					if (variantType >= 0 && variantType < Blam::GameTypeCount)
+					if (variantType >= 0 && variantType < Blam::eGameTypeCount)
 					{
 						writer.Key("variantType");
 						writer.String(Blam::GameTypeNames[variantType].c_str());

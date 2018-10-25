@@ -251,12 +251,12 @@ namespace
 				ss << std::endl << "\t" << map;
 
 			ss << std::endl << std::endl << "Valid gametypes:";
-			for (size_t i = 0; i < Blam::GameTypeCount; i++)
+			for (size_t i = 0; i < Blam::eGameTypeCount; i++)
 				ss << std::endl << "\t" << "[" << i << "] " << Blam::GameTypeNames[i];
 
-			ss << std::endl << std::endl << "Valid gamemodes:";
-			for (size_t i = 0; i < Blam::GameModeCount; i++)
-				ss << std::endl << "\t" << "[" << i << "] " << Blam::GameModeNames[i];
+			ss << std::endl << std::endl << "Valid maptypes:";
+			for (size_t i = 0; i < Blam::eMapTypeCount; i++)
+				ss << std::endl << "\t" << "[" << i << "] " << Blam::MapTypeNames[i];
 
 			returnInfo = ss.str();
 			return false;
@@ -265,8 +265,8 @@ namespace
 		auto mapName = Arguments[0];
 
 		auto gameTypeStr = "none";
-		Blam::GameType gameType = Blam::GameType::None;
-		Blam::GameMode gameMode = Blam::GameMode::Multiplayer;
+		Blam::GameType gameType = Blam::eGameTypeBase;
+		Blam::MapType mapType = Blam::eMapTypeMultiplayer;
 
 		if (std::find(Modules::ModuleGame::Instance().MapList.begin(), Modules::ModuleGame::Instance().MapList.end(), mapName) == Modules::ModuleGame::Instance().MapList.end())
 		{
@@ -280,7 +280,7 @@ namespace
 		{
 			//Look up gametype string.
 			size_t i;
-			for (i = 0; i < Blam::GameTypeCount; i++)
+			for (i = 0; i < Blam::eGameTypeCount; i++)
 			{
 				// Todo: case insensiive
 				if (!Blam::GameTypeNames[i].compare(Arguments[1]))
@@ -290,35 +290,35 @@ namespace
 				}
 			}
 
-			if (i == Blam::GameTypeCount)
+			if (i == Blam::eGameTypeCount)
 				gameType = (Blam::GameType)std::atoi(Arguments[1].c_str());
 
-			if (gameType > Blam::GameTypeCount) // only valid gametypes are 1 to 10
-				gameType = Blam::GameType::Slayer;
+			if (gameType > Blam::eGameTypeCount) // only valid gametypes are 1 to 10
+				gameType = Blam::eGameTypeSlayer;
 		}
 
 		if (Arguments.size() >= 3)
 		{
 			//Look up gamemode string.
 			size_t i;
-			for (i = 0; i < Blam::GameModeCount; i++)
+			for (i = 0; i < Blam::eMapTypeCount; i++)
 			{
 				// Todo: case insensiive
-				if (!Blam::GameModeNames[i].compare(Arguments[2]))
+				if (!Blam::MapTypeNames[i].compare(Arguments[2]))
 				{
-					gameMode = Blam::GameMode(i);
+					mapType = Blam::MapType(i);
 					break;
 				}
 			}
 
-			if (i == Blam::GameModeCount)
-				gameMode = (Blam::GameMode)std::atoi(Arguments[2].c_str());
+			if (i == Blam::eMapTypeCount)
+				mapType = (Blam::MapType)std::atoi(Arguments[2].c_str());
 
-			if (gameMode > Blam::GameModeCount) // only valid gametypes are 1 to 10
-				gameMode = Blam::GameMode::Multiplayer;
+			if (mapType > Blam::eMapTypeCount) // only valid gametypes are 1 to 10
+				mapType = Blam::eMapTypeMultiplayer;
 		}
 
-		ss << "Loading " << mapName << " gametype: " << Blam::GameTypeNames[gameType] << " gamemode: " << Blam::GameModeNames[gameMode];
+		ss << "Loading " << mapName << " gametype: " << Blam::GameTypeNames[gameType] << " maptype: " << Blam::MapTypeNames[mapType];
 
 		// Game Type
 		Pointer(0x2391B2C).Write<uint32_t>(gameType);
@@ -326,8 +326,8 @@ namespace
 		// Infinite play time
 		Pointer(0x2391C51).Write<uint8_t>(0);
 
-		// Game Mode
-		Pointer(0x2391800).Write<uint32_t>(gameMode);
+		// Map Type
+		Pointer(0x2391800).Write<uint32_t>(mapType);
 
 		// Map Name
 		Pointer(0x2391824).Write(mapName.c_str(), mapName.length() + 1);
@@ -580,23 +580,23 @@ namespace
 	{
 		switch (type)
 		{
-		case Blam::GameType::CTF:
+		case Blam::eGameTypeCTF:
 			return FindDefaultGameVariant(wezr->CTFVariants, name);
-		case Blam::GameType::Slayer:
+		case Blam::eGameTypeSlayer:
 			return FindDefaultGameVariant(wezr->SlayerVariants, name);
-		case Blam::GameType::Oddball:
+		case Blam::eGameTypeOddball:
 			return FindDefaultGameVariant(wezr->OddballVariants, name);
-		case Blam::GameType::KOTH:
+		case Blam::eGameTypeKOTH:
 			return FindDefaultGameVariant(wezr->KOTHVariants, name);
-		case Blam::GameType::VIP:
+		case Blam::eGameTypeVIP:
 			return FindDefaultGameVariant(wezr->VIPVariants, name);
-		case Blam::GameType::Juggernaut:
+		case Blam::eGameTypeJuggernaut:
 			return FindDefaultGameVariant(wezr->JuggernautVariants, name);
-		case Blam::GameType::Territories:
+		case Blam::eGameTypeTerritories:
 			return FindDefaultGameVariant(wezr->TerritoriesVariants, name);
-		case Blam::GameType::Assault:
+		case Blam::eGameTypeAssault:
 			return FindDefaultGameVariant(wezr->AssaultVariants, name);
-		case Blam::GameType::Infection:
+		case Blam::eGameTypeInfection:
 			return FindDefaultGameVariant(wezr->InfectionVariants, name);
 		default: // None, Forge
 			return -1;
@@ -615,13 +615,13 @@ namespace
 		// Search through each variant type until something is found
 		auto index = -1;
 		int type;
-		for (type = 1; type < Blam::GameType::GameTypeCount; type++)
+		for (type = 1; type < Blam::GameType::eGameTypeCount; type++)
 		{
 			index = FindDefaultGameVariant(wezr, static_cast<Blam::GameType>(type), name);
 			if (index != -1)
 				break;
 		}
-		if (type == Blam::GameType::GameTypeCount)
+		if (type == Blam::GameType::eGameTypeCount)
 			return false;
 
 		const auto VariantDataSize = 0x264;

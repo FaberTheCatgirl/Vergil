@@ -319,7 +319,7 @@ namespace
 
 		int32_t variantType = Pointer(0x023DAF18).Read<int32_t>();
 
-		if (variantType >= 0 && variantType < Blam::GameTypeCount)
+		if (variantType >= 0 && variantType < Blam::eGameTypeCount)
 		{
 			writer.Key("gameType");
 			writer.String(Blam::GameTypeNames[variantType].c_str());
@@ -404,14 +404,14 @@ namespace
 			writer.Bool(hasObjective);
 
 			//gametype specific stats
-			if (variantType == Blam::GameType::CTF || variantType == Blam::GameType::Assault || variantType == Blam::GameType::Oddball)
+			if (variantType == Blam::eGameTypeCTF || variantType == Blam::eGameTypeAssault || variantType == Blam::eGameTypeOddball)
 			{
 				writer.Key("flagKills");
 				writer.Int(playerStats.WeaponStats[Blam::Tags::Objects::DamageReportingType::Flag].Kills);
 				writer.Key("ballKills");
 				writer.Int(playerStats.WeaponStats[Blam::Tags::Objects::DamageReportingType::Ball].Kills);
 			}
-			else if (variantType == Blam::GameType::KOTH)
+			else if (variantType == Blam::eGameTypeKOTH)
 			{
 				writer.Key("kingsKilled");
 				writer.Int(playerStats.KingsKilled);
@@ -420,7 +420,7 @@ namespace
 				writer.Key("timeControllingHill");
 				writer.Int(playerStats.TimeControllingHill);
 			}
-			else if (variantType == Blam::GameType::Infection)
+			else if (variantType == Blam::eGameTypeInfection)
 			{
 				writer.Key("humansInfected");
 				writer.Int(playerStats.HumansInfected);
