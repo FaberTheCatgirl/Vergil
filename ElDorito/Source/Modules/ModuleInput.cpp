@@ -515,7 +515,7 @@ namespace
 
 	bool VariableControllerStickLayoutUpdated(const std::vector<std::string>& Arguments, std::string& returnInfo)
 	{
-		auto layout = Modules::ModuleInput::Instance().VarControllerStickLayout->ValueInt;
+		auto layout = (uint16_t)Modules::ModuleInput::Instance().VarControllerStickLayout->ValueInt;
 		bindings.JoystickLayout = layout;
 		Modules::ModuleInput::UpdateBindings();
 		return true;
@@ -650,7 +650,7 @@ namespace
 	bool TryParseFloat(const char* str, float* value)
 	{
 		char* endp;
-		*value = std::strtod(str, &endp);
+		*value = (float)std::strtod(str, &endp);
 		return endp != str;
 	}
 

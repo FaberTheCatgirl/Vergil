@@ -125,7 +125,7 @@ namespace
 		auto targetObject = Blam::Objects::Get(targetObjectIndex);
 		if (!targetObject)
 			return;	
-		auto s = std::pow(targetObject->Scale, 0.5);
+		auto s = (float)std::pow(targetObject->Scale, 0.5);
 		definition.Depth *= s;
 		definition.PositionShift *= s;
 	}

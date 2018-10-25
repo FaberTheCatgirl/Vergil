@@ -27,7 +27,7 @@ namespace Web::Ui::WebVirtualKeyboard
 			return;
 
 		//Strip illegal characters
-		std::string illegal = "\\/:?\"<>|";
+		std::wstring illegal = L"\\/:?\"<>|";
 		for (auto it = value.begin(); it < value.end(); ++it)
 			if (illegal.find(*it) != std::wstring::npos)
 				*it = ' ';

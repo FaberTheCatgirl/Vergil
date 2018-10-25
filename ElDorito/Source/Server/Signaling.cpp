@@ -110,7 +110,7 @@ namespace Server::Signaling
 		auto session = Blam::Network::GetActiveSession();
 		CreatePasswords();
 		currentPassword = authStrings[session->MembershipInfo.HostPeerIndex];
-		port = Modules::ModuleServer::Instance().VarSignalServerPort->ValueInt;
+		port = (uint16_t)Modules::ModuleServer::Instance().VarSignalServerPort->ValueInt;
 		Web::Ui::ScreenLayer::Notify("signal-ready", ServerPortJson(), true);
 		if (Modules::ModuleUPnP::Instance().VarUPnPEnabled->ValueInt)
 		{

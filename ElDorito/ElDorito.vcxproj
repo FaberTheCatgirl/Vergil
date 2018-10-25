@@ -587,6 +587,7 @@
       <DebugInformationFormat>
       </DebugInformationFormat>
       <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
+      <DisableSpecificWarnings>4348;4996;</DisableSpecificWarnings>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;NOMINMAX;PSAPI_VERSION=1;MINIUPNP_STATICLIB;ElDorito_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
