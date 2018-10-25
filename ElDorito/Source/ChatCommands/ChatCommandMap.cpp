@@ -22,7 +22,7 @@ namespace ChatCommands
 	EndGameCommand endGameCommand;
 	ShuffleTeamsCommand shuffleTeamsCommand;
 
-	void LifeCycleStateChanged(Blam::Network::LifeCycleState newState)
+	void LifeCycleStateChanged(Blam::LifeCycleState newState)
 	{
 
 		auto* session = Blam::Network::GetActiveSession();
@@ -32,13 +32,13 @@ namespace ChatCommands
 		switch (newState)
 		{
 
-			case Blam::Network::eLifeCycleStateStartGame:
+			case Blam::eLifeCycleStateStartGame:
 			{
 				chatCommandsActive = true;
 				break;
 			}
 
-			case Blam::Network::eLifeCycleStateEndGameWriteStats: //This is fired if you also hit game.stop
+			case Blam::eLifeCycleStateEndGameWriteStats: //This is fired if you also hit game.stop
 			{
 
 				Server::TempBanList::Instance().decrementDuration();

@@ -727,7 +727,7 @@ namespace GameGlobals
 	namespace PersistentUserDataChud
 	{
 		const size_t TLSOffset = 0x424;
-		const size_t SprintMeterOffset = 0x157;
+		const size_t HUDElementsOffset = 0x14D;
 	}
 
 	namespace ObjectHeader

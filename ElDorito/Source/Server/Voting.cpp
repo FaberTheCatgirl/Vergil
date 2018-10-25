@@ -26,11 +26,11 @@ namespace Server::Voting
 	}
 
 	//Reset the state of voting in case people start a game manually. 
-	void LifeCycleStateChanged(Blam::Network::LifeCycleState newState)
+	void LifeCycleStateChanged(Blam::LifeCycleState newState)
 	{
 		switch (newState)
 		{
-		case Blam::Network::eLifeCycleStateStartGame:
+		case Blam::eLifeCycleStateStartGame:
 		{
 
 			if (Modules::ModuleServer::Instance().VarServerTeamShuffleEnabled->ValueInt == 1)
@@ -45,7 +45,7 @@ namespace Server::Voting
 			break;
 		}
 
-		case Blam::Network::eLifeCycleStateNone:
+		case Blam::eLifeCycleStateNone:
 		{
 			for (auto elem : VotingSystems)
 			{

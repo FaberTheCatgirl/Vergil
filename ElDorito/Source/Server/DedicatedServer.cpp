@@ -9,21 +9,21 @@ namespace Server::DedicatedServer
 
 	void Init()
 	{
-		Blam::Network::SetLobbyType(2);
+		Blam::Network::SetLobbyType(Blam::eLobbyTypeMultiplayer);
 		needToSetMode = true;
 	}
 	void Tick()
 	{
 		if (!needToSetMode) {
-			if (Blam::Network::GetLobbyType() != 2) {
-				Blam::Network::SetLobbyType(2);
+			if (Blam::Network::GetLobbyType() != Blam::eLobbyTypeMultiplayer) {
+				Blam::Network::SetLobbyType(Blam::eLobbyTypeMultiplayer);
 				needToSetMode = true;
 			}
 			return;
 		}
 
-		if (Blam::Network::GetLobbyType() == 2) {
-			if (Blam::Network::SetNetworkMode(3)) {
+		if (Blam::Network::GetLobbyType() == Blam::eLobbyTypeMultiplayer) {
+			if (Blam::Network::SetNetworkMode(Blam::eNetworkModeSystemLink)) {
 				needToSetMode = false;
 			}
 		}

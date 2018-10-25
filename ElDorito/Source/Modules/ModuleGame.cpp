@@ -449,25 +449,16 @@ namespace
 		return (firstMapId == mapId && secondMapId == mapId);
 	}
 
-	// TODO: Might be useful to map out this enum
-	// 2 = customs, 3 = forge
-	int GetUiGameMode()
-	{
-		typedef int(__thiscall *GetUiGameModePtr)();
-		auto GetUiGameModeImpl = reinterpret_cast<GetUiGameModePtr>(0x435640);
-		return GetUiGameModeImpl();
-	}
-
 	void SaveMapVariantToPreferences(const uint8_t *data)
 	{
 		// Check the lobby type so we know where to save the variant
 		size_t variantOffset;
-		switch (GetUiGameMode())
+		switch (Blam::Network::GetLobbyType())
 		{
-		case 2: // Customs
+		case Blam::eLobbyTypeMultiplayer:
 			variantOffset = 0x7F0;
 			break;
-		case 3: // Forge
+		case Blam::eLobbyTypeForge:
 			variantOffset = 0xEA98;
 			break;
 		default:
@@ -484,7 +475,7 @@ namespace
 
 	void SaveGameVariantToPreferences(const uint8_t *data)
 	{
-		if (GetUiGameMode() != 2)
+		if (Blam::Network::GetLobbyType() != Blam::eLobbyTypeMultiplayer)
 			return; // Only allow doing this from a customs lobby
 
 		// Copy the data in
@@ -502,8 +493,8 @@ namespace
 			returnInfo = "You must specify an internal map or Forge map name!";
 			return false;
 		}
-		auto lobbyType = GetUiGameMode();
-		if (lobbyType != 2 && lobbyType != 3)
+		auto lobbyType = Blam::Network::GetLobbyType();
+		if (lobbyType != Blam::eLobbyTypeMultiplayer && lobbyType != Blam::eLobbyTypeForge)
 		{
 			returnInfo = "You can only change maps from a Custom Games or Forge lobby.";
 			return false;
@@ -653,7 +644,7 @@ namespace
 			returnInfo = "You must specify a built-in gametype or custom gametype name!";
 			return false;
 		}
-		if (GetUiGameMode() != 2)
+		if (Blam::Network::GetLobbyType() != Blam::eLobbyTypeMultiplayer)
 		{
 			returnInfo = "You can only change gametypes from a Custom Games lobby.";
 			return false;

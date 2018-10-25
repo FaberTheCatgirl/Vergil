@@ -866,21 +866,19 @@ namespace
 		}
 
 		auto previous = std::to_string(Blam::Network::GetNetworkMode());
-		auto serverMode = -1;
+		auto serverMode = (Blam::NetworkMode)-1;
 		try
 		{
-			serverMode = std::atoi(Arguments[0].c_str());
+			serverMode = (Blam::NetworkMode)std::atoi(Arguments[0].c_str());
 		}
 		catch (std::logic_error&)
 		{
 		}
 
-		if (serverMode < 0 || serverMode > 4) {
+		if (serverMode < Blam::eNetworkModeOpenToPublic || serverMode > Blam::eNetworkModeOffline) {
 			returnInfo = "0 = Xbox Live (Open Party); 1 = Xbox Live (Friends Only); 2 = Xbox Live (Invite Only); 3 = Online; 4 = Offline;";
 			return false;
 		}
-
-		
 		bool retVal = Blam::Network::SetNetworkMode(serverMode);
 		if (retVal)
 		{
@@ -901,16 +899,16 @@ namespace
 		}
 
 		auto previous = std::to_string(Blam::Network::GetLobbyType());
-		auto lobbyType = -1;
+		auto lobbyType = (Blam::LobbyType)-1;
 		try
 		{
-			lobbyType = std::atoi(Arguments[0].c_str());
+			lobbyType = (Blam::LobbyType)std::atoi(Arguments[0].c_str());
 		}
 		catch (std::logic_error&)
 		{
 		}
 
-		if (lobbyType < 0 || lobbyType > 4) {
+		if (lobbyType < Blam::eLobbyTypeCampaign || lobbyType > Blam::eLobbyTypeTheater) {
 			returnInfo = "0 = Campaign; 1 = Matchmaking; 2 = Multiplayer; 3 = Forge; 4 = Theater;";
 			return false;
 		}

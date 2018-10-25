@@ -1057,7 +1057,7 @@ namespace
 		}
 	}
 
-	void LifeCycleStateChangedHookImpl(Blam::Network::LifeCycleState newState)
+	void LifeCycleStateChangedHookImpl(Blam::LifeCycleState newState)
 	{
 		for (auto &&callback : lifeCycleStateChangedCallbacks)
 			callback(newState);

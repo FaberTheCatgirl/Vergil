@@ -159,13 +159,13 @@ public:
 
 namespace
 {
-	void LifeCycleStateChanged(Blam::Network::LifeCycleState newState)
+	void LifeCycleStateChanged(Blam::LifeCycleState newState)
 	{
 		switch (newState)
 		{
-		case Blam::Network::eLifeCycleStateStartGame:
-		case Blam::Network::eLifeCycleStateNone:
-		case Blam::Network::eLifeCycleStateLeaving:
+		case Blam::eLifeCycleStateStartGame:
+		case Blam::eLifeCycleStateNone:
+		case Blam::eLifeCycleStateLeaving:
 			OnVotingEnded();
 			break;
 		}

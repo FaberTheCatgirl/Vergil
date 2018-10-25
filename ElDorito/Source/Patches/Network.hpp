@@ -29,7 +29,7 @@ namespace Patches::Network
 
 	// Callback for a lifecycle state change handler function.
 	// newState - The new lifecycle state.
-	typedef std::function<void(Blam::Network::LifeCycleState newState)> LifeCycleStateChangedCallback;
+	typedef std::function<void(Blam::LifeCycleState newState)> LifeCycleStateChangedCallback;
 
 	// Registers a function to be called when the lifecycle state is
 	// changed.

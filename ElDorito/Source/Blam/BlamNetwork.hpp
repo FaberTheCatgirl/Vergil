@@ -13,19 +13,6 @@ namespace Blam::Network
 	// The maximum number of players in a network session.
 	const int MaxPlayers = 16;
 
-	enum PeerConnectionState
-	{
-		ePeerConnectionStateNone,
-		ePeerConnectionStateRejoining,
-		ePeerConnectionStateReserved,
-		ePeerConnectionStateDisconnected,
-		ePeerConnectionStateConnected,
-		ePeerConnectionStateJoining,
-		ePeerConnectionStateJoined,
-		ePeerConnectionStateWaiting,
-		ePeerConnectionStateEstablished
-	};
-
 	struct PeerInfo
 	{
 		uint8_t Unknown0[0x10];
@@ -338,29 +325,6 @@ namespace Blam::Network
 	};
 	static_assert(sizeof(Session) == 0x25BC40, "Invalid c_network_session size");
 
-	// Lifecycle states.
-	enum LifeCycleState
-	{
-		eLifeCycleStateNone,
-		eLifeCycleStatePreGame,
-		eLifeCycleStateStartGame,
-		eLifeCycleStateInGame,
-		eLifeCycleStateEndGameWriteStats,
-		eLifeCycleStateLeaving,
-		eLifeCycleStateJoining,
-		eLifeCycleStateMatchmakingStart,
-		eLifeCycleStateMatchmakingFindMatchClient,
-		eLifeCycleStateMatchmakingFindMatch,
-		eLifeCycleStateMatchmakingFindAndAssembleMatch,
-		eLifeCycleStateMatchmakingAssembleMatch,
-		eLifeCycleStateMatchmakingArbitration,
-		eLifeCycleStateMatchmakingSelectHost,
-		eLifeCycleStateMatchmakingPrepareMap,
-		eLifeCycleStateInMatch,
-		eLifeCycleStateEndMatchWriteStats,
-		eLifeCycleStatePostMatch,
-	};
-
 	// Gets a pointer to the active network session.
 	// Can be null!
 	Session *GetActiveSession();
@@ -377,16 +341,16 @@ namespace Blam::Network
 	bool BootPlayer(int playerIndex, int reason);
 
 	// Gets the lobby type. Also known as GetUiGameMode
-	int GetLobbyType();
+	LobbyType GetLobbyType();
 
 	// Gets the network mode
-	int GetNetworkMode();
+	NetworkMode GetNetworkMode();
 
 	//Sets the lobbyType
-	bool SetLobbyType(int type);
+	bool SetLobbyType(LobbyType type);
 
 	//Sets the Network Mode.
-	bool SetNetworkMode(int mode);
+	bool SetNetworkMode(NetworkMode mode);
 
 	// Requests to end the game.
 	bool EndGame();

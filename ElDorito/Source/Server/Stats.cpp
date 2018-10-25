@@ -464,7 +464,7 @@ namespace Server::Stats
 		return true;
 	}
 
-	void LifeCycleStateChanged(Blam::Network::LifeCycleState newState)
+	void LifeCycleStateChanged(Blam::LifeCycleState newState)
 	{
 		auto* session = Blam::Network::GetActiveSession();
 		
@@ -473,7 +473,7 @@ namespace Server::Stats
 
 		switch (newState)
 		{
-			case Blam::Network::eLifeCycleStateStartGame:
+			case Blam::eLifeCycleStateStartGame:
 			{
 				auto thread = CreateThread(NULL, 0, GetPlayersInfo_Thread, (LPVOID)"", 0, NULL);
 				break;

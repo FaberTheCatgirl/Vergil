@@ -2,6 +2,7 @@
 #include "../Patch.hpp"
 #include "../ElDorito.hpp"
 #include "../Blam/BlamTypes.hpp"
+#include "../Blam/Memory/TlsData.hpp"
 
 namespace
 {
@@ -32,8 +33,8 @@ namespace Patches::Sprint
 	void Tick()
 	{
 		// Show/hide the sprint meter
-		auto persistentUserDataChud = ElDorito::GetMainTls(GameGlobals::PersistentUserDataChud::TLSOffset)[0];
+		Blam::Memory::chud_player_hud_elements *persistentUserDataChud = ElDorito::GetMainTls(GameGlobals::PersistentUserDataChud::TLSOffset)[0](GameGlobals::PersistentUserDataChud::HUDElementsOffset);
 		if (persistentUserDataChud)
-			persistentUserDataChud(GameGlobals::PersistentUserDataChud::SprintMeterOffset).WriteFast<bool>(sprintEnabled);
+			persistentUserDataChud->stamina = sprintEnabled;
 	}
 }

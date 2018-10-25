@@ -250,26 +250,26 @@ namespace Blam::Network
 		return Network_squad_session_end_game();
 	}
 
-	int GetLobbyType() {
-		auto Get_Type = (int(__cdecl*)())(0x00435640);
+	LobbyType GetLobbyType() {
+		auto Get_Type = (LobbyType(__cdecl*)())(0x00435640);
 		return Get_Type();
 	}
 
 	// Gets the network mode
-	int GetNetworkMode() {
-		auto Get_Mode = (int(__cdecl*)())(0x00A7F160);
+	NetworkMode GetNetworkMode() {
+		auto Get_Mode = (NetworkMode(__cdecl*)())(0x00A7F160);
 		return Get_Mode();
 	}
 
-	bool SetLobbyType(int type)
+	bool SetLobbyType(LobbyType type)
 	{
-		auto set_server_lobby_type = (bool(__cdecl*)(int))(0x00A7EE70);
+		auto set_server_lobby_type = (bool(__cdecl*)(LobbyType))(0x00A7EE70);
 		return set_server_lobby_type(type);
 	}
-	
-	bool SetNetworkMode(int mode)
+
+	bool SetNetworkMode(NetworkMode mode)
 	{
-		auto Set_Network_Mode = (bool(__cdecl*)(int))(0x00A7F950);
+		auto Set_Network_Mode = (bool(__cdecl*)(NetworkMode))(0x00A7F950);
 		return Set_Network_Mode(mode);
 	}
 	
