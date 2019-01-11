@@ -71,6 +71,100 @@ namespace
 
 	std::vector<Patches::Core::MapLoadedCallback> mapLoadedCallbacks;
 	std::vector<Patches::Core::GameStartCallback> gameStartCallbacks;
+	
+		struct s_file_reference
+	{
+		uint32_t header_type;
+		uint16_t flags;
+		uint16_t unknown6;
+		char path[256];
+		uint32_t file_handle;
+		uint32_t file_pointer;
+	};
+
+	static const auto global_game_state_initialized = (bool *)0x2497CD0;
+	static const auto global_game_state_data = (void **)0x2497CD4;
+	static const auto global_game_state_size = (DWORD *)0x2497CDC;
+	static const auto global_game_state_valid = (bool *)0x02497CE0;
+
+	static const auto game_state_buffer_handle_read = (int(*)())0x50F280;
+	static const auto game_state_security_verify_signature = (bool(__cdecl *)(LPVOID *))0x5106F0;
+
+	static const auto file_create_parent_directories_if_not_present = (bool(__cdecl *)(s_file_reference *))0x527FF0;
+	static const auto file_reference_create_from_path = (s_file_reference *(__cdecl *)(s_file_reference *, wchar_t *, bool))0x5285B0;
+	static const auto file_close = (bool(__cdecl *)(s_file_reference *))0x528B60;
+	static const auto file_create = (bool(__cdecl *)(s_file_reference *))0x528FB0;
+	static const auto file_exists = (bool(__cdecl *)(s_file_reference *))0x5295F0;
+	static const auto file_open = (bool(__cdecl *)(s_file_reference *, int, int *))0x52A220;
+	static const auto file_read = (bool(__cdecl *)(s_file_reference *, DWORD, char, LPVOID))0x52A7E0;
+	static const auto file_write = (bool(__cdecl *)(s_file_reference *, DWORD, LPCVOID))0x52B250;
+
+	static const auto game_state_call_after_load_procs = (int(__cdecl *)(int))0x58A4B0;
+	static const auto game_state_call_before_load_procs = (int(__cdecl *)(char))0x58A5F0;
+
+	void game_state_write_file_to_storage()
+	{
+		auto result = false;
+
+		if (*global_game_state_initialized)
+		{
+			s_file_reference file;
+			file_reference_create_from_path(&file, L"game_state.dat", false);
+
+			file_create_parent_directories_if_not_present(&file);
+
+			if (!file_exists(&file))
+				file_create(&file);
+
+			int file_error;
+			if (!file_open(&file, 2, &file_error))
+			{
+				// TODO: log file error
+				return;
+			}
+
+			result = file_write(&file, *global_game_state_size, *global_game_state_data);
+			file_close(&file);
+		}
+
+		*global_game_state_valid = result;
+	}
+
+	bool __cdecl game_state_read(int a1, int a2)
+	{
+		auto result = false;
+
+		if (*global_game_state_initialized)
+		{
+			s_file_reference file;
+			file_reference_create_from_path(&file, L"game_state.dat", false);
+
+			int file_error;
+			if (!file_open(&file, 1, &file_error))
+			{
+				// TODO: log file error
+				return result;
+			}
+
+			game_state_call_before_load_procs(a2);
+
+			auto file_result = file_read(&file, *global_game_state_size, false, *global_game_state_data);
+
+			file_close(&file);
+
+			result = game_state_security_verify_signature(nullptr) && file_result;
+
+			game_state_buffer_handle_read();
+			game_state_call_after_load_procs(a2);
+		}
+
+		return result;
+	}
+
+	bool __cdecl hash_verification(int a1, int a2, bool a3, int32_t *a4, int a5)
+	{
+		return true;
+	}
 }
 
 namespace Patches::Core
@@ -179,6 +273,9 @@ namespace Patches::Core
 		Hook(0x351FC9, sub_750C60_hook, HookFlags::IsCall).Apply();
 		Hook(0x2947FE, sub_6948C0_hook, HookFlags::IsCall).Apply();
 		Hook(0x15B6D0, data_array_get_hook).Apply();
+		Hook(0x25DB10, game_state_read).Apply();
+		Hook(0x25DBE0, game_state_write_file_to_storage).Apply();
+		Hook(0x109020, hash_verification).Apply();
 
 #ifndef _DEBUG
 		// Dirty disk error at 0x0xA9F6D0 is disabled in this build
