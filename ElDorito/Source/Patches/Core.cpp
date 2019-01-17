@@ -217,7 +217,7 @@ namespace
 		return true;
 	}
 
-	void __fastcall campaign_scoring_sub_6E59A0(char *scoreboard, void *, Blam::DatumHandle handle, Blam::Events::EventType event_type, short a4, Blam::ePlayerStatType player_stat_type, char a6)
+	void __fastcall campaign_scoring_sub_6E59A0(char *scoreboard, void *, Blam::DatumHandle handle, Blam::Events::EventType event_type, short a4, int player_stat_type, char a6)
 	{
 		static const auto data_array_sub_55B710 = reinterpret_cast<unsigned long(__cdecl *)(Blam::DataArrayBase *, Blam::DatumHandle)>(0x55B710);
 		static const auto game_get_current_engine = reinterpret_cast<int(*)()>(0x5CE150);
@@ -399,8 +399,6 @@ namespace Patches::Core
 
 		// campaign metagame hacks
 		Hook(0x2E59A0, campaign_scoring_sub_6E59A0).Apply();
-		Hook(0x1332E9, campaign_metagame_update, HookFlags::IsCall).Apply();
-		Hook(0x1338E7, campaign_metagame_update, HookFlags::IsCall).Apply();
 
 #ifndef _DEBUG
 		// Dirty disk error at 0x0xA9F6D0 is disabled in this build

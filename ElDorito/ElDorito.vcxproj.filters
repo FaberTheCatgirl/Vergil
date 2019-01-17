@@ -611,9 +611,6 @@
     <ClCompile Include="Source\Blam\Sounds\SoundCache.cpp">
       <Filter>Blam\Sounds</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Blam\Sounds\Functions.cpp">
-      <Filter>Blam\Sounds</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Blam\Tags\Objects\Projectile.cpp">
       <Filter>Blam\Tags\Objects</Filter>
     </ClCompile>
@@ -1412,9 +1409,6 @@
     </ClInclude>
     <ClInclude Include="Source\Blam\Sandbox\Sandbox.hpp">
       <Filter>Blam\Sandbox</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Blam\Sounds\Functions.hpp">
-      <Filter>Blam\Sounds</Filter>
     </ClInclude>
     <ClInclude Include="Source\Blam\Tags\Globals\ForgeGlobalsDefinition.hpp">
       <Filter>Blam\Tags\Globals</Filter>

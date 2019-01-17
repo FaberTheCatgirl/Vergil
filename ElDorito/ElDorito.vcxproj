@@ -52,7 +52,6 @@
     <ClCompile Include="Source\Blam\Math\Rectangle2D.cpp" />
     <ClCompile Include="Source\Blam\Memory\Align.cpp" />
     <ClCompile Include="Source\Blam\Memory\DatumHandle.cpp" />
-    <ClCompile Include="Source\Blam\Sounds\Functions.cpp" />
     <ClCompile Include="Source\Blam\Sounds\SoundCache.cpp" />
     <ClCompile Include="Source\Blam\Tags\Camera\AreaScreenEffect.cpp" />
     <ClCompile Include="Source\Blam\Tags\Globals\CacheFileGlobalTags.cpp" />
@@ -249,7 +248,6 @@
     <ClInclude Include="Source\Blam\Padding.hpp" />
     <ClInclude Include="Source\Blam\Preferences\Preferences.hpp" />
     <ClInclude Include="Source\Blam\Sandbox\Sandbox.hpp" />
-    <ClInclude Include="Source\Blam\Sounds\Functions.hpp" />
     <ClInclude Include="Source\Blam\Sounds\SoundCache.hpp" />
     <ClInclude Include="Source\Blam\Sounds\SoundDatum.hpp" />
     <ClInclude Include="Source\Blam\Tags\Camera\AreaScreenEffect.hpp" />
@@ -540,6 +538,7 @@
       <PreprocessorDefinitions>WIN32;_WINDOWS;_ENABLE_ATOMIC_ALIGNMENT_FIX;_DEBUG;NOMINMAX;PSAPI_VERSION=1;MINIUPNP_STATICLIB;ElDorito_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
       <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
+      <DisableSpecificWarnings>4348;4834;4996;</DisableSpecificWarnings>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;NOMINMAX;PSAPI_VERSION=1;MINIUPNP_STATICLIB;ElDorito_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -587,7 +586,7 @@
       <DebugInformationFormat>
       </DebugInformationFormat>
       <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
-      <DisableSpecificWarnings>4348;4996;</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4348;4834;4996;</DisableSpecificWarnings>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;NOMINMAX;PSAPI_VERSION=1;MINIUPNP_STATICLIB;ElDorito_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
