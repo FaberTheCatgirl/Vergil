@@ -176,7 +176,7 @@ namespace
 
 	bool __cdecl read_campaign_save_file_blocking(int, LPVOID buffer, DWORD size)
 	{
-		return file_write_to_path(L"mmiof.bmf", size, buffer);
+		return file_read_from_path(L"mmiof.bmf", size, buffer);
 	}
 
 	bool __cdecl game_state_read_header_from_persistent_storage_blocking(int local_user_index, void *buffer, DWORD size)
@@ -207,9 +207,11 @@ namespace
 		return 0;
 	}
 
-	bool __cdecl sub_5254A0(int local_user_index)
+	bool __cdecl campaign_save_file_exists(int local_user_index)
 	{
-		return local_user_index == 0;
+		s_file_reference file;
+		file_reference_create_from_path(&file, L"mmiof.bmf", false);
+		return file_exists(&file);
 	}
 
 	bool __cdecl hash_verification(int a1, int a2, bool a3, int32_t *a4, int a5)
@@ -395,7 +397,7 @@ namespace Patches::Core
 		Hook(0x1270F0, game_state_write_file_to_storage_blocking).Apply();
 		Hook(0x25DBE0, game_state_write_file_to_storage).Apply();
 		Hook(0x109020, hash_verification).Apply();
-		Hook(0x1254A0, sub_5254A0).Apply();
+		Hook(0x1254A0, campaign_save_file_exists).Apply();
 
 		// campaign metagame hacks
 		Hook(0x2E59A0, campaign_scoring_sub_6E59A0).Apply();

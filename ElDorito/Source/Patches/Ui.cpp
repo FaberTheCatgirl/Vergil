@@ -1581,44 +1581,43 @@ namespace
 	{
 		_asm
 		{
-			//custom_colors:
-				cmp enableCustomHUDColors, 1
-				jne tag_color
-				cmp[ebp + 0xC], 0x0
-				je secondary_color
-				cmp[ebp + 0xC], 0x1
-				je secondary_color
-				cmp[ebp + 0xC], 0x2
-				je primary_color
-				cmp[ebp + 0xC], 0x4
-				je primary_color
-				cmp[ebp + 0xC], 0x8
-				je primary_color
-				cmp[ebp + 0xC], 0xA
-				je primary_color
-				cmp[ebp + 0xC], 0xB
-				je primary_color
-				cmp[ebp + 0xC], 0xF
-				je primary_color
+			cmp enableCustomHUDColors, 1
+			jne tag_color
+			cmp[ebp + 0xC], 0x0
+			je secondary_color
+			cmp[ebp + 0xC], 0x1
+			je secondary_color
+			cmp[ebp + 0xC], 0x2
+			je primary_color
+			cmp[ebp + 0xC], 0x4
+			je primary_color
+			cmp[ebp + 0xC], 0x8
+			je primary_color
+			cmp[ebp + 0xC], 0xA
+			je primary_color
+			cmp[ebp + 0xC], 0xB
+			je primary_color
+			cmp[ebp + 0xC], 0xF
+			je primary_color
 
-				tag_color :
+		tag_color:
 			mov eax, [eax + edi * 4 + 4]
-				jmp eldorado_return
+			jmp eldorado_return
 
-				primary_color :
+		primary_color:
 			mov eax, Patches::Ui::customPrimaryHUDColor
-				jmp eldorado_return
+			jmp eldorado_return
 
-				secondary_color :
+		secondary_color:
 			mov eax, Patches::Ui::customSecondaryHUDColor
-				jmp eldorado_return
+			jmp eldorado_return
 
-				eldorado_return :
+		eldorado_return:
 			pop edi
-				pop esi
-				pop ebx
-				pop ebp
-				ret 8
+			pop esi
+			pop ebx
+			pop ebp
+			ret 8
 		}
 	}
 
