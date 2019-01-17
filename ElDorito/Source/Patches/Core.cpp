@@ -1,30 +1,44 @@
 #include "Core.hpp"
 
+#include "../Blam/Geometry/RenderGeometry.hpp"
+
+#include "../Blam/Math/RealColorARGB.hpp"
+#include "../Blam/Math/RealMatrix4x3.hpp"
+#include "../Blam/Math/RealQuaternion.hpp"
+#include "../Blam/Math/RealVector3D.hpp"
+
+#include "../Blam/Memory/TlsData.hpp"
+
+#include "../Blam/Preferences/Preferences.hpp"
+
+#include "../Blam/Tags/TagInstance.hpp"
+#include "../Blam/Tags/Effects/DecalSystem.hpp"
+#include "../Blam/Tags/Items/DefinitionWeapon.hpp"
+#include "../Blam/Tags/Scenario/Scenario.hpp"
+
+#include "../Blam/BlamData.hpp"
+#include "../Blam/BlamEvents.hpp"
+#include "../Blam/BlamPlayers.hpp"
+#include "../Blam/BlamNetwork.hpp"
+#include "../Blam/BlamObjects.hpp"
+#include "../Blam/BlamTypes.hpp"
+
+#include "../Modules/ModuleCampaign.hpp"
+#include "../Modules/ModuleGame.hpp"
+#include "../Modules/ModulePlayer.hpp"
+#include "../Modules/ModuleServer.hpp"
+#include "../Modules/ModuleTweaks.hpp"
+
+#include "../Console.hpp"
+
 #include "../ElDorito.hpp"
 #include "../ElPatches.hpp"
 #include "../Patch.hpp"
-#include "../Blam/Math/RealColorARGB.hpp"
-#include "../Blam/BlamTypes.hpp"
-#include "../Blam/BlamPlayers.hpp"
-#include "../Blam/Tags/TagInstance.hpp"
-#include "../Blam/Tags/Items/DefinitionWeapon.hpp"
-#include "../Blam/Tags/Scenario/Scenario.hpp"
-#include "../Blam/BlamObjects.hpp"
-#include "../Modules/ModuleGame.hpp"
-#include "../Modules/ModuleServer.hpp"
-#include "../Modules/ModulePlayer.hpp"
-#include "../Console.hpp"
+
 #include "boost/filesystem.hpp"
+
 #include <codecvt>
 #include <Shlobj.h>
-#include "../Blam/Math/RealMatrix4x3.hpp"
-#include "../Blam/Math/RealQuaternion.hpp"
-
-#include <Blam\Geometry\RenderGeometry.hpp>
-#include <Blam\Memory\DatumHandle.hpp>
-#include <Blam\Memory\TlsData.hpp>
-#include <Blam\Tags\Effects\DecalSystem.hpp>
-#include <Utils\Logger.hpp>
 
 #include <effects\particles.hpp>
 #include <memory\resources.hpp>
