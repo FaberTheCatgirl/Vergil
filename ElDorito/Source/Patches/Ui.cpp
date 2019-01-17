@@ -1581,7 +1581,7 @@ namespace
 	{
 		_asm
 		{
-			custom_colors:
+			//custom_colors:
 				cmp enableCustomHUDColors, 1
 				jne tag_color
 				cmp[ebp + 0xC], 0x0
