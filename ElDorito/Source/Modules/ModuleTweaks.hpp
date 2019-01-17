@@ -14,6 +14,8 @@ namespace Modules
 		Command *VarReachStyleFrags;
 		Command *VarFlatHUD;
 		Command *VarEliteHUD;
+		Command *VarSinglethreaded;
+		Command *VarDisableMetagame;
 
 		ModuleTweaks();
 	};

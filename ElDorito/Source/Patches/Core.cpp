@@ -226,6 +226,9 @@ namespace
 		static const auto game_is_team_game = reinterpret_cast<bool(__cdecl *)()>(0x5565E0);
 		static const auto scoreboard_sub_6E5A90 = reinterpret_cast<void(__thiscall *)(char *, unsigned int, Blam::Events::EventType, short, int)>(0x6E5A90);
 
+		if (Modules::ModuleTweaks::Instance().VarDisableMetagame->ValueInt != 0)
+			return;
+
 		if (!scoreboard)
 			return;
 
@@ -280,6 +283,19 @@ namespace
 				}
 			}
 		}
+	}
+
+	bool __cdecl campaign_metagame_update()
+	{
+		if (Modules::ModuleTweaks::Instance().VarDisableMetagame->ValueInt != 0)
+			return false;
+
+		return ((bool(__cdecl *)())0x60A4F0)();
+	}
+
+	bool __cdecl is_multithreaded_sub_42E2C0()
+	{
+		return Modules::ModuleTweaks::Instance().VarSinglethreaded->ValueInt == 0;
 	}
 }
 
@@ -389,7 +405,7 @@ namespace Patches::Core
 		Hook(0x351FC9, sub_750C60_hook, HookFlags::IsCall).Apply();
 		Hook(0x2947FE, sub_6948C0_hook, HookFlags::IsCall).Apply();
 		Hook(0x15B6D0, data_array_get_hook).Apply();
-		
+
 		// game state reading/writing
 		Hook(0x25DB10, game_state_read_file_from_storage).Apply();
 		Hook(0x1265E0, read_campaign_save_file_blocking).Apply();
@@ -401,6 +417,14 @@ namespace Patches::Core
 
 		// campaign metagame hacks
 		Hook(0x2E59A0, campaign_scoring_sub_6E59A0).Apply();
+		Hook(0x1332E9, campaign_metagame_update, HookFlags::IsCall).Apply();
+		Hook(0x1338E7, campaign_metagame_update, HookFlags::IsCall).Apply();
+
+		// optional single or multithreading
+		Hook(0x2E2C0, is_multithreaded_sub_42E2C0).Apply();
+
+		// decal hack
+		Hook(0x2947FE, sub_6948C0_hook, HookFlags::IsCall).Apply();
 
 #ifndef _DEBUG
 		// Dirty disk error at 0x0xA9F6D0 is disabled in this build

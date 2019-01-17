@@ -53,5 +53,13 @@ namespace Modules
 		VarEliteHUD = AddVariableInt("EliteHUD", "elitehud", "Switches to the elite HUD.", eCommandFlagsArchived, 0, VariableEliteHUDUpdated);
 		VarEliteHUD->ValueIntMin = 0;
 		VarEliteHUD->ValueIntMax = 1;
+
+		VarSinglethreaded = AddVariableInt("Singlethreaded", "singlethreaded", "Enables singlethreaded mode.", eCommandFlagsArchived, 0);
+		VarSinglethreaded->ValueIntMin = 0;
+		VarSinglethreaded->ValueIntMax = 1;
+
+		VarDisableMetagame = AddVariableInt("DisableMetagame", "disable_metagame", "Disables the campaign metagame.", eCommandFlagsArchived, 1);
+		VarDisableMetagame->ValueIntMin = 0;
+		VarDisableMetagame->ValueIntMax = 1;
 	}
 }
