@@ -23,7 +23,6 @@
 #include "../Blam/BlamObjects.hpp"
 #include "../Blam/BlamTypes.hpp"
 
-#include "../Modules/ModuleCampaign.hpp"
 #include "../Modules/ModuleGame.hpp"
 #include "../Modules/ModulePlayer.hpp"
 #include "../Modules/ModuleServer.hpp"
