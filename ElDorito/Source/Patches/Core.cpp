@@ -71,8 +71,8 @@ namespace
 
 	std::vector<Patches::Core::MapLoadedCallback> mapLoadedCallbacks;
 	std::vector<Patches::Core::GameStartCallback> gameStartCallbacks;
-	
-		struct s_file_reference
+
+	struct s_file_reference
 	{
 		uint32_t header_type;
 		uint16_t flags;
@@ -99,60 +99,60 @@ namespace
 	static const auto file_read = (bool(__cdecl *)(s_file_reference *, DWORD, char, LPVOID))0x52A7E0;
 	static const auto file_write = (bool(__cdecl *)(s_file_reference *, DWORD, LPCVOID))0x52B250;
 
+	bool __cdecl file_read_from_path(wchar_t *path, DWORD size, LPVOID buffer)
+	{
+		s_file_reference file;
+		file_reference_create_from_path(&file, path, false);
+
+		int file_error;
+		if (!file_open(&file, 1, &file_error))
+		{
+			// TODO: log file error
+			return false;
+		}
+
+		auto result = file_read(&file, size, false, buffer);
+
+		file_close(&file);
+
+		return result;
+	}
+
+	bool __cdecl file_write_to_path(wchar_t *path, DWORD size, LPVOID buffer)
+	{
+		s_file_reference file;
+		file_reference_create_from_path(&file, path, false);
+
+		file_create_parent_directories_if_not_present(&file);
+
+		if (!file_exists(&file))
+			file_create(&file);
+
+		int file_error;
+		if (!file_open(&file, 2, &file_error))
+		{
+			// TODO: log file error
+			return false;
+		}
+
+		auto result = file_write(&file, size, buffer);
+		file_close(&file);
+
+		return result;
+	}
+
 	static const auto game_state_call_after_load_procs = (int(__cdecl *)(int))0x58A4B0;
 	static const auto game_state_call_before_load_procs = (int(__cdecl *)(char))0x58A5F0;
 
-	void game_state_write_file_to_storage()
+	bool __cdecl game_state_read_file_from_storage(int a1, int a2)
 	{
 		auto result = false;
 
 		if (*global_game_state_initialized)
 		{
-			s_file_reference file;
-			file_reference_create_from_path(&file, L"game_state.dat", false);
-
-			file_create_parent_directories_if_not_present(&file);
-
-			if (!file_exists(&file))
-				file_create(&file);
-
-			int file_error;
-			if (!file_open(&file, 2, &file_error))
-			{
-				// TODO: log file error
-				return;
-			}
-
-			result = file_write(&file, *global_game_state_size, *global_game_state_data);
-			file_close(&file);
-		}
-
-		*global_game_state_valid = result;
-	}
-
-	bool __cdecl game_state_read(int a1, int a2)
-	{
-		auto result = false;
-
-		if (*global_game_state_initialized)
-		{
-			s_file_reference file;
-			file_reference_create_from_path(&file, L"game_state.dat", false);
-
-			int file_error;
-			if (!file_open(&file, 1, &file_error))
-			{
-				// TODO: log file error
-				return result;
-			}
-
 			game_state_call_before_load_procs(a2);
 
-			auto file_result = file_read(&file, *global_game_state_size, false, *global_game_state_data);
-
-			file_close(&file);
-
-			result = game_state_security_verify_signature(nullptr) && file_result;
+			result = file_read_from_path(L"gamestate.hdr", *global_game_state_size, *global_game_state_data);
 
 			game_state_buffer_handle_read();
 			game_state_call_after_load_procs(a2);
@@ -161,9 +161,110 @@ namespace
 		return result;
 	}
 
+	bool __cdecl read_campaign_save_file_blocking(int, LPVOID buffer, DWORD size)
+	{
+		return file_write_to_path(L"mmiof.bmf", size, buffer);
+	}
+
+	bool __cdecl game_state_read_header_from_persistent_storage_blocking(int local_user_index, void *buffer, DWORD size)
+	{
+		return file_read_from_path(L"gamestate.hdr", size, buffer);
+	}
+
+	void game_state_write_file_to_storage()
+	{
+		auto result = false;
+
+		if (*global_game_state_initialized)
+			result = file_write_to_path(L"gamestate.hdr", *global_game_state_size, *global_game_state_data);
+
+		*global_game_state_valid = result;
+	}
+
+	int __cdecl game_state_write_file_to_storage_blocking(LPVOID buffer1, DWORD size1, LPVOID buffer2, DWORD size2)
+	{
+		auto result = true;
+
+		if (result)
+			result = file_write_to_path(L"gamestate.hdr", size1, buffer1);
+
+		if (result)
+			result = file_write_to_path(L"mmiof.bmf", size2, buffer2);
+
+		return 0;
+	}
+
+	bool __cdecl sub_5254A0(int local_user_index)
+	{
+		return local_user_index == 0;
+	}
+
 	bool __cdecl hash_verification(int a1, int a2, bool a3, int32_t *a4, int a5)
 	{
 		return true;
+	}
+
+	void __fastcall campaign_scoring_sub_6E59A0(char *scoreboard, void *, Blam::DatumHandle handle, Blam::Events::EventType event_type, short a4, Blam::ePlayerStatType player_stat_type, char a6)
+	{
+		static const auto data_array_sub_55B710 = reinterpret_cast<unsigned long(__cdecl *)(Blam::DataArrayBase *, Blam::DatumHandle)>(0x55B710);
+		static const auto game_get_current_engine = reinterpret_cast<int(*)()>(0x5CE150);
+		static const auto game_is_team_game = reinterpret_cast<bool(__cdecl *)()>(0x5565E0);
+		static const auto scoreboard_sub_6E5A90 = reinterpret_cast<void(__thiscall *)(char *, unsigned int, Blam::Events::EventType, short, int)>(0x6E5A90);
+
+		if (!scoreboard)
+			return;
+
+		auto *scoreboard_unknown = &scoreboard[2 * (event_type + 26 * handle.Index)];
+		auto v7 = a4 + *((short *)scoreboard_unknown + 2);
+
+		short v8;
+
+		if (v7 <= -30000 || v7 < 30000)
+		{
+			v8 = -30000;
+			if (v7 > -30000)
+				v8 = a4 + *((short *)scoreboard_unknown + 2);
+		}
+		else
+		{
+			v8 = 30000;
+		}
+
+		*((short *)scoreboard_unknown + 2) = v8;
+
+		auto v9 = 0;
+
+		if (handle.Index >= 0x20u)
+			v9 = 1 << *((char *)&handle.Handle);
+
+		auto v10 = v9 ^ (1 << *((char *)&handle.Handle));
+
+		if (handle.Index >= 0x40u)
+			v9 ^= 1 << *((char *)&handle.Handle);
+
+		auto v13 = v10;
+		auto v14 = v9;
+
+		((char(__cdecl *)(void *))0x4B2A70)(&v13);
+
+		if (player_stat_type != -1)
+			((void(__cdecl *)(int, int, int, int))0x5704A0)(handle.Index, -1, player_stat_type, *((signed __int16 *)scoreboard_unknown + 2));
+
+		if (a6)
+		{
+			if (game_get_current_engine() && game_is_team_game())
+			{
+				auto player_datum = (Blam::Players::PlayerDatum*)data_array_sub_55B710(ElDorito::Instance().GetMainTls(0x40).Read<Blam::DataArray<Blam::Players::PlayerDatum>*>(), handle);
+
+				if (player_datum)
+				{
+					auto team_index = player_datum->Properties.TeamIndex;
+
+					if (team_index >= 0 && team_index < 8)
+						scoreboard_sub_6E5A90(scoreboard, team_index, event_type, a4, player_stat_type);
+				}
+			}
+		}
 	}
 }
 
@@ -273,9 +374,20 @@ namespace Patches::Core
 		Hook(0x351FC9, sub_750C60_hook, HookFlags::IsCall).Apply();
 		Hook(0x2947FE, sub_6948C0_hook, HookFlags::IsCall).Apply();
 		Hook(0x15B6D0, data_array_get_hook).Apply();
-		Hook(0x25DB10, game_state_read).Apply();
+		
+		// game state reading/writing
+		Hook(0x25DB10, game_state_read_file_from_storage).Apply();
+		Hook(0x1265E0, read_campaign_save_file_blocking).Apply();
+		Hook(0x1266E0, game_state_read_header_from_persistent_storage_blocking).Apply();
+		Hook(0x1270F0, game_state_write_file_to_storage_blocking).Apply();
 		Hook(0x25DBE0, game_state_write_file_to_storage).Apply();
 		Hook(0x109020, hash_verification).Apply();
+		Hook(0x1254A0, sub_5254A0).Apply();
+
+		// campaign metagame hacks
+		Hook(0x2E59A0, campaign_scoring_sub_6E59A0).Apply();
+		Hook(0x1332E9, campaign_metagame_update, HookFlags::IsCall).Apply();
+		Hook(0x1338E7, campaign_metagame_update, HookFlags::IsCall).Apply();
 
 #ifndef _DEBUG
 		// Dirty disk error at 0x0xA9F6D0 is disabled in this build
