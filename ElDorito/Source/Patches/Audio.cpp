@@ -41,9 +41,22 @@ namespace Patches::Audio
 		//Hook(0x4EC0, FmodSystemInitHook2).Apply();
 		Hook(0x25076B, FmodChannelCountHook, HookFlags::IsCall).Apply();
 
+		*reinterpret_cast<uint32_t*>(0x4035E1) = MAX_CHANNELS;
+
 		// increase fmod software channel count
 		// http://www.fmod.org/docs/content/generated/FMOD_System_SetSoftwareChannels.html
-		*reinterpret_cast<uint32_t*>(0x404DF8 + 1) = MAX_CHANNELS;
+		*reinterpret_cast<uint32_t*>(0x404DF9) = MAX_CHANNELS;
+
+		*reinterpret_cast<uint32_t*>(0x517BE6) = 0;
+		*reinterpret_cast<uint32_t*>(0x517AFC) = 0x3800;
+		*reinterpret_cast<uint32_t*>(0x517B4C) = 0x3800;
+		*reinterpret_cast<uint32_t*>(0x18BE324) = 0x700070;
+		*reinterpret_cast<uint32_t*>(0x18BE328) = 0xC0012;
+		*reinterpret_cast<uint32_t*>(0x667728) = MAX_CHANNELS;
+		*reinterpret_cast<uint32_t*>(0x667736) = MAX_CHANNELS;
+		*reinterpret_cast<uint32_t*>(0x667744) = MAX_CHANNELS;
+		*reinterpret_cast<uint32_t*>(0x667752) = MAX_CHANNELS;
+		*reinterpret_cast<uint32_t*>(0x667760) = MAX_CHANNELS;
 
 		Pointer(0x01750794).Write(uint32_t(&FMOD_System_Init_Hook));
 		Pointer(0x0176CA18).Write(uint32_t(&snd_SYSTEM_FMOD_Init_Hook));
