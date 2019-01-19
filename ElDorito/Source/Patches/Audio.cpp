@@ -4,7 +4,7 @@
 
 namespace
 {
-	const auto MAX_CHANNELS = 1024;
+	const auto MAX_CHANNELS = 256;
 
 	int FmodChannelCountHook();
 	int __stdcall FMOD_System_Init_Hook(void* system, int maxchannels, int flags, int extradriverdata, int a5);
