@@ -516,7 +516,7 @@ namespace
 	bool VariableControllerStickLayoutUpdated(const std::vector<std::string>& Arguments, std::string& returnInfo)
 	{
 		auto layout = (uint16_t)Modules::ModuleInput::Instance().VarControllerStickLayout->ValueInt;
-		bindings.JoystickLayout = layout;
+		bindings.JoystickLayout = (uint16_t)layout;
 		Modules::ModuleInput::UpdateBindings();
 		return true;
 	}

@@ -21,6 +21,9 @@ namespace FMOD::System {
 	// sub_01387A7F
 	// This is some kind of wrapper for FMOD CreateSound.
 	FMOD_RESULT CreateSound(void* system1, void* system2, char* nameOrData, FMOD_MODE mode, FMOD_CREATESOUNDEXINFO* exInfo, void* sound);
+
+	// sub_01387AD5
+	FMOD_RESULT CreateStream(void* system1, void* system2, char* nameOrData, FMOD_MODE mode, FMOD_CREATESOUNDEXINFO* exInfo, void* sound);
 }
 
 namespace FMOD::Sound {

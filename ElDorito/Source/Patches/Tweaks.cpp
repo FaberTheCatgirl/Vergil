@@ -8,7 +8,7 @@
 #include "../Blam/Tags/Models/Model.hpp"
 #include "../Blam/Tags/Objects/Biped.hpp"
 #include "../Blam/Tags/Objects/Projectile.hpp"
-#include "../Blam/Tags/Sounds/SoundClasses.hpp"
+#include "../Blam/Tags/Sounds/SoundClasses/SoundClasses.hpp"
 #include "../Blam/Tags/Scenario/Scenario.hpp"
 #include "../Blam/Tags/UI/ChudGlobalsDefinition.hpp"
 #include "../Blam/Tags/UI/ChudDefinition.hpp"
@@ -54,33 +54,11 @@ namespace Patches::Tweaks
 		}
 
 		EnableHitmarkers(Modules::ModuleServer::Instance().VarHitMarkersEnabledClient->ValueInt != 0);
-
-		UpdateUnitHUD();
 	}
 
 	void EnableHitmarkers(bool enabled)
 	{
 		EnableHitmarkersInternal(enabled);
-	}
-
-	void UpdateUnitHUD()
-	{
-		using namespace Blam::Tags;
-
-		using Blam::Tags::Objects::Biped;
-
-		auto masterChief = TagInstance::Find('bipd', "objects\\characters\\masterchief\\mp_masterchief\\mp_masterchief");
-		if (masterChief.Index == 0xFFFF)
-			return;
-
-		auto masterChiefDefinition = masterChief.GetDefinition<Biped>();
-		if (masterChiefDefinition->Unit.HudInterfaces.Count < 3)
-			return;
-
-		if (Modules::ModuleTweaks::ModuleTweaks::Instance().VarEliteHUD->ValueInt)
-			masterChiefDefinition->Unit.HudInterfaces[0].UnitHudInterface = masterChiefDefinition->Unit.HudInterfaces[2].UnitHudInterface;
-		else
-			masterChiefDefinition->Unit.HudInterfaces[0].UnitHudInterface = masterChiefDefinition->Unit.HudInterfaces[1].UnitHudInterface;
 	}
 }
 
@@ -162,26 +140,26 @@ namespace
 			return;
 		}
 
-		for (int i = 0; i < snclDefinition->Unknown2.Count; i++)
+		for (int i = 0; i < snclDefinition->ClassProperties.Count; i++)
 		{
-			snclDefinition->Unknown2[i].CacheMissMode = SoundClasses::CacheMissMode::Discard;
-			snclDefinition->Unknown2[i].Priority = 0;
+			snclDefinition->ClassProperties[i].CacheMissMode = Blam::Tags::Sounds::CacheMissMode::Discard;
+			snclDefinition->ClassProperties[i].Priority = 0;
 
 			switch (i)
 			{
 			case 4:
-				snclDefinition->Unknown2[i].MaxSoundsPerTag = 32;
-				snclDefinition->Unknown2[i].MaxSoundsPerObject = 4;
+				snclDefinition->ClassProperties[i].MaxSoundsPerTag = 32;
+				snclDefinition->ClassProperties[i].MaxSoundsPerObject = 4;
 				break;
 
 			case 23:
-				snclDefinition->Unknown2[i].MaxSoundsPerTag = 16;
-				snclDefinition->Unknown2[i].MaxSoundsPerObject = 8;
+				snclDefinition->ClassProperties[i].MaxSoundsPerTag = 16;
+				snclDefinition->ClassProperties[i].MaxSoundsPerObject = 8;
 				break;
 
 			default:
-				snclDefinition->Unknown2[i].MaxSoundsPerTag = 1;
-				snclDefinition->Unknown2[i].MaxSoundsPerObject = 1;
+				snclDefinition->ClassProperties[i].MaxSoundsPerTag = 1;
+				snclDefinition->ClassProperties[i].MaxSoundsPerObject = 1;
 				break;
 			}
 		}

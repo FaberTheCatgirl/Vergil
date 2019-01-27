@@ -302,15 +302,24 @@ namespace Blam
 		uint8_t byte248[0x80];
 		uint8_t byte2AC;
 		uint8_t byte2AD[7];
-		uint8_t byte2B4[92];
-		char GameVariant[0x264];
-		char MapVariant[0xE090];
+		uint8_t byte2B4[0x5C];
+		char GameVariant[0x264]; // Blam::GameVariant
+		char MapVariant[0xE090]; // Blam::MapVariant
+
 		uint8_t MachineArray[0x128];
-		uint8_t InitialParticipantsArray[0x16400];
+		struct
+		{
+			uint8_t IsValid;
+			uint8_t byte1;
+			uint16_t word2;
+			uint32_t dword4;
+			uint8_t unknown8[0x18];
+			char PlayerProperties[0x1620]; // Blam::Players::PlayerProperties
+		} InitialParticipantsArray[16];
 	};
 	static_assert(sizeof(LevelData) == 0x24B48);
 
-	enum NetworkMode : int16_t
+	enum NetworkMode : int32_t
 	{
 		eNetworkModeOpenToPublic = 0,
 		eNetworkModeOpenToFriends,
@@ -366,6 +375,170 @@ namespace Blam
 		eLifeCycleStatePostMatch,
 
 		eLifeCycleStateCount
+	};
+
+	enum ePlayerStatType : int32_t
+	{
+		ePlayerStatTypeGamesPlayed = 0,
+		ePlayerStatTypeGamesCompleted,
+		ePlayerStatTypeGamesWon,
+		ePlayerStatTypeGamesTied,
+		ePlayerStatTypeRoundsCompleted,
+		ePlayerStatTypeRoundsWon,
+		ePlayerStatTypeInRoundScore,
+		ePlayerStatTypeInGameTotalScore,
+		ePlayerStatTypeBetrayals,
+		ePlayerStatTypeSuicides,
+		ePlayerStatTypeMostKillsInARow,
+		ePlayerStatTypeSecondsAlive,
+		ePlayerStatTypeCtfFlagScores,
+		ePlayerStatTypeCtfFlagGrabs,
+		ePlayerStatTypeCtfFlagCarrierKills,
+		ePlayerStatTypeCtfFlagReturns,
+		ePlayerStatTypeAssaultBombArms,
+		ePlayerStatTypeAssaultBombGrabs,
+		ePlayerStatTypeAssaultBombDisarms,
+		ePlayerStatTypeAssaultBombDetonations,
+		ePlayerStatTypeOddballTimeWithBall,
+		ePlayerStatTypeOddballUnused,
+		ePlayerStatTypeOddballKillsAsCarrier,
+		ePlayerStatTypeOddballBallCarrierKills,
+		ePlayerStatTypeKingTimeOnHill,
+		ePlayerStatTypeKingTotalControlTime,
+		ePlayerStatTypeKingUnused,
+		ePlayerStatTypeVipUnused,
+		ePlayerStatTypeVipTakedowns,
+		ePlayerStatTypeVipKillsAsVip,
+		ePlayerStatTypeVipGuardTime,
+		ePlayerStatTypeVipTimeAsVip,
+		ePlayerStatTypeVipLivesAsVip,
+		ePlayerStatTypeJuggernautKills,
+		ePlayerStatTypeJuggernautKillsAsJuggernaut,
+		ePlayerStatTypeJuggernautTotalControlTime,
+		ePlayerStatTypeTotalWp,
+		ePlayerStatTypeJuggernautUnused,
+		ePlayerStatTypeTerritoriesOwned,
+		ePlayerStatTypeTerritoriesCaptures,
+		ePlayerStatTypeTerritoriesOusts,
+		ePlayerStatTypeTerritoriesTimeInTerritory,
+		ePlayerStatTypeInfectionZombieKills,
+		ePlayerStatTypeInfectionInfections,
+		ePlayerStatTypeInfectionTimeAsHuman,
+		ePlayerStatTypeDamageKills,
+		ePlayerStatTypeDamageDeaths,
+		ePlayerStatTypeDamageBetrayals,
+		ePlayerStatTypeDamageSuicides,
+		ePlayerStatTypeDamageHeadshots,
+		ePlayerStatTypePlayerVsPlayerKills,
+		ePlayerStatTypePlayerVsPlayerDeaths,
+		ePlayerStatTypeMedalExtermination,
+		ePlayerStatTypeMedalPerfection,
+		ePlayerStatTypeCount
+	};
+
+	enum eUnitAction : int32_t
+	{
+		eUnitActionDeathPing = 0,
+		eUnitActionCustomAnimation,
+		eUnitActionStopCustomAnimation,
+		eUnitActionSyncContainer,
+		eUnitActionAssassinate,
+		eUnitActionGetInfected,
+		eUnitActionHostileMorph,
+		eUnitActionResurrect,
+		eUnitActionHardPing,
+		eUnitActionPing,
+		eUnitActionMorph,
+		eUnitActionMorphArrival,
+		eUnitActionInfect,
+		eUnitActionPosture,
+		eUnitActionPostureExit,
+		eUnitActionVehicleExit,
+		eUnitActionVehicleExitAndDetach,
+		eUnitActionVehicleEjection,
+		eUnitActionVehicleBoard,
+		eUnitActionVehicleEnter,
+		eUnitActionOpen,
+		eUnitActionClose,
+		eUnitActionVehicleExitImmediate,
+		eUnitActionVehicleFlip,
+		eUnitActionClimbAttach,
+		eUnitActionClimbDetach,
+		eUnitActionWallLean,
+		eUnitActionWallLeanOpen,
+		eUnitActionToken,
+		eUnitActionTakeoff,
+		eUnitActionPerch,
+		eUnitActionPerchJump,
+		eUnitActionLand,
+		eUnitActionJump,
+		eUnitActionLeapAnticipation,
+		eUnitActionLeap,
+		eUnitActionLeapRecovery,
+		eUnitActionEmitAi,
+		eUnitActionBerserk,
+		eUnitActionFlurry,
+		eUnitActionDeployTurret,
+		eUnitActionSmash,
+		eUnitActionVault,
+		eUnitActionHoist,
+		eUnitActionAiImpulse,
+		eUnitActionMeleeAi,
+		eUnitActionWeaponPickup,
+		eUnitActionWeaponTrade,
+		eUnitActionPrimaryWeaponDrop,
+		eUnitActionSecondaryWeaponDrop,
+		eUnitActionSurge,
+		eUnitActionPhase,
+		eUnitActionStow,
+		eUnitActionDraw,
+		eUnitActionInfectionSpew,
+		eUnitActionKamikaze,
+		eUnitActionPrimaryWeaponSwitch,
+		eUnitActionSecondaryWeaponSwitch,
+		eUnitActionGrenade,
+		eUnitActionEquipment,
+		eUnitActionEquipmentAnimation,
+		eUnitActionEquipmentPickup,
+		eUnitActionEquipmentDrop,
+		eUnitActionMeleePlayer,
+		eUnitActionPrimaryWeaponPrimaryReload,
+		eUnitActionPrimaryWeaponSecondaryReload,
+		eUnitActionSecondaryWeaponPrimaryReload,
+		eUnitActionSecondaryWeaponSecondaryReload,
+		eUnitActionSoftPing,
+		eUnitActionPrimaryWeaponPrimaryRecoil,
+		eUnitActionPrimaryWeaponSecondaryRecoil,
+		eUnitActionPrimaryWeaponPrimaryChamber,
+		eUnitActionPrimaryWeaponSecondaryChamber,
+		eUnitActionPrimaryWeaponPrimaryCharged,
+		eUnitActionPrimaryWeaponSecondaryCharged,
+		eUnitActionSecondaryWeaponPrimaryRecoil,
+		eUnitActionSecondaryWeaponSecondaryRecoil,
+		eUnitActionSecondaryWeaponPrimaryChamber,
+		eUnitActionSecondaryWeaponSecondaryChamber,
+		eUnitActionSecondaryWeaponPrimaryCharged,
+		eUnitActionSecondaryWeaponSecondaryCharged,
+		eUnitActionPrimaryWeaponOverheatEnter,
+		eUnitActionPrimaryWeaponOverheatLoop,
+		eUnitActionPrimaryWeaponOverheatExit,
+		eUnitActionSecondaryWeaponOverheatEnter,
+		eUnitActionSecondaryWeaponOverheatLoop,
+		eUnitActionSecondaryWeaponOverheatExit,
+		eUnitActionCount
+	};
+
+	struct UnitActionInfo
+	{
+		const char *Name;
+		uint16_t Unknown4;
+		uint16_t Unknown6;
+	};
+
+	struct UnitAction
+	{
+		Blam::eUnitAction Index;
+		uint8_t Unknown4[0x44];
 	};
 
 	typedef struct _BLAM_CONTENT_HEADER
@@ -441,7 +614,7 @@ namespace Blam
 	// todo: safely make this into a C++ struct without any padding/packing etc
 	typedef struct _BLAM_GAME_VARIANT
 	{
-		/* 0xB2C */ uint32_t GameType; // see Blam::GameType
+		/* 0xB2C */ GameType GameType; // see Blam::GameType
 		float Unknown1; // gravity maybe?
 		uint8_t Unknown2[0x2C];
 		wchar_t Name[0x10];
@@ -515,8 +688,9 @@ namespace Blam
 		uint8_t Unknown63; // 0
 		uint8_t Unknown64; // default 0xFE
 		uint8_t Unknown65; // default 0xFE
+		uint8_t Unknown66[0xFC];
 		// theres a lot more bytes too
-	} BLAM_GAME_VARIANT, *PBLAM_GAME_VARIANT;
+	} GameVariant, BLAM_GAME_VARIANT, *PBLAM_GAME_VARIANT;
 
 
 	struct MapVariant

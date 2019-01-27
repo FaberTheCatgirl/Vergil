@@ -24,13 +24,15 @@ function textWithNewLines(text) {
 }
 
 function aWrap(link) {
-    var parser = document.createElement('a');
-    parser.href = link;
-    if(safeDomains.indexOf(parser.hostname) > -1){
-        return '<a href="' + link + '" target="_blank">' + link + '<\/a>';
-    } else {
+    link = unescapeHtml(link);
+   if(/\b[^-A-Za-z0-9+&@#/%?=~_|!:,.;\(\)]+/ig.test(link))
         return '';
-    }
+    var e = document.createElement('a');
+    e.setAttribute('href', link);
+    e.setAttribute('target', '_blank');
+    e.setAttribute('style', 'color:dodgerblue');
+    e.textContent = link;
+    return e.outerHTML;
 };
 
 function updateProgress(progress) {
@@ -71,8 +73,7 @@ function loadMap(mapName) {
     dew.command("Server.MessageClient", { internal: true }).then(function (message) {
         if(message.length > 0){
             message = message.substr(0, 512);
-            $(".serverMessage").show();
-            $(".serverMessage").html(textWithNewLines(message).replace(/\bhttp[^ ]+/ig, aWrap));
+            $(".serverMessage").html(textWithNewLines(escapeHtml(message)).replace(/\bhttps?:\/\/[^ ]+/ig, aWrap)).show();
         } else {
             $(".serverMessage").hide();
         }
@@ -89,6 +90,18 @@ function resetLoader() {
     $("#gametype, #gamerounds, #gamescore, #timelimit, .serverName, .serverMessage, .title, .desc").text("");
     $(".mapLoader").css({backgroundImage: ""});
     $("#gametypeicon").attr("src", "");
+}
+
+function escapeHtml(str) {
+    var div = document.createElement('div');
+    div.appendChild(document.createTextNode(str));
+    return div.innerHTML;
+}
+
+function unescapeHtml(str) {
+    var e = document.createElement('div');
+    e.innerHTML = str;
+    return e.childNodes.str === 0 ? "" : e.childNodes[0].nodeValue;
 }
 
 dew.on("show", function (event) {

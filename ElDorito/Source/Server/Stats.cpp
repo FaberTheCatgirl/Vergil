@@ -184,7 +184,7 @@ namespace Server::Stats
 	DWORD WINAPI CommandServerAnnounceStats_Thread(LPVOID lpParam)
 	{
 		auto* session = Blam::Network::GetActiveSession();
-		if (Blam::Network::GetLobbyType() != 2 || Blam::Network::GetNetworkMode() != 3)
+		if (Blam::Network::GetLobbyType() != Blam::eLobbyTypeMultiplayer || Blam::Network::GetNetworkMode() != Blam::eNetworkModeSystemLink)
 			return false;
 
 		std::vector<std::string> statsEndpoints;

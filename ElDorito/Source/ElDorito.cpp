@@ -10,6 +10,9 @@
 #include "Server/BanList.hpp"
 #include "Server/Rcon.hpp"
 #include "Server/Signaling.hpp"
+#include "Server/BanListSync.hpp"
+#include "Server/ReportHandler.hpp"
+#include "Server/PostgameController.hpp"
 #include "Patches/Core.hpp"
 #include "Console.hpp"
 #include "Web/Ui/WebScoreboard.hpp"
@@ -30,9 +33,7 @@
 #include "Patches/Weapon.hpp"
 #include "Patches/Memory.hpp"
 #include "Patches/Camera.hpp"
-#include "Discord/DiscordRPC.h"
 #include "ThirdParty/SOP.hpp"
-
 #include "Blam/Cache/StringIdCache.hpp"
 
 #include <Windows.h>
@@ -264,6 +265,9 @@ void ElDorito::Initialize()
 	Server::VariableSynchronization::Initialize();
 	Server::Rcon::Initialize();
 	Server::Signaling::Initialize();
+	Server::BanListSync::Init();
+	Server::ReportHandler::Init();
+	Server::PostgameController::Init();
 
 	if (!Blam::Cache::StringIDCache::Instance.Load(mapsFolder + "string_ids.dat"))
 	{
@@ -286,8 +290,11 @@ void ElDorito::Tick()
 
 	Server::Stats::Tick();
 	Server::Voting::Tick();
+	Server::BanListSync::Tick();
+	Server::ReportHandler::Tick();
+	Server::PostgameController::Tick();
+
 	ChatCommands::Tick();
-	Discord::DiscordRPC::Instance().Update();
 
 	// TODO: refactor this elsewhere
 	Modules::ModuleCamera::Instance().UpdatePosition();

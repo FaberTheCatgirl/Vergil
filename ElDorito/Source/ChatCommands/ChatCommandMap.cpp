@@ -8,6 +8,7 @@
 #include "../Utils/Logger.hpp"
 #include "../CommandMap.hpp"
 #include "../Patches/Network.hpp"
+#include "../Server/ReportHandler.hpp"
 
 
 
@@ -70,7 +71,28 @@ namespace ChatCommands
 		Commands.push_back((AbstractChatCommand*) &shuffleTeamsCommand);
 
 	}
+	int FindPlayerByName(const std::string &name, bool findPeer = false)
+	{
+		auto* session = Blam::Network::GetActiveSession();
+		if (!session || !session->IsEstablished() || !session->IsHost())
+			return -1;
+		auto membership = &session->MembershipInfo;
+		for (auto peerIdx = membership->FindFirstPeer(); peerIdx >= 0; peerIdx = membership->FindNextPeer(peerIdx))
+		{
+			auto playerIdx = session->MembershipInfo.GetPeerPlayer(peerIdx);
+			if (playerIdx == -1)
+				continue;
+			auto* player = &membership->PlayerSessions[playerIdx];
+			if (Utils::String::ThinString(player->Properties.DisplayName) == name) {
+				if (findPeer)
+					return peerIdx;
+				else
+					return playerIdx;
+			}
 
+		}
+		return -1;
+	}
 	bool addToVoteTimes(uint64_t sender)
 	{
 		time_t curTime;
@@ -130,6 +152,12 @@ namespace ChatCommands
 
 		if (line.empty())
 			return true;
+
+		int numArgs = 0;
+		auto args = Modules::CommandLineToArgvA((PCHAR)line.c_str(), &numArgs);
+		std::string cmd = args[0];
+		std::transform(cmd.begin(), cmd.end(), cmd.begin(), ::tolower);
+
 		//TODO move the logic for !help and !listPlayers into a new non-voting chat command type
 		std::string lowercaseline = Utils::String::ToLower(line);
 		if (lowercaseline == "help")
@@ -156,11 +184,20 @@ namespace ChatCommands
 			}
 			return true;
 		}
-
-		//If the voting commands are not active at the moment, don't do anything.
+		else if (numArgs > 1 && !stricmp(args[0], "report"))
+		{
+			auto numArgs = 0;
+			auto args = Modules::CommandLineToArgvA((PCHAR)line.c_str(), &numArgs);
+			if (numArgs < 1 || strnlen(args[1], 256) <= 128)
+			{
+				Server::Chat::SendServerMessage("Invalid or missing token", peer);
+				return true;
+			}
+			Server::Chat::SendServerMessage("Player report received", peer);
+			Server::ReportHandler::Handle(std::string{ args[1] });
+			return true;
+		}
 		
-
-
 		for (auto elem : Commands)
 		{
 			if (elem->isCurrentlyVoting())
@@ -169,11 +206,6 @@ namespace ChatCommands
 				return true;
 			}
 		}
-
-		int numArgs = 0;
-		auto args = Modules::CommandLineToArgvA((PCHAR)line.c_str(), &numArgs);
-		std::string cmd = args[0];
-		std::transform(cmd.begin(), cmd.end(), cmd.begin(), ::tolower);
 
 		//If we are not already voting, check if the command is initiating one
 		for (auto elem : Commands)

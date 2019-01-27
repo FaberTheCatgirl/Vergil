@@ -1,12 +1,15 @@
 #pragma once
+#include "FMODEnum.hpp"
 
 namespace FMOD {
 
 	// Max number of channels (real and virtual). Each channel represents a sound.
 	const int FMOD_MAX_CHANNELS = 1024;
 
-	// TODO: Add the commented enums to FMODEnum.cpp
+	//Get the FMOD::System class pointer
+	void* GetSystemPointer();
 
+	// TODO: Add the commented enums to FMODEnum.cpp
 	struct FMOD_CREATESOUNDEXINFO{
 		int cbsize;
 		unsigned int length;
@@ -36,15 +39,7 @@ namespace FMOD {
 		void *fileuserdata;
 		int filebuffersize;
 		FMOD_CHANNELORDER channelorder;
-		FMOD_CHANNELMASK channelmask;
-		void* *initialsoundgroup;		//FMOD_SOUNDGROUP
-		unsigned int initialseekposition;
-		FMOD_TIMEUNIT initialseekpostype;
-		int ignoresetfilesystem;
-		unsigned int audioqueuepolicy;
-		unsigned int minmidigranularity;
-		int nonblockthreadid;
-		void *fsbguid;					//FMOD_GUID
 	};
+	static_assert(sizeof(FMOD_CREATESOUNDEXINFO) == 0x70, "Invalid FMOD_CREATESOUNDEXINFO size");
 
 }

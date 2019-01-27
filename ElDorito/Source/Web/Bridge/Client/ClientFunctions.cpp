@@ -2,11 +2,9 @@
 #include "ClientFunctions.hpp"
 #include "../../Ui/ScreenLayer.hpp"
 #include "../../Ui/WebVirtualKeyboard.hpp"
-#include "../../Ui/WebForge.hpp"
 #include "../../Ui/WebScoreboard.hpp"
 #include "../../../CommandMap.hpp"
 #include "../../../Blam/BlamNetwork.hpp"
-#include "../../../Discord/DiscordRPC.h"
 #include "../../../Patches/Network.hpp"
 #include "../../../Patches/Input.hpp"
 #include "../../../Patches/Ui.hpp"
@@ -580,7 +578,10 @@ namespace Anvil::Client::Rendering::Bridge::ClientFunctions
 
 		Modules::ModuleVoIP::Instance().voiceDetected = value->value.GetBool();
 
-		Patches::Ui::ToggleSpeakingPlayerName(Modules::ModulePlayer::Instance().VarPlayerName->ValueString , value->value.GetBool());
+		if (Modules::ModuleVoIP::Instance().VarSpeakingPlayerOnHUD->ValueInt == 1)
+		{
+			Patches::Ui::ToggleSpeakingPlayerName(Modules::ModulePlayer::Instance().VarPlayerName->ValueString , value->value.GetBool());
+		}
 
 		return QueryError_Ok;
 	}
@@ -614,7 +615,13 @@ namespace Anvil::Client::Rendering::Bridge::ClientFunctions
 			return QueryError_BadQuery;
 		}
 
-		Patches::Ui::ToggleSpeakingPlayerName(name->value.GetString(), value->value.GetBool());
+		if (Modules::ModuleVoIP::Instance().VarSpeakingPlayerOnHUD->ValueInt == 1)
+			Patches::Ui::ToggleSpeakingPlayerName(name->value.GetString(), value->value.GetBool());
+		else
+		{
+			if(!value->value.GetBool()) //If we only want to render web, allow us to remove names still
+				Patches::Ui::ToggleSpeakingPlayerName(name->value.GetString(), value->value.GetBool());
+		}
 
 		return QueryError_Ok;
 	}
@@ -635,34 +642,9 @@ namespace Anvil::Client::Rendering::Bridge::ClientFunctions
 		return QueryError_Ok;
 	}
 
-	QueryError OnForgeAction(const rapidjson::Value &p_Args, std::string *p_Result)
-	{
-		Web::Ui::WebForge::ProcessAction(p_Args, p_Result);
-		return QueryError_Ok;
-	}
-	
 	QueryError OnShowLan(const rapidjson::Value &p_Args, std::string *p_Result)
 	{
 		Patches::Ui::ShowLanBrowser();
-		return QueryError_Ok;
-	}
-
-	QueryError OnDiscordReply(const rapidjson::Value &p_Args, std::string *p_Result)
-	{
-		auto userId = p_Args.FindMember("userId");
-		auto replyValue = p_Args.FindMember("reply");
-		if (userId == p_Args.MemberEnd() || !userId->value.IsString())
-		{
-			*p_Result = "Bad query : A \"userId\" argument is required and must be a string";
-			return QueryError_BadQuery;
-		}
-		else if (replyValue == p_Args.MemberEnd() || !replyValue->value.IsNumber())
-		{
-			*p_Result = "Bad query : A \"reply\" argument is required and must be a number";
-			return QueryError_BadQuery;
-		}
-
-		Discord::DiscordRPC::Instance().ReplyToJoinRequest(userId->value.GetString(), replyValue->value.GetInt());
 		return QueryError_Ok;
 	}
 }

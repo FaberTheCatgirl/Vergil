@@ -165,12 +165,12 @@
             screen.state = ScreenState.VISIBLE;
             screen.selector.show();
             notifyScreen(screen, "show", screen.data || {});
+            screen.data = {};
         } else if (screen.state === ScreenState.WAITING || screen.state === ScreenState.VISIBLE) {
             screen.state = ScreenState.HIDDEN;
             screen.selector.hide();
             notifyScreen(screen, "hide", {});
         }
-        screen.data = {};
         updateOverlay();
     }
 
@@ -363,6 +363,8 @@
                 // Requested to change capture state
                 if (screen && "capture" in data) {
                     setCaptureState(screen, !!data.capture);
+                    var message = (typeof eventData.message === "string") ? eventData.message : (screen ? screen.id : null);
+                    ui.notify('captureInput', Object.assign({}, data, { screen: screen.id }), true, false);
                 }
                 break;
 			case "capturePointer":

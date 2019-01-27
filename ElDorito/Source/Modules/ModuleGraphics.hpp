@@ -24,6 +24,8 @@ namespace Modules
 
 		Command* VarUIScaling;
 
+		Command* VarCinematicDebugMode;
+
 		ModuleGraphics();
 	};
 }

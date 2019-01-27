@@ -9,6 +9,7 @@ namespace Modules
 		Command* VarMemcpySrc;
 		Command* VarMemcpyDst;
 		Command* VarMemsetDst;
+		Command *VarPrintHsEvaluations;
 
 		ModuleDebug();
 	};

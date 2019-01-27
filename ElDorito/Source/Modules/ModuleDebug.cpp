@@ -82,19 +82,30 @@ namespace
 
 		return true;
 	}
+
+	bool PrintHsEvaluationsUpdate(const std::vector<std::string>& Arguments, std::string& returnInfo)
+	{
+		auto value = Modules::ModuleDebug::Instance().VarPrintHsEvaluations->ValueInt;
+
+		std::stringstream ss;
+		ss << "HS evaluation printing " << (value ? "enabled" : "disabled");
+		returnInfo = ss.str();
+
+		return true;
+	}
 }
 
 namespace Modules
 {
 	ModuleDebug::ModuleDebug() : ModuleBase("Debug")
 	{
-#ifdef _DEBUG
+//#ifdef _DEBUG
 		VarMemcpySrc = AddVariableInt("MemcpySrc", "memcpy_src", "Allows breakpointing memcpy based on specified source address filter.", eCommandFlagsHidden, 0, MemcpySrcFilterUpdate);
 		VarMemcpyDst = AddVariableInt("MemcpyDst", "memcpy_dst", "Allows breakpointing memcpy based on specified destination address filter.", eCommandFlagsHidden, 0, MemcpyDstFilterUpdate);
 		VarMemsetDst = AddVariableInt("MemsetDst", "memset_dst", "Allows breakpointing memset based on specified destination address filter.", eCommandFlagsHidden, 0, MemsetDstFilterUpdate);
-
+		VarPrintHsEvaluations = AddVariableInt("PrintHsEvaluations", "print_hs_eval", "Sets whether hs_macro_function_evaluate should print debug info to the console.", eCommandFlagsNone, 0, PrintHsEvaluationsUpdate);
 		Hook(0x7EF260, Debug_MemcpyHook).Apply();
 		Hook(0x7EF2E0, Debug_MemsetHook).Apply();
-#endif
+//#endif
 	}
 }

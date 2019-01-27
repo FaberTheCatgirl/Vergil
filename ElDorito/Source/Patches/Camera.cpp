@@ -24,7 +24,6 @@ namespace Patches::Camera
 	const char *IncreaseLOD()
 	{
 		std::string result;
-
 		// LOD patches compliments of zedd
 		// Patch for lod dword_176DB40 (2.0) -> dword_176DB50 (10.0)
 		// Patch to apply cine lod to everything
@@ -33,7 +32,7 @@ namespace Patches::Camera
 			memset(Pointer(0xA65EBB), 0x50, 1);
 			memset(Pointer(0xA1962C), 0x90, 2);
 			LodIncreased = true;
-			result = "Lod increased: true";
+			result = "Lod Unlocked: True";
 		}
 		else
 		{
@@ -41,7 +40,7 @@ namespace Patches::Camera
 			memset(Pointer(0xA1962C), 0x74, 1);
 			memset(Pointer(0xA1962D), 0x10, 1);
 			LodIncreased = false;
-			result = "Lod increased: false";
+			result = "Lod Unlocked: False";
 		}
 		return result.c_str();
 	}

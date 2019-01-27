@@ -3,6 +3,7 @@
 #include "ElDorito.hpp"
 #include "Blam\Tags\TagInstance.hpp"
 #include "Patches\Core.hpp"
+#include "Patches\CharacterHud.hpp"
 #include "Patches\Audio.hpp"
 #include "Patches\Mouse.hpp"
 #include "Patches\Network.hpp"
@@ -13,7 +14,6 @@
 #include "Patches\ContentItems.hpp"
 #include "Patches\PlayerUid.hpp"
 #include "Patches\Input.hpp"
-#include "Patches\Forge.hpp"
 #include "Patches\CustomPackets.hpp"
 #include "Patches\Logging.hpp"
 #include "Patches\Sprint.hpp"
@@ -36,7 +36,8 @@
 #include "Patches\DamageSystem.hpp"
 #include "Patches\PlayerScale.hpp"
 #include "Game\Armor.hpp"
-#include "Patches\Campaign.hpp"
+#include "Patches\Experimental.hpp"
+#include "Patches\Script.hpp"
 
 #include <fstream>
 
@@ -52,6 +53,7 @@ namespace Patches
 		UnprotectMemory();
 		Hf2pExperimental::ApplyAll();
 		Core::ApplyAll();
+		CharacterHud::ApplyAll();
 		Audio::ApplyAll();
 		Memory::ApplyAll();
 		Mouse::ApplyAll();
@@ -64,7 +66,7 @@ namespace Patches
 		PlayerUid::ApplyAll();
 		PlayerScale::ApplyAll();
 		Input::ApplyAll();
-		Forge::ApplyAll();
+		//Forge::ApplyAll();
 		CustomPackets::ApplyAll();
 		Logging::ApplyAll();
 		Events::ApplyAll();
@@ -79,11 +81,11 @@ namespace Patches
 		Maps::ApplyAll();
 		GameEngineSettings::ApplyAll();
 		DamageSystem::ApplyAll();
-		Campaign::ApplyAll();
-
+		Script::ApplyAll();
 		Network::PlayerPropertiesExtender::Instance().Add(std::make_shared<Game::Armor::ArmorExtension>());
 
 		PlayerRepresentation::ApplyAll();
+		Experimental::ApplyAll();
 
 		//Since these patches are happening before ED gets initalized, we dont know if we are in dedi mode or not.
 		bool isdedicated = false;
@@ -118,7 +120,7 @@ namespace Patches
 	void Tick()
 	{
 		Sprint::Tick();
-		Forge::Tick();
+		//Forge::Tick();
 		PlayerScale::Tick();
 		static bool appliedFirstTickPatches = false;
 		if (appliedFirstTickPatches)

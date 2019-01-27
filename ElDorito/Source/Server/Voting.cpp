@@ -20,9 +20,8 @@ namespace Server::Voting
 	//Callback for when the loading screen back to the main menu finishes. We use this to determine when to start a new vote.
 	void MapLoadedCallback(const char *mapPath)
 	{
-		if(Blam::Network::GetActiveSession()->Parameters.GetSessionMode() == 1 && Blam::Network::GetNetworkMode() == 3){
+		if(Blam::Network::GetActiveSession()->Parameters.GetSessionMode() == 1 && Blam::Network::GetNetworkMode() == Blam::eNetworkModeSystemLink)
 			StartNewVote();
-		}
 	}
 
 	//Reset the state of voting in case people start a game manually. 

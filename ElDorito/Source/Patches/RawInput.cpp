@@ -4,9 +4,9 @@
 #include "../Patch.hpp"
 #include "../Blam/BlamTypes.hpp"
 #include "../Blam/BlamPlayers.hpp"
+#include "../Blam/Sandbox/Sandbox.hpp"
 #include "../Modules/ModuleInput.hpp"
 #include "../Modules/ModuleCamera.hpp"
-#include "../Forge/ForgeUtil.hpp"
 
 namespace
 {
@@ -43,7 +43,7 @@ namespace
 
 			// if we're rotating an object
 			uint32_t heldObjectIndex;
-			if (Forge::GetEditorModeState(playerIndex, &heldObjectIndex, nullptr) && heldObjectIndex != -1 && *(uint8_t*)0x238E6AC > 0)
+			if (Blam::Sandbox::GetEditorModeState(playerIndex, &heldObjectIndex, nullptr) && heldObjectIndex != -1 && *(uint8_t*)0x238E6AC > 0)
 				return true;
 
 			// if we're spectating

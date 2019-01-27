@@ -266,7 +266,7 @@ namespace Blam::Network
 		auto set_server_lobby_type = (bool(__cdecl*)(LobbyType))(0x00A7EE70);
 		return set_server_lobby_type(type);
 	}
-
+	
 	bool SetNetworkMode(NetworkMode mode)
 	{
 		auto Set_Network_Mode = (bool(__cdecl*)(NetworkMode))(0x00A7F950);

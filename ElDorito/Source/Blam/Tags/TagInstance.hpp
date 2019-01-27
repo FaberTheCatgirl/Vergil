@@ -136,5 +136,15 @@ namespace Blam::Tags
 
 			return TagInstance(0xFFFF);
 		}
+
+		inline static const std::string GetTagName(uint32_t index) {
+			for (auto &entry : TagNames)
+			{
+				if (index == entry.first)
+					return entry.second;
+			}
+			return std::string("None");
+
+		}
 	};
 }

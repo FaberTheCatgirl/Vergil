@@ -6,6 +6,10 @@ html {
     background:rgba(0,0,0,0.6);
     overflow: hidden;
 }
+html, body {
+    margin:0;
+    padding:0;
+}
 
 #window{
     position: absolute;
@@ -185,6 +189,10 @@ html {
     background-color: rgba(250, 250, 250, 0.12);
 }
 
+#playerBreakdown .player:hover>td:first-child {
+    text-decoration: underline;
+}
+
 #playerName{
     font-size: 36px;
     font-weight: 500;
@@ -334,3 +342,4 @@ html {
 #killedMost tbody tr td:last-of-type, #killedMostBy tbody tr td:last-of-type, #killedMost thead tr td:last-of-type, #killedMostBy thead tr td:last-of-type{
 	width: 20%;
 }
+

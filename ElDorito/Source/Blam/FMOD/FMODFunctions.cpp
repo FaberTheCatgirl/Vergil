@@ -24,6 +24,11 @@ namespace FMOD::System {
 		return sub_1387A7F(system1, system2, nameOrData, mode, exInfo, sound);
 	}
 
+	FMOD_RESULT CreateStream(void* system1, void* system2, char* nameOrData, FMOD_MODE mode, FMOD_CREATESOUNDEXINFO* exInfo, void* sound) {
+		static auto sub_1387AD5 = (FMOD_RESULT(__thiscall *)(void* system1, void* system2, char* nameOrData, FMOD_MODE mode, FMOD_CREATESOUNDEXINFO* exInfo, void* sound))(0x1387AD5);
+		return sub_1387AD5(system1, system2, nameOrData, mode, exInfo, sound);
+	}
+
 }
 
 namespace FMOD::Sound {

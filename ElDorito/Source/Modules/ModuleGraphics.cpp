@@ -4,8 +4,8 @@
 #include <algorithm>
 #include "../ElDorito.hpp"
 #include "../Blam/BlamTypes.hpp"
-#include "../Patches/Ui.hpp"
 #include "../Patches/Camera.hpp"
+#include "../Patches/Ui.hpp"
 #include "../ThirdParty/rapidjson/stringbuffer.h"
 #include "../ThirdParty/rapidjson/writer.h"
 #include <boost/regex.hpp>
@@ -192,6 +192,19 @@ namespace
 	bool CommandIncreaseLOD(const std::vector<std::string>& Arguments, std::string& returnInfo)
 	{
 		returnInfo = Patches::Camera::IncreaseLOD();
+		return true;
+	}
+
+	bool VariableCinematicDebugModeUpdate(const std::vector<std::string>& Arguments, std::string& returnInfo)
+	{
+		auto enabled = Modules::ModuleGraphics::Instance().VarCinematicDebugMode->ValueInt;
+
+		Pointer cinematicDebugModePtr(0x24B0A3E);
+		cinematicDebugModePtr.Write<bool>(enabled);
+
+		std::stringstream ss;
+		ss << (enabled ? "Enabled" : "Disabled") << " cinematic debug mode";
+		returnInfo = ss.str();
 
 		return true;
 	}
@@ -231,7 +244,11 @@ namespace Modules
 		VarLetterbox->ValueIntMin = 0;
 		VarLetterbox->ValueIntMax = 1;
 
-		AddCommand("IncreaseLOD", "increase_lod", "Increases the maximum lod", eCommandFlagsNone, CommandIncreaseLOD);
+		AddCommand("IncreaseLOD", "increase_lod", "increases the maximum lod", eCommandFlagsNone, CommandIncreaseLOD);
+
+		VarCinematicDebugMode = AddVariableInt("CinematicDebugMode", "cinematic_debug_mode", "The cinematics debug mode.", eCommandFlagsNone, 0, VariableCinematicDebugModeUpdate);
+		VarCinematicDebugMode->ValueIntMin = 0;
+		VarCinematicDebugMode->ValueIntMax = 1;
 
 		VarUIScaling = AddVariableInt("UIScaling", "uiscaling", "Enables proper UI scaling to match your monitor's resolution.", eCommandFlagsArchived, 1, VariableUIScalingUpdate);
 		VarUIScaling->ValueIntMin = 0;

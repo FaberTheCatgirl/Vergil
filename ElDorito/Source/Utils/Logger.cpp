@@ -164,7 +164,13 @@ namespace Utils
 			if (localtime_s(&ourLocalTime, &t) != 0)
 				goto closefile;
 
-			outfile << '[' << std::put_time(&ourLocalTime, "%H:%M:%S") << "] " << LogTypesToString(entry.Type) << " - " << message << '\n';
+			// Get the UTC time
+			auto now = std::chrono::system_clock::now();
+			auto time = std::chrono::system_clock::to_time_t(now);
+			struct tm gmTime;
+			gmtime_s(&gmTime, &time);
+
+			outfile << '[' << std::put_time(&gmTime, "%m/%d/%y %H:%M:%S") << "] " << LogTypesToString(entry.Type) << " - " << message << '\n';
 		}
 
 		closefile:

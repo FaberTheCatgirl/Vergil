@@ -1,5 +1,7 @@
 #include "Core.hpp"
 
+#include "../Blam/Cache/StringIdCache.hpp"
+
 #include "../Blam/Geometry/RenderGeometry.hpp"
 
 #include "../Blam/Math/RealColorARGB.hpp"
@@ -13,6 +15,7 @@
 
 #include "../Blam/Tags/TagInstance.hpp"
 #include "../Blam/Tags/Effects/DecalSystem.hpp"
+#include "../Blam/Tags/Game/Globals.hpp"
 #include "../Blam/Tags/Items/DefinitionWeapon.hpp"
 #include "../Blam/Tags/Scenario/Scenario.hpp"
 
@@ -23,6 +26,7 @@
 #include "../Blam/BlamObjects.hpp"
 #include "../Blam/BlamTypes.hpp"
 
+#include "../Modules/ModuleCampaign.hpp"
 #include "../Modules/ModuleGame.hpp"
 #include "../Modules/ModulePlayer.hpp"
 #include "../Modules/ModuleServer.hpp"
@@ -39,8 +43,11 @@
 #include <codecvt>
 #include <Shlobj.h>
 
+// new headers
 #include <effects\particles.hpp>
-#include <memory\resources.hpp>
+#include <game\game_globals.hpp>
+#include <memory\data.hpp>
+#include <objects\object_types.hpp>
 #include <structures\scenario_structure_bsp.hpp>
 
 namespace
@@ -53,8 +60,8 @@ namespace
 	void GrenadeLoadoutHook();
 	void ShutdownHook();
 	const char *GetMapsFolderHook();
-	bool LoadMapHook(void *data);
-	void LoadLevelHook(uint8_t* data, char n2, int n3, int n4);
+	bool LoadMapHook(Blam::LevelData *data);
+	void LoadLevelHook(uint8_t* mapinfo, char a2, char *mapsPath, char a4);
 	void GameStartHook();
 	void __fastcall EdgeDropHook(void* thisptr, void* unused, int a2, int a3, int a4, float* a5);
 	void __cdecl BipedFeetZoneOffsetHook(uint32_t bipedObjectIndex, Blam::Math::RealVector3D *position, float *height, float *radius);
@@ -64,10 +71,6 @@ namespace
 	void __cdecl HsPrintHook(const char *message);
 	void ContrailFixHook();
 	void HillColorHook();
-
-	void __cdecl sub_6948C0_hook(int a1);
-	bool __cdecl sub_750C60_hook(int structure_bsp_index, int a2, int instanced_geometry_instance_index, int unknown_6th_index, int a5, char a6, char a7, char *a8, int a9);
-	void *__cdecl data_array_get_hook(Blam::DataArrayBase *array, Blam::DatumHandle handle);
 
 	std::vector<Patches::Core::ShutdownCallback> shutdownCallbacks;
 	std::string MapsFolder;
@@ -84,6 +87,24 @@ namespace
 
 	std::vector<Patches::Core::MapLoadedCallback> mapLoadedCallbacks;
 	std::vector<Patches::Core::GameStartCallback> gameStartCallbacks;
+
+	void *__cdecl LevelDataGetHook();
+	void PrintLevelInfo();
+
+	void preferences_set_defaults_hook()
+	{
+		static const auto preferences_set_defaults = reinterpret_cast<void(*)()>(0x50A520);
+
+		preferences_set_defaults();
+
+		Blam::Preferences *preferences = ElDorito::GetMainTls(0x18)[0];
+
+		preferences->HideWatermark = 1;
+		preferences->Unknown00 = 1;
+		preferences->IsDirty = 1;
+
+		*(uint32_t *)ElDorito::GetMainTls(0x18)[0](0x8400C) = 1;
+	}
 
 	struct s_file_reference
 	{
@@ -207,7 +228,7 @@ namespace
 		return 0;
 	}
 
-	bool __cdecl campaign_save_file_exists(int local_user_index)
+	bool __cdecl campaign_save_exists(int)
 	{
 		s_file_reference file;
 		file_reference_create_from_path(&file, L"mmiof.bmf", false);
@@ -219,7 +240,7 @@ namespace
 		return true;
 	}
 
-	void __fastcall campaign_scoring_sub_6E59A0(char *scoreboard, void *, Blam::DatumHandle handle, Blam::Events::EventType event_type, short a4, int player_stat_type, char a6)
+	void __fastcall campaign_scoring_sub_6E59A0(char *scoreboard, void *, Blam::DatumHandle handle, Blam::Events::EventType event_type, short a4, Blam::ePlayerStatType player_stat_type, char a6)
 	{
 		static const auto data_array_sub_55B710 = reinterpret_cast<unsigned long(__cdecl *)(Blam::DataArrayBase *, Blam::DatumHandle)>(0x55B710);
 		static const auto game_get_current_engine = reinterpret_cast<int(*)()>(0x5CE150);
@@ -297,6 +318,54 @@ namespace
 	{
 		return Modules::ModuleTweaks::Instance().VarSinglethreaded->ValueInt == 0;
 	}
+
+	void __cdecl sub_6948C0_hook(int a1)
+	{
+		const auto sub_694430 = (int(__fastcall *)(void * /*this*/, void * /*unused*/, int))0x694430;
+
+		auto *tls = (Blam::Memory::tls_data *)ElDorito::Instance().GetMainTls();
+
+		if (tls->decal_system == nullptr || *(long *)0x46DE700 <= 0)
+			return;
+
+		for (int v1 = 0, *v2 = (int *)0x46DE718; v1 < *(long *)0x46DE700; v1++, v2 += 0x25D)
+		{
+			if (v2[0x258] == 0)
+				continue;
+
+			auto v3 = *v2;
+			auto decalDatumIndex = *(unsigned short *)(v3 + 8);
+
+			if (decalDatumIndex == 0xBABA)
+				continue;
+
+			auto decalTagIndex = (*tls->decal_system)[decalDatumIndex].tag_index;
+
+			if (decalTagIndex == -1)
+				continue;
+
+			auto *decs = Blam::Tags::TagInstance(decalTagIndex & 0xFFFF).GetDefinition<Blam::Tags::Effects::DecalSystem>();
+
+			auto decalBlockIndex = *(DWORD *)(v3 + 4);
+
+			if (decalBlockIndex == 0xBABA)
+				continue;
+
+			if (a1 == decs->Decal[decalBlockIndex].Unknown)
+			{
+				if (tls->decal_system != nullptr)
+					sub_694430((void *)*v2, nullptr, 0);
+			}
+		}
+	}
+
+	void *__cdecl datum_get_hook(Blam::DataArrayBase *array, Blam::DatumHandle handle)
+	{
+		if (array == nullptr)
+			return nullptr;
+
+		return array->Get(handle);
+	}
 }
 
 namespace Patches::Core
@@ -317,6 +386,11 @@ namespace Patches::Core
 
 		// Remove preferences.dat hash check
 		Patch::NopFill(Pointer::Base(0x10C99A), 0x6);
+
+		// post-processing to default preferences
+		Hook(0x10A491, preferences_set_defaults_hook, HookFlags::IsCall).Apply();
+		Hook(0x10C87D, preferences_set_defaults_hook, HookFlags::IsCall).Apply();
+		Hook(0x10CA3C, preferences_set_defaults_hook, HookFlags::IsCall).Apply();
 
 		// Patch to allow spawning AI through effects
 		Patch::NopFill(Pointer::Base(0x1033321), 2);
@@ -350,6 +424,11 @@ namespace Patches::Core
 		// Used to call Patches::ApplyAfterTagsLoaded when tags have loaded
 		Hook(0x1030EA, TagsLoadedHook).Apply();
 
+#ifndef _DEBUG
+		// Dirty disk error at 0x0xA9F6D0 is disabled in this build
+		Hook(0x69F6C0, DirtyDiskErrorHook).Apply();
+#endif
+
 		// Prevent FOV from being overridden when the game loads
 		Patch::NopFill(Pointer::Base(0x25FA79), 10);
 		Patch::NopFill(Pointer::Base(0x25FA86), 5);
@@ -369,6 +448,11 @@ namespace Patches::Core
 		//Allow the user to select any resolution that Windows supports in the settings screen.
 		Patch::NopFill(Pointer::Base(0x10BF1B), 2);
 		Patch::NopFill(Pointer::Base(0x10BF21), 6);
+
+		// post-processing to default preferences
+		//Hook(0x10A491, preferences_set_defaults_hook, HookFlags::IsCall).Apply();
+		//Hook(0x10C87D, preferences_set_defaults_hook, HookFlags::IsCall).Apply();
+		//Hook(0x10CA3C, preferences_set_defaults_hook, HookFlags::IsCall).Apply();
 
 		// Prevent game variant weapons from being overridden
 		Pointer::Base(0x1A315F).Write<uint8_t>(0xEB);
@@ -400,11 +484,13 @@ namespace Patches::Core
 		// prevent hill zone luminosity from dropping below the visible threshold
 		Hook(0x5D6B1C, HillColorHook).Apply();
 
-		// hacks
-		Hook(0x2D3289, sub_750C60_hook, HookFlags::IsCall).Apply();
-		Hook(0x351FC9, sub_750C60_hook, HookFlags::IsCall).Apply();
-		Hook(0x2947FE, sub_6948C0_hook, HookFlags::IsCall).Apply();
-		Hook(0x15B6D0, data_array_get_hook).Apply();
+		// hsc print functionality
+		Hook(0x32FE9A, HsPrintHook, HookFlags::IsCall).Apply();
+
+		// level data get
+		Hook(0x1322D0, LevelDataGetHook).Apply();
+
+		//Hook(0x769CF0, unit_action_submit_hook).Apply();
 
 		// game state reading/writing
 		Hook(0x25DB10, game_state_read_file_from_storage).Apply();
@@ -413,7 +499,7 @@ namespace Patches::Core
 		Hook(0x1270F0, game_state_write_file_to_storage_blocking).Apply();
 		Hook(0x25DBE0, game_state_write_file_to_storage).Apply();
 		Hook(0x109020, hash_verification).Apply();
-		Hook(0x1254A0, campaign_save_file_exists).Apply();
+		Hook(0x1254A0, campaign_save_exists).Apply();
 
 		// campaign metagame hacks
 		Hook(0x2E59A0, campaign_scoring_sub_6E59A0).Apply();
@@ -425,14 +511,7 @@ namespace Patches::Core
 
 		// decal hack
 		Hook(0x2947FE, sub_6948C0_hook, HookFlags::IsCall).Apply();
-
-#ifndef _DEBUG
-		// Dirty disk error at 0x0xA9F6D0 is disabled in this build
-		Hook(0x69F6C0, DirtyDiskErrorHook).Apply();
-#else
-		// hsc print functionality
-		Hook(0x32FE9A, HsPrintHook, HookFlags::IsCall).Apply();
-#endif
+		Hook(0x15B6D0, datum_get_hook).Apply();
 	}
 
 	void OnShutdown(ShutdownCallback callback)
@@ -517,29 +596,123 @@ namespace
 		return MapsFolder.c_str();
 	}
 
-	bool LoadMapHook(void *data)
+	void ApplyDefaultScreenFx()
 	{
-		typedef bool(*LoadMapPtr)(void *data);
+		static const auto GetLocalPlayerUnitObjectIndex = (uint32_t(*)(int playerIndex))0x589CC0;
+		static const auto SpawnScreenEffect = (void(*)(uint32_t tagIndex, uint32_t unitObjectIndex, int a3, void* a4, void* a5))0x683060;
+
+		auto scnrDefinition = Blam::Tags::Scenario::GetCurrentScenario();
+		if (scnrDefinition->DefaultScreenFx.TagIndex == -1)
+			return;
+
+		SpawnScreenEffect(scnrDefinition->DefaultScreenFx.TagIndex, -1, -1, *(void **)0x189CF00, *(void **)0x189CF60);
+	}
+
+	static const auto game_is_campaign = (BOOL(*)())0x531A60;
+
+	int get_spartan_representation_index()
+	{
+		static Blam::Text::StringID *campaign_name = nullptr;
+		static Blam::Text::StringID *multiplayer_name = nullptr;
+
+		if (campaign_name == nullptr)
+		{
+			campaign_name = new Blam::Text::StringID;
+			*campaign_name = Blam::Cache::StringIDCache::Instance.GetStringID("spartan");
+		}
+
+		if (multiplayer_name == nullptr)
+		{
+			multiplayer_name = new Blam::Text::StringID;
+			*multiplayer_name = Blam::Cache::StringIDCache::Instance.GetStringID("mp_spartan");
+		}
+
+		auto name = game_is_campaign() ? *campaign_name : *multiplayer_name;
+
+		auto matg = Blam::Tags::TagInstance::Find('matg', "globals\\globals").GetDefinition<Blam::Tags::Game::Globals>();
+
+		for (auto i = 0; i < matg->PlayerRepresentation.Count; i++)
+			if (name == matg->PlayerRepresentation[i].Name)
+				return i;
+
+		return 2;
+	}
+
+	int get_elite_representation_index()
+	{
+		static Blam::Text::StringID *campaign_name = nullptr;
+		static Blam::Text::StringID *multiplayer_name = nullptr;
+
+		if (campaign_name == nullptr)
+		{
+			campaign_name = new Blam::Text::StringID;
+			*campaign_name = Blam::Cache::StringIDCache::Instance.GetStringID("sp_elite");
+		}
+
+		if (multiplayer_name == nullptr)
+		{
+			multiplayer_name = new Blam::Text::StringID;
+			*multiplayer_name = Blam::Cache::StringIDCache::Instance.GetStringID("mp_elite");
+		}
+
+		auto name = game_is_campaign() ? *campaign_name : *multiplayer_name;
+
+		auto matg = Blam::Tags::TagInstance::Find('matg', "globals\\globals").GetDefinition<Blam::Tags::Game::Globals>();
+
+		for (auto i = 0; i < matg->PlayerRepresentation.Count; i++)
+			if (name == matg->PlayerRepresentation[i].Name)
+				return i;
+
+		return 3;
+	}
+
+	bool LoadMapHook(Blam::LevelData *data)
+	{
+		typedef bool(*LoadMapPtr)(Blam::LevelData *data);
 		auto LoadMap = reinterpret_cast<LoadMapPtr>(0x566EF0);
 		if (!LoadMap(data))
 			return false;
 
+		*(int *)0x537483 = get_spartan_representation_index();
+		*(int *)0x53761B = get_spartan_representation_index();
+		*(int *)0x539EB9 = get_spartan_representation_index();
+		*(int *)0x539FBD = get_spartan_representation_index();
+		*(int *)0x53A739 = get_spartan_representation_index();
+		*(int *)0x53A7C7 = get_spartan_representation_index();
+
+		*(int *)0x537490 = get_elite_representation_index();
+		*(int *)0x537628 = get_elite_representation_index();
+		*(int *)0x539EC7 = get_elite_representation_index();
+		*(int *)0x539FCB = get_elite_representation_index();
+		*(int *)0x53A746 = get_elite_representation_index();
+		*(int *)0x53A7BF = get_elite_representation_index();
+
+		ApplyDefaultScreenFx();
+
+		const auto soundSystemPtr = (uint8_t**)(0x018BC9C8);
+		if (soundSystemPtr)
+		{
+			// unmute ambient sounds
+			if (*(float *)((*soundSystemPtr) + 0x44) == 0.0f)
+				*(float *)((*soundSystemPtr) + 0x44) = 1.0f;
+		}
+
 		for (auto &&callback : mapLoadedCallbacks)
-			callback(static_cast<const char*>(data) + 0x24); // hax
+			callback(data->ScenarioPath); // hax
 
 		return true;
 	}
 
-	void LoadLevelHook(uint8_t* data, char n2, int n3, int n4)
+	void LoadLevelHook(uint8_t* mapinfo, char a2, char *mapsPath, char a4)
 	{
-		typedef int(__cdecl *LoadLevelPtr)(uint8_t* data, char n2, int n3, int n4);
+		typedef int(__cdecl *LoadLevelPtr)(uint8_t* mapinfo, char a2, char *mapsPath, char a4);
 		auto LoadLevel = reinterpret_cast<LoadLevelPtr>(0x0054A6C0);
 
-		*reinterpret_cast<uint32_t*>(data + 0x111C) = 0x08081002;
-		*reinterpret_cast<uint32_t*>(data + 0x1120) = 0x08080808;
-		*reinterpret_cast<uint32_t*>(data + 0x1124) = 0x08080808;
+		*reinterpret_cast<uint32_t*>(mapinfo + 0x111C) = 0x08081002;
+		*reinterpret_cast<uint32_t*>(mapinfo + 0x1120) = 0x08080808;
+		*reinterpret_cast<uint32_t*>(mapinfo + 0x1124) = 0x08080808;
 
-		LoadLevel(data, n2, n3, n4);
+		LoadLevel(mapinfo, a2, mapsPath, a4);
 	}
 
 	void GameStartHook()
@@ -679,11 +852,21 @@ namespace
 		return ((double)gameResolution[0] / (double)gameResolution[1]);
 	}
 
+	float GetNewPhysicsRate()
+	{
+		auto *tls = (Blam::Memory::tls_data *)ElDorito::Instance().GetMainTls();
+		auto gameGlobalsPtr = tls->game_globals;
+		if (!gameGlobalsPtr || gameGlobalsPtr->level_data.FrameLimit == 60)
+			return 0.5f;
+
+		return 30.0f / gameGlobalsPtr->level_data.FrameLimit;
+	}
+
 	void __fastcall EdgeDropHook(void* thisptr, void* unused, int a2, int a3, int a4, float* a5)
 	{
 		static auto& modulePlayer = Modules::ModulePlayer::Instance();
 
-		Pointer(a3)(0xAC).WriteFast<float>(0.5f);
+		Pointer(a3)(0xAC).WriteFast<float>(GetNewPhysicsRate());
 
 		static auto sub_724BB0 = (void(__thiscall*)(void* thisptr, int a2, int a3, int a4, float* a5))(0x724BB0);
 		sub_724BB0(thisptr, a2, a3, a4, a5);
@@ -698,14 +881,13 @@ namespace
 			*position += bipedObject->Up * 0.05f; // offset feet
 	}
 
-	const auto GetBinkVideoPath = reinterpret_cast<char(*)(int, char*)>(0xA99120);
-
 	char GetBinkVideoPathHook(int p_VideoID, char *p_DestBuf)
 	{
 		if (Modules::ModuleGame::Instance().VarSkipIntroVideos->ValueInt == 1)
 			// Tell the game that there is no video with that ID
 			return 0;
 
+		const auto GetBinkVideoPath = reinterpret_cast<char(*)(int, char*)>(0xA99120);
 		return GetBinkVideoPath(p_VideoID, p_DestBuf);
 	}
 
@@ -795,143 +977,167 @@ namespace
 		}
 	}
 
-	void __cdecl sub_6948C0_hook(int a1)
+	bool IsForgeVariantLoaded(std::string name, char *MapVariant)
 	{
-		const auto sub_694430 = (int(__fastcall *)(void * /*this*/, void * /*unused*/, int))0x694430;
+		if (std::string(Utils::String::ThinString(((Blam::MapVariant *)MapVariant)->ContentHeader.Name)).find(name) == std::string::npos)
+			return false;
+		return true;
+	}
 
+	bool IsGameVariantLoaded(std::string name, char *GameVariant)
+	{
+		if (std::string(Utils::String::ThinString(((Blam::GameVariant *)GameVariant)->Name)).find(name) == std::string::npos)
+			return false;
+		return true;
+	}
+
+	bool IsMap(Blam::LevelData *data, std::string map_name)
+	{
+		if (std::string(data->ScenarioPath).find(map_name) == std::string::npos)
+			return false;
+		return true;
+	}
+
+	// todo: make these user configurable, campaign_prefs.cfg?
+	void *NewLevelData(Blam::LevelData *data)
+	{
+		if (data->MapType == Blam::eMapTypeCampaign)
+		{
+			auto moduleCampaign = &Modules::ModuleCampaign::Instance();
+			data->FrameLimit = (int16_t)moduleCampaign->VarFrameLimit->ValueInt;
+			data->CampaignDifficultyLevel = (Blam::CampaignDifficultyLevel)moduleCampaign->VarDifficultyLevel->ValueInt;
+			data->CampaignInsertionPoint = (Blam::CampaignInsertionPoint)moduleCampaign->VarInsertionPoint->ValueInt;
+			data->CampaignMetagameScoringOption = (Blam::CampaignMetagameScoringOption)moduleCampaign->VarMetagameScoringOption->ValueInt;
+			data->CampaignMetagameEnabled = (bool)moduleCampaign->VarMetagameEnabled->ValueInt;
+			data->SurvivalModeEnabled = (bool)moduleCampaign->VarSurvivalModeEnabled->ValueInt;
+		}
+		else
+			if (Pointer(0x165C83C).Read<int>() != 60)
+				Pointer(0x165C83C).Write<int>(60);
+
+		return (void *)data;
+	}
+
+	void *__cdecl LevelDataGetHook()
+	{
 		auto *tls = (Blam::Memory::tls_data *)ElDorito::Instance().GetMainTls();
+		auto gameGlobalsPtr = tls->game_globals;
+		if (!gameGlobalsPtr)
+			return false;
 
-		if (tls->decal_system == nullptr || *(long *)0x46DE700 <= 0)
+		return NewLevelData(&gameGlobalsPtr->level_data);
+	}
+
+	void PrintLevelInfo()
+	{
+		auto *tls = (Blam::Memory::tls_data *)ElDorito::Instance().GetMainTls();
+		auto gameGlobalsPtr = tls->game_globals;
+		if (!gameGlobalsPtr)
 			return;
+		auto LevelData = &gameGlobalsPtr->level_data;
 
-		for (int v1 = 0, *v2 = (int *)0x46DE718; v1 < *(long *)0x46DE700; v1++, v2 += 0x25D)
+		std::string bool_string[2]
 		{
-			if (v2[0x258] == 0)
-				continue;
+			"False",
+			"True"
+		};
 
-			auto v3 = *v2;
-			auto decalDatumIndex = *(unsigned short *)(v3 + 8);
+		std::stringstream ss;
+		ss << "Level Info:" << std::endl;
 
-			if (decalDatumIndex == 0xBABA)
-				continue;
+		ss << "\tBSP is loaded: " << bool_string[gameGlobalsPtr->bsp_load_state] << std::endl << std::endl;
 
-			auto decalTagIndex = (*tls->decal_system)[decalDatumIndex].tag_index;
+		ss << "\tFrame Limit: " << LevelData->FrameLimit << std::endl;
+		ss << "\tGame Simulation: " << Blam::GameSimulationNames[LevelData->GameSimulation] << std::endl;
+		ss << "\tDeterminism Version: " << LevelData->DeterminismVersion << std::endl << std::endl;
 
-			if (decalTagIndex == -1)
-				continue;
+		ss << "\tGame Playback: " << Blam::GamePlaybackNames[LevelData->GamePlayback] << std::endl;
+		ss << "\tTheater Mode: " << bool_string[LevelData->GamePlayback == Blam::eGamePlaybackLocal] << std::endl << std::endl;
 
-			auto *decs = Blam::Tags::TagInstance(decalTagIndex & 0xFFFF).GetDefinition<Blam::Tags::Effects::DecalSystem>();
+		ss << "\tCinematic Debug Mode: " << bool_string[Pointer(0x24B0A3E).Read<bool>()] << std::endl << std::endl;
 
-			auto decalBlockIndex = *(DWORD *)(v3 + 4);
+		ss << "\tMap type: " << Blam::MapTypeNames[LevelData->MapType] << std::endl;
 
-			if (decalBlockIndex == 0xBABA)
-				continue;
+		ss << "\tMap Id: " << LevelData->MapId << std::endl;
+		ss << "\tMap Path: " << LevelData->ScenarioPath << std::endl << std::endl;
 
-			if (a1 == decs->Decal[decalBlockIndex].Unknown)
+		if (LevelData->MapType == Blam::eMapTypeCampaign)
+		{
+			ss << "\tCampaign Id: " << LevelData->CampaignId << std::endl;
+			ss << "\tRally Point: " << Blam::CampaignInsertionPointNames[LevelData->CampaignInsertionPoint] << std::endl;
+			ss << "\tZoneset Index: " << LevelData->ZonesetIndex << std::endl << std::endl;
+
+			ss << "\tCampaign Difficulty: " << Blam::GameDifficultNames[LevelData->CampaignDifficultyLevel] << std::endl;
+			ss << "\tMetagame Enable: " << bool_string[LevelData->CampaignMetagameEnabled] << std::endl;
+			ss << "\tMetagame Scoring: " << Blam::CampaignMetagameScoringOptionNames[LevelData->CampaignMetagameScoringOption] << std::endl;
+			ss << "\tSurvival Mode Enable: " << bool_string[LevelData->SurvivalModeEnabled] << std::endl << std::endl;
+
+			// TODO: figure out / fix
+			//ss << "\tActive Primary Skulls: " << Blam::SkullNames[LevelData->CampaignSkullsPrimary] << std::endl;
+			//ss << "\tActive Secondary Skulls: " << Blam::SkullNames[LevelData->CampaignSkullsSecondary] << std::endl << std::endl;
+		}
+		else
+		{
+			auto GameVariant = (Blam::GameVariant *)LevelData->GameVariant;
+			ss << "\t(Game Variant)->Game Type: " << Blam::GameTypeNames[GameVariant->GameType] << std::endl;
+			ss << "\t(Game Variant)->Name: " << Utils::String::ThinString(GameVariant->Name) << std::endl;
+			ss << "\t(Game Variant)->Author: " << GameVariant->Author << std::endl;
+			ss << "\t(Game Variant)->Description: " << GameVariant->Description << std::endl << std::endl;
+
+			auto MapVariant = (Blam::MapVariant *)LevelData->MapVariant;
+			ss << "\t(Map Variant)->Base Map Id: " << MapVariant->MapId << std::endl;
+			ss << "\t(Map Variant)->Name: " << Utils::String::ThinString(MapVariant->ContentHeader.Name) << std::endl;
+			ss << "\t(Map Variant)->Author: " << MapVariant->ContentHeader.Author << std::endl;
+			ss << "\t(Map Variant)->Description: " << MapVariant->ContentHeader.Description << std::endl << std::endl;
+
+			std::string TeamNames[9]
 			{
-				if (tls->decal_system != nullptr)
-					sub_694430((void *)*v2, nullptr, 0);
-			}
-		}
-	}
+				"Red",
+				"Blue",
+				"Green",
+				"Orange",
+				"Purple",
+				"Gold",
+				"Brown",
+				"Pink",
+				"Observer"
+			};
 
-	bool __cdecl sub_750C60_hook(int structure_bsp_index, int a2, int instanced_geometry_instance_index, int unknown_6th_index, int a5, char a6, char a7, char *a8, int a9)
-	{
-		static const auto scenerio_get_instance_bsp_collision = (blam::global_collision_bsp_instance *(__cdecl *)(int scenario_sbsp_index, int instanced_geometry_index))0x4E9640;
-		static const auto scenario_get_structure_bsp_definition = (blam::scenario_structure_bsp_definition *(__cdecl *)(int structure_bsp_index))0x4E96D0;
-		static const auto pageable_resource_get = (void *(__cdecl *)(blam::pageable_resource **))0x563E10;
-		static const auto sub_750C60 = (bool(__cdecl *)(int structure_bsp_index, int, int instanced_geometry_instance_index, int unknown_6th_index, int, char, char, char *, int))0x750C60;
-		static const auto structure_bsp_get_unknown_sub_A2EEC0 = (void *(__cdecl *)(int structure_bsp_index))0xA2EEC0;
-		static const auto structure_bsp_get_unknown_sub_A2EDC0 = (void *(__cdecl *)(int structure_bsp_index))0xA2EED0;
-		static const auto structure_bsp_get_render_geometry = (Blam::Geometry::RenderGeometry *(__cdecl *)(int structure_bsp_index))0xA2EF00;
+			ss << "Initial Participants Array:" << std::endl;
 
-		if (structure_bsp_index == -1)
-			return false;
-
-		auto *bsp_definition = scenario_get_structure_bsp_definition(structure_bsp_index);
-		auto *bsp_geometry = structure_bsp_get_render_geometry(structure_bsp_index);
-		auto *bsp_geometry_resource = (Blam::Geometry::RenderGeometryApiResourceDefinition *)pageable_resource_get((blam::pageable_resource **)&bsp_geometry->Pageable);
-		auto *bsp_pathfinding = (blam::structure_bsp_cache_file_tag_resources *)pageable_resource_get(&bsp_definition->pathfinding_resource);
-
-		if (!bsp_geometry || !bsp_geometry || !bsp_geometry_resource || !bsp_pathfinding)
-			return false;
-
-		auto *v10 = structure_bsp_get_unknown_sub_A2EEC0(structure_bsp_index);
-		
-		if (!a6 && !v10)
-			return false;
-
-		if (bsp_pathfinding->unknown_6ths.address == nullptr ||
-			bsp_pathfinding->unknown_6ths.count <= 0 ||
-			unknown_6th_index < 0 ||
-			unknown_6th_index >= bsp_pathfinding->unknown_6ths.count)
-		{
-			return false;
-		}
-
-		auto *unknown_6ths = (blam::structure_bsp_unknown_6th *)bsp_pathfinding->unknown_6ths.address;
-		auto *unknown_6th = &unknown_6ths[unknown_6th_index];
-
-		if (unknown_6th->plane_index < 0 || (unknown_6th->plane_index + unknown_6th->plane_count) >= bsp_pathfinding->planes.count)
-			return false;
-
-		auto *planes = (blam::structure_bsp_plane *)bsp_pathfinding->planes.address;
-		auto *clusters = (blam::structure_bsp_cluster *)bsp_definition->clusters.address;
-		auto *instances = (blam::structure_bsp_instanced_geometry *)bsp_definition->instanced_geometry_instances.address;
-
-		for (auto i = 0; i < unknown_6th->plane_count; i++)
-		{
-			auto *plane = &planes[unknown_6th->plane_index + i];
-
-			Blam::Geometry::RenderMesh *mesh = nullptr;
-
-			if (instanced_geometry_instance_index == -1)
+			auto player_index = 0;
+			auto participant = LevelData->InitialParticipantsArray;
+			do
 			{
-				if (!clusters || plane->cluster_index2 < 0 || plane->cluster_index2 >= bsp_definition->clusters.count)
-					return false;
+				auto properties = (Blam::Players::PlayerProperties *)participant->PlayerProperties;
+				if (participant->IsValid)
+				{
+					ss << "\tPlayer " << player_index + 1 << ": ";
+					ss << Utils::String::ThinString(properties->DisplayName);
+					ss << ", " << Utils::String::ThinString(properties->ServiceTag);
 
-				auto *cluster = &clusters[plane->cluster_index2];
+					switch (GameVariant->GameType)
+					{
+					case Blam::eGameTypeInfection:
+						ss << ", " << (properties->TeamIndex ? "Human" : "Zombie");
+					default:
+						ss << ", " << TeamNames[properties->TeamIndex];
+						break;
+					}
 
-				if (cluster->mesh_index < 0 || cluster->mesh_index >= bsp_geometry->Meshes.Count)
-					return false;
+					//ss << ", " << (properties->PlayerRepresentation ? "Spartan" : "Monitor");
+					//ss << ", " << (properties->Gender ? "Female" : "Male");
+					//ss << ", " << std::hex << properties->Uid;
 
-				mesh = &bsp_geometry->Meshes[cluster->mesh_index];
-			}
-			else
-			{
-				if (!instances || instanced_geometry_instance_index < 0 || instanced_geometry_instance_index >= bsp_definition->instanced_geometry_instances.count)
-					return false;
-
-				auto *instance = &instances[instanced_geometry_instance_index];
-				auto *instance_collision = scenerio_get_instance_bsp_collision(structure_bsp_index, instance->instance_definition);
-
-				if (instance_collision->mesh_index < 0 || instance_collision->mesh_index >= bsp_geometry->Meshes.Count)
-					return false;
-
-				mesh = &bsp_geometry->Meshes[instance_collision->mesh_index];
-			}
-
-			if (mesh->VertexBufferIndices[0] < 0 || mesh->VertexBufferIndices[0] >= bsp_geometry_resource->VertexBuffers.Count)
-				return false;
-
-			if (mesh->IndexBufferIndices[0] < 0 || mesh->IndexBufferIndices[0] >= bsp_geometry_resource->IndexBuffers.Count)
-				return false;
+					ss << std::endl;
+				}
+				++player_index;
+				++participant;
+			} while (player_index < 16);
 		}
+		ss << std::endl << std::endl;
 
-		return sub_750C60(structure_bsp_index, a2, instanced_geometry_instance_index, unknown_6th_index, a5, a6, a7, a8, a9);
-	}
-
-	void *__cdecl data_array_get_hook(Blam::DataArrayBase *array, Blam::DatumHandle handle)
-	{
-		if (array && handle != Blam::DatumHandle::Null && handle.Index < array->FirstUnallocated)
-		{
-			auto *datum = array->GetAddress(handle);
-			auto salt = datum->GetSalt();
-
-			if (salt && salt == handle.Salt)
-				return datum;
-		}
-
-		return nullptr;
+		if (!IsMap(LevelData, "mainmenu"))
+			Console::WriteLine(ss.str());
 	}
 }

@@ -4,12 +4,13 @@
 #include "../Blam/BlamPlayers.hpp"
 #include "../Blam/BlamData.hpp"
 #include "../Blam/BlamObjects.hpp"
+#include "../Blam/BlamTime.hpp"
 #include "../Blam/Math/RealVector3D.hpp"
 #include "../Blam/Tags/TagBlock.hpp"
 #include "../Blam/Tags/TagInstance.hpp"
 #include "../Blam/Tags/Items/Item.hpp"
 #include "../Blam/Tags/Game/MultiplayerGlobals.hpp"
-#include "../Blam/BlamTime.hpp"
+#include "../Blam/Memory/TlsData.hpp"
 #include "../ElDorito.hpp"
 #include "../Patch.hpp"
 #include <cstdint>
@@ -536,21 +537,7 @@ namespace
 
 	void VisionEnd(uint32_t unitObjectIndex, uint32_t visionScreenEffectTagIndex)
 	{
-		struct s_rasterizer_screen_effect : Blam::DatumBase
-		{
-			uint16_t field_2;
-			uint32_t tag_index;
-			float seconds_active;
-			RealVector3D position;
-			uint32_t object_index;
-			uint32_t field_1c;
-			RealVector3D field_20;
-			RealVector3D field_2c;
-			uint32_t field_38;
-		};
-		static_assert(sizeof(s_rasterizer_screen_effect) == 0x3C, "s_rasterizer_screen_effect invalid");
-
-		auto screenEffects = ElDorito::GetMainTls(0x338).Read<Blam::DataArray<s_rasterizer_screen_effect>*>();
+		auto screenEffects = Blam::Memory::GetTlsData()->rasterizer_screen_effects;
 		for (auto it = screenEffects->begin(); it != screenEffects->end(); ++it)
 		{
 			if (it->object_index == unitObjectIndex && it->tag_index == visionScreenEffectTagIndex)

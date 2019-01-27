@@ -7,6 +7,8 @@
 #include "../Blam/BlamMemory.hpp"
 #include "../Utils/Logger.hpp"
 #include "Core.hpp"
+#include "../Modules/ModuleDebug.hpp"
+#include "../Console.hpp"
 
 namespace
 {
@@ -27,6 +29,7 @@ namespace
 	void* __stdcall virtualAllocHook(void* address, size_t size, uint32_t allocationType, uint32_t protect);
 	void GetTagDefinitionHook();
 	void HsEvalHook();
+	int __cdecl hs_macro_function_evaluate(__int16 opcode, int a2, char a3);
 
 	void LogPhysicalMemoryAllocationRequestHook();
 	void LogSuccessfulPhysicalMemoryAllocationResultHook();
@@ -91,6 +94,7 @@ namespace Patches::Logging
 #if !defined(ELDEWRITO_RELEASE)
 		Hook(0x103370, GetTagDefinitionHook).Apply();
 		Hook(0x198CEE, HsEvalHook).Apply();
+		Hook(0x1972F0, hs_macro_function_evaluate).Apply();
 #endif
 	}
 }
@@ -493,5 +497,40 @@ namespace
 			push 0x598D06
 			retn
 		}
+	}
+
+	struct hs_script_op
+	{
+		short return_type;
+		short unknown1;
+		short (__cdecl *callback)(int, int, char);
+		const char *usage;
+		char unknown2[8];
+	};
+
+	int __cdecl hs_macro_function_evaluate(short opcode, int a2, char a3)
+	{
+		static int(__cdecl *hs_arguments_evaluate)(int, short, int, char) = nullptr;
+		static void **hs_function_table = nullptr;
+
+		if (hs_arguments_evaluate == nullptr)
+			hs_arguments_evaluate = reinterpret_cast<decltype(hs_arguments_evaluate)>(0x594140);
+
+		if (hs_function_table == nullptr)
+			hs_function_table = reinterpret_cast<void **>(0x18ED378);
+
+		if (Modules::ModuleDebug::Instance().VarPrintHsEvaluations->ValueInt)
+		{
+			std::stringstream ss;
+			ss << "Evaluating hs opcode 0x" << std::hex << opcode;
+
+			Console::WriteLine(ss.str());
+		}
+
+		return hs_arguments_evaluate(
+			a2,
+			*((unsigned short *)*(hs_function_table + opcode) + 6),
+			(int)*(hs_function_table + opcode) + 14,
+			a3);
 	}
 }

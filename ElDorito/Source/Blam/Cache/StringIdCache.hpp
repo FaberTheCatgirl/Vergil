@@ -3,6 +3,8 @@
 #include <iostream>
 #include <string>
 
+#include <Blam\Text\StringID.hpp>
+
 namespace Blam::Cache
 {
 	struct StringIDCacheHeader
@@ -23,7 +25,9 @@ namespace Blam::Cache
 		static StringIDCache Instance;
 
 		bool Load(const std::string &path);
-		char *GetString(const uint32_t stringID);
+
+		std::string GetString(const Text::StringID &stringID);
+		Text::StringID GetStringID(const std::string &string);
 	};
 }
 

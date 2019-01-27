@@ -146,7 +146,7 @@ namespace Blam
 		uint32_t LastLoadedLobby; // String Id
 		uint32_t Unknown44;
 		GamemodeData GamemodeData;
-		uint32_t Unknown41BC0;
+		Blam::NetworkMode LastNetworkMode;
 		uint32_t Unknown41BC4;
 		uint32_t DefaultVideoSettings;
 		uint8_t Fullscreen;

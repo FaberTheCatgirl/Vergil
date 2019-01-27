@@ -20,6 +20,7 @@
 #include "../../Blam/Tags/Items/DefinitionWeapon.hpp"
 #include "../../Blam/BlamTime.hpp"
 #include "../../Modules/ModuleGame.hpp"
+#include "../../Console.hpp"
 
 using namespace Blam::Input;
 using namespace Blam::Events;
@@ -33,13 +34,14 @@ namespace
 	bool postgame = false;
 	bool pregame = false;
 	bool returningToLobby = false;
+	bool forcedBackToLobby = false;
 	bool acceptsInput = true;
 	bool pressedLastTick = false;
 	bool spawningSoon = false;
 	bool roundInProgress = false;
 	int lastPressedTime = 0;
-	uint32_t postgameDisplayed;
-	const float postgameDelayTime = 2;
+	time_t postgameDisplayed;
+	const uint32_t postgameDelayTime = 2;
 	uint32_t scoreboardSentTime = 0;
 
 	void OnEvent(Blam::DatumHandle player, const Event *event, const EventDefinition *definition);
@@ -94,10 +96,11 @@ namespace Web::Ui::WebScoreboard
 		if (!is_multiplayer() && !is_main_menu())
 			return;
 
-
+		time_t curTime;
+		time(&curTime);
 		if (postgame)
 		{
-			if (Blam::Time::TicksToSeconds(Blam::Time::GetGameTicks() - postgameDisplayed) > postgameDelayTime)
+			if (((curTime - postgameDisplayed) > postgameDelayTime))
 			{
 				Web::Ui::WebScoreboard::Show(locked, postgame);
 				acceptsInput = false;
@@ -105,6 +108,21 @@ namespace Web::Ui::WebScoreboard
 				returningToLobby = true;
 			}
 		}
+
+		if (returningToLobby && !forcedBackToLobby)
+		{
+			auto timeout = Modules::ModuleServer::Instance().VarReturnToLobbyTimeoutSeconds->ValueInt;
+			if ((curTime - postgameDisplayed) > (timeout + postgameDelayTime))
+			{
+				auto session = Blam::Network::GetActiveSession();
+				if (session && session->IsEstablished())
+				{
+					session->Parameters.SetSessionMode(1);
+					forcedBackToLobby = true;
+				}
+			}
+		}
+
 		auto isMainMenu = is_main_menu();
 
 		if (!postgame && !isMainMenu) {
@@ -115,7 +133,6 @@ namespace Web::Ui::WebScoreboard
 			{
 				scoreboardSentTime = 0;
 				Web::Ui::ScreenLayer::NotifyScreen("scoreboard", "scoreboard", getScoreboard());
-				
 			}
 		}
 
@@ -149,7 +166,7 @@ namespace Web::Ui::WebScoreboard
 		if (!engineGlobals)
 			return;
 
-		auto currentEngineState = engineGlobals(0xE110).Read<uint8_t>();	
+		auto currentEngineState = engineGlobals(0xE110).Read<uint8_t>();
 		if (previousEngineState & 8 && !(currentEngineState & 8)) // summary ui
 		{
 			locked = false;
@@ -212,6 +229,7 @@ namespace
 		if (event->NameStringId == 0x4004D || event->NameStringId == 0x4005A) // "general_event_game_over" / "general_event_round_over"
 		{
 			postgameDisplayed = Blam::Time::GetGameTicks();
+			time(&postgameDisplayed);
 			postgame = true;
 
 			Web::Ui::ScreenLayer::NotifyScreen("scoreboard", "scoreboard", Web::Ui::WebScoreboard::getScoreboard());
@@ -232,14 +250,25 @@ namespace
 
 			if (strcmp((char*)Pointer(0x22AB018)(0x1A4), "mainmenu") != 0)
 			{
+				locked = false;
+
+				auto values = reinterpret_cast<float*>(0x244D1F0 + 0x2FC);
+				auto movementAmount = 0.0f;
+				for (auto i = 0; i < 8; i++)
+					movementAmount += values[i] * values[i];
+
 				//If shift is held down or was pressed again within the repeat delay, lock the scoreboard
-				locked = GetKeyTicks(eKeyCodeShift, eInputTypeUi) || ((GetTickCount() - lastPressedTime) < 250
-					&& Modules::ModuleInput::Instance().VarTapScoreboard->ValueInt == 1);
+				if (GetKeyTicks(eKeyCodeShift, eInputTypeUi) || ((GetTickCount() - lastPressedTime) < 250
+					&& Modules::ModuleInput::Instance().VarTapScoreboard->ValueInt == 1))
+				{
+					locked = true;
+				}
+
 
 				Web::Ui::WebScoreboard::Show(locked, postgame);
 
 				lastPressedTime = GetTickCount();
-				pressedLastTick = true;	
+				pressedLastTick = true;
 			}
 			else
 			{
@@ -247,10 +276,10 @@ namespace
 			}
 		}
 		//Hide the scoreboard when you release tab. Only check when the scoreboard isn't locked.
-		else if(!locked && !postgame && pressedLastTick && uiSelect->Ticks == 0)
-		{		
+		else if (!locked && !postgame && pressedLastTick && uiSelect->Ticks == 0)
+		{
 			Web::Ui::WebScoreboard::Hide();
-			pressedLastTick = false;		
+			pressedLastTick = false;
 		}
 	}
 
@@ -398,7 +427,7 @@ namespace
 			writer.Key("bestStreak");
 			writer.Int(playerStats.BestStreak);
 
-			
+
 
 			writer.Key("hasObjective");
 			writer.Bool(hasObjective);

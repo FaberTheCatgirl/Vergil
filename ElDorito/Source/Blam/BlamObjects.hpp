@@ -91,7 +91,9 @@ namespace Blam::Objects
 		Blam::Math::RealVector3D Velocity2;
 		float Scale;
 		uint32_t Unknown94;
-		uint32_t Unknown98;
+		uint16_t Unknown98;
+		ObjectType Type;
+		uint8_t Unknown9B;
 		uint16_t ObjectNameIndex;
 		uint16_t Unknown9E;
 		uint32_t HavokComponent;

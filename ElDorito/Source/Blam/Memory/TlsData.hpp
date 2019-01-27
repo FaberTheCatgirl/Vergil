@@ -1,10 +1,10 @@
 #pragma once
 #include "../../ElDorito.hpp"
 #include "../Preferences/Preferences.hpp"
-
 #include "../BlamData.hpp"
 #include "../BlamObjects.hpp"
 #include "../BlamPlayers.hpp"
+#include "../../../new/game/game_globals.hpp"
 
 namespace Blam::Memory
 {
@@ -46,9 +46,9 @@ namespace Blam::Memory
 	struct structure_seam_globals;
 	struct visibility_active_portals;
 	struct campaign_metagame;
-	struct observer;
+	struct observer_globals;
 	struct observer_gamestate;
-	struct rumble;
+	struct rumble_globals;
 	struct bink_gamestate;
 	struct sound_classes;
 	struct game_allegiance_globals;
@@ -62,7 +62,7 @@ namespace Blam::Memory
 	struct recorded_animations;
 	struct game_save_globals;
 	struct s_rasterizer_screen_effect;
-	struct player_effects;
+	struct player_effect_globals;
 	struct scenario_interpolator_globals;
 	struct survival_mode_globals;
 	struct player_training_globals;
@@ -114,8 +114,8 @@ namespace Blam::Memory
 	struct chud_persistent_user_data;
 	struct chud_persistent_global_data;
 	struct user_widget;
-	struct first_person_orientations;
-	struct first_person_weapons;
+	struct first_person_orientation_globals;
+	struct first_person_weapon_globals;
 	struct cortana_globals;
 	struct campaign_objectives;
 	struct object_globals;
@@ -176,19 +176,13 @@ namespace Blam::Memory
 
 	struct tls_data
 	{
-		char *unknown0;
-		char *unknown4;
+		char *unknown0[2];
 		simulation_gamestate_entities *simulation_gamestate_entities;
 		main_gamestate_timing *main_gamestate_timing;
 		main_render_timing *main_render_timing;
 		main_time_globals *main_time_globals;
 		Blam::Preferences *preferences;
-		char *unknown1C;
-		char *unknown20;
-		char *unknown24;
-		char *unknown28;
-		char *unknown2C;
-		char *unknown30;
+		char *unknown1C[6];
 		random_math_globals *random_math_globals;
 		char *filo_related;
 		game_globals *game_globals;
@@ -208,14 +202,7 @@ namespace Blam::Memory
 		hs_distributed_global_data *hs_distributed_global_data;
 		hs_thread_tracking_data *hs_thread_tracking_data;
 		hs_thread_non_deterministic_data *hs_thread_non_deterministic_data;
-		char *unknown80;
-		char *unknown84;
-		char *unknown88;
-		char *unknown8C;
-		char *unknown90;
-		char *unknown94;
-		char *unknown98;
-		char *unknown9C;
+		char *unknown80[8];
 		effect *effect;
 		effect_event *effect_event;
 		effect_location *effect_location;
@@ -234,8 +221,8 @@ namespace Blam::Memory
 		visibility_active_portals *visibility_active_portals;
 		campaign_metagame *campaign_metagame;
 		observer_gamestate *observer_gamestate;
-		observer *observer;
-		rumble *rumble;
+		observer_globals *observer_globals;
+		rumble_globals *rumble_globals;
 		bink_gamestate *bink_gamestate;
 		char *unknownF4;
 		char *c_font_cache_mt_safe;
@@ -245,151 +232,21 @@ namespace Blam::Memory
 		scenario_soft_surface_globals *scenario_soft_surface_globals;
 		game_sound_player_effects_globals *game_sound_player_effects_globals;
 		char *havok_proxies;
-		char *unknown114;
-		char *unknown118;
-		char *unknown11C;
-		char *unknown120;
-		char *unknown124;
-		char *unknown128;
-		char *unknown12C;
-		char *unknown130;
-		char *unknown134;
-		char *unknown138;
-		char *unknown13C;
-		char *unknown140;
-		char *unknown144;
-		char *unknown148;
-		char *unknown14C;
-		char *unknown150;
-		char *unknown154;
-		char *unknown158;
-		char *unknown15C;
-		char *unknown160;
-		char *unknown164;
-		char *unknown168;
-		char *unknown16C;
-		char *unknown170;
-		char *unknown174;
-		char *unknown178;
-		char *unknown17C;
-		char *unknown180;
-		char *unknown184;
-		char *unknown188;
-		char *unknown18C;
-		char *unknown190;
-		char *unknown194;
-		char *unknown198;
-		char *unknown19C;
-		char *unknown1A0;
-		char *unknown1A4;
-		char *unknown1A8;
-		char *unknown1AC;
-		char *unknown1B0;
-		char *unknown1B4;
-		char *unknown1B8;
-		char *unknown1BC;
-		char *unknown1C0;
-		char *unknown1C4;
-		char *unknown1C8;
-		char *unknown1CC;
-		char *unknown1D0;
-		char *unknown1D4;
-		char *unknown1D8;
-		char *unknown1Dc;
-		char *unknown1E0;
-		char *unknown1E4;
-		char *unknown1E8;
-		char *unknown1EC;
-		char *unknown1F0;
-		char *unknown1F4;
-		char *unknown1F8;
-		char *unknown1FC;
-		char *unknown200;
-		char *unknown204;
-		char *unknown208;
-		char *unknown20C;
-		char *unknown210;
-		char *unknown214;
-		char *unknown218;
-		char *unknown21C;
-		char *unknown220;
-		char *unknown224;
-		char *unknown228;
-		char *unknown22C;
-		char *unknown230;
-		char *unknown234;
-		char *unknown238;
-		char *unknown23C;
-		char *unknown240;
-		char *unknown244;
-		char *unknown248;
-		char *unknown24C;
-		char *unknown250;
-		char *unknown254;
-		char *unknown258;
-		char *unknown25C;
-		char *unknown260;
-		char *unknown264;
-		char *unknown268;
-		char *unknown26C;
-		char *unknown270;
-		char *unknown274;
-		char *unknown278;
-		char *unknown27C;
-		char *unknown280;
-		char *unknown284;
-		char *unknown288;
-		char *unknown28C;
-		char *unknown290;
-		char *unknown294;
-		char *unknown298;
-		char *unknown29C;
-		char *unknown2A0;
-		char *unknown2A4;
-		char *unknown2A8;
-		char *unknown2AC;
-		char *unknown2B0;
-		char *unknown2B4;
-		char *unknown2B8;
-		char *unknown2BC;
-		char *unknown2C0;
-		char *unknown2C4;
-		char *unknown2C8;
-		char *unknown2CC;
-		char *unknown2D0;
-		char *unknown2D4;
-		char *unknown2D8;
-		char *unknown2DC;
-		char *unknown2E0;
-		char *unknown2E4;
-		char *unknown2E8;
-		char *unknown2EC;
-		char *unknown2F0;
-		char *unknown2F4;
-		char *unknown2F8;
-		char *unknown2FC;
-		char *unknown300;
-		char *unknown304;
-		char *unknown308;
-		char *unknown30C;
-		char *unknown310;
-		char *unknown314;
-		char *unknown318;
-		char *unknown31C;
+		char *unknown114[131];
 		cinematic_new_globals *cinematic_new_globals;
 		cinematic_globals *cinematic_globals;
 		cinematic_light_globals *cinematic_light_globals;
 		physics_constants *physics_constants;
 		recorded_animations *recorded_animations;
 		game_save_globals *game_save_globals;
-		Blam::DataArray<s_rasterizer_screen_effect> *rasterizer_screen_effects;
-		player_effects *player_effects;
+		DataArray<s_rasterizer_screen_effect> *rasterizer_screen_effects;
+		player_effect_globals *player_effect_globals;
 		scenario_interpolator_globals *scenario_interpolator_globals;
 		survival_mode_globals *survival_mode_globals;
 		player_training_globals *player_training_globals;
 		scenario_kill_trigger_volume_state *scenario_kill_trigger_volume_state;
 		deterministic_game_sound_globals *deterministic_game_sound_globals;
-		Blam::DataArray<s_decal_system_datum> *decal_system;
+		DataArray<s_decal_system_datum> *decal_system;
 		decal_counts *decal_counts;
 		decal *decal;
 		decal_messaging_queue *decal_messaging_queue;
@@ -399,8 +256,8 @@ namespace Blam::Memory
 		object_list_header *object_list_header;
 		list_object *list_object;
 		scripted_camera_globals *scripted_camera_globals;
-		Blam::DataArrayBase *particles;
-		Blam::DataArray<s_particle_system_datum> *particle_system;
+		DataArrayBase *particles;
+		DataArray<s_particle_system_datum> *particle_system;
 		contrail_system *contrail_system;
 		contrail *contrail;
 		contrail_location *contrail_location;
@@ -446,8 +303,8 @@ namespace Blam::Memory
 		user_widget *user_widget_1;
 		user_widget *user_widget_2;
 		user_widget *user_widget_3;
-		first_person_orientations *first_person_orientations;
-		first_person_weapons *first_person_weapons;
+		first_person_orientation_globals *first_person_orientation_globals;
+		first_person_weapon_globals *first_person_weapon_globals;
 		cortana_globals *cortana_globals;
 		campaign_objectives *campaign_objectives;
 		DataArray<Blam::Objects::ObjectHeader> *object_header;
@@ -459,8 +316,7 @@ namespace Blam::Memory
 		damage_globals *damage_globals;
 		char *unknown464;
 		char *noncollideable_object;
-		char *unknown46C;
-		char *unknown470;
+		char *unknown46C[2];
 		object_render_data *object_render_data;
 		char *damage;
 		object_placement *object_placement;
@@ -483,26 +339,7 @@ namespace Blam::Memory
 		leaf_system *leaf_system;
 		antenna *antenna;
 		cloth *cloth;
-		char *unknown4CC;
-		char *unknown4D0;
-		char *unknown4D4;
-		char *unknown4D8;
-		char *unknown4DC;
-		char *unknown4E0;
-		char *unknown4E4;
-		char *unknown4E8;
-		char *unknown4EC;
-		char *unknown4F0;
-		char *unknown4F4;
-		char *unknown4F8;
-		char *unknown4FC;
-		char *unknown500;
-		char *unknown504;
-		char *unknown508;
-		char *unknown50C;
-		char *unknown510;
-		char *unknown514;
-		char *unknown518;
+		char *unknown4CC[20];
 		actor *actor;
 		actor_firing_position *actor_firing_position;
 		ai_reference_frame *ai_reference_frame;
@@ -530,6 +367,7 @@ namespace Blam::Memory
 		vision_mode *vision_mode;
 		char *unknown580;
 	};
+	static_assert(sizeof(tls_data) == 4 * 353);
 
 	// TODO: Move all these out of this file (it could get quite large check https://gist.github.com/theTwist84/33ca9c90bc49728ec7d043794ddfbd98/cb0d6b7389c444f464a1c6204a47b93c3e8cc815)
 	// TODO: Actually RE all the below structs.
@@ -592,9 +430,37 @@ namespace Blam::Memory
 
 	struct game_globals
 	{
-		unsigned char unknown0[0x10];
+		unsigned char unknown0;
+		unsigned char unknown1;
+		unsigned char unknown2;
+		unsigned char unknown3;
+		unsigned long bsp_load_state;
+		unsigned long unknown8;
+		unsigned long unknownC;
 		Blam::LevelData level_data;
-		unsigned char unknown24B58[0x6B0];
+		unsigned long unknown24B58; // mapname string_id?
+
+		struct 
+		{
+			unsigned long unknown[32];
+		} game_progression;
+
+		unsigned char unknown24BDC[12];
+		
+		unsigned long end_match_wait_time;
+		
+		unsigned short primary_skulls_flags;
+		unsigned char secondary_skulls_flags;
+
+		unsigned char unknown24BEF[9];
+
+		struct {
+			struct {
+				unsigned char unknown[32];
+			} unknown[16];
+		} unknown24BF8[3];
+
+		unsigned char unknown251F8[16];
 	};
 	static_assert(sizeof(game_globals) == 0x25208);
 
@@ -856,11 +722,18 @@ namespace Blam::Memory
 	};
 	static_assert(sizeof(campaign_metagame) == 0x1A158);
 
-	struct observer
+	struct observer_globals
 	{
-		char unknown[0xF28];
+		struct player_data
+		{
+			char data[0x3C8];
+		};
+		static_assert(sizeof(player_data) == 0x3C8);
+
+		player_data players[4];
+		char unknownF20[8];
 	};
-	static_assert(sizeof(observer) == 0xF28);
+	static_assert(sizeof(observer_globals) == 0xF28);
 
 	struct observer_gamestate
 	{
@@ -870,11 +743,20 @@ namespace Blam::Memory
 	};
 	static_assert(sizeof(observer_gamestate) == 0xC);
 
-	struct rumble
+	struct rumble_globals
 	{
-		char unknown[0x22C];
+		struct player_data
+		{
+			char data[0x88];
+		};
+		static_assert(sizeof(player_data) == 0x88);
+
+		player_data players[4];
+		float unknown220;
+		float unknown224;
+		float unknown228;
 	};
-	static_assert(sizeof(rumble) == 0x22C);
+	static_assert(sizeof(rumble_globals) == 0x22C);
 
 	struct bink_gamestate
 	{
@@ -924,13 +806,13 @@ namespace Blam::Memory
 
 	struct cinematic_globals
 	{
-		char unknown0[4];
+		long unknown0;
 		char show_letterbox;
 		char start_stop;
 		char skip_start_stop;
 		char suppress_bsp_object_creation;
 		char unknow8[24];
-		uint32_t subtitle_string_id;
+		unsigned long subtitle_string_id;
 		float subtitle_time_shown;
 		float subtitle_time_shown2;
 		char unknown2C[2];
@@ -984,11 +866,18 @@ namespace Blam::Memory
 	};
 	static_assert(sizeof(s_rasterizer_screen_effect) == 0x3C);
 
-	struct player_effects
+	struct player_effect_globals
 	{
-		char unknown[0x3A0];
+		struct player_data
+		{
+			char data[0xE4];
+		};
+		static_assert(sizeof(player_data) == 0xE4);
+
+		char unknown0[0x10];
+		player_data players[4];
 	};
-	static_assert(sizeof(player_effects) == 0x3A0);
+	static_assert(sizeof(player_effect_globals) == 0x3A0);
 
 	struct scenario_interpolator_globals
 	{
@@ -1008,12 +897,12 @@ namespace Blam::Memory
 		long round_multiplier;
 		short waves_per_round;
 		short rounds_per_set;
-		char unknown18[4];
+		long unknown18;
 		long unknown1C;
-		char unknown20[4];
+		long unknown20;
 		long unknown24;
 		long unknown28;
-		char unknown2C[4];
+		long unknown2C;
 		long scoreboard;
 		char unknown34[464];
 	};
@@ -1021,7 +910,38 @@ namespace Blam::Memory
 
 	struct player_training_globals
 	{
-		char unknown[0x8E8];
+		struct training_data
+		{
+			enum activation_flags : unsigned char
+			{
+				flashlight = 1 << 0,
+				crouch = 1 << 1,
+				stealth = 1 << 2,
+				jump = 1 << 4
+			};
+
+			unsigned long long unknown0;
+			unsigned long long unknown8[18];
+			unsigned long unknown98;
+			unsigned long unknown9C;
+			unsigned long long unknownA0[40];
+			unsigned long long unknown1E0;
+			unsigned long long unknown1E8;
+			unsigned long long unknown1F0;
+			unsigned long long unknown1F8;
+			activation_flags flags;
+			unsigned char unknown201[11];
+			unsigned char unknown20C;
+			unsigned char unknown20D[43];
+		};
+		static_assert(sizeof(training_data) == 0x238);
+
+		training_data players[4];
+		unsigned long unknown8E0;
+		unsigned char unknown8E4;
+		unsigned char unknown8E5;
+		unsigned short unknown8E6;
+
 	};
 	static_assert(sizeof(player_training_globals) == 0x8E8);
 
@@ -1261,7 +1181,12 @@ namespace Blam::Memory
 
 	struct water_interaction_ripples
 	{
-		char unknown[0x1400];
+		struct ripple_data
+		{
+			unsigned long unknown[40];
+		};
+		static_assert(sizeof(ripple_data) == 0xA0);
+		ripple_data ripples[32];
 	};
 	static_assert(sizeof(water_interaction_ripples) == 0x1400);
 
@@ -1448,17 +1373,37 @@ namespace Blam::Memory
 	};
 	static_assert(sizeof(user_widget) == 0x18);
 
-	struct first_person_orientations
+	struct first_person_orientation_globals
 	{
-		char unknown[0x12C00];
-	};
-	static_assert(sizeof(first_person_orientations) == 0x12C00);
+		struct player_data
+		{
+			unsigned char data[0x4B00];
+		};
+		static_assert(sizeof(player_data) == 0x4B00);
 
-	struct first_person_weapons
-	{
-		char unknown[0x14000];
+		player_data players[4];
 	};
-	static_assert(sizeof(first_person_weapons) == 0x14000);
+	static_assert(sizeof(first_person_orientation_globals) == 0x12C00);
+
+	struct first_person_weapon_globals
+	{
+		struct player_data
+		{
+			struct unknown_data
+			{
+				unsigned char data[0x27A0];
+			};
+
+			long flags;
+			unsigned char unknown4[0x68];
+			unknown_data unknown_array[2];
+			unsigned char unknown4FAC[0x54];
+		};
+		static_assert(sizeof(player_data) == 0x5000);
+
+		player_data players[4];
+	};
+	static_assert(sizeof(first_person_weapon_globals) == 0x14000);
 
 	struct cortana_globals
 	{

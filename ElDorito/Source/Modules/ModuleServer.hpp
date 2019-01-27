@@ -56,6 +56,14 @@ namespace Modules
 		Command* VarChatCommandEndGameEnabled;
 		Command* VarChatCommandVoteTime;
 		Command* VarChatCommandShuffleTeamsEnabled;
+		Command* VarChatVoteAction;
+		Command* VarChatVoteActionClient;
+		Command* VarChatVoteStarted;
+		Command* VarChatVoteStartedClient;
+		Command* VarChatVotesNeeded;
+		Command* VarChatVotesNeededClient;
+		Command* VarChatVoteStartedByUid;
+		Command* VarChatVoteStartedByUidClient;
 		Command* VarPlayersInfo;
 		Command* VarPlayersInfoClient;
 		Command* VarNumTeams;
@@ -63,9 +71,6 @@ namespace Modules
 		Command* VarSignalServerPort;
 		Command* VarSendChatToRconClients;
 		Command* VarHttpServerCacheTime;
-		Command* VarInsertionPoint;
-		Command* VarInsertionPointClient;
-
 
 		//Veto System Commands
 		Command* VarNumberOfVetoVotes;
@@ -79,6 +84,8 @@ namespace Modules
 
 		std::unordered_set<std::string> NonAllowedNames = std::unordered_set<std::string>{};
 		void refreshNonAllowedNames();
+		Command* VarBanListSyncIntervalSeconds;
+		Command* VarReturnToLobbyTimeoutSeconds;
 
 		uint8_t SyslinkData[0x176];
 

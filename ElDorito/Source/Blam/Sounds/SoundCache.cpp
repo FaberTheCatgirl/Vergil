@@ -10,11 +10,8 @@ namespace Blam::SoundCache {
 		FLAG4 = 0x1 << 3
 	};
 
-	DataArray<Blam::XboxSoundDatum> &globalXboxSounds = *(DataArray<Blam::XboxSoundDatum> *)0x2497CF8;
 
-
-
-	int32_t AllocateSound(int32_t SoundTagIndex, Sound::PermutationChunk *Chunk, uint32_t a3) {
+	int32_t AllocateSound(int32_t SoundTagIndex, PermutationChunk *Chunk, uint32_t a3) {
 
 		int32_t return_flags = NONE;
 
@@ -31,7 +28,7 @@ namespace Blam::SoundCache {
 		if (Chunk->RuntimeIndex != -1) {
 			return_flags = FLAG2;
 			if (v4) {
-				++globalXboxSounds[Chunk->RuntimeIndex].NumberTimesRequested;
+				//++globalXboxSounds[Chunk->RuntimeIndex].NumberTimesRequested;
 				return_flags |= FLAG3;
 			}
 		}
@@ -47,7 +44,7 @@ namespace Blam::SoundCache {
 		return return_flags;
 	}
 
-	int32_t AllocateSoundInArray(int32_t SoundTagIndex, Sound::PermutationChunk *Chunk, int8_t *a3) {
+	int32_t AllocateSoundInArray(int32_t SoundTagIndex, PermutationChunk *Chunk, int8_t *a3) {
 		//This is only used to signal that a allocation has been made
 		*a3 = 0;
 
@@ -58,13 +55,13 @@ namespace Blam::SoundCache {
 			// Why bother doing that? It<s in the decompiled code but doesn't seem to be used anywhere.
 			int chunkSize = Memory::Align16Bits(0x3FFFFFF & Chunk->EncodedSize);
 
-			Blam::DatumHandle handle = AllocateDatum(&globalXboxSounds);
+			//Blam::DatumHandle handle = AllocateDatum<Blam::XboxSoundDatum>(globalXboxSounds);
 
-			Chunk->RuntimeIndex = handle.Index;
-			result = SoundTagIndex;
-			globalXboxSounds[handle.Index].Chunk = Chunk;
-			globalXboxSounds[handle.Index].NumberTimesRequested = 0;
-			globalXboxSounds[handle.Index].SoundTagIndex = SoundTagIndex;
+			//Chunk->RuntimeIndex = handle.Index;
+			//result = SoundTagIndex;
+			//globalXboxSounds[handle.Index].Chunk = Chunk;
+			//globalXboxSounds[handle.Index].NumberTimesRequested = 0;
+			//globalXboxSounds[handle.Index].SoundTagIndex = SoundTagIndex;
 		}
 
 		return result;

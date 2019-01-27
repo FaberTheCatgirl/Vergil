@@ -12,7 +12,6 @@
 #include "../Blam/Tags/Game/GameEngineSettings.hpp"
 #include "../Blam/Tags/Scenario/Scenario.hpp"
 #include "../Patches/Core.hpp"
-#include "../Patches/Forge.hpp"
 #include "../Patches/Maps.hpp"
 #include "../Web/WebRenderer.hpp"
 #include "../Web/Ui/ScreenLayer.hpp"
@@ -264,9 +263,8 @@ namespace
 
 		auto mapName = Arguments[0];
 
-		auto gameTypeStr = "none";
-		Blam::GameType gameType = Blam::eGameTypeBase;
-		Blam::MapType mapType = Blam::eMapTypeMultiplayer;
+		Blam::GameType gameType = Blam::GameType::eGameTypeBase;
+		Blam::MapType mapType = Blam::MapType::eMapTypeMultiplayer;
 
 		if (std::find(Modules::ModuleGame::Instance().MapList.begin(), Modules::ModuleGame::Instance().MapList.end(), mapName) == Modules::ModuleGame::Instance().MapList.end())
 		{
@@ -282,8 +280,7 @@ namespace
 			size_t i;
 			for (i = 0; i < Blam::eGameTypeCount; i++)
 			{
-				// Todo: case insensiive
-				if (!Blam::GameTypeNames[i].compare(Arguments[1]))
+				if (!Utils::String::ToLower(Blam::GameTypeNames[i]).compare(Utils::String::ToLower(Arguments[1])))
 				{
 					gameType = Blam::GameType(i);
 					break;
@@ -294,17 +291,16 @@ namespace
 				gameType = (Blam::GameType)std::atoi(Arguments[1].c_str());
 
 			if (gameType > Blam::eGameTypeCount) // only valid gametypes are 1 to 10
-				gameType = Blam::eGameTypeSlayer;
+				gameType = Blam::GameType::eGameTypeSlayer;
 		}
 
 		if (Arguments.size() >= 3)
 		{
-			//Look up gamemode string.
+			//Look up maptype string.
 			size_t i;
 			for (i = 0; i < Blam::eMapTypeCount; i++)
 			{
-				// Todo: case insensiive
-				if (!Blam::MapTypeNames[i].compare(Arguments[2]))
+				if (!Utils::String::ToLower(Blam::MapTypeNames[i]).compare(Utils::String::ToLower(Arguments[2])))
 				{
 					mapType = Blam::MapType(i);
 					break;
@@ -314,8 +310,8 @@ namespace
 			if (i == Blam::eMapTypeCount)
 				mapType = (Blam::MapType)std::atoi(Arguments[2].c_str());
 
-			if (mapType > Blam::eMapTypeCount) // only valid gametypes are 1 to 10
-				mapType = Blam::eMapTypeMultiplayer;
+			if (mapType > Blam::eMapTypeCount) // only valid gametypes are 1 to 5
+				mapType = Blam::MapType::eMapTypeMultiplayer;
 		}
 
 		ss << "Loading " << mapName << " gametype: " << Blam::GameTypeNames[gameType] << " maptype: " << Blam::MapTypeNames[mapType];
@@ -326,7 +322,7 @@ namespace
 		// Infinite play time
 		Pointer(0x2391C51).Write<uint8_t>(0);
 
-		// Map Type
+		// Game Mode
 		Pointer(0x2391800).Write<uint32_t>(mapType);
 
 		// Map Name
@@ -455,10 +451,10 @@ namespace
 		size_t variantOffset;
 		switch (Blam::Network::GetLobbyType())
 		{
-		case Blam::eLobbyTypeMultiplayer:
+		case Blam::eLobbyTypeMultiplayer: // Customs
 			variantOffset = 0x7F0;
 			break;
-		case Blam::eLobbyTypeForge:
+		case Blam::eLobbyTypeForge: // Forge
 			variantOffset = 0xEA98;
 			break;
 		default:
@@ -606,13 +602,13 @@ namespace
 		// Search through each variant type until something is found
 		auto index = -1;
 		int type;
-		for (type = 1; type < Blam::GameType::eGameTypeCount; type++)
+		for (type = 1; type < Blam::eGameTypeCount; type++)
 		{
 			index = FindDefaultGameVariant(wezr, static_cast<Blam::GameType>(type), name);
 			if (index != -1)
 				break;
 		}
-		if (type == Blam::GameType::eGameTypeCount)
+		if (type == Blam::eGameTypeCount)
 			return false;
 
 		const auto VariantDataSize = 0x264;
@@ -623,19 +619,6 @@ namespace
 		auto LoadBuiltInGameVariant = reinterpret_cast<LoadBuiltInGameVariantPtr>(0x572270);
 		return LoadBuiltInGameVariant(static_cast<Blam::GameType>(type), index, out);
 	}
-
-	const std::string GameTypeExtensions[] =
-	{
-		"ctf",
-		"slayer",
-		"oddball",
-		"koth",
-		"jugg",
-		"terries",
-		"assault",
-		"zombiez",
-		"vip",
-	};
 
 	bool CommandGameType(const std::vector<std::string>& Arguments, std::string& returnInfo)
 	{
@@ -656,7 +639,7 @@ namespace
 		// corresponding to each supported game mode
 		std::ifstream gameVariant;
 		std::string variantFileName;
-		for (auto &&extension : GameTypeExtensions)
+		for (auto &&extension : Blam::GameTypeExtensions)
 		{
 			variantFileName = "mods/variants/" + name + "/variant." + extension;
 			gameVariant.open(variantFileName, std::ios::binary);
@@ -1192,8 +1175,31 @@ namespace Modules
 
 		AddCommand("Update", "update", "Update the game to the latest version", eCommandFlagsNone, CommandGameUpdate);
 
-		VarMenuURL = AddVariableString("MenuURL", "menu_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "http://scooterpsu.github.io/");
+		VarMenuURL = AddVariableString("MenuURL", "menu_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "http://rabidsquabbit.github.io/");
 
+		VarLoadingURL = AddVariableString("LoadingURL", "loading_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/loading/");
+
+		VarScoreboardURL = AddVariableString("ScoreboardURL", "scoreboard_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "http://rabidsquabbit.github.io/screens/scoreboard/");
+		VarKeyboardURL = AddVariableString("KeyboardURL", "keyboard_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/keyboard/");
+		VarConsoleURL = AddVariableString("ConsoleURL", "console_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/console/");
+		VarChatURL = AddVariableString("ChatURL", "chat_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/chat/");
+		VarMedalsURL = AddVariableString("MedalsURL", "madals_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/medals/");
+		VarVotingURL = AddVariableString("VotingURL", "voting_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/voting/");
+		VarTitleURL = AddVariableString("TitleURL", "title_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/title/");
+		VarAlertURL = AddVariableString("AlertURL", "alert_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/alert/");
+		VarSettingsURL = AddVariableString("SettingsURL", "settings_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/settings/");
+		VarServerSettingsURL = AddVariableString("ServerSettingsURL", "server_settings_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/server_settings/");
+		ProfileSettingsURL = AddVariableString("ProfileSettingsURL", "profile_settings_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/profile_settings/");
+		ForgeObjectPropertiesURL = AddVariableString("ForgeObjectPropertiesURL", "forge_properties_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/object_properties/");
+		VarForgeObjectCreationURL = AddVariableString("ForgeObjectCreationURL", "forge_object_creation_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/object_creation/");
+		VarSpectateURL = AddVariableString("SpectateURL", "spectate_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/spectate/");
+		VarVoipURL = AddVariableString("VoipURL", "voip_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/voip/");
+		VarWeaponOffsetURL = AddVariableString("WeaponOffsetURL", "weapon_offset_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/weapon_offset/");
+		VarScreenshotNoticeURL = AddVariableString("ScreenshotNoticeURL", "weapon_offset_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/screenshot_notice/");
+		VarExitURL = AddVariableString("ExitURL", "exit_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/exit/");
+		VarDiscordURL = AddVariableString("DiscordURL", "discord_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/discord/");
+		VarReportURL = AddVariableString("ReportURL", "report_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "http://rabidsquabbit.github.io/screens/report/");
+		VarInGameVotingURL = AddVariableString("InGameVotingURL", "ingame_voting", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/ingame_voting/");
 		VarLanguage = AddVariableString("Language", "language", "The language to use", eCommandFlagsArchived, "english", VariableLanguageUpdated);
 
 		VarSkipTitleSplash = AddVariableInt("SkipTitleSplash", "titlesplash", "Skip the ElDewrito splash screen and go straight to the main menu", eCommandFlagsArchived, 0);
@@ -1236,6 +1242,8 @@ namespace Modules
 		VarScreenshotNoticeDisabled = AddVariableInt("ScreenshotNoticeDisabled", "screenshot_notice_disabled", "Disables the screenshot notifications", eCommandFlagsArchived, 0);
 
 		VarCefMedals = AddVariableInt("CefMedals", "cef_medals", "Enable/disable cef medals. When disabled fallback to the H3 medal system.", eCommandFlagsArchived, 0);
+
+		VarFpsLimiter = AddVariableInt("FPSLimiter", "fps_limiter", "Enable/disable framerate limiter (improves frame timing at the cost of cpu usage)", eCommandFlagsArchived, 0);
 
 		VarDiscordEnable = AddVariableInt("Discord.Enable", "discord.enable", "Enable/disable discord integration", eCommandFlagsArchived, 1);
 		VarDiscordAutoAccept = AddVariableInt("Discord.AutoAccept", "discord.auto_accept", "Allow auto accepting join requests", eCommandFlagsArchived, 0);

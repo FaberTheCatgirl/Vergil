@@ -138,7 +138,8 @@ namespace Blam::Tags::Sounds
 
 		// Platform Codec
 
-		int16_t Unknown3;
+		int8_t Unknown3;
+		int8_t LoadMode;
 		int8_t Encoding;
 		int8_t Compression;
 
@@ -210,7 +211,7 @@ namespace Blam::Tags::Sounds
 			Math::Bounds<int16_t> Bend;
 			Math::Bounds<int16_t> MaxGainPitch;
 			Math::Bounds<int16_t> Unknown2;
-			uint32_t Unknown3;
+			float Unknown3;
 			uint32_t Unknown4;
 			uint32_t Unknown5;
 			uint32_t Unknown6;

@@ -5,7 +5,7 @@
 #include <boost/filesystem.hpp>
 #include "include/cef_stream.h"
 #include "include/wrapper/cef_stream_resource_handler.h"
-
+#include "unordered_map"
 using namespace Anvil::Client::Rendering;
 
 namespace

@@ -213,9 +213,16 @@ dew.on("chat", function(e){
         chatClass += ' emote';
         e.data.message = e.data.message.substring(4, e.data.message.length);
     }
+
+    e.data.message =  e.data.message.substring(0, Math.min(128,  e.data.message.length));
     
-    var messageText = e.data.message.replace(/\</g,"&lt;").replace(/\>/g,"&gt;").replace(/&#x3C;/g,'&lt;').replace(/&#x3E;/g,'&gt;');
-    $("#chatWindow").append($('<span>', { class: messageClass, css: { backgroundColor: bgColor}, text: e.data.sender }).wrap($('<p>', { class: chatClass })).parent().append($("<div>").text(messageText).text().replace(/\bhttp[^ ]+/ig, aWrap))); 
+    var messageHtml = escapeHtml(e.data.message).replace(/\bhttps?:\/\/[^ ]+/ig, aWrap);
+    $("#chatWindow").append($('<span>', { 
+        class: messageClass, 
+        css: { backgroundColor: bgColor}, 
+        text: e.data.sender 
+    })
+    .wrap($('<p>', { class: chatClass })).parent().append(messageHtml));
     
     if(settingsArray['Game.HideChat'] == 0){
         dew.show();
@@ -274,8 +281,28 @@ function hexToRgba(hex,opacity){
 }
 
 function aWrap(link) {
-    return '<a href="' + link + '" target="_blank" style="color: dodgerblue">' + link + '<\/a>';
+    link = unescapeHtml(link);
+   if(/\b[^-A-Za-z0-9+&@#/%?=~_|!:,.;\(\)]+/ig.test(link))
+        return '';
+    var e = document.createElement('a');
+    e.setAttribute('href', link);
+    e.setAttribute('target', '_blank');
+    e.setAttribute('style', 'color:dodgerblue');
+    e.textContent = link;
+    return e.outerHTML;
 };
+
+function escapeHtml(str) {
+    var div = document.createElement('div');
+    div.appendChild(document.createTextNode(str));
+    return div.innerHTML;
+}
+
+function unescapeHtml(str) {
+    var e = document.createElement('div');
+    e.innerHTML = str;
+    return e.childNodes.str === 0 ? "" : e.childNodes[0].nodeValue;
+}
 
 function adjustColor(color, amount){
     var colorhex = (color.split("#")[1]).match(/.{2}/g);
