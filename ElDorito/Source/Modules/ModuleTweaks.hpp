@@ -16,6 +16,7 @@ namespace Modules
 		Command *VarEliteHUD;
 		Command *VarSinglethreaded;
 		Command *VarDisableMetagame;
+		Command *VarHalo3MoppFixup;
 
 		ModuleTweaks();
 	};
