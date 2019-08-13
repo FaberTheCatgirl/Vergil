@@ -350,7 +350,7 @@ namespace Modules
 		VarCloneMultiplier = AddVariableInt("CloneMultiplier", "forge_clone_multiplier", "Number of consecutive times the object will be cloned", eCommandFlagsNone, 1);
 		VarRotationSnap = AddVariableInt("RotationSnap", "forge_rotation_snap", "Angle at which object rotation will be snapped", eCommandFlagsNone, 0);
 		VarRotationSnap->ValueIntMin = 0;
-		VarRotationSnap->ValueIntMax = 6;
+		VarRotationSnap->ValueIntMax = 180;
 		VarRotationSensitivity = AddVariableFloat("RotationSensitivity", "forge_rotation_sensitivity", "Controls the sensitivity of object rotation", eCommandFlagsArchived, 1.0f);
 		VarMonitorSpeed = AddVariableInt("MonitorSpeed", "forge_monitor_speed", "Controls the movement speed of the monitor", eCommandFlagsArchived, 3);
 		VarMonitorSpeed->ValueIntMin = 0;

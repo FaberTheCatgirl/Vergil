@@ -41,10 +41,10 @@ namespace Forge::RotationSnap
 
 		static auto& moduleForge = Modules::ModuleForge::Instance();
 		auto currentSnapIndex = moduleForge.VarRotationSnap->ValueInt;
-		if (currentSnapIndex < 0 || currentSnapIndex > 6)
+		if (currentSnapIndex < 0 || currentSnapIndex > 180)
 			currentSnapIndex = 0;
 
-		const auto snapAngleDegrees = SNAP_ANGLES[currentSnapIndex];
+		const auto snapAngleDegrees = currentSnapIndex; //SNAP_ANGLES[currentSnapIndex];
 
 		if (snapAngleDegrees < 1 && !s_RotationSnapState.IsScripted)
 			return;
@@ -93,7 +93,7 @@ namespace Forge::RotationSnap
 	{
 		static auto& moduleForge = Modules::ModuleForge::Instance();
 		auto currentSnap = moduleForge.VarRotationSnap->ValueInt;
-		const auto snapAngleDegrees = SNAP_ANGLES[currentSnap];
+		const auto snapAngleDegrees = currentSnap;//SNAP_ANGLES[currentSnap];
 		const auto snapAngleRadians = snapAngleDegrees / 180.0f * Blam::Math::PI;
 
 		if (s_RotationSnapState.Current < 1)
@@ -130,14 +130,14 @@ namespace
 		static auto& moduleForge = Modules::ModuleForge::Instance();
 
 		if (value < 0) value = 0;
-		if (value > 6) value = 6;
+		if (value > 6) value = 90;
 
 		std::string prev;
 		Modules::CommandMap::Instance().SetVariable(moduleForge.VarRotationSnap, std::to_string(value), prev);
 
 		wchar_t buff[256];
 		if (value > 0)
-			swprintf_s(buff, 256, L"Rotation Snap: %.2f\n", SNAP_ANGLES[value]);
+			swprintf_s(buff, 256, L"Rotation Snap: %.2f\n", value);//SNAP_ANGLES[value]);
 		else
 			swprintf_s(buff, 256, L"Rotation Snap: OFF");
 
@@ -163,7 +163,7 @@ namespace
 				currentSnap = snapAngleCount - 1;
 
 			uiLeftAction->Flags |= eActionStateFlagsHandled;
-			SetSnap(currentSnap);
+			SetSnap(0);
 		}
 		if (!(uiRightAction->Flags & eActionStateFlagsHandled) &&  uiRightAction->Ticks == 1)
 		{
@@ -171,7 +171,7 @@ namespace
 				currentSnap = 0;
 
 			uiRightAction->Flags |= eActionStateFlagsHandled;
-			SetSnap(currentSnap);
+			SetSnap(90);
 		}
 	}
 }
