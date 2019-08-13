@@ -860,15 +860,8 @@
 
             m.add(makeDewProperty('Forge.GrabDistance', 'Grab Distance', 'range', { min: 1, max: 60, step: 0.1 }));
             m.add(makeDewProperty('Forge.RotationSensitivity', 'Rotation Sensitvity', 'range', { min: 0, max: 4, step: 0.05 }));
-            m.add(makeDewProperty('Forge.RotationSnap', 'Rotation Snap', 'spinner', [
-                { label: 'Off', value: 0 },
-                { label: '3', value: 1 },
-                { label: '5', value: 2 },
-                { label: '15', value: 3 },
-                { label: '30', value: 4 },
-                { label: '45', value: 5 },
-                { label: '90', value: 6 },
-            ]));
+            m.add(makeDewProperty('Forge.RotationSnap', 'Rotation Snap', 'range', { min: 0, max: 180, step: 1 }));
+
 
             m.add(makeDewProperty('Forge.SelectionRenderer', 'Selection Renderer', 'spinner', [
                 { label: 'Default', value: 0 },
