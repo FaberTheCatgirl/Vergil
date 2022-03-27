@@ -45,7 +45,7 @@ dew.on("show", function(e){
         });
     }else{
         $("#blackLayer").hide();
-        $.getJSON( "https://raw.githubusercontent.com/ElDewrito/ElDorito/master/currentRelease.json", function(data) {
+        $.getJSON( "https://raw.githubusercontent.com/VaktorTV/ElDorito/master/currentRelease.json", function(data) {
             dew.getVersion().then(function (version) {
                 if(parseVersion(data.release[0].version) != parseVersion(version)) {
                     dew.show('alert',{"title":"Update Available!", "body":"There is a newer version of ElDewrito available.|r|n|r|nWould you like to launch the updater?", "type":"update"});

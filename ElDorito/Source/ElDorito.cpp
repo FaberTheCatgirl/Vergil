@@ -257,7 +257,7 @@ void ElDorito::Initialize()
 		}
 	}
 
-	setWatermarkText("ElDewrito | Version: " + Utils::Version::GetVersionString() + " | Build Date: " __DATE__);
+	setWatermarkText("Unofficial ElDewrito | Version: " + Utils::Version::GetVersionString() + " | Build Date: " __DATE__);
 
 	// Ensure a ban list file exists
 	Server::SaveDefaultBanList(Server::LoadDefaultBanList());

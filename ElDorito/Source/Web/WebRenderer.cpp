@@ -85,7 +85,7 @@ bool WebRenderer::Init(const std::string &p_Url, bool p_EnableDebugging)
 #else
 	s_Settings.multi_threaded_message_loop = false;
 #endif
-	CefString(&s_Settings.product_version) = "ElDewrito";
+	CefString(&s_Settings.product_version) = "Unofficial ElDewrito";
 	CefString(&s_Settings.browser_subprocess_path) = "custom_menu.exe";
 	CefString(&s_Settings.log_file) = "custom_menu.log";
 	s_Settings.no_sandbox = true;
