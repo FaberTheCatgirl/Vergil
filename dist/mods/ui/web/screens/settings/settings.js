@@ -765,6 +765,7 @@ function resetButton(){
             initializeBindings();
         });
     }else{
+		alertBoxReset("Are you sure you want to reset the settings?", function() {	
         dew.command('Settings.Reset').then(function(){
             setControlValues();
             initGamepad();
@@ -1283,6 +1284,9 @@ function queueChange(changeBlock){
 }
 
 function alertBox(alertText, dismissButton){
+	$('#okButton').show();
+	$('#acceptButton').hide();
+	$('#denyButton').hide();
     if(dismissButton){
         $('#dismissButton').show();
     }else{
@@ -1292,6 +1296,25 @@ function alertBox(alertText, dismissButton){
     $('#alertBox').fadeIn(100);
     activePage = activePage+'alertBox';
     dew.command('Game.PlaySound sound\\game_sfx\\ui\\button_based_ui_sounds\\x_button.snd!');
+}
+
+function alertBoxReset(alertText, callback){
+	$('#okButton').hide();
+	$('#dismissButton').hide();
+	$('#acceptButton').show();
+	$('#denyButton').show();
+	$("#acceptButton").off('click').on('click', function(e){
+		console.log("reset settings");
+		callback();	
+		hideAlert(true);
+	});
+	$("#denyButton").off('click').on('click', function(e){
+		hideAlert(true);
+	});
+    $('#wDescription').text(alertText);
+    $('#alertBox').fadeIn(100);
+    activePage = activePage+'alertBox';
+    dew.command('Game.PlaySound 0x0B02');
 }
 
 function hideAlert(sound){
