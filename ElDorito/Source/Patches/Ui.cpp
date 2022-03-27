@@ -52,6 +52,7 @@ namespace
 	int UI_ShowHalo3PauseMenu(uint32_t a1, uint32_t a2, uint32_t a3, uint32_t a4, uint32_t a5);
 	void UI_EndGame();
 	char __fastcall UI_Forge_ButtonPressHandlerHook(void* a1, int unused, uint8_t* controllerStruct);
+	void LocalizedStringHook();
 	void LobbyMenuButtonHandlerHook();
 	void WindowTitleSprintfHook(char* destBuf, char* format, char* version);
 	void ResolutionChangeHook();
@@ -238,7 +239,7 @@ namespace Patches::Ui
 		Pointer::Base(0x723E1C).Write<uint8_t>(0);
 
 		// Localized string override hook
-		//Hook(0x11E040, LocalizedStringHook).Apply();
+		Hook(0x11E040, LocalizedStringHook).Apply();
 
 		// Hook window title sprintf to replace the dest buf with our string
 		Hook(0x2EB84, WindowTitleSprintfHook, HookFlags::IsCall).Apply();
@@ -873,10 +874,57 @@ namespace
 		return buttonHandler(a1, controllerStruct);
 	}
 
+	bool LocalizedStringHookImpl(int tagIndex, int stringId, wchar_t* outputBuffer)
+	{
+		const size_t MaxStringLength = 0x400;
+
+		switch (stringId)
+		{
+		case 0x1010A: // start_new_campaign
+		{
+			// Get the version string, convert it to uppercase UTF-16, and return it
+			std::string version = Utils::Version::GetVersionString();
+			std::transform(version.begin(), version.end(), version.begin(), toupper);
+			std::wstring unicodeVersion(version.begin(), version.end());
+			swprintf(outputBuffer, MaxStringLength, L"UNOFFICIAL ELDEWRITO %s", unicodeVersion.c_str());
+			return true;
+		}
+		}
+		return false;
+	}
+
 	void WindowTitleSprintfHook(char* destBuf, char* format, char* version)
 	{
 		std::string windowTitle = "ElDewrito | Version: " + Utils::Version::GetVersionString() + " | Build Date: " __DATE__;
 		strcpy_s(destBuf, 0x40, windowTitle.c_str());
+	}
+
+	__declspec(naked) void LocalizedStringHook()
+	{
+		__asm
+		{
+			// Run the hook implementation function and fallback to the original if it returned false
+			push ebp
+			mov ebp, esp
+			push[ebp + 0x10]
+			push[ebp + 0xC]
+			push[ebp + 0x8]
+			call LocalizedStringHookImpl
+			add esp, 0xC
+			test al, al
+			jz fallback
+
+			// Don't run the original function
+			mov esp, ebp
+			pop ebp
+			ret
+
+			fallback :
+			// Execute replaced code and jump back to original function
+			sub esp, 0x800
+				mov edx, 0x51E049
+				jmp edx
+		}
 	}
 
 	__declspec(naked) void LobbyMenuButtonHandlerHook()
