@@ -1274,27 +1274,32 @@ namespace
 			{
 				// TODO: Maybe check the menu item's text over the index?
 
-				switch (id)
+				switch (itemIndex)
 				{
-				case 0x10075: // matchmaking: Server Browser
+				case 0: // Server Browser
 					Web::Ui::ScreenLayer::Show("browser", "{}");
 					return;
 
-				case 0x1036A: // local: Local Games
+				case 1: // Host Multiplayer
+					break;
+
+				case 2: // Host Forge
+					break;
+
+				case 3: // Local Games
 					ShowLanBrowser();
 					return;
 
-				/*case 0x1007C: // theater: Customization
+				case 4: // Customization
 					Web::Ui::ScreenLayer::Show("profile_settings", "{}");
-					return;*/
-
-				case 0x3FA3: // settings: Settings
-					//Web::Ui::ScreenLayer::Show("settings", "{}");
-					Patches::Ui::ShowDialog(0x10084);
 					return;
 
-				case 0x55: // exit: Exit
+				case 5: // Exit
 					Web::Ui::ScreenLayer::Show("exit", "{}");
+					return;
+
+				case 6: // Settings
+					Web::Ui::ScreenLayer::Show("settings", "{}");
 					return;
 				}
 			}
