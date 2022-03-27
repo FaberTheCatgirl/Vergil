@@ -423,7 +423,7 @@ namespace Modules
 		float zPos = directorGlobalsPtr(0x83C).Read<float>();
 		float xShift = directorGlobalsPtr(0x840).Read<float>();
 		float yShift = directorGlobalsPtr(0x844).Read<float>();
-		float zShift = directorGlobalsPtr(0x845).Read<float>();
+		float zShift = directorGlobalsPtr(0x848).Read<float>();
 		float hShift = directorGlobalsPtr(0x84C).Read<float>();
 		float vShift = directorGlobalsPtr(0x850).Read<float>();
 		float depth = directorGlobalsPtr(0x854).Read<float>();
