@@ -1,5 +1,5 @@
 #include <fstream>
-#include "StringIDCache.hpp"
+#include "Blam\Cache\StringIDCache.hpp"
 
 namespace Blam::Cache
 {

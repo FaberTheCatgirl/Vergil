@@ -186,8 +186,8 @@
 
 #pragma once
 
-#include "../Blam/BitStream.hpp"
-#include "../Blam/BlamNetwork.hpp"
+#include "Blam\BitStream.hpp"
+#include "Blam\BlamNetwork.hpp"
 
 #include <string>
 #include <cstdint>

@@ -1,6 +1,6 @@
 #pragma once
-#include "../../Tags.hpp"
-#include "CacheMissMode.hpp"
+#include "Blam\Tags\Tags.hpp"
+#include "Blam\Tags\Sounds\SoundClasses\CacheMissMode.hpp"
 
 namespace Blam::Tags::Sounds {
 	struct ClassProperty

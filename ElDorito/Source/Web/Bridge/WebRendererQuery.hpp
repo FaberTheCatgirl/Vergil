@@ -1,7 +1,7 @@
 #pragma once
 
 #include <functional>
-#include "../../ThirdParty/rapidjson/document.h"
+#include "ThirdParty\rapidjson\document.h"
 
 namespace Anvil::Client::Rendering::Bridge
 {

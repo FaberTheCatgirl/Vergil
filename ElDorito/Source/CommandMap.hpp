@@ -5,7 +5,7 @@
 #include <Windows.h>
 #include <functional>
 
-#include "Utils/Singleton.hpp"
+#include "Utils\Singleton.hpp"
 
 enum VariableSetReturnValue
 {

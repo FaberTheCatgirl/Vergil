@@ -1,11 +1,11 @@
 #pragma once
-#include <include/cef_client.h>
-#include <include/cef_render_handler.h>
-#include <include/wrapper/cef_message_router.h>
+#include <include\cef_client.h>
+#include <include\cef_render_handler.h>
+#include <include\wrapper\cef_message_router.h>
 #include <d3d9.h>
 #include <mutex>
 #include <memory>
-#include "../Utils/Rectangle.hpp"
+#include "Utils\Rectangle.hpp"
 
 namespace Anvil::Client::Rendering
 {

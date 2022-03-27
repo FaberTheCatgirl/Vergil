@@ -1,4 +1,4 @@
-#include "Random.hpp"
+#include "Blam\Math\Random.hpp"
 
 namespace Blam::Math {
 

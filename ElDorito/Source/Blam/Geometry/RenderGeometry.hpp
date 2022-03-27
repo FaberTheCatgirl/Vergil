@@ -1,12 +1,12 @@
 #pragma once
 
-#include "../Math/Bounds.hpp"
-#include "../Math/RealPlane3D.hpp"
-#include "../Math/RealPoint3D.hpp"
+#include "Blam\Math\Bounds.hpp"
+#include "Blam\Math\RealPlane3D.hpp"
+#include "Blam\Math\RealPoint3D.hpp"
 
-#include "../Tags/TagBlock.hpp"
-#include "../Tags/TagData.hpp"
-#include "../Tags/TagStructureReference.hpp"
+#include "Blam\Tags\TagBlock.hpp"
+#include "Blam\Tags\TagData.hpp"
+#include "Blam\Tags\TagStructureReference.hpp"
 
 namespace Blam::Geometry
 {

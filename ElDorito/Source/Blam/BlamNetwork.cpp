@@ -1,8 +1,9 @@
 #include <WS2tcpip.h>
 #define WIN32_LEAN_AND_MEAN
 
-#include "BlamNetwork.hpp"
-#include "../Pointer.hpp"
+#include "Blam\BlamNetwork.hpp"
+#include "Pointer.hpp"
+//#include "Discord\DiscordRPC.h"
 
 namespace
 {
@@ -270,7 +271,12 @@ namespace Blam::Network
 	bool SetNetworkMode(NetworkMode mode)
 	{
 		auto Set_Network_Mode = (bool(__cdecl*)(NetworkMode))(0x00A7F950);
-		return Set_Network_Mode(mode);
+		bool success = Set_Network_Mode(mode);
+
+		//Let Discord Know
+		//Discord::DiscordRPC::Instance().UpdatePresence(mode);
+
+		return success;
 	}
 	
 	bool Disconnect()

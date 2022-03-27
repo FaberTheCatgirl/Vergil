@@ -1,11 +1,11 @@
 #include <winsock2.h>
-#include "WebRendererSchemeHandlerFactory.hpp"
-#include <boost/network/uri.hpp>
-#include <boost/algorithm/string.hpp>
-#include <boost/filesystem.hpp>
-#include "include/cef_stream.h"
-#include "include/wrapper/cef_stream_resource_handler.h"
-#include "unordered_map"
+#include "Web\WebRendererSchemeHandlerFactory.hpp"
+#include <boost\network\uri.hpp>
+#include <boost\algorithm\string.hpp>
+#include <boost\filesystem.hpp>
+#include <include\cef_stream.h>
+#include <include\wrapper\cef_stream_resource_handler.h>
+#include <unordered_map>
 using namespace Anvil::Client::Rendering;
 
 namespace

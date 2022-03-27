@@ -1,4 +1,4 @@
-#include "Network.hpp"
+#include "Patches\Network.hpp"
 
 #define _WINSOCK_DEPRECATED_NO_WARNINGS // TODO: Remove this and fix the deprecated calls
 #include <WinSock2.h>
@@ -8,26 +8,26 @@
 #include <fstream>
 #include <iomanip>
 
-#include "PlayerPropertiesExtension.hpp"
-#include "../Patch.hpp"
-#include "../Utils/VersionInfo.hpp"
-#include "../Modules/ModuleServer.hpp"
-#include "../ElDorito.hpp"
-#include "../ThirdParty/rapidjson/writer.h"
-#include "../ThirdParty/rapidjson/stringbuffer.h"
-#include "../Blam/BlamNetwork.hpp"
-#include "../Server/BanList.hpp"
-#include "../Modules/ModulePlayer.hpp"
-#include "../Modules/ModuleServer.hpp"
-#include "../Modules/ModuleUPnP.hpp"
-#include "../Server/Voting.hpp"
-#include "../Server/Stats.hpp"
-#include "../Utils/Logger.hpp"
-#include "../Web/Ui/ScreenLayer.hpp"
-#include "../Server/Signaling.hpp"
+#include "Patches\PlayerPropertiesExtension.hpp"
+#include "Patch.hpp"
+#include "Utils\VersionInfo.hpp"
+#include "Modules\ModuleServer.hpp"
+#include "ElDorito.hpp"
+#include "ThirdParty\rapidjson\writer.h"
+#include "ThirdParty\rapidjson\stringbuffer.h"
+#include "Blam\BlamNetwork.hpp"
+#include "Server\BanList.hpp"
+#include "Modules\ModulePlayer.hpp"
+#include "Modules\ModuleServer.hpp"
+#include "Modules\ModuleUPnP.hpp"
+#include "Server\Voting.hpp"
+#include "Server\Stats.hpp"
+#include "Utils\Logger.hpp"
+#include "Web\Ui\ScreenLayer.hpp"
+#include "Server\Signaling.hpp"
 
-#include <game\game.hpp>
-#include <game\game_globals.hpp>
+#include "new\game\game.hpp"
+#include "new\game\game_globals.hpp"
 
 namespace
 {

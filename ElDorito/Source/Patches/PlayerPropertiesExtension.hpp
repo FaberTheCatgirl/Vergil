@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../Utils/Singleton.hpp"
-#include "../Blam/BitStream.hpp"
-#include "../Blam/BlamPlayers.hpp"
+#include "Utils\Singleton.hpp"
+#include "Blam\BitStream.hpp"
+#include "Blam\BlamPlayers.hpp"
 
 #include <vector>
 #include <memory>

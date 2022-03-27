@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Blam/BlamTypes.hpp"
+#include "Blam\BlamTypes.hpp"
 
 namespace Patches::Maps
 {

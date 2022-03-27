@@ -1,12 +1,12 @@
-#include "RotationSnap.hpp"
-#include "../Blam/BlamData.hpp"
-#include "../Blam/Math/RealQuaternion.hpp"
-#include "../Blam/Math/RealMatrix4x3.hpp"
-#include "../Blam/Math/MathUtil.hpp"
-#include "../Blam/BlamInput.hpp"
-#include "../Blam/BlamTime.hpp"
-#include "../Modules/ModuleForge.hpp"
-#include "ForgeUtil.hpp"
+#include "Forge\RotationSnap.hpp"
+#include "Blam\BlamData.hpp"
+#include "Blam\Math\RealQuaternion.hpp"
+#include "Blam\Math\RealMatrix4x3.hpp"
+#include "Blam\Math\MathUtil.hpp"
+#include "Blam\BlamInput.hpp"
+#include "Blam\BlamTime.hpp"
+#include "Modules\ModuleForge.hpp"
+#include "Forge\ForgeUtil.hpp"
 
 using namespace Blam;
 using namespace Blam::Math;

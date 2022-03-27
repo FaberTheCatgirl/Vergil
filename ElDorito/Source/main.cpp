@@ -1,6 +1,6 @@
 #include <windows.h>
 #include <IPTypes.h> // for proxy
-#include "Utils/VersionInfo.hpp"
+#include "Utils\VersionInfo.hpp"
 #include "ElDorito.hpp"
 #include "ElPatches.hpp"
 

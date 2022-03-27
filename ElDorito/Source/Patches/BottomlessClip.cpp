@@ -1,10 +1,10 @@
-#include "BottomlessClip.hpp"
-#include "../Patch.hpp"
-#include "../ElDorito.hpp"
-#include "../Blam/BlamObjects.hpp"
-#include "../Blam/BlamPlayers.hpp"
+#include "Patches\BottomlessClip.hpp"
+#include "Patch.hpp"
+#include "ElDorito.hpp"
+#include "Blam\BlamObjects.hpp"
+#include "Blam\BlamPlayers.hpp"
 
-#include <game\game.hpp>
+#include "new\game\game.hpp"
 
 namespace
 {

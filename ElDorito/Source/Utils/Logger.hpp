@@ -1,7 +1,7 @@
 #pragma once
-#include "Singleton.hpp"
+#include "Utils\Singleton.hpp"
 #include <string>
-#include <boost/lockfree/queue.hpp>
+#include <boost\lockfree\queue.hpp>
 #include <mutex>
 #include <windows.h>
 

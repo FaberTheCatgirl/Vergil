@@ -3,20 +3,21 @@
 #include <iostream>
 #include <fstream>
 #include "ElDorito.hpp"
-#include "Modules/ModuleGame.hpp"
-#include "Modules/ModulePlayer.hpp"
-#include "Modules/ModuleWeapon.hpp"
-#include "Modules/ModuleServer.hpp"
-#include "Modules/ModuleSettings.hpp"
-#include "Modules/ModuleCamera.hpp"
-#include "Modules/ModuleInput.hpp"
-#include "Modules/ModuleTime.hpp"
-#include "Modules/ModuleGraphics.hpp"
-#include "Modules/ModuleUPnP.hpp"
-#include "Modules/ModuleDebug.hpp"
-#include "Modules/ModuleVoIP.hpp"
-#include "Modules/ModuleTweaks.hpp"
-#include "Modules/ModuleCampaign.hpp"
+#include "Modules\ModuleGame.hpp"
+#include "Modules\ModulePlayer.hpp"
+#include "Modules\ModuleWeapon.hpp"
+#include "Modules\ModuleServer.hpp"
+#include "Modules\ModuleSettings.hpp"
+#include "Modules\ModuleCamera.hpp"
+#include "Modules\ModuleInput.hpp"
+#include "Modules\ModuleTime.hpp"
+#include "Modules\ModuleGraphics.hpp"
+#include "Modules\ModuleUPnP.hpp"
+#include "Modules\ModuleDebug.hpp"
+#include "Modules\ModuleForge.hpp"
+#include "Modules\ModuleVoIP.hpp"
+#include "Modules\ModuleTweaks.hpp"
+#include "Modules\ModuleCampaign.hpp"
 #include <ShlObj.h>
 
 namespace
@@ -142,6 +143,7 @@ namespace Modules
 		ModuleGraphics::Instance();
 		ModuleUPnP::Instance();
 		ModuleDebug::Instance();
+		ModuleForge::Instance();
 		ModuleVoIP::Instance();
 		ModuleTweaks::Instance();
 		ModuleCampaign::Instance();

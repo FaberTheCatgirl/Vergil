@@ -1,4 +1,4 @@
-#include "Point2D.hpp"
+#include "Blam\Math\Point2D.hpp"
 
 namespace Blam::Math
 {

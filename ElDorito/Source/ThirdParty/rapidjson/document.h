@@ -17,11 +17,11 @@
 
 /*! \file document.h */
 
-#include "reader.h"
-#include "internal/meta.h"
-#include "internal/strfunc.h"
-#include "memorystream.h"
-#include "encodedstream.h"
+#include "ThirdParty\rapidjson\reader.h"
+#include "ThirdParty\rapidjson\internal\meta.h"
+#include "ThirdParty\rapidjson\internal\strfunc.h"
+#include "ThirdParty\rapidjson\memorystream.h"
+#include "ThirdParty\rapidjson\encodedstream.h"
 #include <new>      // placement new
 #include <limits>
 

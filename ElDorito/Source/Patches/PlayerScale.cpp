@@ -1,17 +1,17 @@
-#include "PlayerScale.hpp"
-#include "../Modules/ModulePlayer.hpp"
-#include "../Blam/BlamObjects.hpp"
-#include "../Blam/BlamPlayers.hpp"
-#include "../Blam/Tags/TagBlock.hpp"
-#include "../Blam/Tags/TagInstance.hpp"
-#include "../Blam/BlamTime.hpp"
-#include "../Blam/Math/RealMatrix4x3.hpp"
-#include "../Blam/Tags/Items/DefinitionWeapon.hpp"
-#include "../Blam/Tags/Objects/Biped.hpp"
-#include "../Patch.hpp"
+#include "Patches\PlayerScale.hpp"
+#include "Modules\ModulePlayer.hpp"
+#include "Blam\BlamObjects.hpp"
+#include "Blam\BlamPlayers.hpp"
+#include "Blam\Tags\TagBlock.hpp"
+#include "Blam\Tags\TagInstance.hpp"
+#include "Blam\BlamTime.hpp"
+#include "Blam\Math\RealMatrix4x3.hpp"
+#include "Blam\Tags\Items\DefinitionWeapon.hpp"
+#include "Blam\Tags\Objects\Biped.hpp"
+#include "Patch.hpp"
 
-#include <game\game.hpp>
-#include <game\game_globals.hpp>
+#include "new\game\game.hpp"
+#include "new\game\game_globals.hpp"
 
 namespace
 {

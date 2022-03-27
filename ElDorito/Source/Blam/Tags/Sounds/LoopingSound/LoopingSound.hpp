@@ -1,12 +1,12 @@
 #pragma once
 
-#include <Blam\Tags\Tags.hpp>
-#include <Blam\Math\Bounds.hpp>
-#include <Blam\Text\StringID.hpp>
+#include "Blam\Tags\Tags.hpp"
+#include "Blam\Math\Bounds.hpp"
+#include "Blam\Text\StringID.hpp"
 
-#include "..\SoundClasses\SoundClassEnum.hpp"
-#include "Track.hpp"
-#include "DetailSound.hpp"
+#include "Blam\Tags\Sounds\SoundClasses\SoundClassEnum.hpp"
+#include "Blam\Tags\Sounds\LoopingSound\Track.hpp"
+#include "Blam\Tags\Sounds\LoopingSound\DetailSound.hpp"
 
 namespace Blam::Tags::Sounds
 {

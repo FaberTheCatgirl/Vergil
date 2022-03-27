@@ -1,8 +1,8 @@
 #pragma once
-#include "../../Math/Bounds.hpp"
-#include "../Tags.hpp"
-#include "../../Text/StringID.hpp"
-#include "../Objects/Object.hpp"
+#include "Blam\Math\Bounds.hpp"
+#include "Blam\Tags\Tags.hpp"
+#include "Blam\Text\StringID.hpp"
+#include "Blam\Tags\Objects\Object.hpp"
 
 namespace Blam::Tags::Items
 {

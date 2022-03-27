@@ -1,4 +1,4 @@
-#include "String.h"
+#include "Utils\String.hpp"
 
 // STL
 #include <string>
@@ -11,7 +11,7 @@
 #include <iomanip>
 
 #include <openssl\evp.h>
-#include <boost/algorithm/string/trim.hpp>
+#include <boost\algorithm\string\trim.hpp>
 
 namespace Utils::String
 {

@@ -1,23 +1,25 @@
 #pragma once
-#include "ClientFunctions.hpp"
-#include "../../Ui/ScreenLayer.hpp"
-#include "../../Ui/WebVirtualKeyboard.hpp"
-#include "../../Ui/WebScoreboard.hpp"
-#include "../../../CommandMap.hpp"
-#include "../../../Blam/BlamNetwork.hpp"
-#include "../../../Patches/Network.hpp"
-#include "../../../Patches/Input.hpp"
-#include "../../../Patches/Ui.hpp"
-#include "../../../Modules/ModuleVoIP.hpp"
-#include "../../../Modules/ModulePlayer.hpp"
-#include "../../../Pointer.hpp"
-#include "../../../Server/ServerChat.hpp"
-#include "../../../Utils/VersionInfo.hpp"
-#include "../../../Utils/String.hpp"
-#include "../../../ThirdParty/rapidjson/writer.h"
-#include "../../../ThirdParty/rapidjson/stringbuffer.h"
+#include "Web\Bridge\Client\ClientFunctions.hpp"
+#include "Web\Ui\ScreenLayer.hpp"
+#include "Web\Ui\WebVirtualKeyboard.hpp"
+#include "Web\Ui\WebForge.hpp"
+#include "Web\Ui\WebScoreboard.hpp"
+#include "CommandMap.hpp"
+#include "Blam\BlamNetwork.hpp"
+//#include "Discord\DiscordRPC.h"
+#include "Patches\Network.hpp"
+#include "Patches\Input.hpp"
+#include "Patches\Ui.hpp"
+#include "Modules\ModuleVoIP.hpp"
+#include "Modules\ModulePlayer.hpp"
+#include "Pointer.hpp"
+#include "Server\ServerChat.hpp"
+#include "Utils\VersionInfo.hpp"
+#include "Utils\String.hpp"
+#include "ThirdParty\rapidjson\writer.h"
+#include "ThirdParty\rapidjson\stringbuffer.h"
 
-#include <game\game.hpp>
+#include "new\game\game.hpp"
 
 namespace
 {
@@ -633,9 +635,34 @@ namespace Anvil::Client::Rendering::Bridge::ClientFunctions
 		return QueryError_Ok;
 	}
 
+	QueryError OnForgeAction(const rapidjson::Value& p_Args, std::string* p_Result)
+	{
+		Web::Ui::WebForge::ProcessAction(p_Args, p_Result);
+		return QueryError_Ok;
+	}
+
 	QueryError OnShowLan(const rapidjson::Value &p_Args, std::string *p_Result)
 	{
 		Patches::Ui::ShowLanBrowser();
+		return QueryError_Ok;
+	}
+
+	QueryError OnDiscordReply(const rapidjson::Value& p_Args, std::string* p_Result)
+	{
+		auto userId = p_Args.FindMember("userId");
+		auto replyValue = p_Args.FindMember("reply");
+		if (userId == p_Args.MemberEnd() || !userId->value.IsString())
+		{
+			*p_Result = "Bad query : A \"userId\" argument is required and must be a string";
+			return QueryError_BadQuery;
+		}
+		else if (replyValue == p_Args.MemberEnd() || !replyValue->value.IsNumber())
+		{
+			*p_Result = "Bad query : A \"reply\" argument is required and must be a number";
+			return QueryError_BadQuery;
+		}
+
+		//Discord::DiscordRPC::Instance().ReplyToJoinRequest(userId->value.GetString(), replyValue->value.GetInt());
 		return QueryError_Ok;
 	}
 }

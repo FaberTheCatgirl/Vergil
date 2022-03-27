@@ -1,14 +1,14 @@
-#include "ModuleVoIP.hpp"
+#include "Modules\ModuleVoIP.hpp"
 #include <sstream>
-#include "../Patches/Core.hpp"
-#include "../Patches/Ui.hpp"
-#include "../Patches/Input.hpp"
-#include "../Web/Ui/ScreenLayer.hpp"
-#include "../ThirdParty/rapidjson/writer.h"
-#include "../ThirdParty/rapidjson/stringbuffer.h"
-#include "../Blam/Tags/TagInstance.hpp"
+#include "Patches\Core.hpp"
+#include "Patches\Ui.hpp"
+#include "Patches\Input.hpp"
+#include "Web\Ui\ScreenLayer.hpp"
+#include "ThirdParty\rapidjson\writer.h"
+#include "ThirdParty\rapidjson\stringbuffer.h"
+#include "Blam\Tags\TagInstance.hpp"
 
-#include <game\game.hpp>
+#include "new\game\game.hpp"
 
 namespace
 {

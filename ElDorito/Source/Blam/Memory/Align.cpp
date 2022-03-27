@@ -1,4 +1,4 @@
-#include "Align.hpp"
+#include "Blam\Memory\Align.hpp"
 
 namespace Blam::Memory {
 	int32_t Align16Bits(int32_t value) {

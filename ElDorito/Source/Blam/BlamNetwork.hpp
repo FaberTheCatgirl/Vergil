@@ -1,9 +1,9 @@
 #pragma once
 
 #include <cstdint>
-#include "BlamTypes.hpp"
-#include "BlamPlayers.hpp"
-#include "BitStream.hpp"
+#include "Blam\BlamTypes.hpp"
+#include "Blam\BlamPlayers.hpp"
+#include "Blam\BitStream.hpp"
 
 namespace Blam::Network
 {

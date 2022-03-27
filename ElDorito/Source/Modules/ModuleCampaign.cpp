@@ -1,9 +1,9 @@
-#include "ModuleCampaign.hpp"
+#include "Modules\ModuleCampaign.hpp"
 
-#include "../Blam/BlamTypes.hpp"
-#include "../Blam/Memory/TlsData.hpp"
+#include "Blam\BlamTypes.hpp"
+#include "Blam\Memory\TlsData.hpp"
 
-#include "../Pointer.hpp"
+#include "Pointer.hpp"
 
 namespace
 {

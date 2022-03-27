@@ -1,11 +1,11 @@
 #pragma once
-#include "../../ElDorito.hpp"
-#include "../Preferences/Preferences.hpp"
-#include "../BlamData.hpp"
-#include "../BlamObjects.hpp"
-#include "../BlamPlayers.hpp"
+#include "ElDorito.hpp"
+#include "Blam\Preferences\Preferences.hpp"
+#include "Blam\BlamData.hpp"
+#include "Blam\BlamObjects.hpp"
+#include "Blam\BlamPlayers.hpp"
 
-#include <game\game.hpp>
+#include "new\game\game.hpp"
 
 namespace Blam::Memory
 {

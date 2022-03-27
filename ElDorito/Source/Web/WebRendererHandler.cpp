@@ -1,12 +1,12 @@
 /*
 Code was used from NoFaTe (http://nofate.me)
 */
-#include "WebRendererHandler.hpp"
-#include "Logger.hpp"
-#include "../Utils/Rectangle.hpp"
-#include "Bridge/WebRendererQueryHandler.hpp"
-#include "Bridge/Client/ClientFunctions.hpp"
-#include <boost/algorithm/string/predicate.hpp>
+#include "Web\WebRendererHandler.hpp"
+#include "Web\Logger.hpp"
+#include "Utils\Rectangle.hpp"
+#include "Web\Bridge\WebRendererQueryHandler.hpp"
+#include "Web\Bridge\Client\ClientFunctions.hpp"
+#include <boost\algorithm\string\predicate.hpp>
 
 using namespace Anvil::Client::Rendering;
 
@@ -59,7 +59,9 @@ void WebRendererHandler::OnAfterCreated(CefRefPtr<CefBrowser> p_Browser)
 		m_QueryHandler->AddMethod("voipConnected", Bridge::ClientFunctions::OnVoIPConnectedChanged);
 		m_QueryHandler->AddMethod("playerSpeaking", Bridge::ClientFunctions::OnVoIPPlayerSpeakingChanged);
 		m_QueryHandler->AddMethod("isMapLoading", Bridge::ClientFunctions::OnIsMapLoading);
+		m_QueryHandler->AddMethod("forgeaction", Bridge::ClientFunctions::OnForgeAction);
 		m_QueryHandler->AddMethod("showlan", Bridge::ClientFunctions::OnShowLan);
+		m_QueryHandler->AddMethod("discord-reply", Bridge::ClientFunctions::OnDiscordReply);
 
 		m_BrowserRouter->AddHandler(m_QueryHandler.get(), true);
 	}

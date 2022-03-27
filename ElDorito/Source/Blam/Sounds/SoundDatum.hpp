@@ -1,7 +1,7 @@
 #pragma once
 #include <stdint.h>
-#include "../Tags/Sounds/Sound/Sound.hpp"
-#include "../BlamData.hpp"
+#include "Blam\Tags\Sounds\Sound\Sound.hpp"
+#include "Blam\BlamData.hpp"
 
 
 //using namespace Blam::Tags::Sounds;

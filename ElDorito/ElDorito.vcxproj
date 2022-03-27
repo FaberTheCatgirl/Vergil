@@ -11,12 +11,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="new\cache\cache_files.cpp" />
-    <ClCompile Include="new\game\game_globals.cpp" />
-    <ClCompile Include="new\hs\hs.cpp" />
-    <ClCompile Include="new\memory\data.cpp" />
-    <ClCompile Include="new\tag_files\tag_definitions.cpp" />
-    <ClCompile Include="new\tag_files\tag_groups.cpp" />
     <ClCompile Include="Source\Blam\FMOD\FMODEnum.cpp" />
     <ClCompile Include="Source\Blam\FMOD\FMODGlobals.cpp" />
     <ClCompile Include="Source\Blam\Math\SoundRangeValues.cpp" />
@@ -84,7 +78,22 @@
     <ClCompile Include="Source\Definitions\EnumDefinition.cpp" />
     <ClCompile Include="Source\Definitions\FieldDefinition.cpp" />
     <ClCompile Include="Source\Definitions\StructDefinition.cpp" />
+    <ClCompile Include="Source\Forge\ForgeUtil.cpp" />
+    <ClCompile Include="Source\Forge\ForgeVolumes.cpp" />
+    <ClCompile Include="Source\Forge\Magnets.cpp" />
+    <ClCompile Include="Source\Forge\Prefab.cpp" />
+    <ClCompile Include="Source\Forge\PrematchCamera.cpp" />
+    <ClCompile Include="Source\Forge\RotationSnap.cpp" />
+    <ClCompile Include="Source\Forge\Selection.cpp" />
+    <ClCompile Include="Source\Forge\SelectionRenderer.cpp" />
     <ClCompile Include="Source\Modules\ModuleCampaign.cpp" />
+    <ClCompile Include="Source\Modules\ModuleForge.cpp" />
+    <ClCompile Include="Source\new\cache\cache_files.cpp" />
+    <ClCompile Include="Source\new\game\game_globals.cpp" />
+    <ClCompile Include="Source\new\hs\hs.cpp" />
+    <ClCompile Include="Source\new\memory\data.cpp" />
+    <ClCompile Include="Source\new\tag_files\tag_definitions.cpp" />
+    <ClCompile Include="Source\new\tag_files\tag_groups.cpp" />
     <ClCompile Include="Source\Patches\BottomlessClip.cpp" />
     <ClCompile Include="Source\Patches\Camera.cpp" />
     <ClCompile Include="Source\Patches\DamageSystem.cpp" />
@@ -117,6 +126,7 @@
     <ClCompile Include="Source\Patches\Equipment.cpp" />
     <ClCompile Include="Source\Patches\Events.cpp" />
     <ClCompile Include="Source\Patches\Experimental.cpp" />
+    <ClCompile Include="Source\Patches\Forge.cpp" />
     <ClCompile Include="Source\Patches\Hf2pExperimental.cpp" />
     <ClCompile Include="Source\Patches\Input.cpp" />
     <ClCompile Include="Source\Patches\LoadingScreen.cpp" />
@@ -171,6 +181,7 @@
     <ClCompile Include="Source\Web\Ui\VotingScreen.cpp" />
     <ClCompile Include="Source\Web\Ui\WebChat.cpp" />
     <ClCompile Include="Source\Web\Ui\WebConsole.cpp" />
+    <ClCompile Include="Source\Web\Ui\WebForge.cpp" />
     <ClCompile Include="Source\Web\Ui\WebLoadingScreen.cpp" />
     <ClCompile Include="Source\Web\Ui\WebScoreboard.cpp" />
     <ClCompile Include="Source\Web\Ui\WebSettings.cpp" />
@@ -183,26 +194,6 @@
     <ClCompile Include="Source\Web\WebRendererSchemeHandlerFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="new\cache\cache_files.hpp" />
-    <ClInclude Include="new\cseries\cseries.hpp" />
-    <ClInclude Include="new\cseries\integer_math.hpp" />
-    <ClInclude Include="new\cseries\real_math.hpp" />
-    <ClInclude Include="new\effects\particles.hpp" />
-    <ClInclude Include="new\game\game.hpp" />
-    <ClInclude Include="new\game\game_globals.hpp" />
-    <ClInclude Include="new\game\game_mode.hpp" />
-    <ClInclude Include="new\hs\hs.hpp" />
-    <ClInclude Include="new\input\input.hpp" />
-    <ClInclude Include="new\memory\data.hpp" />
-    <ClInclude Include="new\memory\resources.hpp" />
-    <ClInclude Include="new\objects\object_data.hpp" />
-    <ClInclude Include="new\objects\object_types.hpp" />
-    <ClInclude Include="new\players\player_data.hpp" />
-    <ClInclude Include="new\shaders\render_method.hpp" />
-    <ClInclude Include="new\structures\scenario_structure_bsp.hpp" />
-    <ClInclude Include="new\tag_files\tag_definitions.hpp" />
-    <ClInclude Include="new\tag_files\tag_groups.hpp" />
-    <ClInclude Include="new\tag_files\tag_mapping.hpp" />
     <ClInclude Include="Source\Blam\FMOD\FMODEnum.hpp" />
     <ClInclude Include="Source\Blam\FMOD\FMODGlobals.hpp" />
     <ClInclude Include="Source\Blam\Math\SoundRangeValues.hpp" />
@@ -222,6 +213,8 @@
     <ClInclude Include="Source\Blam\Tags\Bitmap\UsageOverride.hpp" />
     <ClInclude Include="Source\Blam\Tags\Sounds\LoopingSound\DetailSound.hpp" />
     <ClInclude Include="Source\Blam\Tags\Sounds\LoopingSound\Track.hpp" />
+    <ClInclude Include="Source\Blam\Tags\Sounds\Sound.hpp" />
+    <ClInclude Include="Source\Blam\Tags\Sounds\SoundClasses.hpp" />
     <ClInclude Include="Source\Blam\Tags\Sounds\SoundClasses\CacheMissMode.hpp" />
     <ClInclude Include="Source\Blam\Tags\Sounds\SoundClasses\ClassProperty.hpp" />
     <ClInclude Include="Source\Blam\Tags\Sounds\Sound\CustomPlayback.hpp" />
@@ -344,7 +337,38 @@
     <ClInclude Include="Source\Definitions\EnumDefinition.hpp" />
     <ClInclude Include="Source\Definitions\FieldDefinition.hpp" />
     <ClInclude Include="Source\Definitions\StructDefinition.hpp" />
+    <ClInclude Include="Source\Forge\ForgeUtil.hpp" />
+    <ClInclude Include="Source\Forge\ForgeVolumes.hpp" />
+    <ClInclude Include="Source\Forge\Geoemetry.hpp" />
+    <ClInclude Include="Source\Forge\Magnets.hpp" />
+    <ClInclude Include="Source\Forge\ObjectSet.hpp" />
+    <ClInclude Include="Source\Forge\Prefab.hpp" />
+    <ClInclude Include="Source\Forge\PrematchCamera.hpp" />
+    <ClInclude Include="Source\Forge\RotationSnap.hpp" />
+    <ClInclude Include="Source\Forge\Selection.hpp" />
+    <ClInclude Include="Source\Forge\SelectionRenderer.hpp" />
     <ClInclude Include="Source\Modules\ModuleCampaign.hpp" />
+    <ClInclude Include="Source\Modules\ModuleForge.hpp" />
+    <ClInclude Include="Source\new\cache\cache_files.hpp" />
+    <ClInclude Include="Source\new\cseries\cseries.hpp" />
+    <ClInclude Include="Source\new\cseries\integer_math.hpp" />
+    <ClInclude Include="Source\new\cseries\real_math.hpp" />
+    <ClInclude Include="Source\new\effects\particles.hpp" />
+    <ClInclude Include="Source\new\game\game.hpp" />
+    <ClInclude Include="Source\new\game\game_globals.hpp" />
+    <ClInclude Include="Source\new\game\game_mode.hpp" />
+    <ClInclude Include="Source\new\hs\hs.hpp" />
+    <ClInclude Include="Source\new\input\input.hpp" />
+    <ClInclude Include="Source\new\memory\data.hpp" />
+    <ClInclude Include="Source\new\memory\resources.hpp" />
+    <ClInclude Include="Source\new\objects\object_data.hpp" />
+    <ClInclude Include="Source\new\objects\object_types.hpp" />
+    <ClInclude Include="Source\new\players\player_data.hpp" />
+    <ClInclude Include="Source\new\shaders\render_method.hpp" />
+    <ClInclude Include="Source\new\structures\scenario_structure_bsp.hpp" />
+    <ClInclude Include="Source\new\tag_files\tag_definitions.hpp" />
+    <ClInclude Include="Source\new\tag_files\tag_groups.hpp" />
+    <ClInclude Include="Source\new\tag_files\tag_mapping.hpp" />
     <ClInclude Include="Source\Patches\BottomlessClip.hpp" />
     <ClInclude Include="Source\Patches\Camera.hpp" />
     <ClInclude Include="Source\Patches\CharacterHud.hpp" />
@@ -377,6 +401,7 @@
     <ClInclude Include="Source\Patches\Equipment.hpp" />
     <ClInclude Include="Source\Patches\Events.hpp" />
     <ClInclude Include="Source\Patches\Experimental.hpp" />
+    <ClInclude Include="Source\Patches\Forge.hpp" />
     <ClInclude Include="Source\Patches\Hf2pExperimental.hpp" />
     <ClInclude Include="Source\Patches\Input.hpp" />
     <ClInclude Include="Source\Patches\LoadingScreen.hpp" />
@@ -478,6 +503,7 @@
     <ClInclude Include="Source\Web\Ui\VotingScreen.hpp" />
     <ClInclude Include="Source\Web\Ui\WebChat.hpp" />
     <ClInclude Include="Source\Web\Ui\WebConsole.hpp" />
+    <ClInclude Include="Source\Web\Ui\WebForge.hpp" />
     <ClInclude Include="Source\Web\Ui\WebLoadingScreen.hpp" />
     <ClInclude Include="Source\Web\Ui\WebScoreboard.hpp" />
     <ClInclude Include="Source\Web\Ui\WebSettings.hpp" />
@@ -501,7 +527,7 @@
     <Platform>Win32</Platform>
     <ProjectName>ElDorito</ProjectName>
     <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

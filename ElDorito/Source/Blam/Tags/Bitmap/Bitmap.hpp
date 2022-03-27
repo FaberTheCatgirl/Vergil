@@ -1,14 +1,14 @@
 #pragma once
 
-#include <Blam\Tags\Tags.hpp>
-#include <Blam\Math\Bounds.hpp>
-#include <Blam\Text\StringID.hpp>
+#include "Blam\Tags\Tags.hpp"
+#include "Blam\Math\Bounds.hpp"
+#include "Blam\Text\StringID.hpp"
 
-#include <Blam\Tags\Bitmap\TightBinding.hpp>
-#include <Blam\Tags\Bitmap\UsageOverride.hpp>
-#include <Blam\Tags\Bitmap\Sequence.hpp>
-#include <Blam\Tags\Bitmap\Image.hpp>
-#include <Blam\Tags\Bitmap\BitmapResource.hpp>
+#include "Blam\Tags\Bitmap\TightBinding.hpp"
+#include "Blam\Tags\Bitmap\UsageOverride.hpp"
+#include "Blam\Tags\Bitmap\Sequence.hpp"
+#include "Blam\Tags\Bitmap\Image.hpp"
+#include "Blam\Tags\Bitmap\BitmapResource.hpp"
 
 namespace Blam::Tags::Bitmap {
 	struct Bitmap : TagGroup<'bitm'>

@@ -1,5 +1,5 @@
 #pragma once
-#include <Blam\Tags\Tags.hpp>
+#include "Blam\Tags\Tags.hpp"
 
 namespace Blam::Tags::Sounds
 {

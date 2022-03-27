@@ -1,14 +1,14 @@
-#include "WebRenderer.hpp"
-#include "WebRendererHandler.hpp"
-#include "WebRendererApp.hpp"
-#include "WebRendererSchemeHandler.hpp"
-#include "WebRendererSchemeHandlerFactory.hpp"
+#include "Web\WebRenderer.hpp"
+#include "Web\WebRendererHandler.hpp"
+#include "Web\WebRendererApp.hpp"
+#include "Web\WebRendererSchemeHandler.hpp"
+#include "Web\WebRendererSchemeHandlerFactory.hpp"
 #include <cef_app.h>
 #include <cef_origin_whitelist.h>
 
 #include <d3dx9.h>
-#include "Logger.hpp"
-#include "Bridge/WebRendererQueryHandler.hpp"
+#include "Web\Logger.hpp"
+#include "Web\Bridge\WebRendererQueryHandler.hpp"
 
 // 1 to enable multi_threaded_message_loop
 #define MULTITHREADED 1

@@ -1,12 +1,12 @@
-#include "WebVirtualKeyboard.hpp"
+#include "Web\Ui\WebVirtualKeyboard.hpp"
 
-#include "../../ThirdParty/rapidjson/stringbuffer.h"
-#include "../../ThirdParty/rapidjson/writer.h"
+#include "ThirdParty\rapidjson\stringbuffer.h"
+#include "ThirdParty\rapidjson\writer.h"
 
-#include "ScreenLayer.hpp"
-#include "../../Blam/BlamInput.hpp"
-#include "../../Patches/VirtualKeyboard.hpp"
-#include "../../Utils/String.hpp"
+#include "Web\Ui\ScreenLayer.hpp"
+#include "Blam\BlamInput.hpp"
+#include "Patches\VirtualKeyboard.hpp"
+#include "Utils\String.hpp"
 
 namespace
 {

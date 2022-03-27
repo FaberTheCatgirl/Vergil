@@ -1,7 +1,7 @@
 #pragma once
-#include "../../Tags.hpp"
-#include "ClassProperty.hpp"
-#include "SoundClassEnum.hpp"
+#include "Blam\Tags\Tags.hpp"
+#include "Blam\Tags\Sounds\SoundClasses\ClassProperty.hpp"
+#include "Blam\Tags\Sounds\SoundClasses\SoundClassEnum.hpp"
 
 namespace Blam::Tags::Sounds
 {

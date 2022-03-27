@@ -1,6 +1,6 @@
 #pragma once
-#include "..\Enum.hpp"
-#include "..\Tags.hpp"
+#include "Blam\Tags\Enum.hpp"
+#include "Blam\Tags\Tags.hpp"
 
 namespace Blam::Tags::Camera
 {

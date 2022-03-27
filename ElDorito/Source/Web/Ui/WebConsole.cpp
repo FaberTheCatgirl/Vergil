@@ -1,9 +1,9 @@
-#include "WebConsole.hpp"
-#include "ScreenLayer.hpp"
-#include "../../Console.hpp"
-#include "../../Patches/Input.hpp"
-#include "../../ThirdParty/rapidjson/writer.h"
-#include "../../ThirdParty/rapidjson/stringbuffer.h"
+#include "Web\Ui\WebConsole.hpp"
+#include "Web\Ui\ScreenLayer.hpp"
+#include "Console.hpp"
+#include "Patches\Input.hpp"
+#include "ThirdParty\rapidjson\writer.h"
+#include "ThirdParty\rapidjson\stringbuffer.h"
 
 using namespace Blam::Input;
 

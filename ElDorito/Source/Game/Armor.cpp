@@ -2,21 +2,21 @@
 #include <unordered_map>
 #include <map>
 
-#include "Armor.hpp"
-#include "../Patch.hpp"
-#include "../Modules/ModulePlayer.hpp"
+#include "Game\Armor.hpp"
+#include "Patch.hpp"
+#include "Modules\ModulePlayer.hpp"
 
-#include "../Blam/Cache/StringIdCache.hpp"
-#include "../Blam/Tags/Tags.hpp"
-#include "../Blam/Tags/TagInstance.hpp"
-#include "../Blam/Tags/Game/Globals.hpp"
-#include "../Blam/Tags/Game/MultiplayerGlobals.hpp"
-#include "../Blam/Tags/Globals/CacheFileGlobalTags.hpp"
-#include "../Blam/Tags/Scenario/Scenario.hpp"
-#include "../Modules/ModulePlayer.hpp"
-#include "../Blam/BlamObjects.hpp"
-#include "../Blam/Math/RealQuaternion.hpp"
-#include <boost/regex.hpp>
+#include "Blam\Cache\StringIdCache.hpp"
+#include "Blam\Tags\Tags.hpp"
+#include "Blam\Tags\TagInstance.hpp"
+#include "Blam\Tags\Game\Globals.hpp"
+#include "Blam\Tags\Game\MultiplayerGlobals.hpp"
+#include "Blam\Tags\Globals\CacheFileGlobalTags.hpp"
+#include "Blam\Tags\Scenario\Scenario.hpp"
+#include "Modules\ModulePlayer.hpp"
+#include "Blam\BlamObjects.hpp"
+#include "Blam\Math\RealQuaternion.hpp"
+#include <boost\regex.hpp>
 
 using namespace Blam::Players;
 

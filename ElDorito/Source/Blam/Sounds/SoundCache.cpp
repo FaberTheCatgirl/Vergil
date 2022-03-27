@@ -1,4 +1,4 @@
-#include "SoundCache.hpp"
+#include "Blam\Sounds\SoundCache.hpp"
 
 namespace Blam::SoundCache {
 
@@ -52,7 +52,7 @@ namespace Blam::SoundCache {
 
 		if (result) {
 
-			// Why bother doing that? It<s in the decompiled code but doesn't seem to be used anywhere.
+			// Why bother doing that? It's in the decompiled code but doesn't seem to be used anywhere.
 			int chunkSize = Memory::Align16Bits(0x3FFFFFF & Chunk->EncodedSize);
 
 			//Blam::DatumHandle handle = AllocateDatum<Blam::XboxSoundDatum>(globalXboxSounds);

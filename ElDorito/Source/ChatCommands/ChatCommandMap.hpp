@@ -1,4 +1,4 @@
-#include "../Server/ServerChat.hpp"
+#include "Server\ServerChat.hpp"
 
 namespace ChatCommands
 {

@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 
-#include <Blam\Text\StringID.hpp>
+#include "Blam\Text\StringID.hpp"
 
 namespace Blam::Cache
 {

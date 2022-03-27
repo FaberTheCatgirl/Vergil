@@ -1,4 +1,4 @@
-#include "HttpRequest.hpp"
+#include "ThirdParty\HttpRequest.hpp"
 #include <sstream>
 
 HttpRequest::HttpRequest(const std::wstring &userAgent, const std::wstring &proxyIp, const std::wstring &proxyPort) :

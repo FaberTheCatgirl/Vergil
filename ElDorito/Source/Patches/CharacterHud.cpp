@@ -1,8 +1,8 @@
-#include "CharacterHud.hpp"
+#include "Patches\CharacterHud.hpp"
 #include <cstdint>
-#include "../Patch.hpp"
-#include "../Blam/Tags/Bitmap/Bitmap.hpp"
-#include "../Blam/Tags/TagInstance.hpp"
+#include "Patch.hpp"
+#include "Blam\Tags\Bitmap\Bitmap.hpp"
+#include "Blam\Tags\TagInstance.hpp"
 
 namespace
 {

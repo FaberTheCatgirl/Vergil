@@ -1,6 +1,6 @@
-#include "Memory.hpp"
+#include "Patches\Memory.hpp"
 #include <cstdint>
-#include "../Blam/BlamData.hpp"
+#include "Blam\BlamData.hpp"
 
 namespace
 {

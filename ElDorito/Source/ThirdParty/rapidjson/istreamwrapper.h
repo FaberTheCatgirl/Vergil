@@ -15,7 +15,7 @@
 #ifndef RAPIDJSON_ISTREAMWRAPPER_H_
 #define RAPIDJSON_ISTREAMWRAPPER_H_
 
-#include "stream.h"
+#include "ThirdParty\rapidjson\stream.h"
 #include <iosfwd>
 
 #ifdef __clang__

@@ -1,5 +1,5 @@
 #pragma once
-#include "FMODEnum.hpp"
+#include "Blam\FMOD\FMODEnum.hpp"
 
 namespace FMOD {
 

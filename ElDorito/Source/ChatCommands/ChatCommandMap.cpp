@@ -1,14 +1,14 @@
-#include "ChatCommandMap.hpp"
+#include "ChatCommands\ChatCommandMap.hpp"
 #include <sstream>
 #include <iostream>
 
-#include "ChatCommand.hpp"
-#include "../Server/BanList.hpp"
-#include "../Utils/Utils.hpp"
-#include "../Utils/Logger.hpp"
-#include "../CommandMap.hpp"
-#include "../Patches/Network.hpp"
-#include "../Server/ReportHandler.hpp"
+#include "ChatCommands\ChatCommand.hpp"
+#include "Server\BanList.hpp"
+#include "Utils\Utils.hpp"
+#include "Utils\Logger.hpp"
+#include "CommandMap.hpp"
+#include "Patches\Network.hpp"
+#include "Server\ReportHandler.hpp"
 
 
 

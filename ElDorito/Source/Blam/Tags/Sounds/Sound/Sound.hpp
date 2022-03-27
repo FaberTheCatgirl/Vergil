@@ -1,21 +1,21 @@
 #pragma once
 
-#include <Blam\Tags\Tags.hpp>
-#include <Blam\Math\Bounds.hpp>
-#include <Blam\Text\StringID.hpp>
+#include "Blam\Tags\Tags.hpp"
+#include "Blam\Math\Bounds.hpp"
+#include "Blam\Text\StringID.hpp"
 
-#include "../SoundClasses/SoundClassEnum.hpp"
+#include "Blam\Tags\Sounds\SoundClasses\SoundClassEnum.hpp"
 
-#include "ImportTypeEnum.hpp"
-#include "SampleRateEnum.hpp"
-#include "Scale.hpp"
-#include "PlaybackParameters.hpp"
-#include "PlatformCodec.hpp"
-#include "Promotion.hpp"
-#include "PitchRange.hpp"
-#include "CustomPlayback.hpp"
-#include "Language.hpp"
-#include "ExtraInfo.hpp"
+#include "Blam\Tags\Sounds\Sound\ImportTypeEnum.hpp"
+#include "Blam\Tags\Sounds\Sound\SampleRateEnum.hpp"
+#include "Blam\Tags\Sounds\Sound\Scale.hpp"
+#include "Blam\Tags\Sounds\Sound\PlaybackParameters.hpp"
+#include "Blam\Tags\Sounds\Sound\PlatformCodec.hpp"
+#include "Blam\Tags\Sounds\Sound\Promotion.hpp"
+#include "Blam\Tags\Sounds\Sound\PitchRange.hpp"
+#include "Blam\Tags\Sounds\Sound\CustomPlayback.hpp"
+#include "Blam\Tags\Sounds\Sound\Language.hpp"
+#include "Blam\Tags\Sounds\Sound\ExtraInfo.hpp"
 
 namespace Blam::Tags::Sounds
 {

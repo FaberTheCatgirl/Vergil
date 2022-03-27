@@ -2,18 +2,18 @@
 // Disable warnings about using "safe" C functions
 #pragma warning (disable : 4996)
 
-#include "Rcon.hpp"
+#include "Server\Rcon.hpp"
 
 #include <algorithm>
 #include <set>
-#include <websocketpp/server.hpp>
+#include <websocketpp\server.hpp>
 #include <Windows.h>
 
-#include "../Patches/Core.hpp"
-#include "../Modules/ModuleGame.hpp"
-#include "../Modules/ModuleServer.hpp"
-#include "../Utils/Cryptography.hpp"
-#include "../Utils/WebSocket.hpp"
+#include "Patches\Core.hpp"
+#include "Modules\ModuleGame.hpp"
+#include "Modules\ModuleServer.hpp"
+#include "Utils\Cryptography.hpp"
+#include "Utils\WebSocket.hpp"
 
 using websocketpp::lib::placeholders::_1;
 using websocketpp::lib::placeholders::_2;

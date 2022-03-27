@@ -1,10 +1,10 @@
-#include "BanList.hpp"
+#include "Server\BanList.hpp"
 
 #include <fstream>
 #include <iomanip>
-#include "../Utils/String.hpp"
-#include "../Patches/PlayerUid.hpp"
-#include "../Modules/ModuleServer.hpp"
+#include "Utils\String.hpp"
+#include "Patches\PlayerUid.hpp"
+#include "Modules\ModuleServer.hpp"
 namespace Server
 {
 	//Adds an ip to the list if it's not already in it. If it is already in it, then it extends the ban duration. 

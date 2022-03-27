@@ -1,8 +1,8 @@
-#include "ModuleSettings.hpp"
-#include "../Patches/Audio.hpp"
-#include "../ThirdParty/rapidjson/stringbuffer.h"
-#include "../ThirdParty/rapidjson/writer.h"
-#include "../Patches/Ui.hpp"
+#include "Modules\ModuleSettings.hpp"
+#include "Patches\Audio.hpp"
+#include "ThirdParty\rapidjson\stringbuffer.h"
+#include "ThirdParty\rapidjson\writer.h"
+#include "Patches\Ui.hpp"
 
 namespace
 {

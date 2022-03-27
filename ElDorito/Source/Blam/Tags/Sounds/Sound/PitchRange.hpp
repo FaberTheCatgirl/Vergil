@@ -1,9 +1,9 @@
 #pragma once
 
-#include <Blam\Tags\Tags.hpp>
-#include <Blam\Math\Bounds.hpp>
-#include <Blam\Text\StringID.hpp>
-#include "Permutation.hpp"
+#include "Blam\Tags\Tags.hpp"
+#include "Blam\Math\Bounds.hpp"
+#include "Blam\Text\StringID.hpp"
+#include "Blam\Tags\Sounds\Sound\Permutation.hpp"
 
 namespace Blam::Tags::Sounds
 {

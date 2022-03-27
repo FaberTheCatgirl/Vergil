@@ -1,6 +1,6 @@
-#include <Blam\Tags\Tags.hpp>
+#include "Blam\Tags\Tags.hpp"
 
-#include <Blam\Tags\Bitmap\Sprite.hpp>
+#include "Blam\Tags\Bitmap\Sprite.hpp"
 
 namespace Blam::Tags::Bitmap {
 	struct Sequence

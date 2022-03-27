@@ -1,14 +1,14 @@
-#include "Logging.hpp"
-#include "../Patch.hpp"
-#include "../ElDorito.hpp"
-#include "../Blam/BlamNetwork.hpp"
+#include "Patches\Logging.hpp"
+#include "Patch.hpp"
+#include "ElDorito.hpp"
+#include "Blam\BlamNetwork.hpp"
 #include <Psapi.h>
 #include <fstream>
-#include "../Blam/BlamMemory.hpp"
-#include "../Utils/Logger.hpp"
-#include "Core.hpp"
-#include "../Modules/ModuleDebug.hpp"
-#include "../Console.hpp"
+#include "Blam\BlamMemory.hpp"
+#include "Utils\Logger.hpp"
+#include "Patches\Core.hpp"
+#include "Modules\ModuleDebug.hpp"
+#include "Console.hpp"
 
 namespace
 {

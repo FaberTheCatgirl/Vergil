@@ -1,11 +1,11 @@
-#include "Prefab.hpp"
-#include "../Blam/Math/RealVector3D.hpp"
-#include "../Blam/BlamTypes.hpp"
-#include "../Blam/BlamObjects.hpp"
-#include "../Blam/BlamPlayers.hpp"
-#include "ForgeUtil.hpp"
-#include "ObjectSet.hpp"
-#include "Selection.hpp"
+#include "Forge\Prefab.hpp"
+#include "Blam\Math\RealVector3D.hpp"
+#include "Blam\BlamTypes.hpp"
+#include "Blam\BlamObjects.hpp"
+#include "Blam\BlamPlayers.hpp"
+#include "Forge\ForgeUtil.hpp"
+#include "Forge\ObjectSet.hpp"
+#include "Forge\Selection.hpp"
 #include <fstream>
 #include <chrono>
 

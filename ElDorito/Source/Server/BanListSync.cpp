@@ -1,19 +1,19 @@
-#include "BanListSync.hpp"
-#include "BanList.hpp"
+#include "Server\BanListSync.hpp"
+#include "Server\BanList.hpp"
 #include <Windows.h>
 #include <mutex>
 #include <vector>
 #include <condition_variable>
 #include <fstream>
-#include "../ThirdParty/rapidjson/error/en.h"
-#include "../ThirdParty/rapidjson/writer.h"
-#include "../ThirdParty/rapidjson/stringbuffer.h"
-#include "../ThirdParty/rapidjson/document.h"
-#include "../ThirdParty/HttpRequest.hpp"
-#include "../Utils/Logger.hpp"
-#include "../Blam/BlamNetwork.hpp"
-#include "../Patches/Core.hpp"
-#include "../Modules/ModuleServer.hpp"
+#include "ThirdParty\rapidjson\error\en.h"
+#include "ThirdParty\rapidjson\writer.h"
+#include "ThirdParty\rapidjson\stringbuffer.h"
+#include "ThirdParty\rapidjson\document.h"
+#include "ThirdParty\HttpRequest.hpp"
+#include "Utils\Logger.hpp"
+#include "Blam\BlamNetwork.hpp"
+#include "Patches\Core.hpp"
+#include "Modules\ModuleServer.hpp"
 
 namespace
 {

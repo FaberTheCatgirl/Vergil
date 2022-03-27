@@ -1,11 +1,11 @@
-#include "WebChat.hpp"
-#include "ScreenLayer.hpp"
-#include "../../Blam/BlamPlayers.hpp"
-#include "../../Patches/Input.hpp"
-#include "../../Server/ServerChat.hpp"
-#include "../../ThirdParty/rapidjson/writer.h"
-#include "../../ThirdParty/rapidjson/stringbuffer.h"
-#include "../../Utils/String.hpp"
+#include "Web\Ui\WebChat.hpp"
+#include "Web\Ui\ScreenLayer.hpp"
+#include "Blam\BlamPlayers.hpp"
+#include "Patches\Input.hpp"
+#include "Server\ServerChat.hpp"
+#include "ThirdParty\rapidjson\writer.h"
+#include "ThirdParty\rapidjson\stringbuffer.h"
+#include "Utils\String.hpp"
 
 #include <iomanip>
 

@@ -91,9 +91,6 @@
     <Filter Include="Discord">
       <UniqueIdentifier>{43beaab3-8907-457d-a9fd-de5498aeed9c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scripting">
-      <UniqueIdentifier>{c21a72b7-3a62-4080-bd35-764273b6025c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Blam\Sounds">
       <UniqueIdentifier>{4245d928-fcbb-473f-be10-6c7b9d5649e7}</UniqueIdentifier>
     </Filter>
@@ -120,6 +117,60 @@
     </Filter>
     <Filter Include="Blam\Preferences">
       <UniqueIdentifier>{f81cf3e0-f3f1-4b21-b42e-7184239b69e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Blam\Tags\Bitmap">
+      <UniqueIdentifier>{03cf65af-8d93-432a-8f4b-fcf1be13efed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Blam\Tags\Models">
+      <UniqueIdentifier>{bf8ba90c-cffc-4d78-b4c1-a86218636185}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Blam\Tags\Sounds\LoopingSound">
+      <UniqueIdentifier>{634a216f-4bde-45b0-b56a-48c681b77344}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Blam\Tags\Sounds\Sound">
+      <UniqueIdentifier>{8ba841f9-1ced-4b34-975a-11f927f79ec9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Blam\Tags\Sounds\SoundClasses">
+      <UniqueIdentifier>{f2da3a9f-8824-4810-8f7b-250e26ce0b66}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{e45625e8-a75c-43d1-93b6-da78258b43ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="new\cache">
+      <UniqueIdentifier>{f111ac0a-fb44-445b-ae04-72efc22c4cde}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="new\cseries">
+      <UniqueIdentifier>{570f788c-80a0-4056-8eb9-778143d468a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="new\memory">
+      <UniqueIdentifier>{a86f2b71-40f8-4144-92bd-d6c9c288b2ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="new\game">
+      <UniqueIdentifier>{fa8111e5-11c2-4d31-bbae-a40060d45aa2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="new\effects">
+      <UniqueIdentifier>{b8f9db89-0ad2-4fe1-8c33-431b238319c8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="new\hs">
+      <UniqueIdentifier>{8ea015a0-74f5-414b-b089-1c5b69297f6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="new\input">
+      <UniqueIdentifier>{47384864-3236-490f-9728-a4c1f018ddf4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="new\objects">
+      <UniqueIdentifier>{0473cf44-0ab1-4206-b8a5-a94b3e7b9a51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="new\players">
+      <UniqueIdentifier>{22f2dbd2-ce1d-40ed-9194-8799474bf572}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="new\shaders">
+      <UniqueIdentifier>{4304cc08-3278-47ab-a68a-de09cd51233a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="new\structures">
+      <UniqueIdentifier>{6b73dcea-20e7-48af-9ce1-aa82f6968cb0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="new\tag_files">
+      <UniqueIdentifier>{fa99bd4e-f904-47bc-b17c-c160c60fc74c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -471,9 +522,6 @@
     <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="Source\Patch.cpp" />
     <ClCompile Include="Source\Pointer.cpp" />
-    <ClCompile Include="Source\Game\Armor.cpp">
-      <Filter>Patches</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Server\Stats.cpp">
       <Filter>Server</Filter>
     </ClCompile>
@@ -558,27 +606,6 @@
     <ClCompile Include="Source\Modules\ModuleCampaign.cpp">
       <Filter>Modules</Filter>
     </ClCompile>
-    <ClCompile Include="new\cache\cache_files.cpp">
-      <Filter>new</Filter>
-    </ClCompile>
-    <ClCompile Include="new\memory\data.cpp">
-      <Filter>new</Filter>
-    </ClCompile>
-    <ClCompile Include="new\game\game_globals.cpp">
-      <Filter>new</Filter>
-    </ClCompile>
-    <ClCompile Include="new\hs\hs.cpp">
-      <Filter>new</Filter>
-    </ClCompile>
-    <ClCompile Include="new\tag_files\tag_definitions.cpp">
-      <Filter>new</Filter>
-    </ClCompile>
-    <ClCompile Include="new\tag_files\tag_groups.cpp">
-      <Filter>new</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Blam\Memory\Align.cpp">
-      <Filter>Blam\Memory</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Patches\PlayerScale.cpp">
       <Filter>Patches</Filter>
     </ClCompile>
@@ -591,12 +618,12 @@
     <ClCompile Include="Source\Blam\Memory\DatumHandle.cpp">
       <Filter>Blam\Memory</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Blam\Sounds\SoundGlobals.cpp">
-      <Filter>Blam\Sounds</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Blam\Sounds\SoundCache.cpp">
-      <Filter>Blam\Sounds</Filter>
-    </ClCompile>
+    <ClCompile Include="Source\Blam\Sounds\SoundCache.cpp" />
+    <ClCompile Include="Source\Blam\Memory\Align.cpp" />
+    <ClCompile Include="Source\Blam\FMOD\FMODFunctions.cpp" />
+    <ClCompile Include="Source\Blam\FMOD\FMODEnum.cpp" />
+    <ClCompile Include="Source\Blam\Sounds\SoundGlobals.cpp" />
+    <ClCompile Include="Source\Blam\FMOD\FMODGlobals.cpp" />
     <ClCompile Include="Source\Blam\FMOD\FMODEnum.cpp">
       <Filter>Blam\FMOD</Filter>
     </ClCompile>
@@ -606,23 +633,84 @@
     <ClCompile Include="Source\Blam\FMOD\FMODGlobals.cpp">
       <Filter>Blam\FMOD</Filter>
     </ClCompile>
-    <ClCompile Include="new\cache\cache_files.cpp" />
-    <ClCompile Include="new\memory\data.cpp" />
-    <ClCompile Include="new\tag_files\tag_definitions.cpp" />
-    <ClCompile Include="new\tag_files\tag_groups.cpp" />
-    <ClCompile Include="new\hs\hs.cpp" />
-    <ClCompile Include="Source\Blam\Sounds\SoundCache.cpp" />
-    <ClCompile Include="Source\Blam\Memory\Align.cpp" />
-    <ClCompile Include="Source\Blam\FMOD\FMODFunctions.cpp" />
-    <ClCompile Include="Source\Blam\FMOD\FMODEnum.cpp" />
-    <ClCompile Include="new\game\game_globals.cpp" />
-    <ClCompile Include="Source\Blam\Sounds\SoundGlobals.cpp" />
-    <ClCompile Include="Source\Blam\FMOD\FMODGlobals.cpp" />
-    <ClCompile Include="Source\Blam\Tags\Sounds\Sound\Sound.cpp" />
-    <ClCompile Include="Source\Blam\Tags\Sounds\SoundClasses\SoundClasses.cpp" />
-    <ClCompile Include="Source\Blam\Math\SoundRangeValues.cpp" />
-    <ClCompile Include="Source\Patches\CharacterHud.cpp" />
-    <ClCompile Include="Source\Blam\Tags\Bitmap\Bitmap.cpp" />
+    <ClCompile Include="Source\Blam\Math\SoundRangeValues.cpp">
+      <Filter>Blam\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Blam\Memory\Align.cpp">
+      <Filter>Blam\Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Blam\Sounds\SoundCache.cpp">
+      <Filter>Blam\Sounds</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Blam\Sounds\SoundGlobals.cpp">
+      <Filter>Blam\Sounds</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Blam\Tags\Bitmap\Bitmap.cpp">
+      <Filter>Blam\Tags\Bitmap</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Blam\Tags\Sounds\Sound\Sound.cpp">
+      <Filter>Blam\Tags\Sounds\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Blam\Tags\Sounds\SoundClasses\SoundClasses.cpp">
+      <Filter>Blam\Tags\Sounds\SoundClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Forge\ForgeUtil.cpp">
+      <Filter>Forge</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Forge\ForgeVolumes.cpp">
+      <Filter>Forge</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Forge\Magnets.cpp">
+      <Filter>Forge</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Forge\Prefab.cpp">
+      <Filter>Forge</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Forge\PrematchCamera.cpp">
+      <Filter>Forge</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Forge\RotationSnap.cpp">
+      <Filter>Forge</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Forge\Selection.cpp">
+      <Filter>Forge</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Forge\SelectionRenderer.cpp">
+      <Filter>Forge</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Patches\CharacterHud.cpp">
+      <Filter>Patches</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Game\Armor.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\new\cache\cache_files.cpp">
+      <Filter>new\cache</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\new\memory\data.cpp">
+      <Filter>new\memory</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\new\game\game_globals.cpp">
+      <Filter>new\game</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\new\hs\hs.cpp">
+      <Filter>new\hs</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\new\tag_files\tag_definitions.cpp">
+      <Filter>new\tag_files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\new\tag_files\tag_groups.cpp">
+      <Filter>new\tag_files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Modules\ModuleForge.cpp">
+      <Filter>Modules</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Web\Ui\WebForge.cpp">
+      <Filter>Web\Ui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Patches\Forge.cpp">
+      <Filter>Patches</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Blam\BitStream.hpp">
@@ -1200,14 +1288,8 @@
     <ClInclude Include="Source\Patch.hpp" />
     <ClInclude Include="Source\Pointer.hpp" />
     <ClInclude Include="Source\Settings.hpp" />
-    <ClInclude Include="Source\Game\Armor.hpp">
-      <Filter>Patches</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Server\Stats.hpp">
       <Filter>Server</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Blam\Tags\Models\Model.hpp">
-      <Filter>Blam\Tags\Objects</Filter>
     </ClInclude>
     <ClInclude Include="Source\Blam\Tags\Camera\AreaScreenEffect.hpp">
       <Filter>Blam\Tags\Camera</Filter>
@@ -1295,69 +1377,6 @@
     <ClInclude Include="Source\Modules\ModuleCampaign.hpp">
       <Filter>Modules</Filter>
     </ClInclude>
-    <ClInclude Include="new\cache\cache_files.hpp">
-      <Filter>new</Filter>
-    </ClInclude>
-    <ClInclude Include="new\cseries\cseries.hpp">
-      <Filter>new</Filter>
-    </ClInclude>
-    <ClInclude Include="new\memory\data.hpp">
-      <Filter>new</Filter>
-    </ClInclude>
-    <ClInclude Include="new\game\game_globals.hpp">
-      <Filter>new</Filter>
-    </ClInclude>
-    <ClInclude Include="new\game\game_mode.hpp">
-      <Filter>new</Filter>
-    </ClInclude>
-    <ClInclude Include="new\hs\hs.hpp">
-      <Filter>new</Filter>
-    </ClInclude>
-    <ClInclude Include="new\input\input.hpp">
-      <Filter>new</Filter>
-    </ClInclude>
-    <ClInclude Include="new\cseries\integer_math.hpp">
-      <Filter>new</Filter>
-    </ClInclude>
-    <ClInclude Include="new\objects\object_data.hpp">
-      <Filter>new</Filter>
-    </ClInclude>
-    <ClInclude Include="new\objects\object_types.hpp">
-      <Filter>new</Filter>
-    </ClInclude>
-    <ClInclude Include="new\effects\particles.hpp">
-      <Filter>new</Filter>
-    </ClInclude>
-    <ClInclude Include="new\players\player_data.hpp">
-      <Filter>new</Filter>
-    </ClInclude>
-    <ClInclude Include="new\cseries\real_math.hpp">
-      <Filter>new</Filter>
-    </ClInclude>
-    <ClInclude Include="new\shaders\render_method.hpp">
-      <Filter>new</Filter>
-    </ClInclude>
-    <ClInclude Include="new\structures\scenario_structure_bsp.hpp">
-      <Filter>new</Filter>
-    </ClInclude>
-    <ClInclude Include="new\tag_files\tag_definitions.hpp">
-      <Filter>new</Filter>
-    </ClInclude>
-    <ClInclude Include="new\tag_files\tag_groups.hpp">
-      <Filter>new</Filter>
-    </ClInclude>
-    <ClInclude Include="new\tag_files\tag_mapping.hpp">
-      <Filter>new</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\resource.h">
-      <Filter>new</Filter>
-    </ClInclude>
-    <ClInclude Include="new\memory\resources.hpp">
-      <Filter>new</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Blam\Memory\Align.hpp">
-      <Filter>Blam\Memory</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Patches\PlayerScale.hpp">
       <Filter>Patches</Filter>
     </ClInclude>
@@ -1382,24 +1401,6 @@
     <ClInclude Include="Source\Blam\Tags\TagStructureReference.hpp">
       <Filter>Blam\Tags</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Blam\Sounds\SoundDatum.hpp">
-      <Filter>Blam\Sounds</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Blam\Sounds\SoundGlobals.hpp">
-      <Filter>Blam\Sounds</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Blam\Sounds\SoundCache.hpp">
-      <Filter>Blam\Sounds</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Blam\FMOD\FMODEnum.hpp">
-      <Filter>Blam\FMOD</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Blam\FMOD\FMODFunctions.hpp">
-      <Filter>Blam\FMOD</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Blam\FMOD\FMODGlobals.hpp">
-      <Filter>Blam\FMOD</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Blam\Tags\Effects\DecalSystem.hpp">
       <Filter>Blam\Tags\Effects</Filter>
     </ClInclude>
@@ -1418,58 +1419,245 @@
     <ClInclude Include="Source\Blam\Preferences\Preferences.hpp">
       <Filter>Blam\Preferences</Filter>
     </ClInclude>
-    <ClInclude Include="new\objects\object_data.hpp" />
-    <ClInclude Include="new\objects\object_types.hpp" />
     <ClInclude Include="Source\Blam\Sounds\SoundCache.hpp" />
     <ClInclude Include="Source\Blam\Memory\Align.hpp" />
     <ClInclude Include="Source\Blam\Sounds\SoundDatum.hpp" />
-    <ClInclude Include="new\players\player_data.hpp" />
     <ClInclude Include="Source\Blam\FMOD\FMODFunctions.hpp" />
     <ClInclude Include="Source\Blam\FMOD\FMODEnum.hpp" />
     <ClInclude Include="Source\Blam\FMOD\FMODGlobals.hpp" />
-    <ClInclude Include="new\game\game_globals.hpp" />
-    <ClInclude Include="new\game\game_mode.hpp" />
     <ClInclude Include="Source\Blam\Sounds\SoundGlobals.hpp" />
-    <ClInclude Include="Source\Blam\Tags\Sounds\Sound\ImportTypeEnum.hpp" />
-    <ClInclude Include="Source\Blam\Tags\Sounds\Sound\SampleRateEnum.hpp" />
-    <ClInclude Include="Source\Blam\Tags\Sounds\LoopingSound\LoopingSound.hpp" />
-    <ClInclude Include="Source\Blam\Tags\Sounds\SoundClasses\SoundClassEnum.hpp" />
-    <ClInclude Include="Source\Blam\Tags\Sounds\SoundClasses\SoundClasses.hpp">
-      <Filter>Blam\Tags\Sounds</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Blam\Tags\Sounds\LoopingSound\OutputEffectEnum.hpp" />
-    <ClInclude Include="Source\Blam\Tags\Sounds\Sound\Sound.hpp">
-      <Filter>Blam\Tags\Sounds</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Blam\Tags\Sounds\Noise.hpp">
       <Filter>Blam\Tags\Sounds</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Blam\Tags\Sounds\Sound\Scale.hpp" />
-    <ClInclude Include="Source\Blam\Tags\Sounds\Sound\PlaybackParameters.hpp" />
-    <ClInclude Include="Source\Blam\Tags\Sounds\Sound\PromotionRule.hpp" />
-    <ClInclude Include="Source\Blam\Tags\Sounds\Sound\RuntimeTimer.hpp" />
-    <ClInclude Include="Source\Blam\Tags\Sounds\Sound\PermutationChunk.hpp" />
-    <ClInclude Include="Source\Blam\Tags\Sounds\Sound\Permutation.hpp" />
-    <ClInclude Include="Source\Blam\Tags\Sounds\Sound\PitchRange.hpp" />
-    <ClInclude Include="Source\Blam\Tags\Sounds\Sound\CustomPlayback.hpp" />
-    <ClInclude Include="Source\Blam\Tags\Sounds\Sound\ExtraInfo.hpp" />
-    <ClInclude Include="Source\Blam\Tags\Sounds\Sound\Language.hpp" />
-    <ClInclude Include="Source\Blam\Tags\Sounds\Sound\PlatformCodec.hpp" />
-    <ClInclude Include="Source\Blam\Tags\Sounds\Sound\Promotion.hpp" />
-    <ClInclude Include="Source\Blam\Tags\Sounds\LoopingSound\Track.hpp" />
-    <ClInclude Include="Source\Blam\Tags\Sounds\LoopingSound\DetailSound.hpp" />
-    <ClInclude Include="Source\Blam\Tags\Sounds\SoundClasses\CacheMissMode.hpp" />
-    <ClInclude Include="Source\Blam\Tags\Sounds\SoundClasses\ClassProperty.hpp" />
-    <ClInclude Include="Source\Blam\Math\SoundRangeValues.hpp" />
-    <ClInclude Include="Source\Patches\CharacterHud.hpp" />
-    <ClInclude Include="Source\Blam\Tags\Bitmap\Bitmap.hpp" />
-    <ClInclude Include="Source\Blam\Tags\Bitmap\TightBinding.hpp" />
-    <ClInclude Include="Source\Blam\Tags\Bitmap\UsageOverride.hpp" />
-    <ClInclude Include="Source\Blam\Tags\Bitmap\Sequence.hpp" />
-    <ClInclude Include="Source\Blam\Tags\Bitmap\Sprite.hpp" />
-    <ClInclude Include="Source\Blam\Tags\Bitmap\Image.hpp" />
-    <ClInclude Include="Source\Blam\Tags\Bitmap\BitmapResource.hpp" />
-    <ClInclude Include="new\game\game.hpp" />
+    <ClInclude Include="Source\Blam\FMOD\FMODEnum.hpp">
+      <Filter>Blam\FMOD</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Blam\FMOD\FMODFunctions.hpp">
+      <Filter>Blam\FMOD</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Blam\FMOD\FMODGlobals.hpp">
+      <Filter>Blam\FMOD</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Blam\Math\SoundRangeValues.hpp">
+      <Filter>Blam\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Blam\Memory\Align.hpp">
+      <Filter>Blam\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Blam\Sounds\SoundCache.hpp">
+      <Filter>Blam\Sounds</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Blam\Sounds\SoundDatum.hpp">
+      <Filter>Blam\Sounds</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Blam\Sounds\SoundGlobals.hpp">
+      <Filter>Blam\Sounds</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Blam\Tags\Bitmap\Bitmap.hpp">
+      <Filter>Blam\Tags\Bitmap</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Blam\Tags\Bitmap\BitmapResource.hpp">
+      <Filter>Blam\Tags\Bitmap</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Blam\Tags\Bitmap\Image.hpp">
+      <Filter>Blam\Tags\Bitmap</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Blam\Tags\Bitmap\Sequence.hpp">
+      <Filter>Blam\Tags\Bitmap</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Blam\Tags\Bitmap\Sprite.hpp">
+      <Filter>Blam\Tags\Bitmap</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Blam\Tags\Bitmap\TightBinding.hpp">
+      <Filter>Blam\Tags\Bitmap</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Blam\Tags\Bitmap\UsageOverride.hpp">
+      <Filter>Blam\Tags\Bitmap</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Blam\Tags\Models\Model.hpp">
+      <Filter>Blam\Tags\Models</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Blam\Tags\Sounds\Sound\Sound.hpp">
+      <Filter>Blam\Tags\Sounds\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Blam\Tags\Sounds\Sound.hpp">
+      <Filter>Blam\Tags\Sounds</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Blam\Tags\Sounds\Sound\CustomPlayback.hpp">
+      <Filter>Blam\Tags\Sounds\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Blam\Tags\Sounds\Sound\ExtraInfo.hpp">
+      <Filter>Blam\Tags\Sounds\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Blam\Tags\Sounds\Sound\ImportTypeEnum.hpp">
+      <Filter>Blam\Tags\Sounds\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Blam\Tags\Sounds\Sound\Language.hpp">
+      <Filter>Blam\Tags\Sounds\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Blam\Tags\Sounds\Sound\Permutation.hpp">
+      <Filter>Blam\Tags\Sounds\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Blam\Tags\Sounds\Sound\PermutationChunk.hpp">
+      <Filter>Blam\Tags\Sounds\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Blam\Tags\Sounds\Sound\PlatformCodec.hpp">
+      <Filter>Blam\Tags\Sounds\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Blam\Tags\Sounds\Sound\PitchRange.hpp">
+      <Filter>Blam\Tags\Sounds\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Blam\Tags\Sounds\Sound\PlaybackParameters.hpp">
+      <Filter>Blam\Tags\Sounds\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Blam\Tags\Sounds\Sound\Promotion.hpp">
+      <Filter>Blam\Tags\Sounds\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Blam\Tags\Sounds\Sound\PromotionRule.hpp">
+      <Filter>Blam\Tags\Sounds\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Blam\Tags\Sounds\Sound\RuntimeTimer.hpp">
+      <Filter>Blam\Tags\Sounds\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Blam\Tags\Sounds\Sound\Scale.hpp">
+      <Filter>Blam\Tags\Sounds\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Blam\Tags\Sounds\Sound\SampleRateEnum.hpp">
+      <Filter>Blam\Tags\Sounds\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Blam\Tags\Sounds\LoopingSound\DetailSound.hpp">
+      <Filter>Blam\Tags\Sounds\LoopingSound</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Blam\Tags\Sounds\LoopingSound\LoopingSound.hpp">
+      <Filter>Blam\Tags\Sounds\LoopingSound</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Blam\Tags\Sounds\LoopingSound\OutputEffectEnum.hpp">
+      <Filter>Blam\Tags\Sounds\LoopingSound</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Blam\Tags\Sounds\LoopingSound\Track.hpp">
+      <Filter>Blam\Tags\Sounds\LoopingSound</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Blam\Tags\Sounds\SoundClasses\CacheMissMode.hpp">
+      <Filter>Blam\Tags\Sounds\SoundClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Blam\Tags\Sounds\SoundClasses\ClassProperty.hpp">
+      <Filter>Blam\Tags\Sounds\SoundClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Blam\Tags\Sounds\SoundClasses\SoundClassEnum.hpp">
+      <Filter>Blam\Tags\Sounds\SoundClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Blam\Tags\Sounds\SoundClasses\SoundClasses.hpp">
+      <Filter>Blam\Tags\Sounds\SoundClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Blam\Tags\Sounds\SoundClasses.hpp">
+      <Filter>Blam\Tags\Sounds</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Forge\ForgeUtil.hpp">
+      <Filter>Forge</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Forge\ForgeVolumes.hpp">
+      <Filter>Forge</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Forge\Geoemetry.hpp">
+      <Filter>Forge</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Forge\Magnets.hpp">
+      <Filter>Forge</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Forge\ObjectSet.hpp">
+      <Filter>Forge</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Forge\Prefab.hpp">
+      <Filter>Forge</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Forge\PrematchCamera.hpp">
+      <Filter>Forge</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Forge\RotationSnap.hpp">
+      <Filter>Forge</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Forge\Selection.hpp">
+      <Filter>Forge</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Forge\SelectionRenderer.hpp">
+      <Filter>Forge</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Patches\CharacterHud.hpp">
+      <Filter>Patches</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Game\Armor.hpp">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\resource.h" />
+    <ClInclude Include="Source\new\cache\cache_files.hpp">
+      <Filter>new\cache</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\new\cseries\cseries.hpp">
+      <Filter>new\cseries</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\new\cseries\integer_math.hpp">
+      <Filter>new\cseries</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\new\cseries\real_math.hpp">
+      <Filter>new\cseries</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\new\memory\data.hpp">
+      <Filter>new\memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\new\memory\resources.hpp">
+      <Filter>new\memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\new\game\game.hpp">
+      <Filter>new\game</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\new\game\game_globals.hpp">
+      <Filter>new\game</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\new\game\game_mode.hpp">
+      <Filter>new\game</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\new\effects\particles.hpp">
+      <Filter>new\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\new\hs\hs.hpp">
+      <Filter>new\hs</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\new\input\input.hpp">
+      <Filter>new\input</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\new\tag_files\tag_definitions.hpp">
+      <Filter>new\tag_files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\new\tag_files\tag_groups.hpp">
+      <Filter>new\tag_files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\new\tag_files\tag_mapping.hpp">
+      <Filter>new\tag_files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\new\structures\scenario_structure_bsp.hpp">
+      <Filter>new\structures</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\new\shaders\render_method.hpp">
+      <Filter>new\shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\new\players\player_data.hpp">
+      <Filter>new\players</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\new\objects\object_data.hpp">
+      <Filter>new\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\new\objects\object_types.hpp">
+      <Filter>new\objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Modules\ModuleForge.hpp">
+      <Filter>Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Web\Ui\WebForge.hpp">
+      <Filter>Web\Ui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Patches\Forge.hpp">
+      <Filter>Patches</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Source\ElDorito.rc" />

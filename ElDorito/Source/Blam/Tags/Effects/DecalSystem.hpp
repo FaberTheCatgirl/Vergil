@@ -1,9 +1,9 @@
 #pragma once
-#include "../../Math/Bounds.hpp"
-#include "../../Math/RealPoint2D.hpp"
-#include "../../Text/StringID.hpp"
-#include "../Shaders/RenderMethod.hpp"
-#include "../TagBlock.hpp"
+#include "Blam\Math\Bounds.hpp"
+#include "Blam\Math\RealPoint2D.hpp"
+#include "Blam\Text\StringID.hpp"
+#include "Blam\Tags\Shaders\RenderMethod.hpp"
+#include "Blam\Tags\TagBlock.hpp"
 
 namespace Blam::Tags::Effects
 {

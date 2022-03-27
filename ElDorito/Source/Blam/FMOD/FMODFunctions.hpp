@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
-#include "FMODEnum.hpp"
-#include "FMODGlobals.hpp"
+#include "Blam\FMOD\FMODEnum.hpp"
+#include "Blam\FMOD\FMODGlobals.hpp"
 
 using namespace FMOD;
 

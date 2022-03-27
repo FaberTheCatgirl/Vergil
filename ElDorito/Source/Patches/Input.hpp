@@ -3,7 +3,7 @@
 #include <memory>
 #include <functional>
 #include <vector>
-#include "../Blam/BlamInput.hpp"
+#include "Blam\BlamInput.hpp"
 
 namespace Patches::Input
 {

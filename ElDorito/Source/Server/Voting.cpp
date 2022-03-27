@@ -2,14 +2,14 @@
 #include <io.h>
 #include <iostream>
 
-#include "../Utils/Utils.hpp"
+#include "Utils\Utils.hpp"
 #include "Voting.hpp"
 #include "VotingSystem.hpp"
-#include "boost/filesystem.hpp"
-#include "../Modules/ModuleGame.hpp"
-#include "../Patches/Network.hpp"
-#include "../Patches/Core.hpp"
-#include "../ElDorito.hpp"
+#include <boost\filesystem.hpp>
+#include "Modules\ModuleGame.hpp"
+#include "Patches\Network.hpp"
+#include "Patches\Core.hpp"
+#include "ElDorito.hpp"
 
 namespace Server::Voting
 {

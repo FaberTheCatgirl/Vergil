@@ -1,10 +1,10 @@
-#include "ModuleCamera.hpp"
+#include "Modules\ModuleCamera.hpp"
 #include <sstream>
-#include "../ElDorito.hpp"
-#include "../Blam/BlamNetwork.hpp"
-#include "../Patches/Ui.hpp"
-#include "../Blam/BlamInput.hpp"
-#include "ModuleInput.hpp"
+#include "ElDorito.hpp"
+#include "Blam\BlamNetwork.hpp"
+#include "Patches\Ui.hpp"
+#include "Blam\BlamInput.hpp"
+#include "Modules\ModuleInput.hpp"
 
 namespace
 {

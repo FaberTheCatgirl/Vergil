@@ -2,34 +2,35 @@
 #include <WS2tcpip.h>
 #include <Windows.h>
 
-#include "ModuleServer.hpp"
+#include "Modules\ModuleServer.hpp"
 #include <sstream>
 #include <fstream>
 #include <algorithm>
 #include <random>
 #include <iomanip>
-#include "../ElDorito.hpp"
-#include "../Patches/Network.hpp"
-#include "../Patches/PlayerUid.hpp"
+#include "ElDorito.hpp"
+#include "Patches\Network.hpp"
+#include "Patches\PlayerUid.hpp"
 
-#include "../ThirdParty/HttpRequest.hpp"
-#include "../ThirdParty/rapidjson/document.h"
-#include "../ThirdParty/rapidjson/writer.h"
-#include "../ThirdParty/rapidjson/stringbuffer.h"
-#include "../Blam/BlamNetwork.hpp"
-#include "../Console.hpp"
-#include "../Server/Signaling.hpp"
-#include "../Server/VariableSynchronization.hpp"
-#include "../Patches/Assassination.hpp"
-#include "../Web/Ui/VotingScreen.hpp"
-#include "../Patches/Sprint.hpp"
-#include "../Patches/Tweaks.hpp"
-#include "../Patches/BottomlessClip.hpp"
-#include "../Server/BanList.hpp"
-#include "../Server/ServerChat.hpp"
-#include "ModulePlayer.hpp"
-#include "../Server/Voting.hpp"
-#include "../Utils/Logger.hpp"
+#include "ThirdParty\HttpRequest.hpp"
+#include "ThirdParty\rapidjson\document.h"
+#include "ThirdParty\rapidjson\writer.h"
+#include "ThirdParty\rapidjson\stringbuffer.h"
+#include "Blam\BlamNetwork.hpp"
+#include "Console.hpp"
+#include "Server\Signaling.hpp"
+#include "Server\VariableSynchronization.hpp"
+#include "Patches\Assassination.hpp"
+#include "Web\Ui\VotingScreen.hpp"
+#include "Patches\Sprint.hpp"
+#include "Patches\Tweaks.hpp"
+#include "Patches\BottomlessClip.hpp"
+#include "Server\BanList.hpp"
+#include "Server\ServerChat.hpp"
+#include "Modules\ModulePlayer.hpp"
+#include "Server\Voting.hpp"
+#include "Utils\Logger.hpp"
+//#include "Discord\DiscordRPC.h"
 
 namespace
 {
@@ -440,6 +441,10 @@ namespace
 		Pointer::Base(0x1E40BB4).Write(xnetInfo, 0x10);
 		Pointer::Base(0x1E40BD4).Write(xnetInfo + 0x10, 0x10);
 		Pointer::Base(0x1E40BE4).Write<uint32_t>(1);
+
+		std::stringstream discordStringStream;
+		discordStringStream << host << ":" << httpPort << " " << password;
+		//Discord::DiscordRPC::Instance().joinString = discordStringStream.str();
 
 		returnInfo = "Attempting connection to " + address + "...";
 		return true;

@@ -1,9 +1,9 @@
 #pragma once
-#include "../../Text/StringID.hpp"
-#include "../TagBlock.hpp"
-#include "../TagFunction.hpp"
-#include "../TagMapping.hpp"
-#include "../TagReference.hpp"
+#include "Blam\Text\StringID.hpp"
+#include "Blam\Tags\TagBlock.hpp"
+#include "Blam\Tags\TagFunction.hpp"
+#include "Blam\Tags\TagMapping.hpp"
+#include "Blam\Tags\TagReference.hpp"
 
 namespace Blam::Tags::Shaders
 {

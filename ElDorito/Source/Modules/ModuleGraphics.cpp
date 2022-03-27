@@ -1,14 +1,14 @@
-#include "ModuleGraphics.hpp"
+#include "Modules\ModuleGraphics.hpp"
 #include <sstream>
 #include <unordered_set>
 #include <algorithm>
-#include "../ElDorito.hpp"
-#include "../Blam/BlamTypes.hpp"
-#include "../Patches/Camera.hpp"
-#include "../Patches/Ui.hpp"
-#include "../ThirdParty/rapidjson/stringbuffer.h"
-#include "../ThirdParty/rapidjson/writer.h"
-#include <boost/regex.hpp>
+#include "ElDorito.hpp"
+#include "Blam\BlamTypes.hpp"
+#include "Patches\Camera.hpp"
+#include "Patches\Ui.hpp"
+#include "ThirdParty\rapidjson\stringbuffer.h"
+#include "ThirdParty\rapidjson\writer.h"
+#include <boost\regex.hpp>
 
 namespace
 {

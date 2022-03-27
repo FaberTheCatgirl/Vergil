@@ -6,37 +6,37 @@
 #include <stdio.h>
 #include <boost\filesystem.hpp>
 
-#include "../ElDorito.hpp"
-#include "../Patch.hpp"
-#include "../Console.hpp"
+#include "ElDorito.hpp"
+#include "Patch.hpp"
+#include "Console.hpp"
 
-#include "../Modules/ModuleWeapon.hpp"
-#include "../Modules/ModuleServer.hpp"
+#include "Modules\ModuleWeapon.hpp"
+#include "Modules\ModuleServer.hpp"
 
-#include "../Blam/BlamNetwork.hpp"
-#include "../Blam/BlamObjects.hpp"
-#include "../Blam/BlamPlayers.hpp"
-#include "../Blam/BlamTime.hpp"
+#include "Blam\BlamNetwork.hpp"
+#include "Blam\BlamObjects.hpp"
+#include "Blam\BlamPlayers.hpp"
+#include "Blam\BlamTime.hpp"
 
-#include "../Blam/Cache/StringIdCache.hpp"
+#include "Blam\Cache\StringIdCache.hpp"
 
-#include "../Blam/Math/RealVector3D.hpp"
+#include "Blam\Math\RealVector3D.hpp"
 
-#include "../Blam/Tags/Tags.hpp"
-#include "../Blam/Tags/TagInstance.hpp"
-#include "../Blam/Tags/Game/Globals.hpp"
-#include "../Blam/Tags/Game/MultiplayerGlobals.hpp"
-#include "../Blam/Tags/Globals/CacheFileGlobalTags.hpp"
-#include "../Blam/Tags/Items/DefinitionWeapon.hpp"
+#include "Blam\Tags\Tags.hpp"
+#include "Blam\Tags\TagInstance.hpp"
+#include "Blam\Tags\Game\Globals.hpp"
+#include "Blam\Tags\Game\MultiplayerGlobals.hpp"
+#include "Blam\Tags\Globals\CacheFileGlobalTags.hpp"
+#include "Blam\Tags\Items\DefinitionWeapon.hpp"
 
-#include "../Patches/Core.hpp"
-#include "../Patches/Weapon.hpp"
+#include "Patches\Core.hpp"
+#include "Patches\Weapon.hpp"
 
-#include "../ThirdParty/rapidjson/document.h"
-#include "../ThirdParty/rapidjson/stringbuffer.h"
-#include "../ThirdParty/rapidjson/prettywriter.h"
+#include "ThirdParty\rapidjson\document.h"
+#include "ThirdParty\rapidjson\stringbuffer.h"
+#include "ThirdParty\rapidjson\prettywriter.h"
 
-#include <game\game.hpp>
+#include "new\game\game.hpp"
 
 namespace
 {

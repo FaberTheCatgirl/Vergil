@@ -14,6 +14,7 @@
 #include "Patches\ContentItems.hpp"
 #include "Patches\PlayerUid.hpp"
 #include "Patches\Input.hpp"
+#include "Patches\Forge.hpp"
 #include "Patches\CustomPackets.hpp"
 #include "Patches\Logging.hpp"
 #include "Patches\Sprint.hpp"
@@ -65,7 +66,7 @@ namespace Patches
 		PlayerUid::ApplyAll();
 		PlayerScale::ApplyAll();
 		Input::ApplyAll();
-		//Forge::ApplyAll();
+		Forge::ApplyAll();
 		CustomPackets::ApplyAll();
 		Logging::ApplyAll();
 		Events::ApplyAll();
@@ -114,7 +115,7 @@ namespace Patches
 	void Tick()
 	{
 		Sprint::Tick();
-		//Forge::Tick();
+		Forge::Tick();
 		PlayerScale::Tick();
 		static bool appliedFirstTickPatches = false;
 		if (appliedFirstTickPatches)

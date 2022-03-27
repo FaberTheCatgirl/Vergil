@@ -1,65 +1,65 @@
-#include "Core.hpp"
+#include "Patches\Core.hpp"
 
-#include "../Blam/Cache/StringIdCache.hpp"
+#include "Blam\Cache\StringIdCache.hpp"
 
-#include "../Blam/Geometry/RenderGeometry.hpp"
+#include "Blam\Geometry\RenderGeometry.hpp"
 
-#include "../Blam/Math/RealColorARGB.hpp"
-#include "../Blam/Math/RealMatrix4x3.hpp"
-#include "../Blam/Math/RealQuaternion.hpp"
-#include "../Blam/Math/RealVector3D.hpp"
+#include "Blam\Math\RealColorARGB.hpp"
+#include "Blam\Math\RealMatrix4x3.hpp"
+#include "Blam\Math\RealQuaternion.hpp"
+#include "Blam\Math\RealVector3D.hpp"
 
-#include "../Blam/Memory/TlsData.hpp"
+#include "Blam\Memory\TlsData.hpp"
 
-#include "../Blam/Preferences/Preferences.hpp"
+#include "Blam\Preferences\Preferences.hpp"
 
-#include "../Blam/Tags/TagInstance.hpp"
-#include "../Blam/Tags/Effects/DecalSystem.hpp"
-#include "../Blam/Tags/Game/Globals.hpp"
-#include "../Blam/Tags/Items/DefinitionWeapon.hpp"
-#include "../Blam/Tags/Scenario/Scenario.hpp"
+#include "Blam\Tags\TagInstance.hpp"
+#include "Blam\Tags\Effects\DecalSystem.hpp"
+#include "Blam\Tags\Game\Globals.hpp"
+#include "Blam\Tags\Items\DefinitionWeapon.hpp"
+#include "Blam\Tags\Scenario\Scenario.hpp"
 
-#include "../Blam/BlamData.hpp"
-#include "../Blam/BlamEvents.hpp"
-#include "../Blam/BlamInput.hpp"
-#include "../Blam/BlamPlayers.hpp"
-#include "../Blam/BlamNetwork.hpp"
-#include "../Blam/BlamObjects.hpp"
-#include "../Blam/BlamTypes.hpp"
+#include "Blam\BlamData.hpp"
+#include "Blam\BlamEvents.hpp"
+#include "Blam\BlamInput.hpp"
+#include "Blam\BlamPlayers.hpp"
+#include "Blam\BlamNetwork.hpp"
+#include "Blam\BlamObjects.hpp"
+#include "Blam\BlamTypes.hpp"
 
-#include "Weapon.hpp"
+#include "Patches\Weapon.hpp"
 
-#include "../Modules/ModuleCamera.hpp"
-#include "../Modules/ModuleCampaign.hpp"
-#include "../Modules/ModuleDebug.hpp"
-#include "../Modules/ModuleGame.hpp"
-#include "../Modules/ModuleInput.hpp"
-#include "../Modules/ModulePlayer.hpp"
-#include "../Modules/ModuleServer.hpp"
-#include "../Modules/ModuleSettings.hpp"
-#include "../Modules/ModuleTweaks.hpp"
-#include "../Modules/ModuleWeapon.hpp"
+#include "Modules\ModuleCamera.hpp"
+#include "Modules\ModuleCampaign.hpp"
+#include "Modules\ModuleDebug.hpp"
+#include "Modules\ModuleGame.hpp"
+#include "Modules\ModuleInput.hpp"
+#include "Modules\ModulePlayer.hpp"
+#include "Modules\ModuleServer.hpp"
+#include "Modules\ModuleSettings.hpp"
+#include "Modules\ModuleTweaks.hpp"
+#include "Modules\ModuleWeapon.hpp"
 
-#include "../Console.hpp"
+#include "Console.hpp"
 
-#include "../ElDorito.hpp"
-#include "../ElPatches.hpp"
-#include "../Patch.hpp"
+#include "ElDorito.hpp"
+#include "ElPatches.hpp"
+#include "Patch.hpp"
 
-#include "boost/filesystem.hpp"
+#include <boost\filesystem.hpp>
 
 #include <codecvt>
 #include <Shlobj.h>
 #include <psapi.h>
 
 // new headers
-#include <effects\particles.hpp>
-#include <game\game.hpp>
-#include <game\game_globals.hpp>
-#include <memory\data.hpp>
-#include <objects\object_types.hpp>
-#include <players\player_data.hpp>
-#include <structures\scenario_structure_bsp.hpp>
+#include"new\effects\particles.hpp"
+#include "new\game\game.hpp"
+#include "new\game\game_globals.hpp"
+#include "new\memory\data.hpp"
+#include "new\objects\object_types.hpp"
+#include "new\players\player_data.hpp"
+#include "new\structures\scenario_structure_bsp.hpp"
 
 namespace
 {

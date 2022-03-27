@@ -1,5 +1,5 @@
 #include <discord-rpc.h>
-#include "../Utils/Singleton.hpp"
+#include "Utils\Singleton.hpp"
 #include <string>
 #include <mutex>
 namespace Discord

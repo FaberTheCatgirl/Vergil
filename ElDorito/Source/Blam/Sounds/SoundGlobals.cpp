@@ -1,4 +1,4 @@
-#include "SoundGlobals.hpp"
+#include "Blam\Sounds\SoundGlobals.hpp"
 
 namespace Blam {
 

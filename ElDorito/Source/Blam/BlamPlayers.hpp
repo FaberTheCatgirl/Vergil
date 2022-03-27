@@ -1,9 +1,9 @@
 #pragma once
 
-#include "BlamData.hpp"
-#include "BlamTypes.hpp"
-#include "Tags/Objects/Damage.hpp"
-#include "Tags/Objects/Medal.hpp"
+#include "Blam\BlamData.hpp"
+#include "Blam\BlamTypes.hpp"
+#include "Blam\Tags\Objects\Damage.hpp"
+#include "Blam\Tags\Objects\Medal.hpp"
 #include <cstdint>
 
 namespace Blam::Players

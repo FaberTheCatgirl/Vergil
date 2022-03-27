@@ -1,5 +1,5 @@
-#include "RealVector3D.hpp"
-#include "RealQuaternion.hpp"
+#include "Blam\Math\RealVector3D.hpp"
+#include "Blam\Math\RealQuaternion.hpp"
 #include <cmath>
 #include <cassert>
 #include <limits>

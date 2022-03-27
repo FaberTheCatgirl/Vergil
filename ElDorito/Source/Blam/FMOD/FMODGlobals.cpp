@@ -1,4 +1,4 @@
-#include "FMODGlobals.hpp"
+#include "Blam\FMOD\FMODGlobals.hpp"
 
 namespace FMOD {
 

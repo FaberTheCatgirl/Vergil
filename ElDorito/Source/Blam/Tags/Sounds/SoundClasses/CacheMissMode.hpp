@@ -1,5 +1,5 @@
 #pragma once
-#include "../../Tags.hpp"
+#include "Blam\Tags\Tags.hpp"
 
 namespace Blam::Tags::Sounds {
 	enum class CacheMissMode : int8_t

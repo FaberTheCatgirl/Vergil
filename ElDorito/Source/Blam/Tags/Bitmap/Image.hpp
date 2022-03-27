@@ -1,4 +1,4 @@
-#include <Blam\Tags\Tags.hpp>
+#include "Blam\Tags\Tags.hpp"
 
 namespace Blam::Tags::Bitmap {
 	struct Image

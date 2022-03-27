@@ -1,7 +1,7 @@
 #pragma once
 
-#include "BlamData.hpp"
-#include "../Blam/Math/RealVector3D.hpp"
+#include "Blam\BlamData.hpp"
+#include "Blam\Math\RealVector3D.hpp"
 
 namespace Blam::Objects
 {

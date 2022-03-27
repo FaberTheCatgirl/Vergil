@@ -1,4 +1,4 @@
-#include "BlamData.hpp"
+#include "Blam\BlamData.hpp"
 
 namespace Blam
 {

@@ -17,12 +17,12 @@
 
 /*! \file reader.h */
 
-#include "allocators.h"
-#include "stream.h"
-#include "encodedstream.h"
-#include "internal/meta.h"
-#include "internal/stack.h"
-#include "internal/strtod.h"
+#include "ThirdParty\rapidjson\allocators.h"
+#include "ThirdParty\rapidjson\stream.h"
+#include "ThirdParty\rapidjson\encodedstream.h"
+#include "ThirdParty\rapidjson\internal\meta.h"
+#include "ThirdParty\rapidjson\internal\stack.h"
+#include "ThirdParty\rapidjson\internal\strtod.h"
 #include <limits>
 
 #if defined(RAPIDJSON_SIMD) && defined(_MSC_VER)

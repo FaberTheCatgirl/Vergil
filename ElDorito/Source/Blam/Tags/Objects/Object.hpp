@@ -1,9 +1,9 @@
 #pragma once
-#include "../../Math/Bounds.hpp"
-#include "../../Math/RealColorRGB.hpp"
-#include "../../Math/RealPoint3D.hpp"
-#include "../Tags.hpp"
-#include "../../Text/StringID.hpp"
+#include "Blam\Math\Bounds.hpp"
+#include "Blam\Math\RealColorRGB.hpp"
+#include "Blam\Math\RealPoint3D.hpp"
+#include "Blam\Tags\Tags.hpp"
+#include "Blam\Text\StringID.hpp"
 
 namespace Blam::Tags::Objects
 {
