@@ -266,6 +266,7 @@ $(document).ready(function(){
             }   
         });
         $('#closeButton').off('click').on('click', function(e){
+			dew.command('Game.PlaySound 0xb01');
             hideScoreboard();
         });
     loadSettings(0);
