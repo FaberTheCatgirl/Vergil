@@ -11,11 +11,16 @@ namespace Modules
 		Command* VarArmorChest;
 		Command* VarArmorRightShoulder;
 		Command* VarArmorLeftShoulder;
+		Command* VarArmorArms;
+		Command* VarArmorLegs;
+		Command* VarArmorPelvis;
+		Command* VarArmorUpperBody;
 
 		Command* VarColorsPrimary;
 		Command* VarColorsSecondary;
 		Command* VarColorsVisor;
 		Command* VarColorsLights;
+		Command* VarColorsHolo;
 
 		Command *VarRepresentation;
 

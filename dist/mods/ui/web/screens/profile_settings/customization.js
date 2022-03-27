@@ -50,15 +50,21 @@ var h3ColorArray = [
 var settingsToLoad = [
     ['playerName', 'Player.Name','Name','', 2],
     ['serviceTag', 'Player.ServiceTag','Service Tag','', 3],
-    ['armorHelmet', 'Player.Armor.Helmet','Helmet','The thing that goes on your head.', 2],
-    ['armorChest', 'Player.Armor.Chest','Body','From arm to arm.', 3],
-    ['armorRightShoulder', 'Player.Armor.RightShoulder','Right Shoulder','Right there on that shoulder.', 4],
-    ['armorLeftShoulder', 'Player.Armor.LeftShoulder','Left Shoulder','The only shoulder that\'s left.', 5],
-    ['gender', 'Player.Gender','Gender','', 6],
-    ['playerRep', 'Player.Representation', 'Player Representation','', 6],
+    ['armorHelmet', 'Player.Armor.Helmet','Helmet','The thing that goes on your head.', 0],
+    ['armorChest', 'Player.Armor.Chest','Body','From arm to arm.', 1],
+    ['armorRightShoulder', 'Player.Armor.RightShoulder','Right Shoulder','Right there on that shoulder.', 2],
+    ['armorLeftShoulder', 'Player.Armor.LeftShoulder','Left Shoulder','The only shoulder that\'s left.', 3],
+	['armorArms', 'Player.Armor.Arms','Arms','Arms.', 4],
+	['armorPelvis', 'Player.Armor.Pelvis','Pelvis','Pelvis.', 5],
+	['armorLegs', 'Player.Armor.Legs','Legs','Legs.', 6],
+	['armorUpperBody', 'Player.Armor.UpperBody','Upper Body','Upper Body.', 7],
+    ['gender', 'Player.Gender','Gender','', 8],
+    ['playerRep', 'Player.Representation', 'Player Representation','', 9],
     ['colorsPrimary', 'Player.Colors.Primary','Armor Primary','The primary armor color will serve you in individual combat but will be overwritten in team scenarios.',0],
     ['colorsSecondary', 'Player.Colors.Secondary','Armor Secondary','The secondary armor color accents your primary color and will be overwritten in team scenarios.',1],
     ['colorsVisor', 'Player.Colors.Visor','Armor Detail','The armor detail color preserves your individual identity in all multiplayer scenarios.',2],
+	['colorsLights', 'Player.Colors.Lights','Light Color','Like Christmas, but more subtle.',3],
+    ['colorsHolo', 'Player.Colors.Holo','Armor Holo','Armor Holo.',4]
 ];
 var armorShoulderList = [
     ['Mark VI','base','Supplemental Armor, Pauldron, Mjolnir: This standard-issue shoulder armor for the Mjolnir Mark VI Powered Assault Armor has been in use since October 2552. It is compatible with all Mjolnir variants.'],
@@ -69,6 +75,33 @@ var armorShoulderList = [
     ['Scout','mp_scout','The SCOUT and RECON projects were run as independent parallel projects intended to develop a single variant of the Mjolnir Powered Assault Armor with stealth capabilities.'],
     ['Security','mp_marathon','The Mjolnir Mark V(m) Powered Assault Armor was originally manufactured in 2528 and recently upgraded to be compatible with all current-issue armor variants.'],
     ['Hayabusa','mp_ryu','The critical innovation brought about by RKD\'s involvement in the development of power armor is in the use of advanced materials-reducing the weight of current generation armor by nearly a third.']
+    ['Air Assault','air_assault','Based on a proven Ushuaia Armory design, Naphtali hopes to leverage the AIR ASSAULT\'s all-around excellent performance and combat endurance to compete for the UNSC\'s lucrative Spartan recruit armor contract. AIR ASSAULT armor is a front-runner for the standard armor that future Spartans will be clad in.'],
+    ['Renegade','renegade',' Obstentially a strategic reconnaissance variant, users have noticed the RENEGADE\'s sensor suite is calibrated specifically to track other Mjolnir suits; particularly those featuring emissions cloaking.'],
+    ['Juggernaut','juggernaut','The JUGGERNAUT\'s design was thought lost during the fall of Reach. Recovered by a corporate scout team in 2553, the prototype helmets were paired with a GEN2 prototype harness and shipped to Anvil Station for integration testing. 2553 Each JUGGERNAUT helmet is dabbed with vitrified dirt from Reach as a reminder of what is at stake.'],
+    ['Scanner','scanner','Scanner'],
+    ['Chameleon','chameleon','Chameleon'],
+    ['Stealth','stealth','Stealth'],
+    ['Omni','omni','A surprisingly effective composite of other Acheron Security designs, the OMNI is currently the companys cutting-edge Mjolnir suit, and one of the few able to effectively use Material Groups GEN2 prototype sensor suite. Petabytes of Mjolnir combat data have been carefully sifted and analzed by Acheron researchers to inform the OMNI\'s design.'],
+    ['Orbital','orbital','Orbital'],
+    ['Shark','shark','Shark'],
+    ['Halberd','halberd','Cloaked in secrecy, all users of the HALBERD-class armor must sign binding non-disclosure agreements about its performance and the particulars of its new weapon mag-lock arrangement. Emerson guards the HALBERD prototype suits with their own - heavily armed - private security.'],
+    ['Hoplite','hoplite','Initially designed as an alternative to the SPI armor used by SPARTAN-III operatives, the notoriously secretive Watershed group has unexpectedly revealed the HOPLITE as a low-cost Mjolnir variant optimized for pairing with UNSC pistols.-III. HOPLITE armor lacks the bells and whistles of most Mjolnir variants, but is easy to build and repair.'],
+	['Ballista','ballista','Ballista'],
+	['Cyclops','cyclops','Cyclops'],
+	['Demo','demo','Demo'],
+	['Dutch','dutch','Dutch'],
+	['Gladiator','gladiator','Gladiator'],
+	['Gungnir','gungnir','Gungnir'],
+	['Hammerhead','hammerhead','Hammerhead'],
+	['Mac','mac','Mac'],
+	['Mercenary','mercenary','Mercenary'],
+	['Nihard','nihard','Nihard'],
+	['Oracle','oracle','Oracle'],
+	['Silverback','silverback','Silverback'],
+	['Spectrum','spectrum','Spectrum'],
+	['Strider','strider','Strider'],
+	['Tankmode','tankmode_human','The divine creation of Tankmode.'],
+	['Widow Maker','widow_maker','Widow Maker']
 ];
 var armorHelmetList = [
     ['Mark VI','base','Integrated Communications Helmet, Mjolnir: This standard-issue helmet for the Mjolnir Mark VI Powered Assault Armor has been in use since October 2552. It is compatible with all Mjolnir variants.'],
@@ -82,6 +115,32 @@ var armorHelmetList = [
     ['Security','mp_marathon','The Mjolnir V(m) variant was manufactured at the Misrah Armories Facility on Mars in 2528. It has been upgraded and modified to be compatible with all current-issue armor variants.'],
     ['Hayabusa','mp_ryu','The critical innovation brought about by RKD\'s involvement in the development of power armor is in the use of advanced materials-reducing the weight of current generation armor by nearly a third.'],
     ['ODST','mp_odst','Many technologies initially developed for Project: MJOLNIR have gained widespread adoption; the use of CTCs for body armor and helmet-integrated neural interfaces being the most visible.']
+    ['Air Assault','air_assault','Based on a proven Ushuaia Armory design, Naphtali hopes to leverage the AIR ASSAULT\'s all-around excellent performance and combat endurance to compete for the UNSC\'s lucrative Spartan recruit armor contract. AIR ASSAULT armor is a front-runner for the standard armor that future Spartans will be clad in.'],
+    ['Renegade','renegade',' Obstentially a strategic reconnaissance variant, users have noticed the RENEGADE\'s sensor suite is calibrated specifically to track other Mjolnir suits; particularly those featuring emissions cloaking.'],
+    ['Juggernaut','juggernaut','The JUGGERNAUT\'s design was thought lost during the fall of Reach. Recovered by a corporate scout team in 2553, the prototype helmets were paired with a GEN2 prototype harness and shipped to Anvil Station for integration testing. 2553 Each JUGGERNAUT helmet is dabbed with vitrified dirt from Reach as a reminder of what is at stake.'],
+    ['Scanner','scanner','Scanner'],
+    ['Chameleon','chameleon','Chameleon'],
+    ['Stealth','stealth','Stealth'],
+    ['Omni','omni','A surprisingly effective composite of other Acheron Security designs, the OMNI is currently the companys cutting-edge Mjolnir suit, and one of the few able to effectively use Material Groups GEN2 prototype sensor suite. Petabytes of Mjolnir combat data have been carefully sifted and analzed by Acheron researchers to inform the OMNI\'s design.'],
+    ['Orbital','orbital','Orbital'],
+    ['Shark','shark','Shark'],
+    ['Halberd','halberd','Cloaked in secrecy, all users of the HALBERD-class armor must sign binding non-disclosure agreements about its performance and the particulars of its new weapon mag-lock arrangement. Emerson guards the HALBERD prototype suits with their own - heavily armed - private security.'],
+    ['Hoplite','hoplite','Initially designed as an alternative to the SPI armor used by SPARTAN-III operatives, the notoriously secretive Watershed group has unexpectedly revealed the HOPLITE as a low-cost Mjolnir variant optimized for pairing with UNSC pistols.-III. HOPLITE armor lacks the bells and whistles of most Mjolnir variants, but is easy to build and repair.'],
+	['Ballista','ballista','Ballista'],
+	['Cyclops','cyclops','Cyclops'],
+	['Demo','demo','Demo'],
+	['Dutch','dutch','Dutch'],
+	['Gladiator','gladiator','Gladiator'],
+	['Gungnir','gungnir','Gungnir'],
+	['Hammerhead','hammerhead','Hammerhead'],
+	['Mac','mac','Mac'],
+	['Mercenary','mercenary','Mercenary'],
+	['Nihard','nihard','Nihard'],
+	['Oracle','oracle','Oracle'],
+	['Silverback','silverback','Silverback'],
+	['Spectrum','spectrum','Spectrum'],
+	['Strider','strider','Strider'],
+	['Widow Maker','widow_maker','Widow Maker']
 ];
 var armorChestList = [
     ['Mark VI','base','Mjolnir Mark VI Powered Assault Armor: This is the standard issue Powered Assault Armor for Spartans as of October 2552. It is compatible with all certified helmet and pauldron variants.'],
@@ -93,7 +152,73 @@ var armorChestList = [
     ['Scout','mp_scout','The Mjolnir VI/S variant was developed and tested alongside the RECON variant at the ONI\'s Ordnance Testing Facility (B5D) at Swanbourne, Perth, Western Australia.'],
     ['Hayabusa','mp_ryu','In late 2536, RKD-an Earth-based think tank-presented the UNSC Ordnance Committee with its answer to the self-contained powered armor problem: Project: HAYABUSA.'],
     ['Katana','mp_katana','To correctly use the sword, one must make it an extension of one\'s body. This is for the understanding of those intending to be warriors.']
+    ['Air Assault','air_assault','Based on a proven Ushuaia Armory design, Naphtali hopes to leverage the AIR ASSAULT\'s all-around excellent performance and combat endurance to compete for the UNSC\'s lucrative Spartan recruit armor contract. AIR ASSAULT armor is a front-runner for the standard armor that future Spartans will be clad in.'],
+    ['Renegade','renegade',' Obstentially a strategic reconnaissance variant, users have noticed the RENEGADE\'s sensor suite is calibrated specifically to track other Mjolnir suits; particularly those featuring emissions cloaking.'],
+    ['Juggernaut','juggernaut','The JUGGERNAUT\'s design was thought lost during the fall of Reach. Recovered by a corporate scout team in 2553, the prototype helmets were paired with a GEN2 prototype harness and shipped to Anvil Station for integration testing. 2553 Each JUGGERNAUT helmet is dabbed with vitrified dirt from Reach as a reminder of what is at stake.'],
+    ['Scanner','scanner','Scanner'],
+    ['Chameleon','chameleon','Chameleon'],
+    ['Stealth','stealth','Stealth'],
+    ['Omni','omni','A surprisingly effective composite of other Acheron Security designs, the OMNI is currently the companys cutting-edge Mjolnir suit, and one of the few able to effectively use Material Groups GEN2 prototype sensor suite. Petabytes of Mjolnir combat data have been carefully sifted and analzed by Acheron researchers to inform the OMNI\'s design.'],
+    ['Orbital','orbital','Orbital'],
+    ['Shark','shark','Shark'],
+    ['Halberd','halberd','Cloaked in secrecy, all users of the HALBERD-class armor must sign binding non-disclosure agreements about its performance and the particulars of its new weapon mag-lock arrangement. Emerson guards the HALBERD prototype suits with their own - heavily armed - private security.'],
+    ['Hoplite','hoplite','Initially designed as an alternative to the SPI armor used by SPARTAN-III operatives, the notoriously secretive Watershed group has unexpectedly revealed the HOPLITE as a low-cost Mjolnir variant optimized for pairing with UNSC pistols.-III. HOPLITE armor lacks the bells and whistles of most Mjolnir variants, but is easy to build and repair.'],
+	['Ballista','ballista','Ballista'],
+	['Cyclops','cyclops','Cyclops'],
+	['Demo','demo','Demo'],
+	['Dutch','dutch','Dutch'],
+	['Gladiator','gladiator','Gladiator'],
+	['Gungnir','gungnir','Gungnir'],
+	['Hammerhead','hammerhead','Hammerhead'],
+	['Mac','mac','Mac'],
+	['Mercenary','mercenary','Mercenary'],
+	['Nihard','nihard','Nihard'],
+	['Oracle','oracle','Oracle'],
+	['Silverback','silverback','Silverback'],
+	['Spectrum','spectrum','Spectrum'],
+	['Strider','strider','Strider'],
+	['Tankmode','tankmode_human','The divine creation of Tankmode.'],
+	['Widow Maker','widow_maker','Widow Maker']
 ];
+
+var armorArmList = [
+	['Mark VI','base','Integrated Communications Helmet, Mjolnir: This standard-issue helmet for the Mjolnir Mark VI Powered Assault Armor has been in use since October 2552. It is compatible with all Mjolnir variants.'],
+	['Air Assault','air_assault','Based on a proven Ushuaia Armory design, Naphtali hopes to leverage the AIR ASSAULT\'s all-around excellent performance and combat endurance to compete for the UNSC\'s lucrative Spartan recruit armor contract. AIR ASSAULT armor is a front-runner for the standard armor that future Spartans will be clad in.'],
+    ['Renegade','renegade',' Obstentially a strategic reconnaissance variant, users have noticed the RENEGADE\'s sensor suite is calibrated specifically to track other Mjolnir suits; particularly those featuring emissions cloaking.'],
+    ['Juggernaut','juggernaut','The JUGGERNAUT\'s design was thought lost during the fall of Reach. Recovered by a corporate scout team in 2553, the prototype helmets were paired with a GEN2 prototype harness and shipped to Anvil Station for integration testing. 2553 Each JUGGERNAUT helmet is dabbed with vitrified dirt from Reach as a reminder of what is at stake.'],
+    ['Scanner','scanner','Scanner'],
+    ['Chameleon','chameleon','Chameleon'],
+    ['Stealth','stealth','Stealth'],
+    ['Omni','omni','A surprisingly effective composite of other Acheron Security designs, the OMNI is currently the companys cutting-edge Mjolnir suit, and one of the few able to effectively use Material Groups GEN2 prototype sensor suite. Petabytes of Mjolnir combat data have been carefully sifted and analzed by Acheron researchers to inform the OMNI\'s design.'],
+    ['Orbital','orbital','Orbital'],
+    ['Shark','shark','Shark'],
+    ['Halberd','halberd','Cloaked in secrecy, all users of the HALBERD-class armor must sign binding non-disclosure agreements about its performance and the particulars of its new weapon mag-lock arrangement. Emerson guards the HALBERD prototype suits with their own - heavily armed - private security.'],
+    ['Hoplite','hoplite','Initially designed as an alternative to the SPI armor used by SPARTAN-III operatives, the notoriously secretive Watershed group has unexpectedly revealed the HOPLITE as a low-cost Mjolnir variant optimized for pairing with UNSC pistols.-III. HOPLITE armor lacks the bells and whistles of most Mjolnir variants, but is easy to build and repair.'],
+	['Ballista','ballista','Ballista'],
+	['Cyclops','cyclops','Cyclops'],
+	['Demo','demo','Demo'],
+	['Dutch','dutch','Dutch'],
+	['Gladiator','gladiator','Gladiator'],
+	['Gungnir','gungnir','Gungnir'],
+	['Hammerhead','hammerhead','Hammerhead'],
+	['Mac','mac','Mac'],
+	['Mercenary','mercenary','Mercenary'],
+	['Nihard','nihard','Nihard'],
+	['Oracle','oracle','Oracle'],
+	['Silverback','silverback','Silverback'],
+	['Spectrum','spectrum','Spectrum'],
+	['Strider','strider','Strider'],
+	['Widow Maker','widow_maker','Widow Maker']
+];
+var armorPelvisList = [
+	['Mark VI','base','Mjolnir Mark VI Powered Assault Armor: This is the standard issue Powered Assault Armor for Spartans as of October 2552. It is compatible with all certified helmet and pauldron variants.'],
+	['Air Assault','air_assault','Based on a proven Ushuaia Armory design, Naphtali hopes to leverage the AIR ASSAULT\'s all-around excellent performance and combat endurance to compete for the UNSC\'s lucrative Spartan recruit armor contract. AIR ASSAULT armor is a front-runner for the standard armor that future Spartans will be clad in.'],
+	['Tankmode','tankmode_human','The divine creation of Tankmode.']
+];
+
+var armorUpperBodyList = [
+];
+
 var colorPicker;
 var genderList = [
     ['Male','male','State your gender. This will not be displayed to other players, but combat effects will be tailored to your gender.'],
@@ -164,12 +289,18 @@ $(document).ready(function(){
     setRadioList('armorChest', armorChestList);
     setRadioList('armorRightShoulder', armorShoulderList);
     setRadioList('armorLeftShoulder', armorShoulderList);
+	setRadioList('armorChest', armorChestList, true);
+	setRadioList('armorArms', armorArmList, true);
+	setRadioList('armorPelvis', armorPelvisList, true);
+    setRadioList('armorLegs', armorArmList, true);
+	setRadioList('armorUpperBody', armorUpperBodyList, true);
     setRadioList('gender', genderList);
     setRadioList('playerRep', playerRepList);
     setRadioList('colorsPrimary', h3ColorArray);
     setRadioList('colorsSecondary', h3ColorArray);
     setRadioList('colorsVisor', h3ColorArray);
     setRadioList('colorsLights', h3ColorArray);
+	setRadioList('colorsHolo', h3ColorArray);
     $('.tabs li a').off('click').on('click', function(e){
         $('.tabs li').removeClass('selected');
         $(this).parent().addClass('selected');
@@ -208,7 +339,7 @@ $(document).ready(function(){
         $(location.hash+' #infoBox #infoText').text($(this).attr('desc'));
 		setUrl(false);
     });
-    $('#colorsPrimaryText, #colorsSecondaryText,#colorsVisorText,#colorsLightsText').off('click').on('click', function(e){
+    $('#colorsPrimaryText, #colorsSecondaryText,#colorsVisorText,#colorsLightsText,#colorsHoloText').off('click').on('click', function(e){
         $('.colorForm').hide();
         colorPicker = dew.makeColorPicker(document.querySelector('#colorPicker'));
         var whichColor = $(this);
@@ -697,7 +828,7 @@ function changeArmor(componentType) {
 	}
 
 function randomArmor(){
-    var armorArray = ['armorHelmet','armorChest','armorRightShoulder','armorLeftShoulder'];
+    var armorArray = ['armorHelmet','armorChest','armorRightShoulder','armorLeftShoulder','armorArms','armorLegs','armorPelvis','armorUpperBody'];
     for(var i = 0; i < armorArray.length; i++) {
         var $options = $('#'+armorArray[i]).find('input'),
             random = ~~(Math.random() * $options.length);
@@ -731,7 +862,7 @@ function randomEmblem(){
 }
 
 function randomColors(){
-    var colorArray = ['colorsPrimary','colorsSecondary','colorsLights','colorsVisor'];
+    var colorArray = ['colorsPrimary','colorsSecondary','colorsLights','colorsVisor','colorsHolo'];
     for(var i = 0; i < colorArray.length; i++) {
         var randomColor = '#'+Math.floor(Math.random()*16777215).toString(16).toUpperCase();
         $('#'+colorArray[i]+'Text').val(randomColor);

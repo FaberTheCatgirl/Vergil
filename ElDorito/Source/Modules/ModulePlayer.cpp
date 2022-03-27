@@ -150,6 +150,10 @@ namespace Modules
 		VarArmorChest = AddVariableString("Armor.Chest", "armor_chest", "Armor ID for player chest", eCommandFlagsArchived, "", VariablePlayerArmorUpdate);
 		VarArmorRightShoulder = AddVariableString("Armor.RightShoulder", "armor_right_shoulder", "Armor ID for player right shoulder", eCommandFlagsArchived, "", VariablePlayerArmorUpdate);
 		VarArmorLeftShoulder = AddVariableString("Armor.LeftShoulder", "armor_left_shoulder", "Armor ID for player left shoulder", eCommandFlagsArchived, "", VariablePlayerArmorUpdate);
+		VarArmorArms = AddVariableString("Armor.Arms", "armor_arms", "Armor ID for player arms", eCommandFlagsArchived, "", VariablePlayerArmorUpdate);
+		VarArmorLegs = AddVariableString("Armor.Legs", "armor_legs", "Armor ID for player legs", eCommandFlagsArchived, "", VariablePlayerArmorUpdate);
+		VarArmorPelvis = AddVariableString("Armor.Pelvis", "armor_pelvis", "Armor ID for player pelvis", eCommandFlagsArchived, "", VariablePlayerArmorUpdate);
+		VarArmorUpperBody = AddVariableString("Armor.UpperBody", "armor_upperbody", "Armor ID for player upper_body", eCommandFlagsArchived, "", VariablePlayerArmorUpdate);
 		AddCommand("Armor.Update", "armor_update", "Update the player's armor.", eCommandFlagsHidden, VariablePlayerArmorUpdate);
 		AddCommand("Armor.SetUiModelPosition", "armor_ui_player_model_position", "Set the position of the ui player model", (CommandFlags)(eCommandFlagsOmitValueInList | eCommandFlagsHidden), CommandSetUiPlayerModelPosition);
 		AddCommand("Armor.SetUiModelRotation", "armor_ui_player_model_rotation", "Set the rotation of the ui player model", (CommandFlags)(eCommandFlagsOmitValueInList | eCommandFlagsHidden), CommandSetUiPlayerModelRotation);
@@ -160,6 +164,7 @@ namespace Modules
 		VarColorsSecondary = AddVariableString("Colors.Secondary", "colors_secondary", "The secondary colors hex value", eCommandFlagsArchived, "#546E26", VariablePlayerArmorUpdate);
 		VarColorsVisor = AddVariableString("Colors.Visor", "colors_visor", "The visor colors hex value", eCommandFlagsArchived, "#FF7F00", VariablePlayerArmorUpdate);
 		VarColorsLights = AddVariableString("Colors.Lights", "colors_lights", "The lights colors hex value", eCommandFlagsArchived, "#9685FF", VariablePlayerArmorUpdate);
+		VarColorsHolo = AddVariableString("Colors.Holo", "colors_holo", "The holo colors hex value", eCommandFlagsArchived, "#9685FF", VariablePlayerArmorUpdate);
 
 		VarRepresentation = AddVariableString("Representation", "player_race", "The representation to display for the player's render mannequin", eCommandFlagsArchived, "spartan", VariablePlayerRepresentationUpdate);
 
