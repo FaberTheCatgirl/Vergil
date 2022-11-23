@@ -6,6 +6,7 @@ namespace ChatCommands
 {
 	int findNumberOfPlayersInGame();
 
+	// Generic command class with handler functions for voting events. 
 	class AbstractChatCommand
 	{
 	public:
@@ -41,7 +42,7 @@ namespace ChatCommands
 
 	};
 
-
+	// Chat command to vote end game
 	class EndGameCommand : public AbstractChatCommand
 	{
 	public:
@@ -53,6 +54,21 @@ namespace ChatCommands
 		EndGameCommand();
 
 	};
+
+	// Chat command to vote skip current round. 
+	class SkipRoundCommand : public AbstractChatCommand
+	{
+	public:
+		virtual void doOnVoteStart(std::string starterName);
+		virtual void doOnVotePass(std::string name);
+		virtual void doOnVoteFail();
+		virtual bool isValidArgument(std::string s, std::string& returnInfo);
+		virtual bool isEnabled();
+		SkipRoundCommand();
+
+	};
+
+	// Chat command to vote shuffle teams
 	class ShuffleTeamsCommand : public AbstractChatCommand
 	{
 	public:
@@ -65,6 +81,7 @@ namespace ChatCommands
 
 	};
 
+	// Chat command to vote kick player 
 	class KickPlayerCommand : public AbstractChatCommand
 	{
 	public:
@@ -79,6 +96,7 @@ namespace ChatCommands
 		std::string playerName;
 	};
 
+	// Chat command to vote kick player index
 	class KickIndexCommand : public AbstractChatCommand
 	{
 	public:

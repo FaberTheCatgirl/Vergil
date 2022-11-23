@@ -54,6 +54,7 @@ namespace Modules
 		Command* VarTempBanDuration;
 		Command* VarChatCommandKickPlayerEnabled;
 		Command* VarChatCommandEndGameEnabled;
+		Command* VarChatCommandSkipRoundEnabled;
 		Command* VarChatCommandVoteTime;
 		Command* VarChatCommandShuffleTeamsEnabled;
 		Command* VarPlayersInfo;

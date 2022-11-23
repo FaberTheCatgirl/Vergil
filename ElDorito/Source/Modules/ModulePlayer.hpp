@@ -11,14 +11,11 @@ namespace Modules
 		Command* VarArmorChest;
 		Command* VarArmorRightShoulder;
 		Command* VarArmorLeftShoulder;
-
 		Command* VarColorsPrimary;
 		Command* VarColorsSecondary;
 		Command* VarColorsVisor;
 		Command* VarColorsLights;
-
-		Command *VarRepresentation;
-
+		Command* VarRepresentation;
 		Command* VarPlayerName;
 		Command* VarPlayerGender;
 		Command* VarPlayerServiceTag;
