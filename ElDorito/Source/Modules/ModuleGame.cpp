@@ -760,7 +760,7 @@ namespace
 
 	bool CommandRoundEnd(const std::vector<std::string>& Arguments, std::string& returnInfo)
 	{
-		Pointer(0x141355B4).Write<int*>(0);
+		Pointer(0x14133D28).Write(2);
 		returnInfo = "Skipping round...";
 		return true;
 	}
