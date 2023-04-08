@@ -852,8 +852,8 @@ namespace Patches::Core
 		Patch(0x63CD07, { 0x20 }).Apply();
 
 		// Force Saber reflections off
-		Pointer::Base(0x1517D62).Write<bool>(false);
-	}
+		//Pointer::Base(0x1517D62).Write<bool>(false);
+	}	// Can be fixed by re importing scenarios using eldo-like lighting system flag from the MCC (which is a lot better than the broken HO one's anyway)
 
 	void OnShutdown(ShutdownCallback callback)
 	{
@@ -957,7 +957,7 @@ namespace
 		if (campaign_name == nullptr)
 		{
 			campaign_name = new Blam::Text::StringID;
-			*campaign_name = Blam::Cache::StringIDCache::Instance.GetStringID("spartan");
+			*campaign_name = Blam::Cache::StringIDCache::Instance.GetStringID("mp_spartan"); //Allow Player Customization in Campaign
 		}
 
 		if (multiplayer_name == nullptr)
@@ -985,7 +985,7 @@ namespace
 		if (campaign_name == nullptr)
 		{
 			campaign_name = new Blam::Text::StringID;
-			*campaign_name = Blam::Cache::StringIDCache::Instance.GetStringID("sp_elite");
+			*campaign_name = Blam::Cache::StringIDCache::Instance.GetStringID("mp_elite"); //Allow Player Customization in Campaign
 		}
 
 		if (multiplayer_name == nullptr)
@@ -1245,7 +1245,7 @@ namespace
 
 	void DirtyDiskErrorHookImpl()
 	{
-		MessageBoxA(NULL, "Dirty Disk Error! Your tags are invalid or corrupted.\nIf you have any mods installed please verify that\nthey are installed in the correct order.\n\nElDewrito will now exit.", "There once was a man from Bungie...", MB_ICONERROR);
+		MessageBoxA(NULL, "Dirty Disk Error! Your tags are invalid or corrupted.\nIf you have any mods installed please verify that\nthey are installed in the correct order.\n\nVergil will now exit.", "There once was a man from Bungie...", MB_ICONERROR);
 		Patches::Core::ExecuteShutdownCallbacks();
 		std::exit(0);
 	}

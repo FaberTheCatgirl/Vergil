@@ -257,7 +257,7 @@ void ElDorito::Initialize()
 		}
 	}
 
-	setWatermarkText("Unofficial ElDewrito | Version: " + Utils::Version::GetVersionString() + " | Build Date: " __DATE__);
+	setWatermarkText("Vergil | Version: " + Utils::Version::GetVersionString() + " | Build Date: " __DATE__);
 
 	// Ensure a ban list file exists
 	Server::SaveDefaultBanList(Server::LoadDefaultBanList());
