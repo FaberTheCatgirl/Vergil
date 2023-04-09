@@ -1190,11 +1190,11 @@ namespace Modules
 
 		AddCommand("Update", "update", "Update the game to the latest version", eCommandFlagsNone, CommandGameUpdate);
 
-		VarMenuURL = AddVariableString("MenuURL", "menu_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "http://rabidsquabbit.github.io/");
+		VarMenuURL = AddVariableString("MenuURL", "menu_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "http://Vergil.github.io/");
 
 		VarLoadingURL = AddVariableString("LoadingURL", "loading_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/loading/");
 
-		VarScoreboardURL = AddVariableString("ScoreboardURL", "scoreboard_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "http://rabidsquabbit.github.io/screens/scoreboard/");
+		VarScoreboardURL = AddVariableString("ScoreboardURL", "scoreboard_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "http://Vergil.github.io/screens/scoreboard/");
 		VarKeyboardURL = AddVariableString("KeyboardURL", "keyboard_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/keyboard/");
 		VarConsoleURL = AddVariableString("ConsoleURL", "console_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/console/");
 		VarChatURL = AddVariableString("ChatURL", "chat_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/chat/");
@@ -1213,7 +1213,7 @@ namespace Modules
 		VarScreenshotNoticeURL = AddVariableString("ScreenshotNoticeURL", "weapon_offset_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/screenshot_notice/");
 		VarExitURL = AddVariableString("ExitURL", "exit_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/exit/");
 		VarDiscordURL = AddVariableString("DiscordURL", "discord_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/discord/");
-		VarReportURL = AddVariableString("ReportURL", "report_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "http://rabidsquabbit.github.io/screens/report/");
+		VarReportURL = AddVariableString("ReportURL", "report_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "http://Vergil.github.io/screens/report/");
 		VarInGameVotingURL = AddVariableString("InGameVotingURL", "ingame_voting", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/ingame_voting/");
 		VarLanguage = AddVariableString("Language", "language", "The language to use", eCommandFlagsArchived, "english", VariableLanguageUpdated);
 

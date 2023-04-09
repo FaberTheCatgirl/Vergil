@@ -30,26 +30,26 @@
         "game.cfg": "BB9E370DECDCD08A616EF6D4DEDE7478AB28D030"
     },
 
-    "updateServiceUrl": "http://eldewrito.anvilonline.net/update.json",
+    "updateServiceUrl": "https://raw.githubusercontent.com/FaberTheCatgirl/faberthecatgirl.github.io/master/update.json",
     "updateChannelsUrl": "",
     "stats": {
         "submitUrls": [
-            "http://new.halostats.click/api/submit"
+            "http://gungnirstudiosllc.com/api/submit"
         ],
-        "playerInfo": "http://new.halostats.click/api/playersinfo"
+        "playerInfo": "http://gungnirstudiosllc.com/api/playersinfo"
     },
     "banlistUrls": [
-        "http://halostats.click/api/banlist"
+        "http://gungnirstudiosllc.com/api/banlist"
     ],
     "playerReportUrls":[],
     "masterServers": [{
-        "list": "http://158.69.166.144:8080/list",
-        "announce": "http://158.69.166.144:8080/announce",
-        "stats": "http://158.69.166.144:8080/stats"
+        "list": "localhost:8080/list",
+        "announce": "localhost:8080/announce",
+        "stats": "localhost:8080/stats"
     }, {
-        "list": "http://eldewrito.red-m.net/list",
-        "announce": "http://eldewrito.red-m.net/announce",
-        "stats": "http://eldewrito.red-m.net/stats"
+        "list": "http://gungnirstudiosllc.com/list",
+        "announce": "http://gungnirstudiosllc.com/announce",
+        "stats": "http://gungnirstudiosllc.com/stats"
     }
  ]
 }

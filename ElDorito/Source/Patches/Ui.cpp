@@ -886,7 +886,7 @@ namespace
 			std::string version = Utils::Version::GetVersionString();
 			std::transform(version.begin(), version.end(), version.begin(), toupper);
 			std::wstring unicodeVersion(version.begin(), version.end());
-			swprintf(outputBuffer, MaxStringLength, L"UNOFFICIAL ELDEWRITO %s", unicodeVersion.c_str());
+			swprintf(outputBuffer, MaxStringLength, L"Vergil %s", unicodeVersion.c_str());
 			return true;
 		}
 		}
@@ -895,7 +895,7 @@ namespace
 
 	void WindowTitleSprintfHook(char* destBuf, char* format, char* version)
 	{
-		std::string windowTitle = "ElDewrito | Version: " + Utils::Version::GetVersionString() + " | Build Date: " __DATE__;
+		std::string windowTitle = "Vergil | Version: " + Utils::Version::GetVersionString() + " | Build Date: " __DATE__;
 		strcpy_s(destBuf, 0x40, windowTitle.c_str());
 	}
 

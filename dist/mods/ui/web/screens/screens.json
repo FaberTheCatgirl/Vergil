@@ -150,7 +150,7 @@
 		{
 			"id": "report",
 			"var": "Game.ReportURL",
-			"fallbackUrl": "http://rabidsquabbit.github.io/screens/report/",
+			"fallbackUrl": "http://Vergil.github.io/screens/report/",
 			"captureInput": true,
 			"zIndex": 80
 		},
