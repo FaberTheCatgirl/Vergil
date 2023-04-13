@@ -2,7 +2,6 @@
 
 # Vergil
 
-[![Build status](https://ci.appveyor.com/api/projects/status/60q567o9u50kc9xj?svg=true)](https://ci.appveyor.com/project/NoShotz11716/eldorito)
 [![Discord](https://img.shields.io/discord/228263208299790338.svg)](https://discord.reclaimers.net/)
 
 ## What is Vergil?
