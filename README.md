@@ -37,7 +37,7 @@ ElDewrito was a fan mod for Halo Online that enables LAN-based online multiplaye
 I cannot provide you with the game files, but a good place to look would be The Internet Archive, as Halo Online is classified as Abandonware
 
 ### How Do I Make Sure My Halo Online/Eldewrito Installation is Safe?
-You can Cross-Refrence the following hashes to ensure that it matches the last known Eldewrito Version before Installing Vergil and it's Enhancements
+You can Cross-Refrence the following community verified hashes to ensure that it matches the last known public Eldewrito Version before Installing Vergil and it's Enhancements
 
 You'll still need to run the updater to update to 0.6.1 if you plan on using any of these with Vergil!
 
