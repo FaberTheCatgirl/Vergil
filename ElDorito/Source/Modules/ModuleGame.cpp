@@ -27,6 +27,7 @@
 #include <unordered_map>
 #include <codecvt>
 #include "Blam\Tags\Camera\AreaScreenEffect.hpp"
+#include "new\game\game_globals.hpp"
 
 namespace
 {
@@ -1116,6 +1117,67 @@ namespace
 		return CommandGameExit(Arguments, returnInfo);
 	}
 
+	bool CommandToggleSkullPrimary(const std::vector<std::string>& Arguments, std::string& returnInfo)
+	{
+		std::stringstream ss;
+		if (Arguments.size() < 1)
+		{
+			int active = 0;
+			for (int i = 0; i < Blam::e_primary_skull::k_number_of_primary_skulls; i++)
+				active += blam::game_globals_primary_skull_is_active(i);
+
+			ss << "Primary skulls active: " << active;
+			returnInfo = ss.str();
+			return false;
+		}
+
+		if (std::stol(Arguments[0]) < Blam::e_primary_skull::_iron || std::stol(Arguments[0]) > Blam::e_primary_skull::k_number_of_primary_skulls)
+		{
+			ss << "invalid parameters, valid parameters are:" << std::endl;
+			for (auto i = 0; i < Blam::e_primary_skull::k_number_of_primary_skulls; i++)
+				ss << ((Blam::e_primary_skull *)i)->value << ", " << ((Blam::e_primary_skull *)i)->GetName() << std::endl;
+			returnInfo = ss.str();
+			return false;
+		}
+
+		Blam::e_primary_skull skull = *(Blam::e_primary_skull *)std::stol(Arguments[0]);
+		blam::game_globals_primary_skull_toggle(skull.value, skull.enabled);
+
+		ss << "Primary skull " << skull.GetName() << ": " << (skull.enabled ? "active." : "inactive.");
+		returnInfo = ss.str();
+		return true;
+	}
+
+	bool CommandToggleSkullSecondary(const std::vector<std::string>& Arguments, std::string& returnInfo)
+	{
+		std::stringstream ss;
+		if (Arguments.size() < 1)
+		{
+			int active = 0;
+			for (int i = 0; i < Blam::e_secondary_skull::k_number_of_secondary_skulls; i++)
+				active += blam::game_globals_primary_skull_is_active(i);
+
+			ss << "Secondary skulls active: " << active;
+			returnInfo = ss.str();
+			return false;
+		}
+
+		if (std::stol(Arguments[0]) < Blam::e_secondary_skull::_assassin || std::stol(Arguments[0]) > Blam::e_secondary_skull::k_number_of_secondary_skulls)
+		{
+			ss << "invalid parameters, valid parameters are:" << std::endl;
+			for (auto i = 0; i < Blam::e_secondary_skull::k_number_of_secondary_skulls; i++)
+				ss << ((Blam::e_primary_skull *)i)->value << ", " << ((Blam::e_primary_skull *)i)->GetName() << std::endl;
+			return false;
+		}
+
+		Blam::e_secondary_skull skull = *(Blam::e_secondary_skull *)std::stol(Arguments[0]);
+		blam::game_globals_secondary_skull_toggle(skull.value, skull.enabled);
+
+		ss << "Secondary skull " << skull.GetName() << ": " << (skull.enabled ? "active." : "inactive.");
+		returnInfo = ss.str();
+		return true;
+	}
+
 	//EXAMPLE:
 	/*std::string VariableGameNameUpdate(const std::vector<std::string>& Arguments)
 	{
@@ -1190,11 +1252,15 @@ namespace Modules
 
 		AddCommand("Update", "update", "Update the game to the latest version", eCommandFlagsNone, CommandGameUpdate);
 
-		VarMenuURL = AddVariableString("MenuURL", "menu_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "http://Vergil.github.io/");
+		AddCommand("TogglePrimarySkull", "toggle_primary_skull", "Toggles a given primary skull", eCommandFlagsNone, CommandToggleSkullPrimary);
+
+		AddCommand("ToggleSecondarySkull", "toggle_secondary_skull", "Toggles a given secondary skull", eCommandFlagsNone, CommandToggleSkullSecondary);
+		
+		VarMenuURL = AddVariableString("MenuURL", "menu_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "http://SourceModdingPub.github.io/");
 
 		VarLoadingURL = AddVariableString("LoadingURL", "loading_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/loading/");
 
-		VarScoreboardURL = AddVariableString("ScoreboardURL", "scoreboard_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "http://Vergil.github.io/screens/scoreboard/");
+		VarScoreboardURL = AddVariableString("ScoreboardURL", "scoreboard_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "http://SourceModdingPub.github.io/screens/scoreboard/");
 		VarKeyboardURL = AddVariableString("KeyboardURL", "keyboard_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/keyboard/");
 		VarConsoleURL = AddVariableString("ConsoleURL", "console_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/console/");
 		VarChatURL = AddVariableString("ChatURL", "chat_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/chat/");
@@ -1213,7 +1279,7 @@ namespace Modules
 		VarScreenshotNoticeURL = AddVariableString("ScreenshotNoticeURL", "weapon_offset_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/screenshot_notice/");
 		VarExitURL = AddVariableString("ExitURL", "exit_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/exit/");
 		VarDiscordURL = AddVariableString("DiscordURL", "discord_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/discord/");
-		VarReportURL = AddVariableString("ReportURL", "report_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "http://Vergil.github.io/screens/report/");
+		VarReportURL = AddVariableString("ReportURL", "report_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "http://SourceModdingPub.github.io/screens/report/");
 		VarInGameVotingURL = AddVariableString("InGameVotingURL", "ingame_voting", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/ingame_voting/");
 		VarLanguage = AddVariableString("Language", "language", "The language to use", eCommandFlagsArchived, "english", VariableLanguageUpdated);
 

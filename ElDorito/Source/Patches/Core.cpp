@@ -843,6 +843,12 @@ namespace Patches::Core
 		// campaign simulation hacks
 		//Hook(0x1A857B, simulation_player_left_game_hook).Apply(); // jmp, not call
 
+		// skulls
+		Hook(0x132B50, primary_skull_toggle_hook);
+		Hook(0x132EE0, secondary_skull_toggle_hook);
+		Hook(0x20AE20, primary_skull_is_active_hook);
+		Hook(0x20AE50, secondary_skull_is_active_hook);
+
 		// Fix default weapon fov value to match H3
 		Patch::NopFill(Pointer::Base(0x25FAB6), 8);
 		Patch(0x01913434, { 0xAE, 0x47, 0x61, 0x3F }).Apply();
@@ -1443,8 +1449,8 @@ namespace
 			ss << "\tSurvival Mode Enable: " << bool_string[GameOptions->SurvivalModeEnabled] << std::endl << std::endl;
 
 			// TODO: figure out / fix
-			//ss << "\tActive Primary Skulls: " << Blam::SkullNames[GameOptions->CampaignSkullsPrimary] << std::endl;
-			//ss << "\tActive Secondary Skulls: " << Blam::SkullNames[GameOptions->CampaignSkullsSecondary] << std::endl << std::endl;
+			ss << "\tActive Primary Skulls: " << Blam::SkullNames[GameOptions->CampaignSkullsPrimary] << std::endl;
+			ss << "\tActive Secondary Skulls: " << Blam::SkullNames[GameOptions->CampaignSkullsSecondary] << std::endl << std::endl;
 		}
 		else
 		{
@@ -1509,5 +1515,55 @@ namespace
 
 		if (!IsMap(GameOptions, "mainmenu"))
 			Console::WriteLine(ss.str());
+	}
+
+	std::vector<Blam::e_primary_skull> primary_skulls
+	{
+		{ Blam::e_primary_skull::_iron, false },
+		{ Blam::e_primary_skull::_black_eye, false },
+		{ Blam::e_primary_skull::_tough_luck, false },
+		{ Blam::e_primary_skull::_catch, false },
+		{ Blam::e_primary_skull::_fog, false },
+		{ Blam::e_primary_skull::_famine, false },
+		{ Blam::e_primary_skull::_thunderstorm, false },
+		{ Blam::e_primary_skull::_tilt, false },
+		{ Blam::e_primary_skull::_mythic, false }
+	};
+
+	std::vector<Blam::e_secondary_skull> secondary_skulls
+	{
+		{ Blam::e_secondary_skull::_assassin, false },
+		{ Blam::e_secondary_skull::_blind, false },
+		{ Blam::e_secondary_skull::_superman, false },
+		{ Blam::e_secondary_skull::_birthday_party, false },
+		{ Blam::e_secondary_skull::_daddy, false },
+		{ Blam::e_secondary_skull::_third_person, false },
+		{ Blam::e_secondary_skull::_directors_cut, false }
+	};
+
+	void primary_skull_toggle_hook(__int16 skull, char enable)
+	{
+		if (skull < Blam::e_primary_skull::k_number_of_primary_skulls)
+			primary_skulls[skull].enabled = enable ? true : false;
+	}
+
+	void secondary_skull_toggle_hook(__int16 skull, char enable)
+	{
+		if (skull < Blam::e_secondary_skull::k_number_of_secondary_skulls)
+			secondary_skulls[skull].enabled = enable ? true : false;
+	}
+
+	bool __cdecl primary_skull_is_active_hook(__int16 skull)
+	{
+		if (skull < Blam::e_primary_skull::k_number_of_primary_skulls)
+			return primary_skulls[skull].enabled;
+		return false;
+	}
+
+	bool __cdecl secondary_skull_is_active_hook(__int16 skull)
+	{
+		if (skull < Blam::e_secondary_skull::k_number_of_secondary_skulls)
+			return secondary_skulls[skull].enabled;
+		return false;
 	}
 }

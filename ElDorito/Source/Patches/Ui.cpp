@@ -1294,12 +1294,16 @@ namespace
 					Web::Ui::ScreenLayer::Show("profile_settings", "{}");
 					return;
 
-				case 5: // Exit
-					Web::Ui::ScreenLayer::Show("exit", "{}");
+				case 5: // FileShare
+					Web::Ui::ScreenLayer::Show("fileshare", "{}");
 					return;
 
 				case 6: // Settings
 					Web::Ui::ScreenLayer::Show("settings", "{}");
+					return;
+
+				case 7: // Exit
+					Web::Ui::ScreenLayer::Show("exit", "{}");
 					return;
 				}
 			}
