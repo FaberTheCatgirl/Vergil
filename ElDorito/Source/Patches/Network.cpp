@@ -338,7 +338,7 @@ namespace Patches::Network
 					httpServerCache = s.GetString();
 				}
 				replyData = httpServerCache;
-				std::string reply = "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nAccess-Control-Allow-Origin: *\r\nServer: ElDewrito/" + Utils::Version::GetVersionString() + "\r\nContent-Length: " + std::to_string(replyData.length()) + "\r\nConnection: close\r\n\r\n" + replyData;
+				std::string reply = "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nAccess-Control-Allow-Origin: *\r\nServer: Vergil/" + Utils::Version::GetVersionString() + "\r\nContent-Length: " + std::to_string(replyData.length()) + "\r\nConnection: close\r\n\r\n" + replyData;
 				send((SOCKET)wParam, reply.c_str(), reply.length(), 0);
 			}
 
@@ -557,8 +557,8 @@ namespace Patches::Network
 		//Setup UPnP
 		if (Modules::ModuleUPnP::Instance().VarUPnPEnabled->ValueInt)
 		{
-			Modules::ModuleUPnP::Instance().UPnPForwardPort(true, port, port, "ElDewrito InfoServer");
-			Modules::ModuleUPnP::Instance().UPnPForwardPort(false, Pointer(0x1860454).Read<uint32_t>(), Pointer(0x1860454).Read<uint32_t>(), "ElDewrito Game");
+			Modules::ModuleUPnP::Instance().UPnPForwardPort(true, port, port, "Vergil InfoServer");
+			Modules::ModuleUPnP::Instance().UPnPForwardPort(false, Pointer(0x1860454).Read<uint32_t>(), Pointer(0x1860454).Read<uint32_t>(), "Vergil Game");
 		}
 
 		WSAAsyncSelect(infoSocket, hwnd, WM_INFOSERVER, FD_ACCEPT | FD_CLOSE);

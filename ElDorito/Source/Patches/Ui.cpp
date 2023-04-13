@@ -138,8 +138,8 @@ namespace
 
 	uint32_t hudMessagesUnicIndex;
 	uint32_t spartanChdtIndex;
-	//uint32_t eliteChdtIndex; //Uncomment as needed.
-	//uint32_t monitorChdtIndex;
+	uint32_t eliteChdtIndex; //Uncomment as needed.
+	uint32_t monitorChdtIndex;
 	uint32_t scoreboardChdtIndex;
 	uint32_t chgdIndex;
 	uint32_t pttLsndIndex;
@@ -264,9 +264,9 @@ namespace Patches::Ui
 		Hook(0x622057, CreateGameWindowHook, HookFlags::IsCall).Apply();
 
 		// disable saber's weapon hud
-		Patch(0x6866F2, { 0xEB }).Apply();
+		//Patch(0x6866F2, { 0xEB }).Apply();
 		// restore h3 weapon hud
-		Hook(0x006970BB, UI_UpdateH3HUDHook, HookFlags::IsCall).Apply();
+		//Hook(0x006970BB, UI_UpdateH3HUDHook, HookFlags::IsCall).Apply();
 		// fix equipment swap message
 		Pointer(0xABD324).Write<uint32_t>(0xABD2F7);
 		// fix dual-wield message

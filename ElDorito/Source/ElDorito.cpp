@@ -88,9 +88,9 @@ void ElDorito::Initialize()
 {
 	::CreateDirectoryA(GetDirectory().c_str(), NULL);
 
-	if (!SOP_CheckProfile("ElDewrito"))
+	if (!SOP_CheckProfile("Vergil"))
 	{
-		SOP_SetProfile("ElDewrito", "eldorado.exe");
+		SOP_SetProfile("Vergil", "eldorado.exe");
 	}
 
 	// Parse command-line commands
@@ -120,7 +120,7 @@ void ElDorito::Initialize()
 	SHGetKnownFolderPath(FOLDERID_LocalAppData, NULL, NULL, &localAppdata);
 	auto wide_ed_appdata = std::wstring(localAppdata);
 	auto ed_appdata = Utils::String::ThinString(wide_ed_appdata);
-	ed_appdata += "\\ElDewrito";
+	ed_appdata += "\\Vergil";
 	::CreateDirectoryA(ed_appdata.c_str(), NULL);
 
 	// load variables/commands from cfg file
@@ -195,7 +195,7 @@ void ElDorito::Initialize()
 				serverPassword = Utils::String::ThinString(szArgList[i + 1]);
 
 			if (arg.compare(L"-cache-memory-increase") == 0 && i < numArgs - 1)
-				Patches::Memory::SetGlobalCacheIncrease(std::stoul(szArgList[i + 1]));
+				Patches::Memory::SetGlobalCacheIncrease(std::stoul(szArgList[i + 1])); // TODO: Hardcode a cache memory increase value
 
 			if (arg.compare(L"-lod-increase") == 0)
 				Patches::Camera::IncreaseLOD();
