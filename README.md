@@ -34,7 +34,7 @@ If you have issues you can get in touch with us on Reclaimers, or make a bug rep
 ElDewrito was a fan mod for Halo Online that enables LAN-based online multiplayer across the globe, as well as many bug-fixes and enhancements. At the time there was no telling if any other Halo game would ever be brought to PC.
 
 ### Where Can I Find Eldewrito/Halo Online's Game Files?
-I cannot provide you with the game files, but a good place to look would be The Internet Archive, as Halo Online is classified as Abandonware
+I cannot provide you with the game files, but a good place to look would be The Internet Archive.
 
 ### How Do I Make Sure My Halo Online/Eldewrito Installation is Safe?
 You can Cross-Refrence the following community verified hashes to ensure that it matches the last known public Eldewrito Version before Installing Vergil and it's Enhancements
