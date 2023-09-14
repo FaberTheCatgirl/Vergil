@@ -5,7 +5,7 @@
 #include "Web\Ui\WebForge.hpp"
 #include "Web\Ui\WebScoreboard.hpp"
 #include "CommandMap.hpp"
-#include "Bungie\BlamNetwork.hpp"
+#include "Bungie\BungieNetwork.hpp"
 //#include "Discord\DiscordRPC.h"
 #include "Patches\Network.hpp"
 #include "Patches\Input.hpp"

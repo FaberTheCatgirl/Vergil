@@ -11,7 +11,7 @@
 #include "ThirdParty\rapidjson\document.h"
 #include "ThirdParty\HttpRequest.hpp"
 #include "Utils\Logger.hpp"
-#include "Bungie\BlamNetwork.hpp"
+#include "Bungie\BungieNetwork.hpp"
 #include "Patches\Core.hpp"
 #include "Modules\ModuleServer.hpp"
 

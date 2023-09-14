@@ -1,8 +1,8 @@
 #include "Forge\Selection.hpp"
 #include "Forge\ObjectSet.hpp"
-#include "Bungie\BlamPlayers.hpp"
-#include "Bungie\BlamObjects.hpp"
-#include "Bungie\BlamInput.hpp"
+#include "Bungie\BungiePlayers.hpp"
+#include "Bungie\BungieObjects.hpp"
+#include "Bungie\BungieInput.hpp"
 #include "Forge\ForgeUtil.hpp"
 #include <stack>
 

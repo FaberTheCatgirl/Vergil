@@ -1,5 +1,5 @@
 #include "Web\Ui\MpEventDispatcher.hpp"
-#include "Bungie\BlamEvents.hpp"
+#include "Bungie\BungieEvents.hpp"
 #include "Patches\Events.hpp"
 #include "Web\Ui\ScreenLayer.hpp"
 #include "ThirdParty\rapidjson\writer.h"

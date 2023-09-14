@@ -2,7 +2,7 @@
 
 #include <time.h>
 
-#include "Bungie\BlamNetwork.hpp"
+#include "Bungie\BungieNetwork.hpp"
 #include "Patches\Network.hpp"
 #include "Patches\Core.hpp"
 #include "Modules\ModuleServer.hpp"

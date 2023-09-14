@@ -1,5 +1,5 @@
 #include "Patches\Events.hpp"
-#include "Bungie\BlamEvents.hpp"
+#include "Bungie\BungieEvents.hpp"
 #include "Patch.hpp"
 #include "Web\Ui\WebScoreboard.hpp"
 #include "Web\Ui\ScreenLayer.hpp"

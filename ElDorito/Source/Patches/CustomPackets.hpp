@@ -187,7 +187,7 @@
 #pragma once
 
 #include "Bungie\BitStream.hpp"
-#include "Bungie\BlamNetwork.hpp"
+#include "Bungie\BungieNetwork.hpp"
 
 #include <string>
 #include <cstdint>

@@ -4,7 +4,7 @@
 #include "ElDorito.hpp"
 #include "Patches\Input.hpp"
 #include "Console.hpp"
-#include "Bungie\BlamInput.hpp"
+#include "Bungie\BungieInput.hpp"
 #include "Utils\NameValueTable.hpp"
 
 #include "ThirdParty\rapidjson\writer.h"

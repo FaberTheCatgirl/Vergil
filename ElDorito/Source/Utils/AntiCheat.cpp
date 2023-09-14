@@ -4,7 +4,7 @@
 #include <Windows.h>
 #include <Psapi.h>
 
-#include "Bungie\BlamNetwork.hpp"
+#include "Bungie\BungieNetwork.hpp"
 #include "CommandMap.hpp"
 
 namespace Utils::AntiCheat

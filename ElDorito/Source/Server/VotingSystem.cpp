@@ -18,7 +18,7 @@
 #include "Modules\ModuleServer.hpp"
 #include "Modules\ModuleGame.hpp"
 #include "Patches\Network.hpp"
-#include "Bungie\BlamNetwork.hpp"
+#include "Bungie\BungieNetwork.hpp"
 #include "ElDorito.hpp"
 #include "ThirdParty\rapidjson\writer.h"
 #include "ThirdParty\rapidjson\document.h"

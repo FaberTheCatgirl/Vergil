@@ -1,9 +1,9 @@
 #include "Modules\ModuleCamera.hpp"
 #include <sstream>
 #include "ElDorito.hpp"
-#include "Bungie\BlamNetwork.hpp"
+#include "Bungie\BungieNetwork.hpp"
 #include "Patches\Ui.hpp"
-#include "Bungie\BlamInput.hpp"
+#include "Bungie\BungieInput.hpp"
 #include "Modules\ModuleInput.hpp"
 
 namespace

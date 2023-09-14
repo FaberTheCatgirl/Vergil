@@ -4,10 +4,10 @@
 #include <cmath>
 
 #include "Patch.hpp"
-#include "Bungie\BlamInput.hpp"
-#include "Bungie\BlamObjects.hpp"
-#include "Bungie\BlamPlayers.hpp"
-#include "Bungie\BlamTime.hpp"
+#include "Bungie\BungieInput.hpp"
+#include "Bungie\BungieObjects.hpp"
+#include "Bungie\BungiePlayers.hpp"
+#include "Bungie\BungieTime.hpp"
 #include "Modules\ModuleInput.hpp"
 #include "Console.hpp"
 #include "ElDorito.hpp"

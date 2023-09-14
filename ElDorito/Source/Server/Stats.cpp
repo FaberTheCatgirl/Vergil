@@ -1,8 +1,8 @@
 #include <WS2tcpip.h>
 #include <fstream>
 #include "Server\Stats.hpp"
-#include "Bungie\BlamEvents.hpp"
-#include "Bungie\BlamNetwork.hpp"
+#include "Bungie\BungieEvents.hpp"
+#include "Bungie\BungieNetwork.hpp"
 #include "Patches\Events.hpp"
 #include "Patches\Core.hpp"
 #include "Modules\ModuleServer.hpp"

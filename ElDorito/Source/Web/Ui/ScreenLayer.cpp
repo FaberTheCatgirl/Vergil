@@ -4,8 +4,8 @@
 #include "Modules\ModuleServer.hpp"
 #include "Patches\Input.hpp"
 #include "Patches\Core.hpp"
-#include "Bungie\BlamInput.hpp"
-#include "Bungie\BlamTime.hpp"
+#include "Bungie\BungieInput.hpp"
+#include "Bungie\BungieTime.hpp"
 #include "Patches\Ui.hpp"
 #include "ElDorito.hpp"
 #include <Windows.h>

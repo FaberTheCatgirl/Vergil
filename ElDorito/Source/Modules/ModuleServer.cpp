@@ -16,7 +16,7 @@
 #include "ThirdParty\rapidjson\document.h"
 #include "ThirdParty\rapidjson\writer.h"
 #include "ThirdParty\rapidjson\stringbuffer.h"
-#include "Bungie\BlamNetwork.hpp"
+#include "Bungie\BungieNetwork.hpp"
 #include "Console.hpp"
 #include "Server\Signaling.hpp"
 #include "Server\VariableSynchronization.hpp"

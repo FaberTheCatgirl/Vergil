@@ -2,8 +2,8 @@
 
 #include "ElDorito.hpp"
 #include "Patch.hpp"
-#include "Bungie\BlamTypes.hpp"
-#include "Bungie\BlamPlayers.hpp"
+#include "Bungie\BungieTypes.hpp"
+#include "Bungie\BungiePlayers.hpp"
 #include "Bungie\Sandbox\Sandbox.hpp"
 #include "Modules\ModuleInput.hpp"
 #include "Modules\ModuleCamera.hpp"

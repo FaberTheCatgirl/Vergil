@@ -177,22 +177,22 @@
     <ClCompile Include="Source\Bungie\BitStream.cpp">
       <Filter>Bungie</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Bungie\BlamData.cpp">
+    <ClCompile Include="Source\Bungie\BungieData.cpp">
       <Filter>Bungie</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Bungie\BlamGraphics.cpp">
+    <ClCompile Include="Source\Bungie\BungieGraphics.cpp">
       <Filter>Bungie</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Bungie\BlamInput.cpp">
+    <ClCompile Include="Source\Bungie\BungieInput.cpp">
       <Filter>Bungie</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Bungie\BlamNetwork.cpp">
+    <ClCompile Include="Source\Bungie\BungieNetwork.cpp">
       <Filter>Bungie</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Bungie\BlamObjects.cpp">
+    <ClCompile Include="Source\Bungie\BungieObjects.cpp">
       <Filter>Bungie</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Bungie\BlamPlayers.cpp">
+    <ClCompile Include="Source\Bungie\BungiePlayers.cpp">
       <Filter>Bungie</Filter>
     </ClCompile>
     <ClCompile Include="Source\Bungie\Cache\StringIdCache.cpp">
@@ -511,7 +511,7 @@
       <Filter>Patches</Filter>
     </ClCompile>
     <ClCompile Include="Source\Patches\DirectXHook.cpp" />
-    <ClCompile Include="Source\Bungie\BlamGraphics.cpp">
+    <ClCompile Include="Source\Bungie\BungieGraphics.cpp">
       <Filter>Bungie</Filter>
     </ClCompile>
     <ClCompile Include="Source\CommandMap.cpp" />
@@ -716,34 +716,34 @@
     <ClInclude Include="Source\Bungie\BitStream.hpp">
       <Filter>Bungie</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Bungie\BlamData.hpp">
+    <ClInclude Include="Source\Bungie\BungieData.hpp">
       <Filter>Bungie</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Bungie\BlamEvents.hpp">
+    <ClInclude Include="Source\Bungie\BungieEvents.hpp">
       <Filter>Bungie</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Bungie\BlamGraphics.hpp">
+    <ClInclude Include="Source\Bungie\BungieGraphics.hpp">
       <Filter>Bungie</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Bungie\BlamInput.hpp">
+    <ClInclude Include="Source\Bungie\BungieInput.hpp">
       <Filter>Bungie</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Bungie\BlamMemory.hpp">
+    <ClInclude Include="Source\Bungie\BungieMemory.hpp">
       <Filter>Bungie</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Bungie\BlamNetwork.hpp">
+    <ClInclude Include="Source\Bungie\BungieNetwork.hpp">
       <Filter>Bungie</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Bungie\BlamObjects.hpp">
+    <ClInclude Include="Source\Bungie\BungieObjects.hpp">
       <Filter>Bungie</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Bungie\BlamPlayers.hpp">
+    <ClInclude Include="Source\Bungie\BungiePlayers.hpp">
       <Filter>Bungie</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Bungie\BlamTime.hpp">
+    <ClInclude Include="Source\Bungie\BungieTime.hpp">
       <Filter>Bungie</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Bungie\BlamTypes.hpp">
+    <ClInclude Include="Source\Bungie\BungieTypes.hpp">
       <Filter>Bungie</Filter>
     </ClInclude>
     <ClInclude Include="Source\Bungie\Cache\StringIdCache.hpp">

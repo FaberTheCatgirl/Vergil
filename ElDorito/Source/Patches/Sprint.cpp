@@ -1,7 +1,7 @@
 #include "Patches\Sprint.hpp"
 #include "Patch.hpp"
 #include "ElDorito.hpp"
-#include "Bungie\BlamTypes.hpp"
+#include "Bungie\BungieTypes.hpp"
 #include "Bungie\Memory\TlsData.hpp"
 
 namespace

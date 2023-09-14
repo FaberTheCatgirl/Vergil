@@ -5,7 +5,7 @@
 #include <bitset>
 
 #include "Console.hpp"
-#include "Bungie\BlamNetwork.hpp"
+#include "Bungie\BungieNetwork.hpp"
 #include "Utils\Cryptography.hpp"
 #include "Patches\CustomPackets.hpp"
 

@@ -1,5 +1,5 @@
 #pragma once
-#include "Bungie\BlamData.hpp"
+#include "Bungie\BungieData.hpp"
 #include <functional>
 
 namespace Bungie::Events

@@ -19,12 +19,12 @@
     <ClCompile Include="Source\Bungie\Sounds\Functions.cpp" />
     <ClCompile Include="Source\Bungie\Math\Random.cpp" />
     <ClCompile Include="Source\Bungie\BitStream.cpp" />
-    <ClCompile Include="Source\Bungie\BlamData.cpp" />
-    <ClCompile Include="Source\Bungie\BlamGraphics.cpp" />
-    <ClCompile Include="Source\Bungie\BlamInput.cpp" />
-    <ClCompile Include="Source\Bungie\BlamNetwork.cpp" />
-    <ClCompile Include="Source\Bungie\BlamObjects.cpp" />
-    <ClCompile Include="Source\Bungie\BlamPlayers.cpp" />
+    <ClCompile Include="Source\Bungie\BungieData.cpp" />
+    <ClCompile Include="Source\Bungie\BungieGraphics.cpp" />
+    <ClCompile Include="Source\Bungie\BungieInput.cpp" />
+    <ClCompile Include="Source\Bungie\BungieNetwork.cpp" />
+    <ClCompile Include="Source\Bungie\BungieObjects.cpp" />
+    <ClCompile Include="Source\Bungie\BungiePlayers.cpp" />
     <ClCompile Include="Source\Bungie\Cache\StringIdCache.cpp" />
     <ClCompile Include="Source\Bungie\Math\Angle.cpp" />
     <ClCompile Include="Source\Bungie\Math\Bounds.cpp" />
@@ -237,16 +237,16 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="Source\Bungie\BitStream.hpp" />
-    <ClInclude Include="Source\Bungie\BlamData.hpp" />
-    <ClInclude Include="Source\Bungie\BlamEvents.hpp" />
-    <ClInclude Include="Source\Bungie\BlamGraphics.hpp" />
-    <ClInclude Include="Source\Bungie\BlamInput.hpp" />
-    <ClInclude Include="Source\Bungie\BlamMemory.hpp" />
-    <ClInclude Include="Source\Bungie\BlamNetwork.hpp" />
-    <ClInclude Include="Source\Bungie\BlamObjects.hpp" />
-    <ClInclude Include="Source\Bungie\BlamPlayers.hpp" />
-    <ClInclude Include="Source\Bungie\BlamTime.hpp" />
-    <ClInclude Include="Source\Bungie\BlamTypes.hpp" />
+    <ClInclude Include="Source\Bungie\BungieData.hpp" />
+    <ClInclude Include="Source\Bungie\BungieEvents.hpp" />
+    <ClInclude Include="Source\Bungie\BungieGraphics.hpp" />
+    <ClInclude Include="Source\Bungie\BungieInput.hpp" />
+    <ClInclude Include="Source\Bungie\BungieMemory.hpp" />
+    <ClInclude Include="Source\Bungie\BungieNetwork.hpp" />
+    <ClInclude Include="Source\Bungie\BungieObjects.hpp" />
+    <ClInclude Include="Source\Bungie\BungiePlayers.hpp" />
+    <ClInclude Include="Source\Bungie\BungieTime.hpp" />
+    <ClInclude Include="Source\Bungie\BungieTypes.hpp" />
     <ClInclude Include="Source\Bungie\Cache\StringIdCache.hpp" />
     <ClInclude Include="Source\Bungie\Sandbox\Sandbox.hpp" />
     <ClInclude Include="Source\Bungie\Geometry\RenderGeometry.hpp" />

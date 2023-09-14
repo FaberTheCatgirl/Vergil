@@ -1,7 +1,7 @@
 #include "Modules\ModuleTime.hpp"
 #include <sstream>
 #include "ElDorito.hpp"
-#include "Bungie\BlamTypes.hpp"
+#include "Bungie\BungieTypes.hpp"
 #include "Server\VariableSynchronization.hpp"
 
 namespace

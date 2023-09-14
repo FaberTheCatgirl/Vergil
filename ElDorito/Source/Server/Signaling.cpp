@@ -16,7 +16,7 @@
 #include "ThirdParty\rapidjson\writer.h"
 #include "Utils\WebSocket.hpp"
 #include "Utils\Cryptography.hpp"
-#include "Bungie\BlamEvents.hpp"
+#include "Bungie\BungieEvents.hpp"
 #include "Patches\Events.hpp"
 #include "Utils\Utils.hpp"
 #include "Patches\Core.hpp"

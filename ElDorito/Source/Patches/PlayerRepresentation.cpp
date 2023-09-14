@@ -1,10 +1,10 @@
 #include <cstdint>
-#include "Bungie\BlamData.hpp"
-#include "Bungie\BlamPlayers.hpp"
+#include "Bungie\BungieData.hpp"
+#include "Bungie\BungiePlayers.hpp"
 #include "Bungie\Tags\Game\Globals.hpp"
 #include "PlayerRepresentation.hpp"
 #include "Patches\PlayerPropertiesExtension.hpp"
-#include "Bungie\BlamNetwork.hpp"
+#include "Bungie\BungieNetwork.hpp"
 #include "Modules\ModulePlayer.hpp"
 #include "Bungie\Cache\StringIdCache.hpp"
 #include "Patch.hpp"

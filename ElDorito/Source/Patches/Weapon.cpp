@@ -13,10 +13,10 @@
 #include "Modules\ModuleWeapon.hpp"
 #include "Modules\ModuleServer.hpp"
 
-#include "Bungie\BlamNetwork.hpp"
-#include "Bungie\BlamObjects.hpp"
-#include "Bungie\BlamPlayers.hpp"
-#include "Bungie\BlamTime.hpp"
+#include "Bungie\BungieNetwork.hpp"
+#include "Bungie\BungieObjects.hpp"
+#include "Bungie\BungiePlayers.hpp"
+#include "Bungie\BungieTime.hpp"
 
 #include "Bungie\Cache\StringIdCache.hpp"
 

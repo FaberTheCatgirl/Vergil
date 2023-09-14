@@ -2,7 +2,7 @@
 
 #include "ElDorito.hpp"
 #include "Patch.hpp"
-#include "Bungie\BlamPlayers.hpp"
+#include "Bungie\BungiePlayers.hpp"
 #include "Modules\ModuleSettings.hpp"
 
 namespace

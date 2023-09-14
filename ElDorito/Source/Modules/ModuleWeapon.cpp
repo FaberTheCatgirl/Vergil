@@ -1,7 +1,7 @@
 #include "Modules\ModuleWeapon.hpp"
 #include "ElDorito.hpp"
 #include "Patches\Weapon.hpp"
-#include "Bungie\BlamNetwork.hpp"
+#include "Bungie\BungieNetwork.hpp"
 #include "Bungie\Cache\StringIdCache.hpp"
 #include "Bungie\Math\RealVector3D.hpp"
 #include "Bungie\Tags\Items\DefinitionWeapon.hpp"

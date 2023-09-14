@@ -1,10 +1,10 @@
 #include "Forge\RotationSnap.hpp"
-#include "Bungie\BlamData.hpp"
+#include "Bungie\BungieData.hpp"
 #include "Bungie\Math\RealQuaternion.hpp"
 #include "Bungie\Math\RealMatrix4x3.hpp"
 #include "Bungie\Math\MathUtil.hpp"
-#include "Bungie\BlamInput.hpp"
-#include "Bungie\BlamTime.hpp"
+#include "Bungie\BungieInput.hpp"
+#include "Bungie\BungieTime.hpp"
 #include "Modules\ModuleForge.hpp"
 #include "Forge\ForgeUtil.hpp"
 

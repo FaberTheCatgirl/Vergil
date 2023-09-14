@@ -19,13 +19,13 @@
 #include "Bungie\Tags\Items\DefinitionWeapon.hpp"
 #include "Bungie\Tags\Scenario\Scenario.hpp"
 
-#include "Bungie\BlamData.hpp"
-#include "Bungie\BlamEvents.hpp"
-#include "Bungie\BlamInput.hpp"
-#include "Bungie\BlamPlayers.hpp"
-#include "Bungie\BlamNetwork.hpp"
-#include "Bungie\BlamObjects.hpp"
-#include "Bungie\BlamTypes.hpp"
+#include "Bungie\BungieData.hpp"
+#include "Bungie\BungieEvents.hpp"
+#include "Bungie\BungieInput.hpp"
+#include "Bungie\BungiePlayers.hpp"
+#include "Bungie\BungieNetwork.hpp"
+#include "Bungie\BungieObjects.hpp"
+#include "Bungie\BungieTypes.hpp"
 
 #include "Patches\Weapon.hpp"
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Bungie\BlamTypes.hpp"
+#include "Bungie\BungieTypes.hpp"
 
 namespace Patches::Maps
 {

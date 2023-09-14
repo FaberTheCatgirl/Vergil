@@ -1,6 +1,6 @@
 #include "VirtualKeyboard.hpp"
 
-#include "Bungie\BlamInput.hpp"
+#include "Bungie\BungieInput.hpp"
 #include "Patch.hpp"
 
 namespace

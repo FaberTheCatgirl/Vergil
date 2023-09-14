@@ -14,7 +14,7 @@
 #include "Bungie\Tags\Globals\CacheFileGlobalTags.hpp"
 #include "Bungie\Tags\Scenario\Scenario.hpp"
 #include "Modules\ModulePlayer.hpp"
-#include "Bungie\BlamObjects.hpp"
+#include "Bungie\BungieObjects.hpp"
 #include "Bungie\Math\RealQuaternion.hpp"
 #include <boost\regex.hpp>
 

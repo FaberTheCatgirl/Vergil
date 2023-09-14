@@ -1,7 +1,7 @@
 #pragma once
 
 #include <functional>
-#include "Bungie\BlamNetwork.hpp"
+#include "Bungie\BungieNetwork.hpp"
 
 #define WM_INFOSERVER WM_USER + 1337
 

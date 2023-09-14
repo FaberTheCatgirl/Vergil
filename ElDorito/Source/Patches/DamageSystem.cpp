@@ -1,6 +1,6 @@
 #include "Patches\DamageSystem.hpp"
-#include "Bungie\BlamObjects.hpp"
-#include "Bungie\BlamPlayers.hpp"
+#include "Bungie\BungieObjects.hpp"
+#include "Bungie\BungiePlayers.hpp"
 #include "Patch.hpp"
 
 namespace

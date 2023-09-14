@@ -1,8 +1,8 @@
 #include "Patches\BottomlessClip.hpp"
 #include "Patch.hpp"
 #include "ElDorito.hpp"
-#include "Bungie\BlamObjects.hpp"
-#include "Bungie\BlamPlayers.hpp"
+#include "Bungie\BungieObjects.hpp"
+#include "Bungie\BungiePlayers.hpp"
 
 #include "new\game\game.hpp"
 

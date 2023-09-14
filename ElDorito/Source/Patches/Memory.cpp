@@ -1,6 +1,6 @@
 #include "Patches\Memory.hpp"
 #include <cstdint>
-#include "Bungie\BlamData.hpp"
+#include "Bungie\BungieData.hpp"
 
 namespace
 {

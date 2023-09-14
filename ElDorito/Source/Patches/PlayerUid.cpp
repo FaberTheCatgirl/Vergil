@@ -5,7 +5,7 @@
 #include "Patch.hpp"
 #include "Patches\PlayerPropertiesExtension.hpp"
 #include "Utils\Cryptography.hpp"
-#include "Bungie\BlamPlayers.hpp"
+#include "Bungie\BungiePlayers.hpp"
 #include "Utils\String.hpp"
 
 #include <openssl\sha.h>

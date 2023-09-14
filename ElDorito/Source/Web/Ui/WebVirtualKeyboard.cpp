@@ -4,7 +4,7 @@
 #include "ThirdParty\rapidjson\writer.h"
 
 #include "Web\Ui\ScreenLayer.hpp"
-#include "Bungie\BlamInput.hpp"
+#include "Bungie\BungieInput.hpp"
 #include "Patches\VirtualKeyboard.hpp"
 #include "Utils\String.hpp"
 

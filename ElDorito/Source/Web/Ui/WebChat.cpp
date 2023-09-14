@@ -1,6 +1,6 @@
 #include "Web\Ui\WebChat.hpp"
 #include "Web\Ui\ScreenLayer.hpp"
-#include "Bungie\BlamPlayers.hpp"
+#include "Bungie\BungiePlayers.hpp"
 #include "Patches\Input.hpp"
 #include "Server\ServerChat.hpp"
 #include "ThirdParty\rapidjson\writer.h"

@@ -1,7 +1,7 @@
 #include "Forge\PrematchCamera.hpp"
 #include "Bungie\Math\RealVector3D.hpp"
-#include "Bungie\BlamObjects.hpp"
-#include "Bungie\BlamPlayers.hpp"
+#include "Bungie\BungieObjects.hpp"
+#include "Bungie\BungiePlayers.hpp"
 #include "Forge\ForgeUtil.hpp"
 
 namespace Forge::PrematchCamera

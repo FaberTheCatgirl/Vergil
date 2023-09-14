@@ -2,7 +2,7 @@
 #include <algorithm>
 #include <sstream>
 #include "ElDorito.hpp"
-#include "Bungie\BlamNetwork.hpp"
+#include "Bungie\BungieNetwork.hpp"
 
 
 namespace Modules

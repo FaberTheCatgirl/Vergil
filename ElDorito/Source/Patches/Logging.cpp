@@ -1,10 +1,10 @@
 #include "Patches\Logging.hpp"
 #include "Patch.hpp"
 #include "ElDorito.hpp"
-#include "Bungie\BlamNetwork.hpp"
+#include "Bungie\BungieNetwork.hpp"
 #include <Psapi.h>
 #include <fstream>
-#include "Bungie\BlamMemory.hpp"
+#include "Bungie\BungieMemory.hpp"
 #include "Utils\Logger.hpp"
 #include "Patches\Core.hpp"
 #include "Modules\ModuleDebug.hpp"

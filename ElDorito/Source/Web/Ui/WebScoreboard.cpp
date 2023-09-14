@@ -1,8 +1,8 @@
 #include "Web\Ui\WebScoreboard.hpp"
 #include "Web\Ui\ScreenLayer.hpp"
-#include "Bungie\BlamNetwork.hpp"
-#include "Bungie\BlamEvents.hpp"
-#include "Bungie\BlamTypes.hpp"
+#include "Bungie\BungieNetwork.hpp"
+#include "Bungie\BungieEvents.hpp"
+#include "Bungie\BungieTypes.hpp"
 #include "Bungie\Tags\Objects\Damage.hpp"
 #include "Patches\Events.hpp"
 #include "Patches\Scoreboard.hpp"
@@ -16,9 +16,9 @@
 #include "ElDorito.hpp"
 
 #include <iomanip>
-#include "Bungie\BlamObjects.hpp"
+#include "Bungie\BungieObjects.hpp"
 #include "Bungie\Tags\Items\DefinitionWeapon.hpp"
-#include "Bungie\BlamTime.hpp"
+#include "Bungie\BungieTime.hpp"
 #include "Modules\ModuleGame.hpp"
 #include "Console.hpp"
 

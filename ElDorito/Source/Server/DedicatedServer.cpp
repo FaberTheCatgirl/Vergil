@@ -1,7 +1,7 @@
 #include <WS2tcpip.h>
 #include "Server\DedicatedServer.hpp"
 #include "Modules\ModuleBase.hpp"
-#include "Bungie\BlamNetwork.hpp"
+#include "Bungie\BungieNetwork.hpp"
 
 namespace Server::DedicatedServer
 {

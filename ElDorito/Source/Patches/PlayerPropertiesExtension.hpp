@@ -2,7 +2,7 @@
 
 #include "Utils\Singleton.hpp"
 #include "Bungie\BitStream.hpp"
-#include "Bungie\BlamPlayers.hpp"
+#include "Bungie\BungiePlayers.hpp"
 
 #include <vector>
 #include <memory>

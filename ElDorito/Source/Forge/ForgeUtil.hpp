@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Bungie\BlamTypes.hpp"
+#include "Bungie\BungieTypes.hpp"
 #include "Bungie\Math\RealMatrix4x3.hpp"
 #include "Bungie\Math\RealVector3D.hpp"
 

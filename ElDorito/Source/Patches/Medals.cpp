@@ -1,8 +1,8 @@
 #include "Patches\Medals.hpp"
 #include "Patches\Events.hpp"
-#include "Bungie\BlamEvents.hpp"
-#include "Bungie\BlamPlayers.hpp"
-#include "Bungie\BlamTime.hpp"
+#include "Bungie\BungieEvents.hpp"
+#include "Bungie\BungiePlayers.hpp"
+#include "Bungie\BungieTime.hpp"
 #include "Patch.hpp"
 #include "Modules\ModuleGame.hpp"
 

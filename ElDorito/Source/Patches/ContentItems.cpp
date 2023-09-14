@@ -2,7 +2,7 @@
 
 #include "ElDorito.hpp"
 #include "Patch.hpp"
-#include "Bungie\BlamData.hpp"
+#include "Bungie\BungieData.hpp"
 
 #include "ThirdParty\dirent.h"
 

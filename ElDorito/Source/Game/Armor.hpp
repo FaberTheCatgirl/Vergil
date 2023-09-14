@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
-#include "Bungie\BlamPlayers.hpp"
+#include "Bungie\BungiePlayers.hpp"
 #include "Bungie\Math\RealVector3D.hpp"
 #include "Patches\PlayerPropertiesExtension.hpp"
 

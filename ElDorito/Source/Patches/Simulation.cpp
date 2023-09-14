@@ -1,11 +1,11 @@
 #include "Patches\Simulation.hpp"
 #include "Bungie\Math\RealVector3D.hpp"
-#include "Bungie\BlamNetwork.hpp"
-#include "Bungie\BlamTypes.hpp"
+#include "Bungie\BungieNetwork.hpp"
+#include "Bungie\BungieTypes.hpp"
 #include "Patches\Network.hpp"
 #include "Bungie\Tags\Objects\Object.hpp"
-#include "Bungie\BlamObjects.hpp"
-#include "Bungie\BlamEvents.hpp"
+#include "Bungie\BungieObjects.hpp"
+#include "Bungie\BungieEvents.hpp"
 #include "Patch.hpp"
 
 namespace

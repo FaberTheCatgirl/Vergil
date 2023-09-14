@@ -1,6 +1,6 @@
 #include "Patches\Maps.hpp"
 #include "Patch.hpp"
-#include "Bungie\BlamTypes.hpp"
+#include "Bungie\BungieTypes.hpp"
 
 namespace
 {

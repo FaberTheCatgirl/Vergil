@@ -15,7 +15,7 @@
 #include "ElDorito.hpp"
 #include "ThirdParty\rapidjson\writer.h"
 #include "ThirdParty\rapidjson\stringbuffer.h"
-#include "Bungie\BlamNetwork.hpp"
+#include "Bungie\BungieNetwork.hpp"
 #include "Server\BanList.hpp"
 #include "Modules\ModulePlayer.hpp"
 #include "Modules\ModuleServer.hpp"

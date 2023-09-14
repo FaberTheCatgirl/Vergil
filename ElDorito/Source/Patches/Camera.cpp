@@ -1,6 +1,6 @@
 #include "Patches\Camera.hpp"
 
-#include "Bungie\BlamObjects.hpp"
+#include "Bungie\BungieObjects.hpp"
 #include "Modules\ModuleCamera.hpp"
 
 #include "new\game\game.hpp"

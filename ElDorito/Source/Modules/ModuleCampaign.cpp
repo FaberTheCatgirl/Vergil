@@ -1,6 +1,6 @@
 #include "Modules\ModuleCampaign.hpp"
 
-#include "Bungie\BlamTypes.hpp"
+#include "Bungie\BungieTypes.hpp"
 #include "Bungie\Memory\TlsData.hpp"
 
 #include "Pointer.hpp"
