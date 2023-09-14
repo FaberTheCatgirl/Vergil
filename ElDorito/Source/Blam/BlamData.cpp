@@ -1,6 +1,6 @@
-#include "Blam\BlamData.hpp"
+#include "Bungie\BlamData.hpp"
 
-namespace Blam
+namespace Bungie
 {
 	DatumBase* DataArrayBase::Get(DatumHandle index) const
 	{
@@ -63,9 +63,9 @@ namespace Blam
 		}
 		else
 		{
-			auto datum = (Blam::DatumBase*)((uint8_t*)this->Array->Data + index * this->Array->DatumSize);
+			auto datum = (Bungie::DatumBase*)((uint8_t*)this->Array->Data + index * this->Array->DatumSize);
 			this->CurrentIndex = index;
-			this->CurrentDatumIndex = Blam::DatumHandle(index, datum->GetSalt());
+			this->CurrentDatumIndex = Bungie::DatumHandle(index, datum->GetSalt());
 			return datum;
 		}		
 	}

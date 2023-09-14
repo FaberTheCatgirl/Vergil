@@ -1,14 +1,14 @@
 #include "Patches\Medals.hpp"
 #include "Patches\Events.hpp"
-#include "Blam\BlamEvents.hpp"
-#include "Blam\BlamPlayers.hpp"
-#include "Blam\BlamTime.hpp"
+#include "Bungie\BlamEvents.hpp"
+#include "Bungie\BlamPlayers.hpp"
+#include "Bungie\BlamTime.hpp"
 #include "Patch.hpp"
 #include "Modules\ModuleGame.hpp"
 
 namespace
 {
-	void OnEvent(Blam::DatumHandle player, const Blam::Events::Event *event, const Blam::Events::EventDefinition *definition);
+	void OnEvent(Bungie::DatumHandle player, const Bungie::Events::Event *event, const Bungie::Events::EventDefinition *definition);
 	void __fastcall chud_update_h3_medal_animation_hook(int thisptr, void* unused, int a2);
 	void __fastcall chud_update_saber_medal_animation_hook(int thisptr, void* unused, int a2);
 	void sound_enqueue_announcer_sound_hook(uint32_t sndTagIndex, int delayTicks);
@@ -32,14 +32,14 @@ namespace Patches::Medals
 
 namespace
 {
-	void OnEvent(Blam::DatumHandle player, const Blam::Events::Event *event, const Blam::Events::EventDefinition *definition)
+	void OnEvent(Bungie::DatumHandle player, const Bungie::Events::Event *event, const Bungie::Events::EventDefinition *definition)
 	{
 		if (Modules::ModuleGame::Instance().VarCefMedals->ValueInt)
 			return;
 
 		if (definition->MedalStringId && definition->MedalStringId != -1)
 		{
-			if (player != Blam::Players::GetLocalPlayer(0))
+			if (player != Bungie::Players::GetLocalPlayer(0))
 				return;
 
 			const auto chud_show_medal = (void(*)(int playerMappingIndex, int medal))(0x00A95A40);
@@ -75,12 +75,12 @@ namespace
 
 		auto medals = (s_chud_h3_medal_state*)thisptr;
 
-		const auto fadeOutDuration = Blam::Time::SecondsToTicks(1);
+		const auto fadeOutDuration = Bungie::Time::SecondsToTicks(1);
 		for (auto i = 0; i < 4; i++)
 		{
 			if (medals[i].Active && medals[i].InAnimationFinished)
 			{
-				auto dt = Blam::Time::GetGameTicks() - medals[i].StartTime;
+				auto dt = Bungie::Time::GetGameTicks() - medals[i].StartTime;
 				if (dt > 250)
 				{
 					

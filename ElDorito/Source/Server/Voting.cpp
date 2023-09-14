@@ -20,16 +20,16 @@ namespace Server::Voting
 	//Callback for when the loading screen back to the main menu finishes. We use this to determine when to start a new vote.
 	void MapLoadedCallback(const char *mapPath)
 	{
-		if(Blam::Network::GetActiveSession()->Parameters.GetSessionMode() == 1 && Blam::Network::GetNetworkMode() == Blam::eNetworkModeSystemLink)
+		if(Bungie::Network::GetActiveSession()->Parameters.GetSessionMode() == 1 && Bungie::Network::GetNetworkMode() == Bungie::eNetworkModeSystemLink)
 			StartNewVote();
 	}
 
 	//Reset the state of voting in case people start a game manually. 
-	void LifeCycleStateChanged(Blam::LifeCycleState newState)
+	void LifeCycleStateChanged(Bungie::LifeCycleState newState)
 	{
 		switch (newState)
 		{
-		case Blam::eLifeCycleStateStartGame:
+		case Bungie::eLifeCycleStateStartGame:
 		{
 
 			if (Modules::ModuleServer::Instance().VarServerTeamShuffleEnabled->ValueInt == 1)
@@ -44,7 +44,7 @@ namespace Server::Voting
 			break;
 		}
 
-		case Blam::eLifeCycleStateNone:
+		case Bungie::eLifeCycleStateNone:
 		{
 			for (auto elem : VotingSystems)
 			{
@@ -79,7 +79,7 @@ namespace Server::Voting
 	}
 	void Tick() 
 	{	
-		auto* session = Blam::Network::GetActiveSession();
+		auto* session = Bungie::Network::GetActiveSession();
 		if (!(session && session->IsEstablished() && session->IsHost()))
 			return;
 
@@ -95,8 +95,8 @@ namespace Server::Voting
 	void PlayerJoinedVoteInProgress(int playerIndex)
 	{
 		//if we aren't in a vote or voting isn't enabled, then do nothing
-		auto* session = Blam::Network::GetActiveSession();
-		if (!(session && session->IsEstablished() && session->IsHost() && Blam::Network::GetLobbyType() == 2))
+		auto* session = Bungie::Network::GetActiveSession();
+		if (!(session && session->IsEstablished() && session->IsHost() && Bungie::Network::GetLobbyType() == 2))
 			return;
 
 		auto peerIdx = session->MembershipInfo.GetPlayerPeer(playerIndex);
@@ -118,8 +118,8 @@ namespace Server::Voting
 	//Starts a new vote
 	void StartNewVote() 
 	{
-		auto* session = Blam::Network::GetActiveSession();
-		if (!(session && session->IsEstablished() && session->IsHost() && Blam::Network::GetLobbyType() == 2))
+		auto* session = Bungie::Network::GetActiveSession();
+		if (!(session && session->IsEstablished() && session->IsHost() && Bungie::Network::GetLobbyType() == 2))
 			return;
 
 		for (auto elem : VotingSystems)
@@ -131,7 +131,7 @@ namespace Server::Voting
 	}
 	void CancelVoteInProgress()
 	{
-		auto* session = Blam::Network::GetActiveSession();
+		auto* session = Bungie::Network::GetActiveSession();
 		if (!(session && session->IsEstablished() && session->IsHost()))
 			return;
 
@@ -147,7 +147,7 @@ namespace Server::Voting
 
 	void LogVote(const VotingMessage &message, std::string name)
 	{
-		auto* session = Blam::Network::GetActiveSession();
+		auto* session = Bungie::Network::GetActiveSession();
 		if (!(session && session->IsEstablished() && session->IsHost()))
 			return;
 

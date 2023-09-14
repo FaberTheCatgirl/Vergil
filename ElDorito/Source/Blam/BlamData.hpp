@@ -2,10 +2,10 @@
 #include <cstdint>
 #include <iterator>
 #include <type_traits>
-#include "Blam\Tags\Tag.hpp"
-#include "Blam\Memory\DatumHandle.hpp"
+#include "Bungie\Tags\Tag.hpp"
+#include "Bungie\Memory\DatumHandle.hpp"
 
-namespace Blam
+namespace Bungie
 {
 	int CalculateDatumArraySize(int datumCount, int datumSize, int alignmentBits);
 
@@ -36,7 +36,7 @@ namespace Blam
 		uint8_t Alignment;             // Bit to align datum addresses to (0 = none)
 		bool IsValid;                  // true if the array can be used
 		uint16_t Flags;                // TODO: Map these out
-		Blam::Tags::Tag Signature;                 // 'd@t@'
+		Bungie::Tags::Tag Signature;                 // 'd@t@'
 		void *Allocator;               // Object used to allocate the array
 		int NextIndex;                 // Index to start searching at to allocate a new datum
 		int FirstUnallocated;          // Data starting at this index is guaranteed to be unallocated
@@ -67,7 +67,7 @@ namespace Blam
 
 	struct DataPoolBase
 	{
-		Blam::Tags::Tag Signature; // 'pool'
+		Bungie::Tags::Tag Signature; // 'pool'
 		char Name[0x20];           // Name given to the pool when it was allocated
 		void** Allocator;
 		int Size;

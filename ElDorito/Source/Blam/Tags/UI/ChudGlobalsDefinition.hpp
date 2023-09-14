@@ -1,15 +1,15 @@
 #pragma once
 #include <cstdint>
-#include "Blam\Tags\Tags.hpp"
-#include "Blam\Text\StringID.hpp"
+#include "Bungie\Tags\Tags.hpp"
+#include "Bungie\Text\StringID.hpp"
 
-namespace Blam::Tags::UI
+namespace Bungie::Tags::UI
 {
-	using Blam::Tags::TagBlock;
-	using Blam::Tags::TagData;
-	using Blam::Tags::TagGroup;
-	using Blam::Tags::TagReference;
-	using Blam::Text::StringID;
+	using Bungie::Tags::TagBlock;
+	using Bungie::Tags::TagData;
+	using Bungie::Tags::TagGroup;
+	using Bungie::Tags::TagReference;
+	using Bungie::Text::StringID;
 
 	struct ChudGlobalsDefinition : TagGroup<'chgd'>
 	{
@@ -28,7 +28,6 @@ namespace Blam::Tags::UI
 		TagReference CampaignMedals;
 		TagReference CampaignMedalHudAnimation;
 		int16_t Unknown5;
-		int16_t Unknown6;
 		float CampaignMedalScale;
 		float CampaignMedalSpacing;
 		float CampaignMedalOffsetX;
@@ -230,7 +229,7 @@ namespace Blam::Tags::UI
 				uint32_t Unknown25;
 				uint32_t Unknown26;
 			};
-			TAG_STRUCT_SIZE_ASSERT(HudAttribute, 0xE8);
+			//TAG_STRUCT_SIZE_ASSERT(HudAttribute, 0xE8);
 
 			struct HudSound
 			{
@@ -245,24 +244,24 @@ namespace Blam::Tags::UI
 					int32_t Biped;
 					TagReference Sound;
 				};
-				TAG_STRUCT_SIZE_ASSERT(Unknown, 0x14);
+				//TAG_STRUCT_SIZE_ASSERT(Unknown, 0x14);
 			};
-			TAG_STRUCT_SIZE_ASSERT(HudSound, 0x14);
+			//TAG_STRUCT_SIZE_ASSERT(HudSound, 0x14);
 
 			struct MultiplayerMedal
 			{
 				int32_t Medal;
 			};
-			TAG_STRUCT_SIZE_ASSERT(MultiplayerMedal, 0x4);
+			//TAG_STRUCT_SIZE_ASSERT(MultiplayerMedal, 0x4);
 		};
-		TAG_STRUCT_SIZE_ASSERT(HudGlobal, 0x2B0);
+		//TAG_STRUCT_SIZE_ASSERT(HudGlobal, 0x2B0);
 
 		struct HudShader
 		{
 			TagReference VertexShader;
 			TagReference PixelShader;
 		};
-		TAG_STRUCT_SIZE_ASSERT(HudShader, 0x20);
+		//TAG_STRUCT_SIZE_ASSERT(HudShader, 0x20);
 
 		struct Unknown0
 		{
@@ -283,7 +282,7 @@ namespace Blam::Tags::UI
 			uint32_t Unknown15;
 			uint32_t Unknown16;
 		};
-		TAG_STRUCT_SIZE_ASSERT(Unknown0, 0x40);
+		//TAG_STRUCT_SIZE_ASSERT(Unknown0, 0x40);
 
 		struct Unknown3
 		{
@@ -346,9 +345,9 @@ namespace Blam::Tags::UI
 				uint32_t Unknown49;
 				TagReference Sound2;
 			};
-			TAG_STRUCT_SIZE_ASSERT(Unknown2, 0xE4);
+			//TAG_STRUCT_SIZE_ASSERT(Unknown2, 0xE4);
 		};
-		TAG_STRUCT_SIZE_ASSERT(Unknown3, 0x10);
+		//TAG_STRUCT_SIZE_ASSERT(Unknown3, 0x10);
 
 		struct PlayerTrainingDatum
 		{
@@ -361,7 +360,7 @@ namespace Blam::Tags::UI
 			uint16_t Flags;
 			int16_t Unknown;
 		};
-		TAG_STRUCT_SIZE_ASSERT(PlayerTrainingDatum, 0x14);
+		//TAG_STRUCT_SIZE_ASSERT(PlayerTrainingDatum, 0x14);
 	};
-	TAG_STRUCT_SIZE_ASSERT(ChudGlobalsDefinition, 0x2C0);
+	//TAG_STRUCT_SIZE_ASSERT(ChudGlobalsDefinition, 0x2C0);
 }

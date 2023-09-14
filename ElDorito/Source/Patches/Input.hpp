@@ -3,7 +3,7 @@
 #include <memory>
 #include <functional>
 #include <vector>
-#include "Blam\BlamInput.hpp"
+#include "Bungie\BlamInput.hpp"
 
 namespace Patches::Input
 {
@@ -27,7 +27,7 @@ namespace Patches::Input
 		// false, the input context will be deactivated.
 		//
 		// The difference between this and UiInputTick() is that this
-		// cannot call Blam::Input::ReadKeyEvent() because Windows messages
+		// cannot call Bungie::Input::ReadKeyEvent() because Windows messages
 		// won't have been pumped yet. However, this happens earlier on in
 		// the engine update cycle.
 		virtual bool GameInputTick() = 0;
@@ -38,9 +38,9 @@ namespace Patches::Input
 		virtual bool UiInputTick() = 0;
 
 		//Called before GameInputTick() and UiInputTick()
-		virtual void InputBlock() { memset(reinterpret_cast<bool*>(0x238DBEB), 1, Blam::Input::InputType::eInputType_Count); }
+		virtual void InputBlock() { memset(reinterpret_cast<bool*>(0x238DBEB), 1, Bungie::Input::InputType::eInputType_Count); }
 		//Called after GameInputTick() and UiInputTick()
-		virtual void InputUnblock() { memset(reinterpret_cast<bool*>(0x238DBEB), 0, Blam::Input::InputType::eInputType_Count); };
+		virtual void InputUnblock() { memset(reinterpret_cast<bool*>(0x238DBEB), 0, Bungie::Input::InputType::eInputType_Count); };
 
 		//If the Input context should allow the registered handlers to still fire
 		bool allowHandlers = false;
@@ -61,8 +61,8 @@ namespace Patches::Input
 
 	// Sets what controls can be configured in the keyboard settings menu.
 	void SetKeyboardSettingsMenu(
-		const std::vector<Blam::Input::ConfigurableAction> &infantrySettings,
-		const std::vector<Blam::Input::ConfigurableAction> &vehicleSettings);
+		const std::vector<Bungie::Input::ConfigurableAction> &infantrySettings,
+		const std::vector<Bungie::Input::ConfigurableAction> &vehicleSettings);
 
 	void TestControllerVibration(float duration);
 	void InvalidateBindings();

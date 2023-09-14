@@ -1,12 +1,12 @@
 #pragma once
 #include <cstdint>
-#include "Blam\Tags\Tags.hpp"
-#include "Blam\Text\StringID.hpp"
+#include "Bungie\Tags\Tags.hpp"
+#include "Bungie\Text\StringID.hpp"
 
-namespace Blam::Tags::Game
+namespace Bungie::Tags::Game
 {
-	using Blam::Tags::TagBlock;
-	using Blam::Text::StringID;
+	using Bungie::Tags::TagBlock;
+	using Bungie::Text::StringID;
 
 	struct TraitsProfile
 	{

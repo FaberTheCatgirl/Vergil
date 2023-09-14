@@ -1,12 +1,12 @@
 #pragma once
 
-#include "Blam\BlamData.hpp"
-#include "Blam\BlamTypes.hpp"
-#include "Blam\Tags\Objects\Damage.hpp"
-#include "Blam\Tags\Objects\Medal.hpp"
+#include "Bungie\BlamData.hpp"
+#include "Bungie\BlamTypes.hpp"
+#include "Bungie\Tags\Objects\Damage.hpp"
+#include "Bungie\Tags\Objects\Medal.hpp"
 #include <cstdint>
 
-namespace Blam::Players
+namespace Bungie::Players
 {
 	// Index values for the Colors array in the PlayerCustomization struct.
 	struct ColorIndices
@@ -160,10 +160,10 @@ namespace Blam::Players
 		uint16_t HumansInfected; //0x56
 		uint16_t Unknown5; //0x58
 
-		uint16_t Medals[Blam::Tags::Objects::MedalType::MedalCount];
+		uint16_t Medals[Bungie::Tags::Objects::MedalType::MedalCount];
 		uint8_t Unknown6[0x68];
 
-		WEAPON_STATS WeaponStats[Blam::Tags::Objects::DamageReportingType::DamageCount];
+		WEAPON_STATS WeaponStats[Bungie::Tags::Objects::DamageReportingType::DamageCount];
 	} PLAYER_STATS, *PPLAYER_STATS;
 	static_assert(sizeof(PLAYER_STATS) == GameGlobals::GlobalStats::PlayerLength, "Invalid PlayerStats size");
 

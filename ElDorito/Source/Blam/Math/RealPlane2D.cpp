@@ -1,6 +1,6 @@
-#include "Blam\Math\RealPlane2D.hpp"
+#include "Bungie\Math\RealPlane2D.hpp"
 
-namespace Blam::Math
+namespace Bungie::Math
 {
 	RealPlane2D::RealPlane2D()
 		: RealPlane2D(RealVector2D(), 0.0f)

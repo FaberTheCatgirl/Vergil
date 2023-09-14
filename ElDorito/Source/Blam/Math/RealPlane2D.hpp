@@ -1,7 +1,7 @@
 #pragma once
-#include "Blam\Math\RealVector2D.hpp"
+#include "Bungie\Math\RealVector2D.hpp"
 
-namespace Blam::Math
+namespace Bungie::Math
 {
 	struct RealPlane2D
 	{

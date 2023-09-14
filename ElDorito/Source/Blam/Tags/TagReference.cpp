@@ -1,6 +1,6 @@
-#include "Blam\Tags\TagReference.hpp"
+#include "Bungie\Tags\TagReference.hpp"
 
-namespace Blam::Tags
+namespace Bungie::Tags
 {
 	TagReference::TagReference()
 		: TagReference((Tag)-1, -1)

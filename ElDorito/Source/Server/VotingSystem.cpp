@@ -18,7 +18,7 @@
 #include "Modules\ModuleServer.hpp"
 #include "Modules\ModuleGame.hpp"
 #include "Patches\Network.hpp"
-#include "Blam\BlamNetwork.hpp"
+#include "Bungie\BlamNetwork.hpp"
 #include "ElDorito.hpp"
 #include "ThirdParty\rapidjson\writer.h"
 #include "ThirdParty\rapidjson\document.h"
@@ -298,7 +298,7 @@ namespace Server::Voting
 	//Creates the message to send to peers. TODO abstract VotingMessage out of VotingSystem
 	void AbstractVotingSystem::GenerateVotingOptionsMessage(int peer)
 	{
-		auto* session = Blam::Network::GetActiveSession();
+		auto* session = Bungie::Network::GetActiveSession();
 		if (!(session && session->IsEstablished() && session->IsHost() && session->Parameters.GetSessionMode() == 1 && isEnabled()))
 			return;
 
@@ -430,7 +430,7 @@ namespace Server::Voting
 			if (Patches::Network::GetNumPlayers() > 0)
 			{
 				idle = false;
-				if (Blam::Network::GetActiveSession()->Parameters.GetSessionMode() == 1)
+				if (Bungie::Network::GetActiveSession()->Parameters.GetSessionMode() == 1)
 					StartVoting();
 
 			}
@@ -744,7 +744,7 @@ namespace Server::Voting
 
 	void VetoSystem::Tick()
 	{
-		auto* session = Blam::Network::GetActiveSession();
+		auto* session = Bungie::Network::GetActiveSession();
 		if (!(session && session->IsEstablished() && session->IsHost() && loadedJson && Modules::ModuleServer::Instance().VarVetoSystemEnabled->ValueInt && !Modules::ModuleServer::Instance().VarServerVotingEnabled->ValueInt))
 			return;
 
@@ -756,7 +756,7 @@ namespace Server::Voting
 			if (Patches::Network::GetNumPlayers() > 0)
 			{
 				idle = false;
-				if (Blam::Network::GetActiveSession()->Parameters.GetSessionMode() == 1)
+				if (Bungie::Network::GetActiveSession()->Parameters.GetSessionMode() == 1)
 					NewVote();
 			}
 
@@ -805,7 +805,7 @@ namespace Server::Voting
 	void VetoSystem::LogVote(const VotingMessage &message, std::string name)
 	{
 		// If we aren't in a vote or if voting is not enabled, exit
-		auto* session = Blam::Network::GetActiveSession();
+		auto* session = Bungie::Network::GetActiveSession();
 		if (!(session && session->IsEstablished() && session->IsHost() && Modules::ModuleServer::Instance().VarVetoSystemEnabled->ValueInt && !Modules::ModuleServer::Instance().VarServerVotingEnabled->ValueInt && voteStartedTime != 0))
 			return;
 

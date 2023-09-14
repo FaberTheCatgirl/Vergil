@@ -1,8 +1,8 @@
-#include "Blam\Math\RealQuaternion.hpp"
-#include "Blam\Math\RealMatrix4x3.hpp"
+#include "Bungie\Math\RealQuaternion.hpp"
+#include "Bungie\Math\RealMatrix4x3.hpp"
 #include <cmath>
 
-namespace Blam::Math
+namespace Bungie::Math
 {
 	RealQuaternion::RealQuaternion()
 		: RealQuaternion(0.0f, 0.0f, 0.0f, 1.0f)

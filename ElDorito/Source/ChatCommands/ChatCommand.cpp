@@ -11,7 +11,7 @@ namespace ChatCommands
 {
 	int findNumberOfPlayersInGame()
 	{
-		auto* session = Blam::Network::GetActiveSession();
+		auto* session = Bungie::Network::GetActiveSession();
 		if (!session || !session->IsEstablished() || !session->IsHost())
 			return 0;
 
@@ -52,7 +52,7 @@ namespace ChatCommands
 
 	bool ShuffleTeamsCommand::isValidArgument(std::string s, std::string& returnInfo)
 	{
-		if (Blam::Network::GetActiveSession()->HasTeams())
+		if (Bungie::Network::GetActiveSession()->HasTeams())
 			return true;
 		else {
 			returnInfo = "Only team games can be shuffled.";
@@ -128,7 +128,7 @@ namespace ChatCommands
 			return false;
 		}
 
-		auto* session = Blam::Network::GetActiveSession();
+		auto* session = Bungie::Network::GetActiveSession();
 		if (indexToKick == starterIndex)
 		{
 			returnInfo = "You cannot kick yourself.";
@@ -193,7 +193,7 @@ namespace ChatCommands
 		}
 		int playerToKickIdx = -1;
 
-		auto membership = &Blam::Network::GetActiveSession()->MembershipInfo;
+		auto membership = &Bungie::Network::GetActiveSession()->MembershipInfo;
 		for (auto peerIdx = membership->FindFirstPeer(); peerIdx >= 0; peerIdx = membership->FindNextPeer(peerIdx))
 		{
 			auto playerIdx = membership->GetPeerPlayer(peerIdx);
@@ -273,7 +273,7 @@ namespace ChatCommands
 			return;
 
 		std::string returnInfo;
-		auto &membership = Blam::Network::GetActiveSession()->MembershipInfo;
+		auto &membership = Bungie::Network::GetActiveSession()->MembershipInfo;
 		starterIndex = membership.GetPeerPlayer(sender);
 		if (!isValidArgument(argument, returnInfo))
 		{
@@ -298,7 +298,7 @@ namespace ChatCommands
 
 			std::string previousValue;
 			char uidString[32] = { 0 };
-			Blam::Players::FormatUid(uidString, uid);
+			Bungie::Players::FormatUid(uidString, uid);
 			Modules::CommandMap::Instance().SetVariable2(Modules::ModuleServer::Instance().VarChatVoteStartedByUid, std::string(uidString), previousValue);
 			Modules::CommandMap::Instance().SetVariable2(Modules::ModuleServer::Instance().VarChatVotesNeeded, std::to_string(votesNeeded), previousValue);
 			Modules::CommandMap::Instance().SetVariable2(Modules::ModuleServer::Instance().VarChatVoteStarted, std::to_string(1), previousValue);
@@ -321,7 +321,7 @@ namespace ChatCommands
 		if (message == "yes")
 		{
 
-			auto &membership = Blam::Network::GetActiveSession()->MembershipInfo;
+			auto &membership = Bungie::Network::GetActiveSession()->MembershipInfo;
 			uint64_t uid = membership.PlayerSessions[membership.GetPeerPlayer(sender)].Properties.Uid;
 			std::string name = Utils::String::ThinString(membership.PlayerSessions[membership.GetPeerPlayer(sender)].Properties.DisplayName);
 

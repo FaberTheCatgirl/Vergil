@@ -1,16 +1,16 @@
 #pragma once
 
-#include "Blam\Tags\Tags.hpp"
-#include "Blam\Math\Bounds.hpp"
-#include "Blam\Text\StringID.hpp"
+#include "Bungie\Tags\Tags.hpp"
+#include "Bungie\Math\Bounds.hpp"
+#include "Bungie\Text\StringID.hpp"
 
-#include "Blam\Tags\Bitmap\TightBinding.hpp"
-#include "Blam\Tags\Bitmap\UsageOverride.hpp"
-#include "Blam\Tags\Bitmap\Sequence.hpp"
-#include "Blam\Tags\Bitmap\Image.hpp"
-#include "Blam\Tags\Bitmap\BitmapResource.hpp"
+#include "Bungie\Tags\Bitmap\TightBinding.hpp"
+#include "Bungie\Tags\Bitmap\UsageOverride.hpp"
+#include "Bungie\Tags\Bitmap\Sequence.hpp"
+#include "Bungie\Tags\Bitmap\Image.hpp"
+#include "Bungie\Tags\Bitmap\BitmapResource.hpp"
 
-namespace Blam::Tags::Bitmap {
+namespace Bungie::Tags::Bitmap {
 	struct Bitmap : TagGroup<'bitm'>
 	{
 		int32_t Usage;

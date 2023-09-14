@@ -1,9 +1,9 @@
 #pragma once
 #include <cstdint>
 
-#include "Blam\BlamTypes.hpp"
+#include "Bungie\BlamTypes.hpp"
 
-namespace Blam
+namespace Bungie
 {
 	struct Preferences;
 
@@ -109,7 +109,7 @@ namespace Blam
 				uint8_t Unknown3;
 				uint8_t Unknown4[0x10];
 				SavedFilmDescription SavedFilmDescription;
-				Blam::GameOptions GameOptions;
+				Bungie::GameOptions GameOptions;
 				uint8_t Unknown24E78[8];
 			};
 			static_assert(sizeof(TheaterData) == 0x24E80);
@@ -146,7 +146,7 @@ namespace Blam
 		uint32_t LastLoadedLobby; // String Id
 		uint32_t Unknown44;
 		GamemodeData GamemodeData;
-		Blam::NetworkMode LastNetworkMode;
+		Bungie::NetworkMode LastNetworkMode;
 		uint32_t Unknown41BC4;
 		uint32_t DefaultVideoSettings;
 		uint8_t Fullscreen;

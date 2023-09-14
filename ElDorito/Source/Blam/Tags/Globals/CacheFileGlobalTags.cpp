@@ -1,10 +1,10 @@
-#include "Blam\Tags\Globals\CacheFileGlobalTags.hpp"
+#include "Bungie\Tags\Globals\CacheFileGlobalTags.hpp"
 #include "Definitions\EnumDefinition.hpp"
 
-using namespace Blam::Tags::Globals;
+using namespace Bungie::Tags::Globals;
 using namespace Definitions;
 
-namespace Blam::Tags
+namespace Bungie::Tags
 {
 	const StructDefinition GlobalsTagStruct =
 	{

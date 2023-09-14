@@ -1,10 +1,10 @@
 #include "Modules\ModuleWeapon.hpp"
 #include "ElDorito.hpp"
 #include "Patches\Weapon.hpp"
-#include "Blam\BlamNetwork.hpp"
-#include "Blam\Cache\StringIdCache.hpp"
-#include "Blam\Math\RealVector3D.hpp"
-#include "Blam\Tags\Items\DefinitionWeapon.hpp"
+#include "Bungie\BlamNetwork.hpp"
+#include "Bungie\Cache\StringIdCache.hpp"
+#include "Bungie\Math\RealVector3D.hpp"
+#include "Bungie\Tags\Items\DefinitionWeapon.hpp"
 #include "ThirdParty\rapidjson\writer.h"
 #include "ThirdParty\rapidjson\stringbuffer.h"
 
@@ -12,13 +12,13 @@
 
 namespace
 {
-	using Blam::Cache::StringIDCache;
-	using Blam::Math::RealVector3D;
-	using Blam::Tags::TagInstance;
-	using Blam::Tags::Items::Weapon;
+	using Bungie::Cache::StringIDCache;
+	using Bungie::Math::RealVector3D;
+	using Bungie::Tags::TagInstance;
+	using Bungie::Tags::Items::Weapon;
 
 	RealVector3D ToOffset(std::string I, std::string J, std::string K);
-	void GetTypes(Blam::Tags::Items::Weapon *WeaponDefinition, std::string MultiplayerWeaponType, std::string WeaponType, std::string TrackingType, std::string SpecialHUDType);
+	void GetTypes(Bungie::Tags::Items::Weapon *WeaponDefinition, std::string MultiplayerWeaponType, std::string WeaponType, std::string TrackingType, std::string SpecialHUDType);
 
 	bool CommandWeaponOffset(const std::vector<std::string>& Arguments, std::string& returnInfo)
 	{
@@ -59,7 +59,7 @@ namespace
 
 	bool CommandWeaponOffsetReset(const std::vector<std::string>& Arguments, std::string& returnInfo)
 	{
-		if (blam::game_is_mainmenu())
+		if (Bungie::game_is_mainmenu())
 		{
 			returnInfo = "This command is unavailable at the moment, please try again when not on the mainmenu.";
 			return false;
@@ -81,7 +81,7 @@ namespace
 			weapon = Patches::Weapon::GetWeaponByName(name);
 		}
 
-		auto *weaponDefinition = TagInstance(weapon.Index).GetDefinition<Blam::Tags::Items::Weapon>();
+		auto *weaponDefinition = TagInstance(weapon.Index).GetDefinition<Bungie::Tags::Items::Weapon>();
 
 		weaponDefinition->FirstPersonWeaponOffset = Patches::Weapon::GetOffsetByName(true, weapon.Name);
 		Patches::Weapon::SetOffsetModified(weapon.Name, Patches::Weapon::GetOffsetByName(true, weapon.Name));
@@ -116,7 +116,7 @@ namespace
 
 	bool CommandSaveWeaponsJSON(const std::vector<std::string>& Arguments, std::string& returnInfo)
 	{
-		if (blam::game_is_mainmenu())
+		if (Bungie::game_is_mainmenu())
 		{
 			returnInfo = "This command is unavailable at the moment, please try again when not on the mainmenu.";
 			return false;
@@ -130,7 +130,7 @@ namespace
 
 	bool CommandWeaponList(const std::vector<std::string>& Arguments, std::string& returnInfo)
 	{
-		if (blam::game_is_mainmenu())
+		if (Bungie::game_is_mainmenu())
 		{
 			returnInfo = "This command is unavailable at the moment, please try again when not on the mainmenu.";
 			return false;
@@ -147,7 +147,7 @@ namespace
 
 	bool CommandGetEquippedWeaponInfo(const std::vector<std::string>& Arguments, std::string& returnInfo)
 	{
-		if (blam::game_is_mainmenu())
+		if (Bungie::game_is_mainmenu())
 		{
 			returnInfo = "This command is unavailable at the moment, please try again when not on the mainmenu.";
 			return false;
@@ -163,7 +163,7 @@ namespace
 
 		auto equippedWeaponName = Patches::Weapon::GetEquippedWeaponName();
 
-		auto *weaponDefinition = TagInstance(equippedWeaponIndex).GetDefinition<Blam::Tags::Items::Weapon>();
+		auto *weaponDefinition = TagInstance(equippedWeaponIndex).GetDefinition<Bungie::Tags::Items::Weapon>();
 		auto equippedWeaponOffset = weaponDefinition->FirstPersonWeaponOffset;
 
 		std::stringstream index_;
@@ -244,7 +244,7 @@ namespace
 
 	bool CommandGetEquippedWeaponJSON(const std::vector<std::string>& Arguments, std::string& returnInfo)
 	{
-		if (blam::game_is_mainmenu())
+		if (Bungie::game_is_mainmenu())
 		{
 			returnInfo = "This command is unavailable at the moment, please try again when not on the mainmenu.";
 			return false;
@@ -253,7 +253,7 @@ namespace
 		auto equippedWeaponIndex = Patches::Weapon::GetEquippedWeaponIndex();
 		auto equippedWeaponName = Patches::Weapon::GetEquippedWeaponName();
 
-		auto *weaponDefinition = TagInstance(equippedWeaponIndex).GetDefinition<Blam::Tags::Items::Weapon>();
+		auto *weaponDefinition = TagInstance(equippedWeaponIndex).GetDefinition<Bungie::Tags::Items::Weapon>();
 		auto equippedWeaponOffset = weaponDefinition->FirstPersonWeaponOffset;
 
 		std::stringstream temp;
@@ -309,110 +309,110 @@ namespace
 		return RealVector3D(std::stof(I), std::stof(J), std::stof(K));
 	}
 
-	void GetTypes(Blam::Tags::Items::Weapon *WeaponDefinition, std::string MultiplayerWeaponType, std::string WeaponType, std::string TrackingType, std::string SpecialHUDType)
+	void GetTypes(Bungie::Tags::Items::Weapon *WeaponDefinition, std::string MultiplayerWeaponType, std::string WeaponType, std::string TrackingType, std::string SpecialHUDType)
 	{
 		switch (WeaponDefinition->MultiplayerWeaponType)
 		{
-		case Blam::Tags::Items::Weapon::MultiplayerType::None:
+		case Bungie::Tags::Items::Weapon::MultiplayerType::None:
 			MultiplayerWeaponType = "None";
 			break;
-		case Blam::Tags::Items::Weapon::MultiplayerType::CTFFlag:
+		case Bungie::Tags::Items::Weapon::MultiplayerType::CTFFlag:
 			MultiplayerWeaponType = "CTFFlag";
 			break;
-		case Blam::Tags::Items::Weapon::MultiplayerType::OddballBall:
+		case Bungie::Tags::Items::Weapon::MultiplayerType::OddballBall:
 			MultiplayerWeaponType = "OddballBall";
 			break;
-		case Blam::Tags::Items::Weapon::MultiplayerType::HeadhunterHead:
+		case Bungie::Tags::Items::Weapon::MultiplayerType::HeadhunterHead:
 			MultiplayerWeaponType = "HeadhunterHead";
 			break;
-		case Blam::Tags::Items::Weapon::MultiplayerType::JuggernautPowerup:
+		case Bungie::Tags::Items::Weapon::MultiplayerType::JuggernautPowerup:
 			MultiplayerWeaponType = "JuggernautPowerup";
 			break;
 		}
 
 		switch (WeaponDefinition->WeaponType)
 		{
-		case Blam::Tags::Items::Weapon::Type::Undefined:
+		case Bungie::Tags::Items::Weapon::Type::Undefined:
 			WeaponType = "Undefined";
 			break;
-		case Blam::Tags::Items::Weapon::Type::Shotgun:
+		case Bungie::Tags::Items::Weapon::Type::Shotgun:
 			WeaponType = "Shotgun";
 			break;
-		case Blam::Tags::Items::Weapon::Type::Needler:
+		case Bungie::Tags::Items::Weapon::Type::Needler:
 			WeaponType = "Needler";
 			break;
-		case Blam::Tags::Items::Weapon::Type::PlasmaPistol:
+		case Bungie::Tags::Items::Weapon::Type::PlasmaPistol:
 			WeaponType = "PlasmaPistol";
 			break;
-		case Blam::Tags::Items::Weapon::Type::PlasmaRifle:
+		case Bungie::Tags::Items::Weapon::Type::PlasmaRifle:
 			WeaponType = "PlasmaRifle";
 			break;
-		case Blam::Tags::Items::Weapon::Type::RocketLauncher:
+		case Bungie::Tags::Items::Weapon::Type::RocketLauncher:
 			WeaponType = "RocketLauncher";
 			break;
-		case Blam::Tags::Items::Weapon::Type::EnergySword:
+		case Bungie::Tags::Items::Weapon::Type::EnergySword:
 			WeaponType = "EnergySword";
 			break;
-		case Blam::Tags::Items::Weapon::Type::SpartanLaser:
+		case Bungie::Tags::Items::Weapon::Type::SpartanLaser:
 			WeaponType = "SpartanLaser";
 			break;
-		case Blam::Tags::Items::Weapon::Type::AssaultRifle:
+		case Bungie::Tags::Items::Weapon::Type::AssaultRifle:
 			WeaponType = "AssaultRifle";
 			break;
-		case Blam::Tags::Items::Weapon::Type::BattleRifle:
+		case Bungie::Tags::Items::Weapon::Type::BattleRifle:
 			WeaponType = "BattleRifle";
 			break;
-		case Blam::Tags::Items::Weapon::Type::DMR:
+		case Bungie::Tags::Items::Weapon::Type::DMR:
 			WeaponType = "DMR";
 			break;
-		case Blam::Tags::Items::Weapon::Type::Magnum:
+		case Bungie::Tags::Items::Weapon::Type::Magnum:
 			WeaponType = "Magnum";
 			break;
-		case Blam::Tags::Items::Weapon::Type::SniperRifle:
+		case Bungie::Tags::Items::Weapon::Type::SniperRifle:
 			WeaponType = "SniperRifle";
 			break;
-		case Blam::Tags::Items::Weapon::Type::SMG:
+		case Bungie::Tags::Items::Weapon::Type::SMG:
 			WeaponType = "SMG";
 			break;
 		}
 
 		switch (WeaponDefinition->TrackingType)
 		{
-		case Blam::Tags::Items::Weapon::TrackingType::NoTracking:
+		case Bungie::Tags::Items::Weapon::TrackingType::NoTracking:
 			TrackingType = "NoTracking";
 			break;
-		case Blam::Tags::Items::Weapon::TrackingType::HumanTracking:
+		case Bungie::Tags::Items::Weapon::TrackingType::HumanTracking:
 			TrackingType = "HumanTracking";
 			break;
-		case Blam::Tags::Items::Weapon::TrackingType::PlasmaTracking:
+		case Bungie::Tags::Items::Weapon::TrackingType::PlasmaTracking:
 			TrackingType = "PlasmaTracking";
 			break;
 		}
 
 		switch (WeaponDefinition->SpecialHUDType)
 		{
-		case Blam::Tags::Items::Weapon::SpecialHUDType::NoOutline:
+		case Bungie::Tags::Items::Weapon::SpecialHUDType::NoOutline:
 			SpecialHUDType = "NoOutline";
 			break;
-		case Blam::Tags::Items::Weapon::SpecialHUDType::Default:
+		case Bungie::Tags::Items::Weapon::SpecialHUDType::Default:
 			SpecialHUDType = "Default";
 			break;
-		case Blam::Tags::Items::Weapon::SpecialHUDType::Ammo:
+		case Bungie::Tags::Items::Weapon::SpecialHUDType::Ammo:
 			SpecialHUDType = "Ammo";
 			break;
-		case Blam::Tags::Items::Weapon::SpecialHUDType::Damage:
+		case Bungie::Tags::Items::Weapon::SpecialHUDType::Damage:
 			SpecialHUDType = "Damage";
 			break;
-		case Blam::Tags::Items::Weapon::SpecialHUDType::Accuracy:
+		case Bungie::Tags::Items::Weapon::SpecialHUDType::Accuracy:
 			SpecialHUDType = "Accuracy";
 			break;
-		case Blam::Tags::Items::Weapon::SpecialHUDType::RateOfFire:
+		case Bungie::Tags::Items::Weapon::SpecialHUDType::RateOfFire:
 			SpecialHUDType = "RateOfFire";
 			break;
-		case Blam::Tags::Items::Weapon::SpecialHUDType::Range:
+		case Bungie::Tags::Items::Weapon::SpecialHUDType::Range:
 			SpecialHUDType = "Range";
 			break;
-		case Blam::Tags::Items::Weapon::SpecialHUDType::Power:
+		case Bungie::Tags::Items::Weapon::SpecialHUDType::Power:
 			SpecialHUDType = "Power";
 			break;
 		}

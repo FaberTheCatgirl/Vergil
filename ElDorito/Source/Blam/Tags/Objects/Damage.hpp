@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-namespace Blam::Tags::Objects
+namespace Bungie::Tags::Objects
 {
 	enum DamageReportingType : uint8_t
 	{

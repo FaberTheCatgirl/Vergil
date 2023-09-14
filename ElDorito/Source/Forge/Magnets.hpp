@@ -1,12 +1,12 @@
 #pragma once
 
-#include "Blam\Math\RealVector3D.hpp"
+#include "Bungie\Math\RealVector3D.hpp"
 
 namespace Forge::Magnets
 {
 	struct Magnet
 	{
-		Blam::Math::RealVector3D Position;
+		Bungie::Math::RealVector3D Position;
 	};
 
 	struct MagnetPair

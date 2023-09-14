@@ -4,7 +4,7 @@
 #include <Windows.h>
 #include <Psapi.h>
 
-#include "Blam\BlamNetwork.hpp"
+#include "Bungie\BlamNetwork.hpp"
 #include "CommandMap.hpp"
 
 namespace Utils::AntiCheat
@@ -40,7 +40,7 @@ namespace Utils::AntiCheat
 		GetWindowText(hwnd, title, sizeof(title));
 		if (strcmp(title, "Halo Online Trainer") == 0)
 		{
-			auto session = Blam::Network::GetActiveSession();
+			auto session = Bungie::Network::GetActiveSession();
 			if (session && session->IsEstablished() && !session->IsHost()) 
 			{
 				MessageBox(NULL, "Detected Halo Online Trainer!\nOnly hosts are allowed to use a trainer!", "AntiCheat", MB_OK); //Tell the user what they did wrong.

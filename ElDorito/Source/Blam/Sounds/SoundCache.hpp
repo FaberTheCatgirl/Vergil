@@ -1,18 +1,18 @@
 #pragma once
-#include "Blam\Tags\Sounds\Sound\Sound.hpp"
-#include "Blam\Tags\Sounds\SoundClasses\SoundClasses.hpp"
-#include "Blam\Math\Random.hpp"
+#include "Bungie\Tags\Sounds\Sound\Sound.hpp"
+#include "Bungie\Tags\Sounds\SoundClasses\SoundClasses.hpp"
+#include "Bungie\Math\Random.hpp"
 #include <math.h>
-#include "Blam\Memory\Align.hpp"
-#include "Blam\Sounds\SoundDatum.hpp"
-#include "Blam\Memory\DatumHandle.hpp"
-#include "Blam\Sounds\SoundGlobals.hpp"
+#include "Bungie\Memory\Align.hpp"
+#include "Bungie\Sounds\SoundDatum.hpp"
+#include "Bungie\Memory\DatumHandle.hpp"
+#include "Bungie\Sounds\SoundGlobals.hpp"
 
 
 
-namespace Blam::SoundCache {
+namespace Bungie::SoundCache {
 
-	using namespace Blam::Tags::Sounds;
+	using namespace Bungie::Tags::Sounds;
 
 	//0x65FCB0
 	int32_t AllocateSound(int32_t SoundTagIndex, PermutationChunk *Chunk, uint32_t a3);

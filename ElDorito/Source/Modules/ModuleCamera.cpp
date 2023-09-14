@@ -1,9 +1,9 @@
 #include "Modules\ModuleCamera.hpp"
 #include <sstream>
 #include "ElDorito.hpp"
-#include "Blam\BlamNetwork.hpp"
+#include "Bungie\BlamNetwork.hpp"
 #include "Patches\Ui.hpp"
-#include "Blam\BlamInput.hpp"
+#include "Bungie\BlamInput.hpp"
 #include "Modules\ModuleInput.hpp"
 
 namespace
@@ -328,7 +328,7 @@ namespace
 
 	bool VariableCameraShowCoordinatesUpdate(const std::vector<std::string>& Arguments, std::string& returnInfo)
 	{
-		auto session = Blam::Network::GetActiveSession();
+		auto session = Bungie::Network::GetActiveSession();
 		if (!session || Arguments.size() != 1)
 		{
 			returnInfo = "Unable to enable debug coordinates!";
@@ -441,18 +441,18 @@ namespace Modules
 		auto& controllerAxes = *(ControllerAxes*)(0x0244D1F0 + 0x2F4);
 		bool controllerEnabled = Pointer::Base(0x204DE98).Read<bool>();
 
-		if (GetActionState(Blam::Input::eGameActionUiLeftBumper)->Ticks > 0)
+		if (GetActionState(Bungie::Input::eGameActionUiLeftBumper)->Ticks > 0)
 			zPos -= moveDelta;
 
-		if (GetActionState(Blam::Input::eGameActionUiRightBumper)->Ticks > 0)
+		if (GetActionState(Bungie::Input::eGameActionUiRightBumper)->Ticks > 0)
 			zPos += moveDelta;
 
-		if (GetActionState(Blam::Input::eGameActionMoveForward)->Ticks > 0 || GetActionState(Blam::Input::eGameActionMoveBack)->Ticks > 0 || (controllerEnabled && controllerAxes.LeftY != 0))
+		if (GetActionState(Bungie::Input::eGameActionMoveForward)->Ticks > 0 || GetActionState(Bungie::Input::eGameActionMoveBack)->Ticks > 0 || (controllerEnabled && controllerAxes.LeftY != 0))
 		{
 			float mod = 1;
 			if (controllerEnabled)
 				mod = controllerAxes.LeftY / 32768.0f;
-			else if (GetActionState(Blam::Input::eGameActionMoveBack)->Ticks > 0)
+			else if (GetActionState(Bungie::Input::eGameActionMoveBack)->Ticks > 0)
 				mod = -1;
 
 			xPos += iForward * (moveDelta * mod);
@@ -460,12 +460,12 @@ namespace Modules
 			zPos += kForward * (moveDelta * mod);
 		}
 
-		if (GetActionState(Blam::Input::eGameActionMoveLeft)->Ticks > 0 || GetActionState(Blam::Input::eGameActionMoveRight)->Ticks > 0 || (controllerEnabled && controllerAxes.LeftX != 0))
+		if (GetActionState(Bungie::Input::eGameActionMoveLeft)->Ticks > 0 || GetActionState(Bungie::Input::eGameActionMoveRight)->Ticks > 0 || (controllerEnabled && controllerAxes.LeftX != 0))
 		{
 			float mod = 1;
 			if (controllerEnabled)
 				mod = controllerAxes.LeftX / 32768.0f;
-			else if (GetActionState(Blam::Input::eGameActionMoveLeft)->Ticks > 0)
+			else if (GetActionState(Bungie::Input::eGameActionMoveLeft)->Ticks > 0)
 				mod = -1;
 
 			xPos -= iRight * (moveDelta * mod);

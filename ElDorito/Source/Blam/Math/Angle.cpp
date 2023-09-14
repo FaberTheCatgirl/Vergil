@@ -1,6 +1,6 @@
-#include "Blam\Math\Angle.hpp"
+#include "Bungie\Math\Angle.hpp"
 
-namespace Blam::Math
+namespace Bungie::Math
 {
 	Angle::Angle()
 		: Angle(0.0f)

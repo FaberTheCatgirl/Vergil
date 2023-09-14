@@ -3,7 +3,7 @@
 #include "new\cseries\cseries.hpp"
 #include "new\memory\data.hpp"
 
-namespace blam
+namespace Bungie
 {
 	struct tag_group
 	{

@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-namespace Blam::Math
+namespace Bungie::Math
 {
 	struct Point2D
 	{

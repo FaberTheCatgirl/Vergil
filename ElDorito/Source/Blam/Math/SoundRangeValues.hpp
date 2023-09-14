@@ -2,7 +2,7 @@
 #include <cstdint>
 #include <cmath>
 
-namespace Blam::Math {
+namespace Bungie::Math {
 
 	float SoundRange(int type, float min, float max, float scale);
 

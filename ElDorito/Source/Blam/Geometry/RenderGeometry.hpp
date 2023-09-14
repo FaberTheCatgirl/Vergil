@@ -1,14 +1,14 @@
 #pragma once
 
-#include "Blam\Math\Bounds.hpp"
-#include "Blam\Math\RealPlane3D.hpp"
-#include "Blam\Math\RealPoint3D.hpp"
+#include "Bungie\Math\Bounds.hpp"
+#include "Bungie\Math\RealPlane3D.hpp"
+#include "Bungie\Math\RealPoint3D.hpp"
 
-#include "Blam\Tags\TagBlock.hpp"
-#include "Blam\Tags\TagData.hpp"
-#include "Blam\Tags\TagStructureReference.hpp"
+#include "Bungie\Tags\TagBlock.hpp"
+#include "Bungie\Tags\TagData.hpp"
+#include "Bungie\Tags\TagStructureReference.hpp"
 
-namespace Blam::Geometry
+namespace Bungie::Geometry
 {
 	enum class RenderGeometryRuntimeFlags : int
 	{

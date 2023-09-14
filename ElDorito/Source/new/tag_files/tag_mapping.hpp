@@ -2,7 +2,7 @@
 #include "new\cseries\cseries.hpp"
 #include "new\tag_files\tag_groups.hpp"
 
-namespace blam
+namespace Bungie
 {
 	enum tag_mapping_variable_type : char_enum
 	{

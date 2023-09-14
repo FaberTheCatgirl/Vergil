@@ -22,8 +22,8 @@ namespace
 	void InitializePacketsHook();
 	void HandlePacketHook();
 
-	void SerializeCustomPacket(Blam::BitStream *stream, int packetSize, const void *packet);
-	bool DeserializeCustomPacket(Blam::BitStream *stream, int packetSize, void *packet);
+	void SerializeCustomPacket(Bungie::BitStream *stream, int packetSize, const void *packet);
+	bool DeserializeCustomPacket(Bungie::BitStream *stream, int packetSize, void *packet);
 }
 
 namespace Patches::CustomPackets
@@ -36,7 +36,7 @@ namespace Patches::CustomPackets
 
 	void SendPacket(int targetPeer, const void *packet, int packetSize)
 	{
-		auto session = Blam::Network::GetActiveSession();
+		auto session = Bungie::Network::GetActiveSession();
 		if (!session)
 			return;
 		auto channelIndex = session->MembershipInfo.PeerChannels[targetPeer].ChannelIndex;
@@ -68,9 +68,9 @@ namespace
 		// Replace the packet table with one we control
 		// Only one extra packet type is ever allocated
 		auto packetCount = CustomPacketId + 1;
-		auto customPacketTable = reinterpret_cast<Blam::Network::PacketTable*>(new Blam::Network::RegisteredPacket[packetCount]);
-		Blam::Network::SetPacketTable(customPacketTable);
-		memset(customPacketTable, 0, packetCount * sizeof(Blam::Network::RegisteredPacket));
+		auto customPacketTable = reinterpret_cast<Bungie::Network::PacketTable*>(new Bungie::Network::RegisteredPacket[packetCount]);
+		Bungie::Network::SetPacketTable(customPacketTable);
+		memset(customPacketTable, 0, packetCount * sizeof(Bungie::Network::RegisteredPacket));
 
 		// Register the "master" custom packet
 		auto name = "eldewrito-custom-packet";
@@ -90,7 +90,7 @@ namespace
 		return &it->second;
 	}
 
-	void SerializeCustomPacket(Blam::BitStream *stream, int packetSize, const void *packet)
+	void SerializeCustomPacket(Bungie::BitStream *stream, int packetSize, const void *packet)
 	{
 		auto packetBase = static_cast<const PacketBase*>(packet);
 
@@ -115,7 +115,7 @@ namespace
 		type->Handler->SerializeRawPacket(stream, packetSize, packet);
 	}
 
-	bool DeserializeCustomPacket(Blam::BitStream *stream, int packetSize, void *packet)
+	bool DeserializeCustomPacket(Bungie::BitStream *stream, int packetSize, void *packet)
 	{
 		if (packetSize < static_cast<int>(sizeof(PacketBase)))
 			return false;
@@ -140,7 +140,7 @@ namespace
 		return type->Handler->DeserializeRawPacket(stream, packetSize, packet);
 	}
 
-	bool HandleCustomPacket(int id, Blam::Network::ObserverChannel *sender, const void *packet)
+	bool HandleCustomPacket(int id, Bungie::Network::ObserverChannel *sender, const void *packet)
 	{
 		// Only handle the master custom packet
 		if (id != CustomPacketId)

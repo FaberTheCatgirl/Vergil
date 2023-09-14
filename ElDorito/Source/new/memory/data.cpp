@@ -1,6 +1,6 @@
 #include "new\memory\data.hpp"
 
-namespace blam
+namespace Bungie
 {
 	long data_array_header::get_index(long index) const
 	{

@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Blam
+namespace Bungie
 {
 	struct GlobalMemoryMapStage
 	{

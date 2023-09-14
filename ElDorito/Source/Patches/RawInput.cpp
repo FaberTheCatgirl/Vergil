@@ -2,9 +2,9 @@
 
 #include "ElDorito.hpp"
 #include "Patch.hpp"
-#include "Blam\BlamTypes.hpp"
-#include "Blam\BlamPlayers.hpp"
-#include "Blam\Sandbox\Sandbox.hpp"
+#include "Bungie\BlamTypes.hpp"
+#include "Bungie\BlamPlayers.hpp"
+#include "Bungie\Sandbox\Sandbox.hpp"
 #include "Modules\ModuleInput.hpp"
 #include "Modules\ModuleCamera.hpp"
 #include "Forge\ForgeUtil.hpp"
@@ -27,14 +27,14 @@ namespace
 {
 	bool ShouldDisableRawInput()
 	{
-		using namespace Blam;
+		using namespace Bungie;
 
 		const auto game_engine_round_in_progress = (bool(*)())(0x00550F90);
 		if (game_engine_round_in_progress())
 		{
-			auto playerIndex = Blam::Players::GetLocalPlayer(0);
-			Blam::Players::PlayerDatum *player{ nullptr };
-			if (playerIndex == DatumHandle::Null || !(player = Blam::Players::GetPlayers().Get(playerIndex)))
+			auto playerIndex = Bungie::Players::GetLocalPlayer(0);
+			Bungie::Players::PlayerDatum *player{ nullptr };
+			if (playerIndex == DatumHandle::Null || !(player = Bungie::Players::GetPlayers().Get(playerIndex)))
 				return false;
 
 			// if we're in a h3 ui screen
@@ -44,11 +44,11 @@ namespace
 
 			// if we're rotating an object
 			uint32_t heldObjectIndex;
-			if (Blam::Sandbox::GetEditorModeState(playerIndex, &heldObjectIndex, nullptr) && heldObjectIndex != -1 && *(uint8_t*)0x238E6AC > 0)
+			if (Bungie::Sandbox::GetEditorModeState(playerIndex, &heldObjectIndex, nullptr) && heldObjectIndex != -1 && *(uint8_t*)0x238E6AC > 0)
 				return true;
 
 			// if we're spectating
-			return player && player->SlaveUnit == Blam::DatumHandle::Null;
+			return player && player->SlaveUnit == Bungie::DatumHandle::Null;
 		}
 
 		return false;

@@ -1,6 +1,6 @@
-#include "Blam\Math\RealRectangle2D.hpp"
+#include "Bungie\Math\RealRectangle2D.hpp"
 
-namespace Blam::Math
+namespace Bungie::Math
 {
 	RealRectangle2D::RealRectangle2D()
 		: RealRectangle2D(0.0f, 0.0f, 0.0f, 0.0f)

@@ -1,13 +1,13 @@
 #include "Web\Ui\WebForge.hpp"
-#include "Blam\Tags\TagInstance.hpp"
-#include "Blam\Tags\TagBlock.hpp"
-#include "Blam\Tags\Objects\Object.hpp"
-#include "Blam\Tags\TagReference.hpp"
-#include "Blam\Tags\Globals\ForgeGlobalsDefinition.hpp"
-#include "Blam\Math\RealVector3D.hpp"
-#include "Blam\BlamPlayers.hpp"
-#include "Blam\BlamObjects.hpp"
-#include "Blam\BlamTypes.hpp"
+#include "Bungie\Tags\TagInstance.hpp"
+#include "Bungie\Tags\TagBlock.hpp"
+#include "Bungie\Tags\Objects\Object.hpp"
+#include "Bungie\Tags\TagReference.hpp"
+#include "Bungie\Tags\Globals\ForgeGlobalsDefinition.hpp"
+#include "Bungie\Math\RealVector3D.hpp"
+#include "Bungie\BlamPlayers.hpp"
+#include "Bungie\BlamObjects.hpp"
+#include "Bungie\BlamTypes.hpp"
 #include "Patches\Input.hpp"
 #include "ThirdParty\rapidjson\writer.h"
 #include "ThirdParty\rapidjson\document.h"
@@ -21,7 +21,7 @@
 #include "Forge\ObjectSet.hpp"
 #include <unordered_map>
 
-using namespace Blam::Math;
+using namespace Bungie::Math;
 using namespace Anvil::Client::Rendering::Bridge;
 
 namespace
@@ -142,7 +142,7 @@ namespace
 	class ObjectPropertySetter
 	{
 	public:
-		ObjectPropertySetter(const Blam::MapVariant::VariantProperties& properties, const Blam::MapVariant::BudgetEntry& budget)
+		ObjectPropertySetter(const Bungie::MapVariant::VariantProperties& properties, const Bungie::MapVariant::BudgetEntry& budget)
 			: m_Properties(properties), m_Budget(budget), m_RespawnRequired(false), m_BudgetDirty(false) {}
 
 		void SetProperty(PropertyTarget target, PropertyValue value)
@@ -508,7 +508,7 @@ namespace
 		void Apply(uint32_t playerIndex, int16_t placementIndex)
 		{
 			static auto Forge_SetPlacementVariantProperties = (void(*)(uint32_t playerIndex,
-				int placementIndex, Blam::MapVariant::VariantProperties *properties))(0x0059B720);
+				int placementIndex, Bungie::MapVariant::VariantProperties *properties))(0x0059B720);
 
 			Forge_SetPlacementVariantProperties(playerIndex, placementIndex, &m_Properties);
 
@@ -527,8 +527,8 @@ namespace
 		}
 
 	private:
-		Blam::MapVariant::VariantProperties m_Properties;
-		Blam::MapVariant::BudgetEntry m_Budget;
+		Bungie::MapVariant::VariantProperties m_Properties;
+		Bungie::MapVariant::BudgetEntry m_Budget;
 		bool m_Valid;
 		bool m_RespawnRequired;
 		bool m_SyncRequired;
@@ -614,16 +614,16 @@ namespace Web::Ui::WebForge
 {
 	void OnItemSpawned(uint32_t objectIndex)
 	{
-		auto object = Blam::Objects::Get(objectIndex);
+		auto object = Bungie::Objects::Get(objectIndex);
 		if (!object || object->PlacementIndex == -1)
 			return;
 
-		s_ItemSpawnProperties.Apply(Blam::Players::GetLocalPlayer(0), object->PlacementIndex);
+		s_ItemSpawnProperties.Apply(Bungie::Players::GetLocalPlayer(0), object->PlacementIndex);
 	}
 
 	void ShowObjectProperties(uint32_t objectIndex)
 	{
-		auto currentObject = Blam::Objects::Get(objectIndex);
+		auto currentObject = Bungie::Objects::Get(objectIndex);
 		if (currentObject && currentObject->PlacementIndex != 0xFFFF)
 		{
 			auto mapv = Forge::GetMapVariant();
@@ -689,11 +689,11 @@ namespace Web::Ui::WebForge
 		{
 		case 1: // set immediate properties
 		{
-			auto currentObject = Blam::Objects::Get(s_CurrentObjectIndex);
+			auto currentObject = Bungie::Objects::Get(s_CurrentObjectIndex);
 			if (currentObject && currentObject->PlacementIndex != 0xFFFF)
 			{
 				auto mapv = Forge::GetMapVariant();
-				auto playerIndex = Blam::Players::GetLocalPlayer(0);
+				auto playerIndex = Bungie::Players::GetLocalPlayer(0);
 				DeferedPropertySink sink;
 				DeserializeObjectProperties(data->value, sink);
 				sink.Apply(playerIndex, currentObject->PlacementIndex);
@@ -745,10 +745,10 @@ namespace
 
 	bool IsForgeLight(uint32_t objectIndex)
 	{
-		auto object = Blam::Objects::Get(objectIndex);
+		auto object = Bungie::Objects::Get(objectIndex);
 		if (!object)
 			return false;
-		auto objectDef = Blam::Tags::TagInstance(object->TagIndex).GetDefinition<Blam::Tags::Objects::Object>();
+		auto objectDef = Bungie::Tags::TagInstance(object->TagIndex).GetDefinition<Bungie::Tags::Objects::Object>();
 		if (!objectDef)
 			return false;
 
@@ -757,7 +757,7 @@ namespace
 			if (attachment.Attached.GroupTag != 'ligh')
 				continue;
 
-			auto lightFlags = *(uint32_t*)Blam::Tags::TagInstance(attachment.Attached.TagIndex).GetDefinition<uint8_t>();
+			auto lightFlags = *(uint32_t*)Bungie::Tags::TagInstance(attachment.Attached.TagIndex).GetDefinition<uint8_t>();
 			if (lightFlags & (1 << 31))
 				return true;
 		}
@@ -767,10 +767,10 @@ namespace
 
 	bool IsForgeScreenEffectObject(uint32_t objectIndex)
 	{
-		auto object = Blam::Objects::Get(objectIndex);
+		auto object = Bungie::Objects::Get(objectIndex);
 		if (!object)
 			return false;
-		auto objectDef = Blam::Tags::TagInstance(object->TagIndex).GetDefinition<Blam::Tags::Objects::Object>();
+		auto objectDef = Bungie::Tags::TagInstance(object->TagIndex).GetDefinition<Bungie::Tags::Objects::Object>();
 		if (!objectDef)
 			return false;
 
@@ -794,7 +794,7 @@ namespace
 		auto placement = mapv->Placements[placementIndex];
 		const auto& budget = mapv->Budget[placement.BudgetIndex];
 
-		auto object = Blam::Objects::Get(placement.ObjectIndex);
+		auto object = Bungie::Objects::Get(placement.ObjectIndex);
 		if (!object)
 			return "{}";
 		auto mpProperties = object->GetMultiplayerProperties();
@@ -823,7 +823,7 @@ namespace
 		SerializeProperty(writer, "is_light", IsForgeLight(placement.ObjectIndex));
 		SerializeProperty(writer, "is_screenfx", IsForgeScreenEffectObject(placement.ObjectIndex));
 
-		auto forgeGlobals = Blam::Tags::TagInstance::Find('forg', "multiplayer\\forge_globals").GetDefinition<Blam::Tags::Globals::ForgeGlobalsDefinition>();
+		auto forgeGlobals = Bungie::Tags::TagInstance::Find('forg', "multiplayer\\forge_globals").GetDefinition<Bungie::Tags::Globals::ForgeGlobalsDefinition>();
 
 		writer.Key("options");
 		writer.StartObject();

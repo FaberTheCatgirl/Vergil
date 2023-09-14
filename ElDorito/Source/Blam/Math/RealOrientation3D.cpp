@@ -1,6 +1,6 @@
-#include "Blam\Math\RealOrientation3D.hpp"
+#include "Bungie\Math\RealOrientation3D.hpp"
 
-namespace Blam::Math
+namespace Bungie::Math
 {
 	RealOrientation3D::RealOrientation3D()
 		: RealOrientation3D(RealQuaternion(), RealPoint3D(), 0.0f)

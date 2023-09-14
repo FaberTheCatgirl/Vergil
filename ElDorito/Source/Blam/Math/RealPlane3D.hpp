@@ -1,7 +1,7 @@
 #pragma once
-#include "Blam\Math\RealVector3D.hpp"
+#include "Bungie\Math\RealVector3D.hpp"
 
-namespace Blam::Math
+namespace Bungie::Math
 {
 	struct RealPlane3D
 	{

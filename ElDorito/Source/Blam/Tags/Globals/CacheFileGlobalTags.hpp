@@ -1,11 +1,11 @@
 #pragma once  
-#include "Blam\Tags\Tags.hpp"  
+#include "Bungie\Tags\Tags.hpp"  
 
-namespace Blam::Tags::Globals
+namespace Bungie::Tags::Globals
 {
-	using Blam::Tags::TagBlock;
-	using Blam::Tags::TagGroup;
-	using Blam::Tags::TagReference;
+	using Bungie::Tags::TagBlock;
+	using Bungie::Tags::TagGroup;
+	using Bungie::Tags::TagReference;
 
 	struct CacheFileGlobalTags : TagGroup<'cfgt'>
 	{

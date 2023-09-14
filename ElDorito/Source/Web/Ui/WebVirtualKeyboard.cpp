@@ -4,14 +4,14 @@
 #include "ThirdParty\rapidjson\writer.h"
 
 #include "Web\Ui\ScreenLayer.hpp"
-#include "Blam\BlamInput.hpp"
+#include "Bungie\BlamInput.hpp"
 #include "Patches\VirtualKeyboard.hpp"
 #include "Utils\String.hpp"
 
 namespace
 {
-	void WebVirtualKeyboardHandler(Blam::Input::VirtualKeyboard* keyboard);
-	Blam::Input::VirtualKeyboard* CurrentKeyboard;
+	void WebVirtualKeyboardHandler(Bungie::Input::VirtualKeyboard* keyboard);
+	Bungie::Input::VirtualKeyboard* CurrentKeyboard;
 }
 
 namespace Web::Ui::WebVirtualKeyboard
@@ -48,7 +48,7 @@ namespace Web::Ui::WebVirtualKeyboard
 
 namespace
 {
-	void WebVirtualKeyboardHandler(Blam::Input::VirtualKeyboard* keyboard)
+	void WebVirtualKeyboardHandler(Bungie::Input::VirtualKeyboard* keyboard)
 	{
 		CurrentKeyboard = keyboard;
 		auto title = Utils::String::ThinString(CurrentKeyboard->Title);

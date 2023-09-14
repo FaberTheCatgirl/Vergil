@@ -1,10 +1,10 @@
 #pragma once
-#include "Blam\Tags\Tags.hpp"
-#include "Blam\Text\StringID.hpp"
+#include "Bungie\Tags\Tags.hpp"
+#include "Bungie\Text\StringID.hpp"
 
-namespace Blam::Tags::Objects
+namespace Bungie::Tags::Objects
 {
-	using Blam::Text::StringID;
+	using Bungie::Text::StringID;
 
 	struct Projectile : TagGroup<'proj'>
 	{

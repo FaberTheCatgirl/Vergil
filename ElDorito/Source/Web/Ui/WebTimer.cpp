@@ -3,8 +3,8 @@
 #include "ThirdParty\rapidjson\stringbuffer.h"
 #include <ctime>
 #include "Web\Ui\ScreenLayer.hpp"
-#include "Blam\BlamPlayers.hpp"
-#include "Blam\BlamTime.hpp"
+#include "Bungie\BlamPlayers.hpp"
+#include "Bungie\BlamTime.hpp"
 #include "Pointer.hpp"
 
 namespace Web::Ui

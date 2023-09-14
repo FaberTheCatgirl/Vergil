@@ -1,8 +1,8 @@
 #pragma once
-#include "Blam\Tags\Tag.hpp"
+#include "Bungie\Tags\Tag.hpp"
 #include "Definitions\StructDefinition.hpp"
 
-namespace Blam::Tags
+namespace Bungie::Tags
 {
 	template <const Tag GroupTagValue>
 	struct TagGroup

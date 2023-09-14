@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Blam\Tags\Tags.hpp"
-#include "Blam\Tags\Sounds\Sound\PromotionRule.hpp"
-#include "Blam\Tags\Sounds\Sound\RuntimeTimer.hpp"
+#include "Bungie\Tags\Tags.hpp"
+#include "Bungie\Tags\Sounds\Sound\PromotionRule.hpp"
+#include "Bungie\Tags\Sounds\Sound\RuntimeTimer.hpp"
 
-namespace Blam::Tags::Sounds
+namespace Bungie::Tags::Sounds
 {
 	struct Promotion {
 		TagBlock<PromotionRule> PromotionsRules;

@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-namespace Blam::Time
+namespace Bungie::Time
 {
 	struct GameTimeGlobals
 	{

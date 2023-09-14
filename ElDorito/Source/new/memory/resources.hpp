@@ -3,7 +3,7 @@
 #include "new\memory\data.hpp"
 #include "new\tag_files\tag_groups.hpp"
 
-namespace blam
+namespace Bungie
 {
 	struct pageable_resource
 	{

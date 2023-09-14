@@ -1,9 +1,9 @@
-#include "Blam\Sounds\Functions.hpp"
+#include "Bungie\Sounds\Functions.hpp"
 
-namespace Blam::Sounds
+namespace Bungie::Sounds
 {
 
-	using namespace Blam::Tags::Sounds;
+	using namespace Bungie::Tags::Sounds;
 
 	void* tag_get(uint32_t tagGroup, int16_t tagIndex)
 	{
@@ -128,7 +128,7 @@ namespace Blam::Sounds
 		if (soundTagIndex == -1 || pitchRangeIndex < 0 || permutationIndex < 0)
 			return false;
 
-		auto sound = (Blam::Tags::Sounds::Sound*)tag_get('snd!', soundTagIndex);
+		auto sound = (Bungie::Tags::Sounds::Sound*)tag_get('snd!', soundTagIndex);
 
 		if (pitchRangeIndex >= GetPitchRangeCount(sound))
 			return false;
@@ -230,12 +230,12 @@ namespace Blam::Sounds
 		if (*(g_global_def + 0xBC))
 			v1 = *(g_global_def + 0xC0);
 
-		auto classes = Blam::Tags::TagInstance(*((int *)v1 + 3)).GetDefinition<Classes>();
+		auto classes = Bungie::Tags::TagInstance(*((int *)v1 + 3)).GetDefinition<Classes>();
 		return GetClassProperty(classes, type);
 	}
 
 
-	FMOD_RESULT SoundCreateFMODSound(Blam::SoundTagDataStruct* data, void* sound, char* a3) {
+	FMOD_RESULT SoundCreateFMODSound(Bungie::SoundTagDataStruct* data, void* sound, char* a3) {
 
 		static auto resource_get = (void*(__cdecl*)(void* resource))(0x563E10);
 
@@ -321,7 +321,7 @@ namespace Blam::Sounds
 		auto *soundDatum0x38 = &soundUnknown[soundDatum0x38Index];
 		auto soundSource = (*soundSources)->Get(soundDatum0x38->SoundSourceHandle);
 
-		auto soundDefinition = Blam::Tags::TagInstance(soundSource->SoundTagIndex).GetDefinition<Sound>();
+		auto soundDefinition = Bungie::Tags::TagInstance(soundSource->SoundTagIndex).GetDefinition<Sound>();
 		
 		// memory crap, can you make this even more obscure ffs?
 		//a4 = 0;                                      

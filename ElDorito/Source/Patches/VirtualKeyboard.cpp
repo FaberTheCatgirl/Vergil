@@ -1,17 +1,17 @@
 #include "VirtualKeyboard.hpp"
 
-#include "Blam\BlamInput.hpp"
+#include "Bungie\BlamInput.hpp"
 #include "Patch.hpp"
 
 namespace
 {
-	Blam::Input::VirtualKeyboard *CreateVirtualKeyboard(const char *file, int unk1, int unk2, int unk3, int unk4, int unk5, int maxLength, int unk7, int unk8);
-	void __fastcall SetVirtualKeyboardDefaultValue(Blam::Input::VirtualKeyboard *keyboard, void *unused, wchar_t *newDefaultValue);
-	void __fastcall SetVirtualKeyboardTitle(Blam::Input::VirtualKeyboard *keyboard, void *unused, wchar_t *newTitle);
-	void __fastcall SetVirtualKeyboardDescription(Blam::Input::VirtualKeyboard *keyboard, void *unused, wchar_t *newDescription);
-	bool ShowVirtualKeyboard(Blam::Input::VirtualKeyboard *keyboard, const char *file, int line);
+	Bungie::Input::VirtualKeyboard *CreateVirtualKeyboard(const char *file, int unk1, int unk2, int unk3, int unk4, int unk5, int maxLength, int unk7, int unk8);
+	void __fastcall SetVirtualKeyboardDefaultValue(Bungie::Input::VirtualKeyboard *keyboard, void *unused, wchar_t *newDefaultValue);
+	void __fastcall SetVirtualKeyboardTitle(Bungie::Input::VirtualKeyboard *keyboard, void *unused, wchar_t *newTitle);
+	void __fastcall SetVirtualKeyboardDescription(Bungie::Input::VirtualKeyboard *keyboard, void *unused, wchar_t *newDescription);
+	bool ShowVirtualKeyboard(Bungie::Input::VirtualKeyboard *keyboard, const char *file, int line);
 
-	Patches::VirtualKeyboard::KeyboardHandlerCallback KeyboardHandler = [](Blam::Input::VirtualKeyboard* keyboard) { keyboard->Reset(); };
+	Patches::VirtualKeyboard::KeyboardHandlerCallback KeyboardHandler = [](Bungie::Input::VirtualKeyboard* keyboard) { keyboard->Reset(); };
 }
 
 namespace Patches::VirtualKeyboard
@@ -34,30 +34,30 @@ namespace Patches::VirtualKeyboard
 
 namespace
 {
-	Blam::Input::VirtualKeyboard *CreateVirtualKeyboard(const char *file, int line, int unk2, int unk3, int unk4, int unk5, int maxLength, int unk7, int unk8)
+	Bungie::Input::VirtualKeyboard *CreateVirtualKeyboard(const char *file, int line, int unk2, int unk3, int unk4, int unk5, int maxLength, int unk7, int unk8)
 	{
-		return new Blam::Input::VirtualKeyboard(file, line, unk2, unk3, unk4, unk5, maxLength, unk7, unk8);
+		return new Bungie::Input::VirtualKeyboard(file, line, unk2, unk3, unk4, unk5, maxLength, unk7, unk8);
 	}
 
 	// Technically thiscall
-	void __fastcall SetVirtualKeyboardDefaultValue(Blam::Input::VirtualKeyboard *keyboard, void *unused, wchar_t *newDefaultValue)
+	void __fastcall SetVirtualKeyboardDefaultValue(Bungie::Input::VirtualKeyboard *keyboard, void *unused, wchar_t *newDefaultValue)
 	{
 		keyboard->SetDefaultValue(newDefaultValue);
 	}
 
 	// Technically thiscall
-	void __fastcall SetVirtualKeyboardTitle(Blam::Input::VirtualKeyboard *keyboard, void *unused, wchar_t *newTitle)
+	void __fastcall SetVirtualKeyboardTitle(Bungie::Input::VirtualKeyboard *keyboard, void *unused, wchar_t *newTitle)
 	{
 		keyboard->SetTitle(newTitle);
 	}
 
 	// Technically thiscall
-	void __fastcall SetVirtualKeyboardDescription(Blam::Input::VirtualKeyboard *keyboard, void *unused, wchar_t *newDescription)
+	void __fastcall SetVirtualKeyboardDescription(Bungie::Input::VirtualKeyboard *keyboard, void *unused, wchar_t *newDescription)
 	{
 		keyboard->SetDescription(newDescription);
 	}
 
-	bool ShowVirtualKeyboard(Blam::Input::VirtualKeyboard *keyboard, const char *file, int line)
+	bool ShowVirtualKeyboard(Bungie::Input::VirtualKeyboard *keyboard, const char *file, int line)
 	{
 		KeyboardHandler(keyboard);
 		return true;

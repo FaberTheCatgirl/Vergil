@@ -1,6 +1,6 @@
-#include "Blam\Math\RealMatrix3x3.hpp"
+#include "Bungie\Math\RealMatrix3x3.hpp"
 
-namespace Blam::Math
+namespace Bungie::Math
 {
 	RealMatrix3x3::RealMatrix3x3()
 		: RealMatrix3x3(RealVector3D(), RealVector3D(), RealVector3D())

@@ -1,5 +1,5 @@
-#include "Blam\Tags\TagGroup.hpp"
+#include "Bungie\Tags\TagGroup.hpp"
 
-namespace Blam::Tags
+namespace Bungie::Tags
 {
 }

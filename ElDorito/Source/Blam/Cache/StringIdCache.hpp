@@ -3,9 +3,9 @@
 #include <iostream>
 #include <string>
 
-#include "Blam\Text\StringID.hpp"
+#include "Bungie\Text\StringID.hpp"
 
-namespace Blam::Cache
+namespace Bungie::Cache
 {
 	struct StringIDCacheHeader
 	{

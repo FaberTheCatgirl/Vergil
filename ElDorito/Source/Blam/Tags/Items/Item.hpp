@@ -1,17 +1,17 @@
 #pragma once
-#include "Blam\Math\Bounds.hpp"
-#include "Blam\Tags\Tags.hpp"
-#include "Blam\Text\StringID.hpp"
-#include "Blam\Tags\Objects\Object.hpp"
+#include "Bungie\Math\Bounds.hpp"
+#include "Bungie\Tags\Tags.hpp"
+#include "Bungie\Text\StringID.hpp"
+#include "Bungie\Tags\Objects\Object.hpp"
 
-namespace Blam::Tags::Items
+namespace Bungie::Tags::Items
 {
-	using Blam::Math::Bounds;
-	using Blam::Tags::TagBlock;
-	using Blam::Tags::TagGroup;
-	using Blam::Tags::TagReference;
-	using Blam::Text::StringID;
-	using Blam::Tags::Objects::Object;
+	using Bungie::Math::Bounds;
+	using Bungie::Tags::TagBlock;
+	using Bungie::Tags::TagGroup;
+	using Bungie::Tags::TagReference;
+	using Bungie::Text::StringID;
+	using Bungie::Tags::Objects::Object;
 
 	struct Item : TagGroup<'item'>
 	{

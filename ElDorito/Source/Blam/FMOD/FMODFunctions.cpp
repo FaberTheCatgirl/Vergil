@@ -1,4 +1,4 @@
-#include "Blam\FMOD\FMODFunctions.hpp"
+#include "Bungie\FMOD\FMODFunctions.hpp"
 
 using namespace FMOD;
 

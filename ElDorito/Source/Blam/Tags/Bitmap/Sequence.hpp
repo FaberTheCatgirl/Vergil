@@ -1,8 +1,8 @@
-#include "Blam\Tags\Tags.hpp"
+#include "Bungie\Tags\Tags.hpp"
 
-#include "Blam\Tags\Bitmap\Sprite.hpp"
+#include "Bungie\Tags\Bitmap\Sprite.hpp"
 
-namespace Blam::Tags::Bitmap {
+namespace Bungie::Tags::Bitmap {
 	struct Sequence
 	{
 		char Name[0x20];

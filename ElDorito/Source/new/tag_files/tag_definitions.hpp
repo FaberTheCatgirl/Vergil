@@ -2,7 +2,7 @@
 
 #include "new\cseries\cseries.hpp"
 
-namespace blam
+namespace Bungie
 {
 	enum tag_enum_type : long_enum
 	{

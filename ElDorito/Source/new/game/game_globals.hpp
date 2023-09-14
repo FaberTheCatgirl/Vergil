@@ -2,7 +2,7 @@
 #include "new\cseries\cseries.hpp"
 #include "new\game\game_mode.hpp"
 
-namespace blam
+namespace Bungie
 {
 	struct game_globals
 	{

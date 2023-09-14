@@ -1,6 +1,6 @@
-#include "Blam\Math\SoundRangeValues.hpp"
+#include "Bungie\Math\SoundRangeValues.hpp"
 
-namespace Blam::Math {
+namespace Bungie::Math {
 
 	// Convert from volume to decibel scale
 	inline float ConvertDecibelToVolume(float decibel) {

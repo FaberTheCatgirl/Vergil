@@ -36,7 +36,7 @@
 #include "Patches\Camera.hpp"
 //#include "Discord\DiscordRPC.h"
 #include "ThirdParty\SOP.hpp"
-#include "Blam\Cache\StringIdCache.hpp"
+#include "Bungie\Cache\StringIdCache.hpp"
 
 #include <Windows.h>
 #include <TlHelp32.h>
@@ -274,7 +274,7 @@ void ElDorito::Initialize()
 	Server::ReportHandler::Init();
 	Server::PostgameController::Init();
 
-	if (!Blam::Cache::StringIDCache::Instance.Load(mapsFolder + "string_ids.dat"))
+	if (!Bungie::Cache::StringIDCache::Instance.Load(mapsFolder + "string_ids.dat"))
 	{
 		std::string msg("Failed to load '" + mapsFolder + "string_ids.dat'!");
 		MessageBox(NULL, msg.c_str(), "", MB_OK);

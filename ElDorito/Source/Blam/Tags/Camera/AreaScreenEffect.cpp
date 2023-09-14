@@ -1,10 +1,10 @@
-#include "Blam\Tags\Camera\AreaScreenEffect.hpp"
+#include "Bungie\Tags\Camera\AreaScreenEffect.hpp"
 #include "Definitions\EnumDefinition.hpp"
 
-using namespace Blam::Tags::Camera;
+using namespace Bungie::Tags::Camera;
 using namespace Definitions;
 
-namespace Blam::Tags
+namespace Bungie::Tags
 {
 	const EnumDefinition FlagsValuesEnum =
 	{

@@ -1,6 +1,6 @@
-#include "Blam\Math\Random.hpp"
+#include "Bungie\Math\Random.hpp"
 
-namespace Blam::Math {
+namespace Bungie::Math {
 
 	uint32_t random_seed(uint32_t* seed)
 	{

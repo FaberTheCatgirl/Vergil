@@ -5,7 +5,7 @@
 #include <bitset>
 
 #include "Console.hpp"
-#include "Blam\BlamNetwork.hpp"
+#include "Bungie\BlamNetwork.hpp"
 #include "Utils\Cryptography.hpp"
 #include "Patches\CustomPackets.hpp"
 
@@ -26,7 +26,7 @@ namespace
 
 		// This is used to determine which peers have updated their binding.
 		// If a peer's bit is set to 1, then it's up-to-date.
-		std::bitset<Blam::Network::MaxPeers> SynchronizedPeers;
+		std::bitset<Bungie::Network::MaxPeers> SynchronizedPeers;
 	};
 
 	std::unordered_map<SyncID, SynchronizationBinding> syncBindings;
@@ -56,14 +56,14 @@ namespace
 	public:
 		SyncUpdateHandler() : VariadicPacketHandler(1) { }
 
-		void Serialize(Blam::BitStream* stream, const SyncUpdatePacketData* data, int extraDataCount, const SyncUpdatePacketVar* extraData) override;
-		bool Deserialize(Blam::BitStream* stream, SyncUpdatePacketData* data, int extraDataCount, SyncUpdatePacketVar* extraData) override;
-		void HandlePacket(Blam::Network::ObserverChannel* sender, const VariadicPacket<SyncUpdatePacketData, SyncUpdatePacketVar>* packet) override;
+		void Serialize(Bungie::BitStream* stream, const SyncUpdatePacketData* data, int extraDataCount, const SyncUpdatePacketVar* extraData) override;
+		bool Deserialize(Bungie::BitStream* stream, SyncUpdatePacketData* data, int extraDataCount, SyncUpdatePacketVar* extraData) override;
+		void HandlePacket(Bungie::Network::ObserverChannel* sender, const VariadicPacket<SyncUpdatePacketData, SyncUpdatePacketVar>* packet) override;
 	};
 
 	SyncID GenerateID(const SynchronizationBinding &binding);
 	void AddBinding(const SynchronizationBinding &binding);
-	void HostTick(Blam::Network::Session *session);
+	void HostTick(Bungie::Network::Session *session);
 }
 
 namespace Server::VariableSynchronization
@@ -90,7 +90,7 @@ namespace Server::VariableSynchronization
 	{
 		// We only need to do anything if we're the host, otherwise the
 		// packet handler will take care of client stuff
-		auto session = Blam::Network::GetActiveSession();
+		auto session = Bungie::Network::GetActiveSession();
 		if (session && session->IsHost())
 			HostTick(session);
 	}
@@ -284,7 +284,7 @@ namespace
 			binding->SynchronizedPeers[peerIndex] = true;
 	}
 
-	bool IsPeerReady(Blam::Network::Session *session, int peerIndex)
+	bool IsPeerReady(Bungie::Network::Session *session, int peerIndex)
 	{
 		auto membership = &session->MembershipInfo;
 		if (peerIndex == membership->LocalPeerIndex || !membership->Peers[peerIndex].IsEstablished())
@@ -293,9 +293,9 @@ namespace
 		return !channelInfo->Unavailable && channelInfo->ChannelIndex >= 0;
 	}
 
-	void SynchronizePeers(Blam::Network::Session *session)
+	void SynchronizePeers(Bungie::Network::Session *session)
 	{
-		std::bitset<Blam::Network::MaxPeers> visitedPeers;
+		std::bitset<Bungie::Network::MaxPeers> visitedPeers;
 		auto membership = &session->MembershipInfo;
 		for (auto peer = membership->FindFirstPeer(); peer != -1; peer = membership->FindNextPeer(peer))
 		{
@@ -313,7 +313,7 @@ namespace
 			binding.second.SynchronizedPeers &= visitedPeers;
 	}
 
-	void HostTick(Blam::Network::Session *session)
+	void HostTick(Bungie::Network::Session *session)
 	{
 		// First, go through each binding and check for updates
 		TickBindings();
@@ -322,7 +322,7 @@ namespace
 		SynchronizePeers(session);
 	}
 
-	void SyncUpdateHandler::Serialize(Blam::BitStream* stream, const SyncUpdatePacketData* data, int extraDataCount, const SyncUpdatePacketVar* extraData)
+	void SyncUpdateHandler::Serialize(Bungie::BitStream* stream, const SyncUpdatePacketData* data, int extraDataCount, const SyncUpdatePacketVar* extraData)
 	{
 		for (auto i = 0; i < extraDataCount; i++)
 		{
@@ -350,7 +350,7 @@ namespace
 		}
 	}
 
-	bool SyncUpdateHandler::Deserialize(Blam::BitStream* stream, SyncUpdatePacketData* data, int extraDataCount, SyncUpdatePacketVar* extraData)
+	bool SyncUpdateHandler::Deserialize(Bungie::BitStream* stream, SyncUpdatePacketData* data, int extraDataCount, SyncUpdatePacketVar* extraData)
 	{
 		for (auto i = 0; i < extraDataCount; i++)
 		{
@@ -379,9 +379,9 @@ namespace
 		return true;
 	}
 
-	void SyncUpdateHandler::HandlePacket(Blam::Network::ObserverChannel* sender, const VariadicPacket<SyncUpdatePacketData, SyncUpdatePacketVar>* packet)
+	void SyncUpdateHandler::HandlePacket(Bungie::Network::ObserverChannel* sender, const VariadicPacket<SyncUpdatePacketData, SyncUpdatePacketVar>* packet)
 	{
-		auto session = Blam::Network::GetActiveSession();
+		auto session = Bungie::Network::GetActiveSession();
 		if (!session || session->IsHost())
 			return; // Ignore packets sent by clients
 

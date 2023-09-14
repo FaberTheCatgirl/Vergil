@@ -1,13 +1,13 @@
 #pragma once
 
-#include "Blam\Tags\Tags.hpp"
-#include "Blam\Math\RealVector3D.hpp"
+#include "Bungie\Tags\Tags.hpp"
+#include "Bungie\Math\RealVector3D.hpp"
 
-namespace Blam::Tags::Globals
+namespace Bungie::Tags::Globals
 {
-	using Blam::Math::RealVector3D;
+	using Bungie::Math::RealVector3D;
 
-	struct ForgeGlobalsDefinition : Blam::Tags::TagGroup<'forg'>
+	struct ForgeGlobalsDefinition : Bungie::Tags::TagGroup<'forg'>
 	{
 		struct ReForgeMaterial;
 		enum class PaletteItemCategory : short;

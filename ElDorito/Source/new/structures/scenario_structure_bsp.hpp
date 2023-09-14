@@ -3,9 +3,9 @@
 #include "new\memory\resources.hpp"
 #include "new\tag_files\tag_groups.hpp"
 
-#include "Blam\Geometry\RenderGeometry.hpp"
+#include "Bungie\Geometry\RenderGeometry.hpp"
 
-namespace blam
+namespace Bungie
 {
 	enum structure_bsp_flags : word_flags
 	{
@@ -211,7 +211,7 @@ namespace blam
 		dword unknown54;
 		tag_block instanced_geometry_instances;
 		tag_block decorators;
-		Blam::Geometry::RenderGeometry geometry;
+		Bungie::Geometry::RenderGeometry geometry;
 		tag_block unknown_sound_clusters_a;
 		tag_block unknown_sound_clusters_b;
 		tag_block unknown_sound_clusters_c;
@@ -232,7 +232,7 @@ namespace blam
 		dword unknown71;
 		dword unknown72;
 		dword unknown73;
-		Blam::Geometry::RenderGeometry geometry2;
+		Bungie::Geometry::RenderGeometry geometry2;
 		tag_block leaf_systems;
 		dword unknown83;
 		dword unknown84;

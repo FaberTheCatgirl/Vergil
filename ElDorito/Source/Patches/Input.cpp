@@ -4,10 +4,10 @@
 #include <cmath>
 
 #include "Patch.hpp"
-#include "Blam\BlamInput.hpp"
-#include "Blam\BlamObjects.hpp"
-#include "Blam\BlamPlayers.hpp"
-#include "Blam\BlamTime.hpp"
+#include "Bungie\BlamInput.hpp"
+#include "Bungie\BlamObjects.hpp"
+#include "Bungie\BlamPlayers.hpp"
+#include "Bungie\BlamTime.hpp"
 #include "Modules\ModuleInput.hpp"
 #include "Console.hpp"
 #include "ElDorito.hpp"
@@ -15,7 +15,7 @@
 #include "new\game\game.hpp"
 
 using namespace Patches::Input;
-using namespace Blam::Input;
+using namespace Bungie::Input;
 
 namespace
 {
@@ -169,7 +169,7 @@ namespace Patches::Input
 
 	void TestControllerVibration(float durationSeconds)
 	{
-		s_ControllerVibrationTestTicks = Blam::Time::SecondsToTicks(durationSeconds);
+		s_ControllerVibrationTestTicks = Bungie::Time::SecondsToTicks(durationSeconds);
 	}
 
 	void InvalidateBindings()
@@ -351,7 +351,7 @@ namespace
 	bool InMonitorMode()
 	{
 		static auto Forge_GetEditorModeState = (bool(__cdecl *)(uint32_t playerIndex, uint32_t* heldObjectIndex, uint32_t* objectIndexUnderCrosshair))(0x0059A6F0);
-		return Forge_GetEditorModeState(Blam::Players::GetLocalPlayer(0), nullptr, nullptr);
+		return Forge_GetEditorModeState(Bungie::Players::GetLocalPlayer(0), nullptr, nullptr);
 	}
 
 	void ProcessKeyBindingsHook(const BindingsTable &bindings, ActionState *actions)
@@ -407,7 +407,7 @@ namespace
 		// manually rotates it.
 
 		static auto firstRotate = true;
-		if (!blam::game_is_mainmenu())
+		if (!Bungie::game_is_mainmenu())
 		{
 			// char_platform is only on the main menu
 			firstRotate = true;
@@ -489,7 +489,7 @@ namespace
 
 	bool IsDualWielding()
 	{
-		auto& objects = Blam::Objects::GetObjects();
+		auto& objects = Bungie::Objects::GetObjects();
 
 		auto unitObjectIndex = ElDorito::GetMainTls(0xC4)[0](0x300).Read<uint32_t>();
 		if (unitObjectIndex == -1)
@@ -626,8 +626,8 @@ namespace
 		{
 			if (s_SprintToggled)
 			{
-				auto playerIndex = Blam::Players::GetLocalPlayer(localPlayerIndex);
-				auto& players = Blam::Players::GetPlayers();
+				auto playerIndex = Bungie::Players::GetLocalPlayer(localPlayerIndex);
+				auto& players = Bungie::Players::GetPlayers();
 				auto player = players.Get(playerIndex);
 				if (player)
 				{

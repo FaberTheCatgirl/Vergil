@@ -1,8 +1,8 @@
 #pragma once
-#include "Blam\BlamData.hpp"
+#include "Bungie\BlamData.hpp"
 #include <functional>
 
-namespace Blam::Events
+namespace Bungie::Events
 {
 	struct Event;
 	struct EventDefinition;
@@ -12,9 +12,9 @@ namespace Patches::Events
 {
 	void ApplyAll();
 
-	// Callback for a Blam event handler.
-	typedef std::function<void(Blam::DatumHandle player, const Blam::Events::Event *event, const Blam::Events::EventDefinition *definition)> EventCallback;
+	// Callback for a Bungie event handler.
+	typedef std::function<void(Bungie::DatumHandle player, const Bungie::Events::Event *event, const Bungie::Events::EventDefinition *definition)> EventCallback;
 
-	// Registers a callback to be run when a Blam event fires.
+	// Registers a callback to be run when a Bungie event fires.
 	void OnEvent(EventCallback callback);
 }

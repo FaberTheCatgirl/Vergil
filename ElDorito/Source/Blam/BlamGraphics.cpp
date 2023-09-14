@@ -1,6 +1,6 @@
-#include "Blam\BlamGraphics.hpp"
+#include "Bungie\BlamGraphics.hpp"
 
-namespace Blam::Graphics
+namespace Bungie::Graphics
 {
 	wchar_t* TakeScreenshot()
 	{

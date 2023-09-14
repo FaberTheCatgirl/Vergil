@@ -1,6 +1,6 @@
-#include "Blam\Memory\DatumHandle.hpp"
+#include "Bungie\Memory\DatumHandle.hpp"
 
-namespace Blam
+namespace Bungie
 {
 	const DatumHandle DatumHandle::Null = -1;
 

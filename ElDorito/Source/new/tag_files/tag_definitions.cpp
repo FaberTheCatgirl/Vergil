@@ -1,6 +1,6 @@
 #include "new\tag_files\tag_definitions.hpp"
 
-namespace blam
+namespace Bungie
 {
 	tag_enum_option::tag_enum_option(const char *name, const long value) :
 		name(name), value(value)

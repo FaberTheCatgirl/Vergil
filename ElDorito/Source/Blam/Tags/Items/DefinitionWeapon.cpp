@@ -1,11 +1,11 @@
-#include "Blam\Tags\Items\DefinitionWeapon.hpp"
+#include "Bungie\Tags\Items\DefinitionWeapon.hpp"
 #include "Definitions\EnumDefinition.hpp"
 
-using namespace Blam::Tags::Items;
-using namespace Blam::Tags;
+using namespace Bungie::Tags::Items;
+using namespace Bungie::Tags;
 using namespace Definitions;
 
-namespace Blam::Tags
+namespace Bungie::Tags
 {
 	// Sounds/Noise
 	const EnumDefinition SoundsNoiseLevelEnum =

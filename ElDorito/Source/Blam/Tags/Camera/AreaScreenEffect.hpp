@@ -1,9 +1,9 @@
 #pragma once
-#include "Blam\Tags\Tags.hpp"
-#include "Blam\Text\StringID.hpp"
-#include "Blam\Math\RealColorRGB.hpp"
+#include "Bungie\Tags\Tags.hpp"
+#include "Bungie\Text\StringID.hpp"
+#include "Bungie\Math\RealColorRGB.hpp"
 
-namespace Blam::Tags::Camera
+namespace Bungie::Tags::Camera
 {
 	struct AreaScreenEffect : TagGroup<'sefc'>
 	{

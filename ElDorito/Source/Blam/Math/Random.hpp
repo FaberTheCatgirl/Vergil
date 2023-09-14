@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-namespace Blam::Math {
+namespace Bungie::Math {
 
 	uint32_t random_seed(uint32_t* seed);
 	uint32_t random_seed_range(uint32_t* seed, int16_t min, int16_t max);

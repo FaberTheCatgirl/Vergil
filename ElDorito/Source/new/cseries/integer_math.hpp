@@ -1,6 +1,6 @@
 #pragma once
 
-namespace blam
+namespace Bungie
 {
 	struct point2d
 	{

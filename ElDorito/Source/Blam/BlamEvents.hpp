@@ -1,9 +1,9 @@
 #pragma once
 #include <cstdint>
-#include "Blam\BlamData.hpp"
-#include "Blam\Tags\Tags.hpp"
+#include "Bungie\BlamData.hpp"
+#include "Bungie\Tags\Tags.hpp"
 
-namespace Blam::Events
+namespace Bungie::Events
 {
 	// Event types.
 	enum EventType : short

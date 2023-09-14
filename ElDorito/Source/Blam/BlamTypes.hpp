@@ -2,9 +2,9 @@
 
 #include <cstdint>
 #include <string>
-#include "Blam\Math\RealVector3D.hpp"
+#include "Bungie\Math\RealVector3D.hpp"
 
-namespace Blam
+namespace Bungie
 {
 	struct e_primary_skull
 	{
@@ -473,7 +473,7 @@ namespace Blam
 
 	struct UnitAction
 	{
-		Blam::eUnitAction Index;
+		Bungie::eUnitAction Index;
 		uint8_t Unknown4[0x44];
 	};
 
@@ -550,7 +550,7 @@ namespace Blam
 	// todo: safely make this into a C++ struct without any padding/packing etc
 	typedef struct _BLAM_GAME_VARIANT
 	{
-		/* 0xB2C */ GameType GameType; // see Blam::GameType
+		/* 0xB2C */ GameType GameType; // see Bungie::GameType
 		float Unknown1; // gravity maybe?
 		uint8_t Unknown2[0x2C];
 		wchar_t Name[0x10];
@@ -664,9 +664,9 @@ namespace Blam
 			uint32_t ObjectIndex;
 			uint32_t EditorObjectIndex;
 			uint32_t BudgetIndex;
-			Blam::Math::RealVector3D Position;
-			Blam::Math::RealVector3D RightVector;
-			Blam::Math::RealVector3D UpVector;
+			Bungie::Math::RealVector3D Position;
+			Bungie::Math::RealVector3D RightVector;
+			Bungie::Math::RealVector3D UpVector;
 			uint32_t Unknown34;
 			uint32_t Unknown38;
 			VariantProperties Properties;
@@ -749,8 +749,8 @@ namespace Blam
 		uint8_t byte2AC;
 		uint8_t byte2AD[7];
 		uint8_t byte2B4[0x5C];
-		GameVariant GameVariant; // Blam::GameVariant
-		MapVariant MapVariant; // Blam::MapVariant
+		GameVariant GameVariant; // Bungie::GameVariant
+		MapVariant MapVariant; // Bungie::MapVariant
 
 		uint8_t MachineArray[0x128];
 		struct
@@ -760,7 +760,7 @@ namespace Blam
 			uint16_t word2;
 			uint32_t dword4;
 			uint8_t unknown8[0x18];
-			char PlayerProperties[0x1620]; // Blam::Players::PlayerProperties
+			char PlayerProperties[0x1620]; // Bungie::Players::PlayerProperties
 		} InitialParticipantsArray[16];
 
 		int LoadIntoGlobalGameOptions()
@@ -780,7 +780,7 @@ namespace Blam
 		}
 		GameOptions *SetMapType(int val)
 		{
-			MapType = (Blam::MapType)val;
+			MapType = (Bungie::MapType)val;
 
 			return this;
 		}

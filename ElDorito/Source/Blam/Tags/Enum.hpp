@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Blam::Tags
+namespace Bungie::Tags
 {
 	template <typename BaseType, typename EnumType>
 	struct Enum

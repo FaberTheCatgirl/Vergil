@@ -6,7 +6,7 @@
 
 #include "new\objects\object_data.hpp"
 
-namespace blam
+namespace Bungie
 {
 	enum
 	{

@@ -3,7 +3,7 @@
 #include <string>
 #include <bitset>
 #include <memory>
-#include "Blam\BlamNetwork.hpp"
+#include "Bungie\BlamNetwork.hpp"
 
 namespace Server::Chat
 {
@@ -69,7 +69,7 @@ namespace Server::Chat
 	};
 
 	// A std::bitset of peers.
-	typedef std::bitset<Blam::Network::MaxPeers> PeerBitSet;
+	typedef std::bitset<Bungie::Network::MaxPeers> PeerBitSet;
 
 	// Initializes the server chat system.
 	void Initialize();

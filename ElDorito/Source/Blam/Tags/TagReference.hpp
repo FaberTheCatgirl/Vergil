@@ -1,9 +1,9 @@
 #pragma once
 #include <cstdint>
-#include "Blam\Padding.hpp"
-#include "Blam\Tags\Tag.hpp"
+#include "Bungie\Padding.hpp"
+#include "Bungie\Tags\Tag.hpp"
 
-namespace Blam::Tags
+namespace Bungie::Tags
 {
 	struct TagReference
 	{

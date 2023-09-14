@@ -1,10 +1,10 @@
-#include "Blam\Tags\Items\DefinitionEquipment.hpp"
+#include "Bungie\Tags\Items\DefinitionEquipment.hpp"
 #include "Definitions\EnumDefinition.hpp"
 
-using namespace Blam::Tags::Items;
+using namespace Bungie::Tags::Items;
 using namespace Definitions;
 
-namespace Blam::Tags
+namespace Bungie::Tags
 {
 	const StructDefinition CameraTrackStruct =
 	{

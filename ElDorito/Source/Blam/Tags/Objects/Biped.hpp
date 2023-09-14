@@ -1,36 +1,36 @@
 #pragma once
-#include "Blam\Tags\Tags.hpp"
-#include "Blam\Math\Angle.hpp"
-#include "Blam\Math\Bounds.hpp"
-#include "Blam\Math\RealEulerAngles2D.hpp"
-#include "Blam\Math\RealPoint3D.hpp"
-#include "Blam\Math\RealVector2D.hpp"
-#include "Blam\Math\RealVector3D.hpp"
-#include "Blam\Text\StringID.hpp"
-#include "Blam\Tags\Objects\Damage.hpp"
-#include "Blam\Tags\Sounds\Noise.hpp"
-#include "Blam\Tags\Objects\Unit.hpp"
+#include "Bungie\Tags\Tags.hpp"
+#include "Bungie\Math\Angle.hpp"
+#include "Bungie\Math\Bounds.hpp"
+#include "Bungie\Math\RealEulerAngles2D.hpp"
+#include "Bungie\Math\RealPoint3D.hpp"
+#include "Bungie\Math\RealVector2D.hpp"
+#include "Bungie\Math\RealVector3D.hpp"
+#include "Bungie\Text\StringID.hpp"
+#include "Bungie\Tags\Objects\Damage.hpp"
+#include "Bungie\Tags\Sounds\Noise.hpp"
+#include "Bungie\Tags\Objects\Unit.hpp"
 
-namespace Blam
+namespace Bungie
 {
 	namespace Tags
 	{
 		namespace Objects
 		{
-			using Blam::Math::Angle;
-			//using Blam::Math::Bounds;
-			//using Blam::Math::RealEulerAngles2D;
-			//using Blam::Math::RealPoint3D;
-			//using Blam::Math::RealVector2D;
-			//using Blam::Math::RealVector3D;
-			//using Blam::Tags::Tag;
-			//using Blam::Tags::TagBlock;
-			//using Blam::Tags::TagData;
-			//using Blam::Tags::TagGroup;
-			using Blam::Tags::TagReference;
-			//using Blam::Text::StringID;
-			//using Blam::Tags::Objects::DamageReportingType;
-			//using Blam::Tags::Sounds::NoiseLevel;
+			using Bungie::Math::Angle;
+			//using Bungie::Math::Bounds;
+			//using Bungie::Math::RealEulerAngles2D;
+			//using Bungie::Math::RealPoint3D;
+			//using Bungie::Math::RealVector2D;
+			//using Bungie::Math::RealVector3D;
+			//using Bungie::Tags::Tag;
+			//using Bungie::Tags::TagBlock;
+			//using Bungie::Tags::TagData;
+			//using Bungie::Tags::TagGroup;
+			using Bungie::Tags::TagReference;
+			//using Bungie::Text::StringID;
+			//using Bungie::Tags::Objects::DamageReportingType;
+			//using Bungie::Tags::Sounds::NoiseLevel;
 
 			struct Biped : TagGroup<'bipd'>
 			{
@@ -262,7 +262,7 @@ namespace Blam
 					uint32_t Unknown9;
 					uint32_t Unknown10;
 					uint32_t Unknown11;
-					Blam::Math::RealVector3D Translation;
+					Bungie::Math::RealVector3D Translation;
 					float TranslationRadius;
 				};
 
@@ -289,9 +289,9 @@ namespace Blam
 					uint32_t Unknown4;
 					uint32_t Unknown5;
 					uint32_t Unknown6;
-					Blam::Math::RealVector3D Bottom;
+					Bungie::Math::RealVector3D Bottom;
 					float BottomRadius;
-					Blam::Math::RealVector3D Top;
+					Bungie::Math::RealVector3D Top;
 					float TopRadius;
 				};
 
@@ -327,7 +327,7 @@ namespace Blam
 					uint32_t Unknown9;
 					uint32_t Unknown10;
 					uint32_t Unknown11;
-					Blam::Math::RealVector3D Translation;
+					Bungie::Math::RealVector3D Translation;
 					float TranslationRadius;
 				};
 

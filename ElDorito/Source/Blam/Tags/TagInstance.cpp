@@ -1,6 +1,6 @@
-#include "Blam\Tags\TagInstance.hpp"
+#include "Bungie\Tags\TagInstance.hpp"
 
-namespace Blam::Tags
+namespace Bungie::Tags
 {
 	std::unordered_map<int32_t, std::string> TagInstance::TagNames = std::unordered_map<int32_t, std::string>();
 

@@ -1,9 +1,9 @@
 #include "Web\Ui\WebScoreboard.hpp"
 #include "Web\Ui\ScreenLayer.hpp"
-#include "Blam\BlamNetwork.hpp"
-#include "Blam\BlamEvents.hpp"
-#include "Blam\BlamTypes.hpp"
-#include "Blam\Tags\Objects\Damage.hpp"
+#include "Bungie\BlamNetwork.hpp"
+#include "Bungie\BlamEvents.hpp"
+#include "Bungie\BlamTypes.hpp"
+#include "Bungie\Tags\Objects\Damage.hpp"
 #include "Patches\Events.hpp"
 #include "Patches\Scoreboard.hpp"
 #include "Patches\Input.hpp"
@@ -16,16 +16,16 @@
 #include "ElDorito.hpp"
 
 #include <iomanip>
-#include "Blam\BlamObjects.hpp"
-#include "Blam\Tags\Items\DefinitionWeapon.hpp"
-#include "Blam\BlamTime.hpp"
+#include "Bungie\BlamObjects.hpp"
+#include "Bungie\Tags\Items\DefinitionWeapon.hpp"
+#include "Bungie\BlamTime.hpp"
 #include "Modules\ModuleGame.hpp"
 #include "Console.hpp"
 
 #include "new\game\game.hpp"
 
-using namespace Blam::Input;
-using namespace Blam::Events;
+using namespace Bungie::Input;
+using namespace Bungie::Events;
 
 namespace
 {
@@ -46,7 +46,7 @@ namespace
 	const uint32_t postgameDelayTime = 2;
 	uint32_t scoreboardSentTime = 0;
 
-	void OnEvent(Blam::DatumHandle player, const Event *event, const EventDefinition *definition);
+	void OnEvent(Bungie::DatumHandle player, const Event *event, const EventDefinition *definition);
 	void OnGameInputUpdated();
 	void getScoreboardInternal(rapidjson::Writer<rapidjson::StringBuffer>& writer);
 }
@@ -93,7 +93,7 @@ namespace Web::Ui::WebScoreboard
 		static auto previousEngineState = 0;
 		static bool previousHasUnit = false;
 
-		if (!blam::game_is_multiplayer() && !blam::game_is_mainmenu())
+		if (!Bungie::game_is_multiplayer() && !Bungie::game_is_mainmenu())
 			return;
 
 		time_t curTime;
@@ -114,7 +114,7 @@ namespace Web::Ui::WebScoreboard
 			auto timeout = Modules::ModuleServer::Instance().VarReturnToLobbyTimeoutSeconds->ValueInt;
 			if ((curTime - postgameDisplayed) > (timeout + postgameDelayTime))
 			{
-				auto session = Blam::Network::GetActiveSession();
+				auto session = Bungie::Network::GetActiveSession();
 				if (session && session->IsEstablished())
 				{
 					session->Parameters.SetSessionMode(1);
@@ -123,11 +123,11 @@ namespace Web::Ui::WebScoreboard
 			}
 		}
 
-		if (!postgame && !blam::game_is_mainmenu()) {
+		if (!postgame && !Bungie::game_is_mainmenu()) {
 			time_t curTime1;
 			time(&curTime1);
 
-			if (scoreboardShown && Blam::Time::TicksToSeconds(scoreboardSentTime++) > kScoreboardUpdateRateSeconds)
+			if (scoreboardShown && Bungie::Time::TicksToSeconds(scoreboardSentTime++) > kScoreboardUpdateRateSeconds)
 			{
 				scoreboardSentTime = 0;
 				Web::Ui::ScreenLayer::NotifyScreen("scoreboard", "scoreboard", getScoreboard());
@@ -137,7 +137,7 @@ namespace Web::Ui::WebScoreboard
 		auto currentMapLoadingState = *(bool*)0x023917F0;
 		if (previousMapLoadingState && !currentMapLoadingState)
 		{
-			if (blam::game_is_mainmenu())
+			if (Bungie::game_is_mainmenu())
 			{
 				returningToLobby = false;
 				acceptsInput = true;
@@ -152,7 +152,7 @@ namespace Web::Ui::WebScoreboard
 				Web::Ui::WebScoreboard::Show(locked, postgame);
 			}
 		}
-		else if (!previousMapLoadingState && currentMapLoadingState && blam::game_is_mainmenu() && !returningToLobby)
+		else if (!previousMapLoadingState && currentMapLoadingState && Bungie::game_is_mainmenu() && !returningToLobby)
 		{
 			locked = false;
 			postgame = false;
@@ -177,15 +177,15 @@ namespace Web::Ui::WebScoreboard
 		roundInProgress = game_engine_round_in_progress();
 		if (roundInProgress)
 		{
-			Blam::Players::PlayerDatum *player{ nullptr };
-			auto playerIndex = Blam::Players::GetLocalPlayer(0);
-			if (playerIndex == Blam::DatumHandle::Null || !(player = Blam::Players::GetPlayers().Get(playerIndex)))
+			Bungie::Players::PlayerDatum *player{ nullptr };
+			auto playerIndex = Bungie::Players::GetLocalPlayer(0);
+			if (playerIndex == Bungie::DatumHandle::Null || !(player = Bungie::Players::GetPlayers().Get(playerIndex)))
 				return;
 
 			auto secondsUntilSpawn = Pointer(player)(0x2CBC).Read<int>();
 			auto firstTimeSpawning = Pointer(player)(0x4).Read<uint32_t>() & 8;
 
-			if (player->SlaveUnit != Blam::DatumHandle::Null)
+			if (player->SlaveUnit != Bungie::DatumHandle::Null)
 			{
 				spawningSoon = false;
 				pregame = false;
@@ -207,7 +207,7 @@ namespace Web::Ui::WebScoreboard
 				}
 			}
 
-			previousHasUnit = player->SlaveUnit != Blam::DatumHandle::Null;
+			previousHasUnit = player->SlaveUnit != Bungie::DatumHandle::Null;
 		}
 	}
 
@@ -222,11 +222,11 @@ namespace Web::Ui::WebScoreboard
 
 namespace
 {
-	void OnEvent(Blam::DatumHandle player, const Event *event, const EventDefinition *definition)
+	void OnEvent(Bungie::DatumHandle player, const Event *event, const EventDefinition *definition)
 	{
 		if (event->NameStringId == 0x4004D || event->NameStringId == 0x4005A) // "general_event_game_over" / "general_event_round_over"
 		{
-			postgameDisplayed = Blam::Time::GetGameTicks();
+			postgameDisplayed = Bungie::Time::GetGameTicks();
 			time(&postgameDisplayed);
 			postgame = true;
 
@@ -283,7 +283,7 @@ namespace
 
 	bool UnitHasObjective(uint32_t unitObjectIndex)
 	{
-		auto unitObject = (uint8_t*)Blam::Objects::Get(unitObjectIndex);
+		auto unitObject = (uint8_t*)Bungie::Objects::Get(unitObjectIndex);
 		if (!unitObject)
 			return false;
 		auto rightWeaponIndex = *(unitObject + 0x2Ca);
@@ -291,20 +291,20 @@ namespace
 			return false;
 
 		auto weaponObjectIndex = *(uint32_t*)(unitObject + 0x2D0 + 4 * rightWeaponIndex);
-		auto rightWeaponObject = Blam::Objects::Get(weaponObjectIndex);
+		auto rightWeaponObject = Bungie::Objects::Get(weaponObjectIndex);
 		if (!rightWeaponObject)
 			return false;
 
-		auto weap = Blam::Tags::TagInstance(rightWeaponObject->TagIndex).GetDefinition<Blam::Tags::Items::Weapon>();
-		return weap->MultiplayerWeaponType != Blam::Tags::Items::Weapon::MultiplayerType::None;
+		auto weap = Bungie::Tags::TagInstance(rightWeaponObject->TagIndex).GetDefinition<Bungie::Tags::Items::Weapon>();
+		return weap->MultiplayerWeaponType != Bungie::Tags::Items::Weapon::MultiplayerType::None;
 	}
 
 	void getScoreboardInternal(rapidjson::Writer<rapidjson::StringBuffer> &writer)
 	{
 		writer.StartObject();
 
-		auto session = Blam::Network::GetActiveSession();
-		auto get_multiplayer_scoreboard = (Blam::MutiplayerScoreboard*(*)())(0x00550B80);
+		auto session = Bungie::Network::GetActiveSession();
+		auto get_multiplayer_scoreboard = (Bungie::MutiplayerScoreboard*(*)())(0x00550B80);
 		auto* scoreboard = get_multiplayer_scoreboard();
 		if (!session || !session->IsEstablished() || !scoreboard)
 		{
@@ -346,10 +346,10 @@ namespace
 
 		int32_t variantType = Pointer(0x023DAF18).Read<int32_t>();
 
-		if (variantType >= 0 && variantType < Blam::eGameTypeCount)
+		if (variantType >= 0 && variantType < Bungie::eGameTypeCount)
 		{
 			writer.Key("gameType");
-			writer.String(Blam::GameTypeNames[variantType].c_str());
+			writer.String(Bungie::GameTypeNames[variantType].c_str());
 		}
 
 		auto& playersGlobal = ElDorito::GetMainTls(0x40)[0];
@@ -362,15 +362,15 @@ namespace
 		while (playerIdx != -1)
 		{
 			auto player = session->MembershipInfo.PlayerSessions[playerIdx];
-			auto playerStats = Blam::Players::GetStats(playerIdx);
+			auto playerStats = Bungie::Players::GetStats(playerIdx);
 
 			bool isAlive = !roundInProgress;
 			bool hasObjective = false;
-			const auto& playerDatum = Blam::Players::GetPlayers()[playerIdx];
+			const auto& playerDatum = Bungie::Players::GetPlayers()[playerIdx];
 			if (playerDatum.GetSalt())
 			{
 				if (roundInProgress)
-					isAlive = playerDatum.SlaveUnit != Blam::DatumHandle::Null || pregame || postgame;
+					isAlive = playerDatum.SlaveUnit != Bungie::DatumHandle::Null || pregame || postgame;
 
 				if (UnitHasObjective(playerDatum.SlaveUnit))
 				{
@@ -392,10 +392,10 @@ namespace
 			writer.Key("team");
 			writer.Int(player.Properties.TeamIndex);
 			char buff[17];
-			sprintf_s(buff, "#%06X", player.Properties.Customization.Colors[Blam::Players::ColorIndices::Primary]);
+			sprintf_s(buff, "#%06X", player.Properties.Customization.Colors[Bungie::Players::ColorIndices::Primary]);
 			writer.Key("color");
 			writer.String(buff);
-			Blam::Players::FormatUid(buff, player.Properties.Uid);
+			Bungie::Players::FormatUid(buff, player.Properties.Uid);
 			writer.Key("UID");
 			writer.String(buff);
 			writer.Key("isHost");
@@ -431,14 +431,14 @@ namespace
 			writer.Bool(hasObjective);
 
 			//gametype specific stats
-			if (variantType == Blam::eGameTypeCTF || variantType == Blam::eGameTypeAssault || variantType == Blam::eGameTypeOddball)
+			if (variantType == Bungie::eGameTypeCTF || variantType == Bungie::eGameTypeAssault || variantType == Bungie::eGameTypeOddball)
 			{
 				writer.Key("flagKills");
-				writer.Int(playerStats.WeaponStats[Blam::Tags::Objects::DamageReportingType::Flag].Kills);
+				writer.Int(playerStats.WeaponStats[Bungie::Tags::Objects::DamageReportingType::Flag].Kills);
 				writer.Key("ballKills");
-				writer.Int(playerStats.WeaponStats[Blam::Tags::Objects::DamageReportingType::Ball].Kills);
+				writer.Int(playerStats.WeaponStats[Bungie::Tags::Objects::DamageReportingType::Ball].Kills);
 			}
-			else if (variantType == Blam::eGameTypeKOTH)
+			else if (variantType == Bungie::eGameTypeKOTH)
 			{
 				writer.Key("kingsKilled");
 				writer.Int(playerStats.KingsKilled);
@@ -447,7 +447,7 @@ namespace
 				writer.Key("timeControllingHill");
 				writer.Int(playerStats.TimeControllingHill);
 			}
-			else if (variantType == Blam::eGameTypeInfection)
+			else if (variantType == Bungie::eGameTypeInfection)
 			{
 				writer.Key("humansInfected");
 				writer.Int(playerStats.HumansInfected);

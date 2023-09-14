@@ -1,6 +1,6 @@
-#include "Blam\Math\RealPoint3D.hpp"
+#include "Bungie\Math\RealPoint3D.hpp"
 
-namespace Blam::Math
+namespace Bungie::Math
 {
 	RealPoint3D::RealPoint3D()
 		: RealPoint3D(0.0f, 0.0f, 0.0f)

@@ -1,24 +1,24 @@
 #pragma once
 
-#include "Blam\Tags\Sounds\Sound\Sound.hpp"
-#include "Blam\Tags\Sounds\SoundClasses\SoundClasses.hpp"
-#include "Blam\Math\Random.hpp"
+#include "Bungie\Tags\Sounds\Sound\Sound.hpp"
+#include "Bungie\Tags\Sounds\SoundClasses\SoundClasses.hpp"
+#include "Bungie\Math\Random.hpp"
 
 #include <math.h>
 #include <iostream>
 
-#include "Blam\Sounds\SoundCache.hpp"
-#include "Blam\Sounds\SoundGlobals.hpp"
+#include "Bungie\Sounds\SoundCache.hpp"
+#include "Bungie\Sounds\SoundGlobals.hpp"
 
-#include "Blam\FMOD\FMODGlobals.hpp"
-#include "Blam\FMOD\FMODEnum.hpp"
-#include "Blam\FMOD\FMODFunctions.hpp"
+#include "Bungie\FMOD\FMODGlobals.hpp"
+#include "Bungie\FMOD\FMODEnum.hpp"
+#include "Bungie\FMOD\FMODFunctions.hpp"
 
 
-namespace Blam::Sounds
+namespace Bungie::Sounds
 {
-	using namespace Blam::Tags::Sounds;
-	using namespace Blam::SoundCache;
+	using namespace Bungie::Tags::Sounds;
+	using namespace Bungie::SoundCache;
 
 	void* tag_get(uint32_t tagGroup, int16_t tagIndex);
 
@@ -47,7 +47,7 @@ namespace Blam::Sounds
 	void PredictFirstPermutation(int16_t soundTagIndex);
 
 	//0x64BD10
-	FMOD_RESULT SoundCreateFMODSound(Blam::SoundTagDataStruct* data, void* sound, char* a3);
+	FMOD_RESULT SoundCreateFMODSound(Bungie::SoundTagDataStruct* data, void* sound, char* a3);
 
 	//0x51B350
 	int8_t UpdateSound(int32_t soundDatum0x38Index, float volume, int a3);

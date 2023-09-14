@@ -2,7 +2,7 @@
 
 #include <cstdio>
 
-namespace blam
+namespace Bungie
 {
 	string_id_cache::string_id_cache() : string_id_cache_header(),
 		data(nullptr), strings(nullptr)

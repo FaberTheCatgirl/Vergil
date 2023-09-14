@@ -1,8 +1,8 @@
 #pragma once
 #include <cstdint>
-#include "Blam\Padding.hpp"
+#include "Bungie\Padding.hpp"
 
-namespace Blam::Math
+namespace Bungie::Math
 {
 	struct ColorRGB
 	{

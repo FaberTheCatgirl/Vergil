@@ -3,7 +3,7 @@
 #include "new\cseries\integer_math.hpp"
 #include "new\cseries\real_math.hpp"
 
-namespace blam
+namespace Bungie
 {
 #	define try_bool(X) if (!X) return false
 

@@ -1,6 +1,6 @@
 #pragma once
 
-namespace blam
+namespace Bungie
 {
 	enum class game_mode : long
 	{

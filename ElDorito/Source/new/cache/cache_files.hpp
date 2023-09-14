@@ -2,7 +2,7 @@
 
 #include "new\cseries\cseries.hpp"
 
-namespace blam
+namespace Bungie
 {
 	struct string_id_cache_header
 	{

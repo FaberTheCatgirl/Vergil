@@ -108,13 +108,13 @@
  *    packet.
  *
  * ***********************
- * * BLAM NETWORKING 101 *
+ * * Bungie NETWORKING 101 *
  * ***********************
  *
  * === Players vs. Peers ===
  *
  * There is a very important distinction between "players" and "peers" in the
- * Blam engine:
+ * Bungie engine:
  *
  * - A "player" takes up a slot on the roster and represents a client who can
  *   control a biped and participate in the game.
@@ -137,7 +137,7 @@
  * Getting a pointer to the current network session (DO NOT HARDCODE AN
  * ADDRESS):
  * 
- *   auto session = Blam::Network::GetActiveSession();
+ *   auto session = Bungie::Network::GetActiveSession();
  *   if (session)
  *   {
  *       // ...
@@ -174,9 +174,9 @@
  *
  * Getting the index of the peer who sent a packet:
  *
- *   virtual void HandlePacket(Blam::Network::ObserverChannel *sender, const ExamplePacket *packet) override
+ *   virtual void HandlePacket(Bungie::Network::ObserverChannel *sender, const ExamplePacket *packet) override
  *   {
- *       auto session = Blam::Network::GetActiveSession();
+ *       auto session = Bungie::Network::GetActiveSession();
  *       auto senderPeer = session->GetChannelPeer(sender);
  *       if (senderPeer < 0)
  *           return;
@@ -186,8 +186,8 @@
 
 #pragma once
 
-#include "Blam\BitStream.hpp"
-#include "Blam\BlamNetwork.hpp"
+#include "Bungie\BitStream.hpp"
+#include "Bungie\BlamNetwork.hpp"
 
 #include <string>
 #include <cstdint>
@@ -219,13 +219,13 @@ namespace Patches::CustomPackets
 		virtual int GetMaxRawPacketSize() const = 0;
 
 		// Serializes raw packet data to a bitstream.
-		virtual void SerializeRawPacket(Blam::BitStream *stream, int packetSize, const void *packet) = 0;
+		virtual void SerializeRawPacket(Bungie::BitStream *stream, int packetSize, const void *packet) = 0;
 
 		// Deserializes raw packet data from a bitstream.
-		virtual bool DeserializeRawPacket(Blam::BitStream *stream, int packetSize, void *packet) = 0;
+		virtual bool DeserializeRawPacket(Bungie::BitStream *stream, int packetSize, void *packet) = 0;
 
 		// Called whenever raw packet data is received.
-		virtual void HandleRawPacket(Blam::Network::ObserverChannel *sender, const void *packet) = 0;
+		virtual void HandleRawPacket(Bungie::Network::ObserverChannel *sender, const void *packet) = 0;
 	};
 
 	// Base struct for custom packets.
@@ -237,7 +237,7 @@ namespace Patches::CustomPackets
 		}
 
 		// The packet's header (initialized automatically).
-		Blam::Network::PacketHeader Header;
+		Bungie::Network::PacketHeader Header;
 
 		// The GUID of the packet's type.
 		PacketGuid TypeGuid;
@@ -342,9 +342,9 @@ namespace Patches::CustomPackets
 	class PacketHandler : public RawPacketHandler
 	{
 	public:
-		virtual void Serialize(Blam::BitStream *stream, const TData *data) = 0;
-		virtual bool Deserialize(Blam::BitStream *stream, TData *data) = 0;
-		virtual void HandlePacket(Blam::Network::ObserverChannel *sender, const Packet<TData> *packet) = 0;
+		virtual void Serialize(Bungie::BitStream *stream, const TData *data) = 0;
+		virtual bool Deserialize(Bungie::BitStream *stream, TData *data) = 0;
+		virtual void HandlePacket(Bungie::Network::ObserverChannel *sender, const Packet<TData> *packet) = 0;
 
 		int GetMinRawPacketSize() const override
 		{
@@ -356,7 +356,7 @@ namespace Patches::CustomPackets
 			return static_cast<int>(sizeof(Packet<TData>));
 		}
 
-		void SerializeRawPacket(Blam::BitStream *stream, int packetSize, const void *packet) override
+		void SerializeRawPacket(Bungie::BitStream *stream, int packetSize, const void *packet) override
 		{
 			// Verify the packet size and typecast to the type-safe packet data
 			if (packetSize != sizeof(Packet<TData>))
@@ -365,7 +365,7 @@ namespace Patches::CustomPackets
 			Serialize(stream, &fullPacket->Data);
 		}
 
-		bool DeserializeRawPacket(Blam::BitStream *stream, int packetSize, void *packet) override
+		bool DeserializeRawPacket(Bungie::BitStream *stream, int packetSize, void *packet) override
 		{
 			// Verify the packet size and typecast to the type-safe packet data
 			if (packetSize != sizeof(Packet<TData>))
@@ -374,7 +374,7 @@ namespace Patches::CustomPackets
 			return Deserialize(stream, &fullPacket->Data);
 		}
 
-		void HandleRawPacket(Blam::Network::ObserverChannel *sender, const void *packet) override
+		void HandleRawPacket(Bungie::Network::ObserverChannel *sender, const void *packet) override
 		{
 			HandlePacket(sender, static_cast<const Packet<TData>*>(packet));
 		}
@@ -404,13 +404,13 @@ namespace Patches::CustomPackets
 		}
 
 		// Serializes packet data to a bitstream.
-		virtual void Serialize(Blam::BitStream *stream, const TData *data, int extraDataCount, const TExtraData *extraData) = 0;
+		virtual void Serialize(Bungie::BitStream *stream, const TData *data, int extraDataCount, const TExtraData *extraData) = 0;
 
 		// Deserializes packet data from a bitstream.
-		virtual bool Deserialize(Blam::BitStream *stream, TData *data, int extraDataCount, TExtraData *extraData) = 0;
+		virtual bool Deserialize(Bungie::BitStream *stream, TData *data, int extraDataCount, TExtraData *extraData) = 0;
 
 		// Called when a packet is received.
-		virtual void HandlePacket(Blam::Network::ObserverChannel *sender, const VariadicPacket<TData, TExtraData> *packet) = 0;
+		virtual void HandlePacket(Bungie::Network::ObserverChannel *sender, const VariadicPacket<TData, TExtraData> *packet) = 0;
 
 		int GetMinRawPacketSize() const override
 		{
@@ -422,7 +422,7 @@ namespace Patches::CustomPackets
 			return maxPacketSize;
 		}
 
-		void SerializeRawPacket(Blam::BitStream *stream, int packetSize, const void *packet) override
+		void SerializeRawPacket(Bungie::BitStream *stream, int packetSize, const void *packet) override
 		{
 			// Verify the packet size and typecast to the type-safe packet data
 			if (packetSize < minPacketSize || packetSize > maxPacketSize)
@@ -438,7 +438,7 @@ namespace Patches::CustomPackets
 			Serialize(stream, &fullPacket->Data, fullPacket->GetExtraDataCount(), fullPacket->ExtraData);
 		}
 
-		bool DeserializeRawPacket(Blam::BitStream *stream, int packetSize, void *packet) override
+		bool DeserializeRawPacket(Bungie::BitStream *stream, int packetSize, void *packet) override
 		{
 			// Verify the packet size
 			if (packetSize < minPacketSize || packetSize > maxPacketSize)
@@ -457,7 +457,7 @@ namespace Patches::CustomPackets
 			return Deserialize(stream, &fullPacket->Data, extraDataCount, fullPacket->ExtraData);
 		}
 
-		void HandleRawPacket(Blam::Network::ObserverChannel *sender, const void *packet) override
+		void HandleRawPacket(Bungie::Network::ObserverChannel *sender, const void *packet) override
 		{
 			HandlePacket(sender, static_cast<const TPacket*>(packet));
 		}

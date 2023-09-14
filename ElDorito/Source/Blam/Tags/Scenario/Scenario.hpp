@@ -1,18 +1,18 @@
 #pragma once
 #include <cstdint>
-#include "Blam\Tags\Tags.hpp"
-#include "Blam\Text\StringID.hpp"
+#include "Bungie\Tags\Tags.hpp"
+#include "Bungie\Text\StringID.hpp"
 #include "Pointer.hpp"
-#include "Blam\Math\RealEulerAngles2D.hpp"
-#include "Blam\Math\RealPoint3D.hpp"
+#include "Bungie\Math\RealEulerAngles2D.hpp"
+#include "Bungie\Math\RealPoint3D.hpp"
 
-namespace Blam::Tags::Scenario
+namespace Bungie::Tags::Scenario
 {
-	using Blam::Tags::TagBlock;
-	using Blam::Tags::TagData;
-	using Blam::Tags::TagGroup;
-	using Blam::Tags::TagReference;
-	using Blam::Text::StringID;
+	using Bungie::Tags::TagBlock;
+	using Bungie::Tags::TagData;
+	using Bungie::Tags::TagGroup;
+	using Bungie::Tags::TagReference;
+	using Bungie::Text::StringID;
 
 	struct Scenario;
 

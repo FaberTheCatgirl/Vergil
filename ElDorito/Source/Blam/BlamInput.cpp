@@ -1,12 +1,12 @@
 #define _CRT_SECURE_NO_WARNINGS
 
-#include "Blam\BlamInput.hpp"
+#include "Bungie\BlamInput.hpp"
 
 #include <cwchar>
 #include <cstring>
 #include "Utils\Macros.hpp"
 
-namespace Blam::Input
+namespace Bungie::Input
 {
 	uint8_t GetKeyTicks(KeyCode key, InputType type)
 	{

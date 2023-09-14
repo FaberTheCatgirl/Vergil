@@ -2,7 +2,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
-namespace blam
+namespace Bungie
 {
 	//
 	// TODO: Move these to more appropriate places?

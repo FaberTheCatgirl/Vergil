@@ -1,6 +1,6 @@
-#include "Blam\BitStream.hpp"
+#include "Bungie\BitStream.hpp"
 
-namespace Blam
+namespace Bungie
 {
 	bool BitStream::ReadBit()
 	{

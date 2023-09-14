@@ -2,7 +2,7 @@
 #include <algorithm>
 #include <sstream>
 #include "ElDorito.hpp"
-#include "Blam\BlamNetwork.hpp"
+#include "Bungie\BlamNetwork.hpp"
 
 
 namespace Modules
@@ -139,7 +139,7 @@ namespace Modules
 		// Host-only commands
 		if (cmd->Flags & eCommandFlagsCheat || cmd->Flags & eCommandFlagsHostOnly)
 		{
-			auto session = Blam::Network::GetActiveSession();
+			auto session = Bungie::Network::GetActiveSession();
 			if (session && session->IsEstablished() && !session->IsHost())
 			{
 				*output = "Only a player hosting a game can use this command";

@@ -3,7 +3,7 @@
 #include "new\cseries\cseries.hpp"
 #include "new\cseries\integer_math.hpp"
 
-namespace blam
+namespace Bungie
 {
 	enum player_color_type : long
 	{

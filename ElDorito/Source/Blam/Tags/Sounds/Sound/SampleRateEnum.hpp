@@ -1,7 +1,7 @@
 #pragma once
-#include "Blam\Tags\Tags.hpp"
+#include "Bungie\Tags\Tags.hpp"
 
-namespace Blam::Tags::Sounds
+namespace Bungie::Tags::Sounds
 {
 	enum class SampleRate : int8_t {
 		_22050Hz,

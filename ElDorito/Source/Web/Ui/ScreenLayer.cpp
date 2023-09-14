@@ -4,8 +4,8 @@
 #include "Modules\ModuleServer.hpp"
 #include "Patches\Input.hpp"
 #include "Patches\Core.hpp"
-#include "Blam\BlamInput.hpp"
-#include "Blam\BlamTime.hpp"
+#include "Bungie\BlamInput.hpp"
+#include "Bungie\BlamTime.hpp"
 #include "Patches\Ui.hpp"
 #include "ElDorito.hpp"
 #include <Windows.h>
@@ -16,7 +16,7 @@
 #include "Modules\ModuleSettings.hpp"
 #include "Modules\ModuleInput.hpp"
 
-using namespace Blam::Input;
+using namespace Bungie::Input;
 using namespace Anvil::Client::Rendering;
 
 namespace
@@ -538,9 +538,9 @@ namespace
 
 		writer.StartObject();
 		writer.Key("gameTicks");
-		writer.Double(Blam::Time::GetGameTicks());
+		writer.Double(Bungie::Time::GetGameTicks());
 		writer.Key("secondsPerTick");
-		writer.Double(Blam::Time::GetSecondsPerTick());
+		writer.Double(Bungie::Time::GetSecondsPerTick());
 		writer.Key("AxisLeftX");
 		writer.Double(controllerAxes.LeftX / 32768.0f);
 		writer.Key("AxisLeftY");
@@ -606,7 +606,7 @@ namespace
 	{
 		if (lastVariableUpdates.size() < 1)
 			return;
-		if (Blam::Time::TicksToSeconds(lastVariableUpdateTicks++) < kVariableUpdateNotifyDebounceSeconds)
+		if (Bungie::Time::TicksToSeconds(lastVariableUpdateTicks++) < kVariableUpdateNotifyDebounceSeconds)
 			return;
 
 		lastVariableUpdateTicks = 0;

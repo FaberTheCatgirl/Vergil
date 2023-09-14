@@ -1,10 +1,10 @@
-#include "Blam\Tags\Objects\Unit.hpp"
+#include "Bungie\Tags\Objects\Unit.hpp"
 #include "Definitions\EnumDefinition.hpp"
 
-using namespace Blam::Tags::Objects;
+using namespace Bungie::Tags::Objects;
 using namespace Definitions;
 
-namespace Blam::Tags
+namespace Bungie::Tags
 {
 	const EnumDefinition MetagamePropertiesUnitValuesEnum =
 	{

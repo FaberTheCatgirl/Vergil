@@ -2,7 +2,7 @@
 
 #include "Modules\ModuleBase.hpp"
 #include "Patch.hpp"
-#include "Blam\BlamTypes.hpp"
+#include "Bungie\BlamTypes.hpp"
 #include <unordered_map>
 
 namespace Modules

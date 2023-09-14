@@ -1,11 +1,11 @@
 #pragma once
 
 #include <cstdint>
-#include "Blam\BlamTypes.hpp"
-#include "Blam\BlamPlayers.hpp"
-#include "Blam\BitStream.hpp"
+#include "Bungie\BlamTypes.hpp"
+#include "Bungie\BlamPlayers.hpp"
+#include "Bungie\BitStream.hpp"
 
-namespace Blam::Network
+namespace Bungie::Network
 {
 	// The maximum number of peers in a network session.
 	const int MaxPeers = 17;

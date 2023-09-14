@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-namespace Blam
+namespace Bungie
 {
 	struct DatumHandle
 	{

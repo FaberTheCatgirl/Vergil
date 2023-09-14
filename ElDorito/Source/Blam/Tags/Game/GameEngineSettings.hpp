@@ -1,28 +1,28 @@
 #pragma once
-#include "Blam\Padding.hpp"
-#include "Blam\Tags\Tags.hpp"
-#include "Blam\Text\StringID.hpp"
-#include "Blam\Tags\Game\TraitsProfile.hpp"
-#include "Blam\Tags\Game\GameVariant.hpp"
-#include "Blam\Tags\Game\SlayerVariant.hpp"
-#include "Blam\Tags\Game\OddballVariant.hpp"
-#include "Blam\Tags\Game\CTFVariant.hpp"
-#include "Blam\Tags\Game\AssaultVariant.hpp"
-#include "Blam\Tags\Game\InfectionVariant.hpp"
-#include "Blam\Tags\Game\KOTHVariant.hpp"
-#include "Blam\Tags\Game\TerritoriesVariant.hpp"
-#include "Blam\Tags\Game\JuggernautVariant.hpp"
-#include "Blam\Tags\Game\VIPVariant.hpp"
-#include "Blam\Tags\Game\SandboxVariant.hpp"
+#include "Bungie\Padding.hpp"
+#include "Bungie\Tags\Tags.hpp"
+#include "Bungie\Text\StringID.hpp"
+#include "Bungie\Tags\Game\TraitsProfile.hpp"
+#include "Bungie\Tags\Game\GameVariant.hpp"
+#include "Bungie\Tags\Game\SlayerVariant.hpp"
+#include "Bungie\Tags\Game\OddballVariant.hpp"
+#include "Bungie\Tags\Game\CTFVariant.hpp"
+#include "Bungie\Tags\Game\AssaultVariant.hpp"
+#include "Bungie\Tags\Game\InfectionVariant.hpp"
+#include "Bungie\Tags\Game\KOTHVariant.hpp"
+#include "Bungie\Tags\Game\TerritoriesVariant.hpp"
+#include "Bungie\Tags\Game\JuggernautVariant.hpp"
+#include "Bungie\Tags\Game\VIPVariant.hpp"
+#include "Bungie\Tags\Game\SandboxVariant.hpp"
 
-namespace Blam::Tags::Game
+namespace Bungie::Tags::Game
 {
-	using Blam::Tags::Tag;
-	using Blam::Tags::TagBlock;
-	using Blam::Tags::TagData;
-	using Blam::Tags::TagGroup;
-	using Blam::Tags::TagReference;
-	using Blam::Text::StringID;
+	using Bungie::Tags::Tag;
+	using Bungie::Tags::TagBlock;
+	using Bungie::Tags::TagData;
+	using Bungie::Tags::TagGroup;
+	using Bungie::Tags::TagReference;
+	using Bungie::Text::StringID;
 
 	struct GameEngineSettingsDefinition : TagGroup<'wezr'>
 	{

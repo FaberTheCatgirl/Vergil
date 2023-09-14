@@ -1,6 +1,6 @@
-#include "Blam\Sounds\SoundGlobals.hpp"
+#include "Bungie\Sounds\SoundGlobals.hpp"
 
-namespace Blam {
+namespace Bungie {
 
 	DataArray<XboxSoundDatum>** xboxSounds = reinterpret_cast<DataArray<XboxSoundDatum>**>(0x02497CF8);
 	DataArray<SoundPlaybackControllerDatum>** soundPlaybackControllers = reinterpret_cast<DataArray<SoundPlaybackControllerDatum>**>(0x02497D3C);

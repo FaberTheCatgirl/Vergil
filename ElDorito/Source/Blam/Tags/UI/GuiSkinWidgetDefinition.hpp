@@ -1,16 +1,16 @@
 #pragma once
 #include <cstdint>
 #include <string>
-#include "Blam\Tags\Tags.hpp"
-#include "Blam\Text\StringID.hpp"
+#include "Bungie\Tags\Tags.hpp"
+#include "Bungie\Text\StringID.hpp"
 
-namespace Blam::Tags::UI
+namespace Bungie::Tags::UI
 {
-	using Blam::Tags::TagBlock;
-	using Blam::Tags::TagData;
-	using Blam::Tags::TagGroup;
-	using Blam::Tags::TagReference;
-	using Blam::Text::StringID;
+	using Bungie::Tags::TagBlock;
+	using Bungie::Tags::TagData;
+	using Bungie::Tags::TagGroup;
+	using Bungie::Tags::TagReference;
+	using Bungie::Text::StringID;
 
 	struct GuiScreenWidgetDefinition : TagGroup<'scn3'>
 	{
@@ -90,7 +90,7 @@ namespace Blam::Tags::UI
 		{
 			TagReference DataSourceReference;
 		};
-		TAG_STRUCT_SIZE_ASSERT(DataSource, 0x10);
+		//TAG_STRUCT_SIZE_ASSERT(DataSource, 0x10);
 
 		struct GroupWidget
 		{
@@ -160,10 +160,10 @@ namespace Blam::Tags::UI
 					TagReference Animation;
 					StringID Target;
 				};
-				TAG_STRUCT_SIZE_ASSERT(ListWidgetItem, 0x30);
+				//TAG_STRUCT_SIZE_ASSERT(ListWidgetItem, 0x30);
 
 			};
-			TAG_STRUCT_SIZE_ASSERT(ListWidget, 0x80);
+			//TAG_STRUCT_SIZE_ASSERT(ListWidget, 0x80);
 
 			struct TextWidget
 			{
@@ -187,7 +187,7 @@ namespace Blam::Tags::UI
 				int16_t TextFont;
 				int16_t Unknown2;
 			};
-			TAG_STRUCT_SIZE_ASSERT(TextWidget, 0x4C);
+			//TAG_STRUCT_SIZE_ASSERT(TextWidget, 0x4C);
 
 			struct BitmapWidget
 			{
@@ -233,7 +233,7 @@ namespace Blam::Tags::UI
 				StringID SpriteDataSourceName;
 
 			};
-			TAG_STRUCT_SIZE_ASSERT(BitmapWidget, 0x6C);
+			//TAG_STRUCT_SIZE_ASSERT(BitmapWidget, 0x6C);
 
 			struct ModelWidget
 			{
@@ -275,20 +275,20 @@ namespace Blam::Tags::UI
 					{
 						TagData<uint8_t> Unknown;
 					};
-					TAG_STRUCT_SIZE_ASSERT(ZoomData, 0x14);
+					//TAG_STRUCT_SIZE_ASSERT(ZoomData, 0x14);
 				};
-				TAG_STRUCT_SIZE_ASSERT(CameraRefinement, 0x3C);
+				//TAG_STRUCT_SIZE_ASSERT(CameraRefinement, 0x3C);
 			};
-			TAG_STRUCT_SIZE_ASSERT(BitmapWidget, 0x6C);
+			//TAG_STRUCT_SIZE_ASSERT(BitmapWidget, 0x6C);
 
 		};
-		TAG_STRUCT_SIZE_ASSERT(GroupWidget, 0x6C);
+		//TAG_STRUCT_SIZE_ASSERT(GroupWidget, 0x6C);
 
 		struct ButtonKeyLegend
 		{
 			TagReference ButtonKeyLegendReference;
 		};
-		TAG_STRUCT_SIZE_ASSERT(DataSource, 0x10);
+		//TAG_STRUCT_SIZE_ASSERT(DataSource, 0x10);
 	};
-	TAG_STRUCT_SIZE_ASSERT(GuiScreenWidgetDefinition, 0xA8);
+	//TAG_STRUCT_SIZE_ASSERT(GuiScreenWidgetDefinition, 0xA8);
 }

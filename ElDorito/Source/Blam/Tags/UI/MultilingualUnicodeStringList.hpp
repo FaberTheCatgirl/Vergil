@@ -1,14 +1,14 @@
 #pragma once
 #include <cstdint>
-#include "Blam\Tags\Tags.hpp"
-#include "Blam\Text\StringID.hpp"
+#include "Bungie\Tags\Tags.hpp"
+#include "Bungie\Text\StringID.hpp"
 
-namespace Blam::Tags::UI
+namespace Bungie::Tags::UI
 {
-	using Blam::Tags::TagBlock;
-	using Blam::Tags::TagData;
-	using Blam::Tags::TagGroup;
-	using Blam::Text::StringID;
+	using Bungie::Tags::TagBlock;
+	using Bungie::Tags::TagData;
+	using Bungie::Tags::TagGroup;
+	using Bungie::Text::StringID;
 
 	struct MultilingualUnicodeStringList : TagGroup<'unic'>
 	{

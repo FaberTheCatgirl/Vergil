@@ -1,17 +1,17 @@
 #include "Patches\Equipment.hpp"
 #include "Pointer.hpp"
-#include "Blam\BlamTypes.hpp"
-#include "Blam\BlamPlayers.hpp"
-#include "Blam\BlamData.hpp"
-#include "Blam\BlamObjects.hpp"
-#include "Blam\BlamTime.hpp"
-#include "Blam\Math\RealVector3D.hpp"
-#include "Blam\Tags\TagBlock.hpp"
-#include "Blam\Tags\TagInstance.hpp"
-#include "Blam\Tags\Items\Item.hpp"
-#include "Blam\Tags\Game\MultiplayerGlobals.hpp"
-#include "Blam\Tags\Items\DefinitionEquipment.hpp"
-#include "Blam\Memory\TlsData.hpp"
+#include "Bungie\BlamTypes.hpp"
+#include "Bungie\BlamPlayers.hpp"
+#include "Bungie\BlamData.hpp"
+#include "Bungie\BlamObjects.hpp"
+#include "Bungie\BlamTime.hpp"
+#include "Bungie\Math\RealVector3D.hpp"
+#include "Bungie\Tags\TagBlock.hpp"
+#include "Bungie\Tags\TagInstance.hpp"
+#include "Bungie\Tags\Items\Item.hpp"
+#include "Bungie\Tags\Game\MultiplayerGlobals.hpp"
+#include "Bungie\Tags\Items\DefinitionEquipment.hpp"
+#include "Bungie\Memory\TlsData.hpp"
 #include "ElDorito.hpp"
 #include "Patch.hpp"
 #include <cstdint>
@@ -23,11 +23,11 @@ namespace
 	void EquipmentPickupHook();
 	void EquipmentActionStateHook();
 	char __cdecl Unit_EquipmentDetachHook(uint32_t unitObjectIndex, uint32_t equipmentObjectIndex, int a3);
-	void* __cdecl Player_GetArmorAbilitiesCHUDHook(Blam::Players::PlayerDatum* playerDatum);
+	void* __cdecl Player_GetArmorAbilitiesCHUDHook(Bungie::Players::PlayerDatum* playerDatum);
 	bool __cdecl UnitUpdateHook(uint32_t unitObjectIndex);
 	void __cdecl EquipmentUseHook(int unitObjectIndex, int slotIndex, unsigned int isClient);
 	void __cdecl UnitDeathHook(int unitObjectIndex, int a2, int a3);
-	void __cdecl PickupHealthpackHook(int playerIndex, Blam::DatumHandle eqipHandle);
+	void __cdecl PickupHealthpackHook(int playerIndex, Bungie::DatumHandle eqipHandle);
 	void DespawnEquipmentHook();
 	void OvershieldDecayHook();
 	void VisionEndHook();
@@ -99,12 +99,12 @@ namespace
 	const auto sub_B87DA0 = (float(*)(int equipmentObjectIndex))(0xB87DA0);
 	const auto IsClient = (bool(*)())(0x00531D70);
 
-	using namespace Blam::Math;
+	using namespace Bungie::Math;
 
-	bool pickup_is_invalid(Blam::Objects::ObjectBase* unitObject, Blam::Objects::ObjectBase* eqipObject)
+	bool pickup_is_invalid(Bungie::Objects::ObjectBase* unitObject, Bungie::Objects::ObjectBase* eqipObject)
 	{
-		using Blam::Tags::Objects::Object;
-		using Blam::Tags::TagInstance;
+		using Bungie::Tags::Objects::Object;
+		using Bungie::Tags::TagInstance;
 
 		auto unitTag = TagInstance(unitObject->TagIndex).GetDefinition<Object>();;
 		bool is_reviving_equipment = false;
@@ -163,14 +163,14 @@ namespace
 
 		if (playerIndex == -1)
 			return;
-		auto playerDatum = Blam::Players::GetPlayers().Get(playerIndex);
+		auto playerDatum = Bungie::Players::GetPlayers().Get(playerIndex);
 		if (!playerDatum)
 			return;
-		auto unitObject = Blam::Objects::Get(playerDatum->SlaveUnit);
+		auto unitObject = Bungie::Objects::Get(playerDatum->SlaveUnit);
 		if (!unitObject)
 			return;
 
-		auto equipmentObject = Blam::Objects::Get(objectIndex);
+		auto equipmentObject = Bungie::Objects::Get(objectIndex);
 		if (!equipmentObject)
 			return;
 
@@ -201,7 +201,7 @@ namespace
 
 	void __stdcall CleanupEquipment(uint32_t unitObjectIndex, int equipmentSlotIndex)
 	{
-		auto unitObject = Blam::Objects::Get(unitObjectIndex);
+		auto unitObject = Bungie::Objects::Get(unitObjectIndex);
 		if (!unitObject)
 			return;
 
@@ -230,7 +230,7 @@ namespace
 
 		auto ret = UnitUpdate(unitObjectIndex);
 
-		auto unitObject = Blam::Objects::Get(unitObjectIndex);
+		auto unitObject = Bungie::Objects::Get(unitObjectIndex);
 		if (!unitObject)
 			return ret;
 
@@ -251,7 +251,7 @@ namespace
 	{
 		const auto EquipmentUse = (void(__cdecl*)(int unitObjectIndex, int slotIndex, unsigned int isClient))(0x00B4CE90);
 
-		auto unitObject = Blam::Objects::Get(unitObjectIndex);
+		auto unitObject = Bungie::Objects::Get(unitObjectIndex);
 		if (!unitObject)
 			return;
 
@@ -268,10 +268,10 @@ namespace
 	void __cdecl UpdateEquipmentActionState(uint32_t playerIndex, uint32_t itemObjectIndex, uint32_t objectType, void* pControlGlobalActionState)
 	{
 
-		auto itemObject = Blam::Objects::Get(itemObjectIndex);
+		auto itemObject = Bungie::Objects::Get(itemObjectIndex);
 		if (!itemObject)
 			return;
-		auto player = Blam::Players::GetPlayers().Get(playerIndex);
+		auto player = Bungie::Players::GetPlayers().Get(playerIndex);
 		if (!player)
 			return;
 
@@ -285,7 +285,7 @@ namespace
 		if (unitObjectIndex == -1)
 			return;
 
-		auto unitObject = Blam::Objects::Get(unitObjectIndex);
+		auto unitObject = Bungie::Objects::Get(unitObjectIndex);
 
 		auto unitRadius = Pointer(unitObject)(0x2c).Read<float>();
 		auto testRadius = unitRadius + 0.1f;
@@ -298,7 +298,7 @@ namespace
 		if (primaryEquipmentObjectIndex == -1)
 			return;
 
-		auto primaryEquipmentObject = Blam::Objects::Get(primaryEquipmentObjectIndex);
+		auto primaryEquipmentObject = Bungie::Objects::Get(primaryEquipmentObjectIndex);
 		if (!primaryEquipmentObject)
 			return;
 
@@ -309,7 +309,7 @@ namespace
 		if (primaryEquipmentObject->TagIndex == itemObject->TagIndex)
 			return;
 
-		auto itemDef = Blam::Tags::TagInstance(itemObject->TagIndex).GetDefinition<Blam::Tags::Items::Item>();
+		auto itemDef = Bungie::Tags::TagInstance(itemObject->TagIndex).GetDefinition<Bungie::Tags::Items::Item>();
 		if (itemDef->SwapMessage == -1)
 			return;
 
@@ -358,7 +358,7 @@ namespace
 		if (mulgTagIndex == -1)
 			return 0;
 
-		auto mulgDefinition = Blam::Tags::TagInstance(mulgTagIndex).GetDefinition<Blam::Tags::Game::MultiplayerGlobals>();
+		auto mulgDefinition = Bungie::Tags::TagInstance(mulgTagIndex).GetDefinition<Bungie::Tags::Game::MultiplayerGlobals>();
 		if (!mulgDefinition)
 			return 0;
 
@@ -382,12 +382,12 @@ namespace
 	}
 
 
-	void* __cdecl Player_GetArmorAbilitiesCHUDHook(Blam::Players::PlayerDatum* playerDatum)
+	void* __cdecl Player_GetArmorAbilitiesCHUDHook(Bungie::Players::PlayerDatum* playerDatum)
 	{
 		static uint8_t data[8];
 		memset(data, 0, sizeof(data));
 
-		auto unitObject = Blam::Objects::Get(playerDatum->SlaveUnit);
+		auto unitObject = Bungie::Objects::Get(playerDatum->SlaveUnit);
 		if (!unitObject)
 			return data;
 
@@ -396,7 +396,7 @@ namespace
 		if (primaryEquipmentObjectIndex == -1)
 			return data;
 
-		auto itemObject = Blam::Objects::Get(primaryEquipmentObjectIndex);
+		auto itemObject = Bungie::Objects::Get(primaryEquipmentObjectIndex);
 		if (!itemObject)
 			return data;
 
@@ -472,7 +472,7 @@ namespace
 
 	void __cdecl UnitDeathHook(int unitObjectIndex, int a2, int a3)
 	{
-		using namespace Blam::Tags;
+		using namespace Bungie::Tags;
 
 		struct GrenadeBlock
 		{
@@ -495,9 +495,9 @@ namespace
 		if (IsClient())
 			return;
 
-		auto objects = Blam::Objects::GetObjects();
+		auto objects = Bungie::Objects::GetObjects();
 		auto unitObjectDatum = objects.Get(unitObjectIndex);
-		if (!unitObjectDatum || !unitObjectDatum->Data || unitObjectDatum->Type != Blam::Objects::eObjectTypeBiped)
+		if (!unitObjectDatum || !unitObjectDatum->Data || unitObjectDatum->Type != Bungie::Objects::eObjectTypeBiped)
 			return;
 
 		auto unitObjectPtr = Pointer(unitObjectDatum->Data);
@@ -532,10 +532,10 @@ namespace
 				Pointer(objectData)(0x1c).WriteFast(unitPosition);
 
 				auto grenadeObjectIndex = Objects_SpawnObject(objectData);
-				uint8_t *grenadeObject = (uint8_t*)Blam::Objects::Get(grenadeObjectIndex);
+				uint8_t *grenadeObject = (uint8_t*)Bungie::Objects::Get(grenadeObjectIndex);
 				if (grenadeObject)
 				{
-					*(uint32_t*)(grenadeObject + 0x180) = Blam::Time::GetGameTicks();
+					*(uint32_t*)(grenadeObject + 0x180) = Bungie::Time::GetGameTicks();
 					*(uint8_t*)(grenadeObject + 0x178) &= 0xFDu;
 					*(uint8_t*)(grenadeObject + 0x179) = 0;
 					*(uint32_t*)(grenadeObject + 0x184) = -1;
@@ -549,22 +549,22 @@ namespace
 		}
 	}
 
-	void __cdecl PickupHealthpackHook(int playerIndex, Blam::DatumHandle eqipHandle)
+	void __cdecl PickupHealthpackHook(int playerIndex, Bungie::DatumHandle eqipHandle)
 	{
-		using Blam::Tags::Items::Equipment;
-		using Blam::Tags::Objects::Object;
-		using Blam::Tags::TagInstance;
+		using Bungie::Tags::Items::Equipment;
+		using Bungie::Tags::Objects::Object;
+		using Bungie::Tags::TagInstance;
 
 		static auto PlaySnd = (void(*)(uint32_t sndTagIndex, float volume))(0x5DE300);
-		const auto sub_B86C20 = (char(_cdecl*)(Blam::DatumHandle eqipHandle, Blam::DatumHandle unitHandle, char isClient))(0xB86C20);
+		const auto sub_B86C20 = (char(_cdecl*)(Bungie::DatumHandle eqipHandle, Bungie::DatumHandle unitHandle, char isClient))(0xB86C20);
 
-		auto eqipObject = Blam::Objects::Get(eqipHandle);
+		auto eqipObject = Bungie::Objects::Get(eqipHandle);
 		auto eqipTag = TagInstance(eqipObject->TagIndex).GetDefinition<Equipment>();;
 
 		if (eqipTag->HealthPack.Count > 0)
 		{
-			auto playerDatum = Blam::Players::GetPlayers().Get(playerIndex);
-			auto unitObject = Blam::Objects::Get(playerDatum->SlaveUnit);
+			auto playerDatum = Bungie::Players::GetPlayers().Get(playerIndex);
+			auto unitObject = Bungie::Objects::Get(playerDatum->SlaveUnit);
 			if (!playerDatum || !unitObject || !eqipTag->AtlasHealthPack)
 				return;
 
@@ -603,7 +603,7 @@ namespace
 		else
 		{
 			// multiplayer powerups
-			const auto powerup_sub_5408E0 = (void(__cdecl*)(int playerIndex, Blam::DatumHandle eqipDatumHandle))(0x5408E0);
+			const auto powerup_sub_5408E0 = (void(__cdecl*)(int playerIndex, Bungie::DatumHandle eqipDatumHandle))(0x5408E0);
 			powerup_sub_5408E0(playerIndex, eqipHandle);
 		}
 	}
@@ -615,11 +615,11 @@ namespace
 
 		const auto DECAY_RATE = 0.025f;
 
-		auto unitObject = (uint8_t*)Blam::Objects::Get(unitObjectIndex);
+		auto unitObject = (uint8_t*)Bungie::Objects::Get(unitObjectIndex);
 		if (!unitObject)
 			return;
 
-		*(float*)(unitObject + 0x100) -= DECAY_RATE * Blam::Time::GetSecondsPerTick();
+		*(float*)(unitObject + 0x100) -= DECAY_RATE * Bungie::Time::GetSecondsPerTick();
 
 		// simulation
 		uint8_t unknown[0x8] = { 0 };
@@ -641,7 +641,7 @@ namespace
 
 	void VisionEnd(uint32_t unitObjectIndex, uint32_t visionScreenEffectTagIndex)
 	{
-		auto screenEffects = Blam::Memory::GetTlsData()->rasterizer_screen_effects;
+		auto screenEffects = Bungie::Memory::GetTlsData()->rasterizer_screen_effects;
 		for (auto it = screenEffects->begin(); it != screenEffects->end(); ++it)
 		{
 			if (it->object_index == unitObjectIndex && it->tag_index == visionScreenEffectTagIndex)

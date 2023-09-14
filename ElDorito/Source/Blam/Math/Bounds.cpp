@@ -1,6 +1,6 @@
-#include "Blam\Math\Bounds.hpp"
+#include "Bungie\Math\Bounds.hpp"
 
-namespace Blam::Math
+namespace Bungie::Math
 {
 }
 

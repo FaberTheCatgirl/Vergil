@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Blam\BlamTypes.hpp"
-#include "Blam\Math\RealMatrix4x3.hpp"
-#include "Blam\Math\RealVector3D.hpp"
+#include "Bungie\BlamTypes.hpp"
+#include "Bungie\Math\RealMatrix4x3.hpp"
+#include "Bungie\Math\RealVector3D.hpp"
 
 namespace Forge
 {
@@ -171,7 +171,7 @@ namespace Forge
 		float Length;
 		float Top;
 		float Bottom;
-		Blam::Math::RealMatrix4x3 Transform;
+		Bungie::Math::RealMatrix4x3 Transform;
 		float BoundingRadius;
 	};
 	static_assert(sizeof(ZoneShape) == 0x50, "Invalid ZoneShape size");
@@ -184,9 +184,9 @@ namespace Forge
 		uint16_t Unknown06;
 		uint32_t HeldObjects[16];
 		float HeldObjectDistances[16];
-		Blam::Math::RealVector3D CrosshairPoints[16];
-		Blam::Math::RealVector3D CrosshairIntersectNormals[16];
-		Blam::Math::RealVector3D CrosshairDirections[16];
+		Bungie::Math::RealVector3D CrosshairPoints[16];
+		Bungie::Math::RealVector3D CrosshairIntersectNormals[16];
+		Bungie::Math::RealVector3D CrosshairDirections[16];
 		uint32_t CrosshairObjects[16];
 		uint8_t UnknownE49c[0x43c];
 	};
@@ -202,7 +202,7 @@ namespace Forge
 		int8_t QuotaMin;
 		int8_t QuotaMax;
 		uint16_t Unknown16;
-		Blam::Math::RealVector3D CrosshairPoint;
+		Bungie::Math::RealVector3D CrosshairPoint;
 		uint32_t SelectedGameType;
 		uint16_t EngineFlags;
 		uint8_t Flags;
@@ -220,27 +220,27 @@ namespace Forge
 
 
 	const auto GetObjectZoneShape = (void(__cdecl *)(uint32_t objectIndex, ZoneShape* zoneShape, int a3))(0xBA0AD0);
-	const auto PointIntersectsZone = (bool(__cdecl*)(const Blam::Math::RealVector3D* point, const ZoneShape* zone))(0x00BA11F0);
-	const auto GetObjectTransformationMatrix = (void(__cdecl*)(uint32_t objectIndex, Blam::Math::RealMatrix4x3* outMatrix))(0x00B2EC60);
-	const auto GetObjectPosition = (void(*)(uint32_t objectIndex, Blam::Math::RealVector3D *position))(0xB2E5A0);
-	const auto SpawnObject = (uint32_t(__thiscall *)(Blam::MapVariant* thisptr, uint32_t tagIndex, int a3, int16_t placementIndex,
-		const Blam::Math::RealVector3D *position, const Blam::Math::RealVector3D *rightVec, const Blam::Math::RealVector3D *upVec, int16_t scnrPlacementBlockIndex,
-		int objectType, const Blam::MapVariant::VariantProperties* variantProperties, uint16_t placementFlags))(0x00582110);
+	const auto PointIntersectsZone = (bool(__cdecl*)(const Bungie::Math::RealVector3D* point, const ZoneShape* zone))(0x00BA11F0);
+	const auto GetObjectTransformationMatrix = (void(__cdecl*)(uint32_t objectIndex, Bungie::Math::RealMatrix4x3* outMatrix))(0x00B2EC60);
+	const auto GetObjectPosition = (void(*)(uint32_t objectIndex, Bungie::Math::RealVector3D *position))(0xB2E5A0);
+	const auto SpawnObject = (uint32_t(__thiscall *)(Bungie::MapVariant* thisptr, uint32_t tagIndex, int a3, int16_t placementIndex,
+		const Bungie::Math::RealVector3D *position, const Bungie::Math::RealVector3D *rightVec, const Bungie::Math::RealVector3D *upVec, int16_t scnrPlacementBlockIndex,
+		int objectType, const Bungie::MapVariant::VariantProperties* variantProperties, uint16_t placementFlags))(0x00582110);
 	const auto GetPlayerHoldingObject = (uint32_t(__cdecl*)(int objectIndex))(0x0059BB90);
 	const auto GetEditorModeState = (bool(__cdecl *)(uint32_t playerIndex, uint32_t* heldObjectIndex, uint32_t* objectIndexUnderCrosshair))(0x59A6F0);
 	const auto GetSandboxGlobals = (SandboxGlobals&(*)())(0x0059BC10);
 	const auto ObjectIsPhased = (bool(*)(uint32_t objectIndex))(0x0059A7B0);
 	const auto PrintKillFeedText = (void(__cdecl *)(int hudIndex, wchar_t *text, int a3))(0x00A95920);
 
-	Blam::MapVariant* GetMapVariant();
+	Bungie::MapVariant* GetMapVariant();
 
 	struct AABB { float MinX, MaxX, MinY, MaxY, MinZ, MaxZ; };
 	const AABB* GetObjectBoundingBox(uint32_t tagIndex);
-	Blam::Math::RealVector3D GetClosestCardianalAxix(const Blam::Math::RealVector3D& v);
+	Bungie::Math::RealVector3D GetClosestCardianalAxix(const Bungie::Math::RealVector3D& v);
 	void DeleteObject(uint16_t playerIndex, int16_t placementIndex);
-	uint32_t CloneObject(uint32_t playerIndex, uint32_t objectIndex, float depth, const Blam::Math::RealVector3D &normal);
+	uint32_t CloneObject(uint32_t playerIndex, uint32_t objectIndex, float depth, const Bungie::Math::RealVector3D &normal);
 	void ThrowObject(uint32_t playerIndex, uint32_t objectIndex, float throwForce);
-	bool PointInWorldBounds(Blam::Math::RealVector3D &point);
+	bool PointInWorldBounds(Bungie::Math::RealVector3D &point);
 	bool ObjectInWorldBounds(uint32_t objectIndex);
 
 	extern bool IsReforgeObject(uint32_t objectIndex);

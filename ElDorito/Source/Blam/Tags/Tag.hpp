@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-namespace Blam::Tags
+namespace Bungie::Tags
 {
 	typedef uint32_t Tag;
 }

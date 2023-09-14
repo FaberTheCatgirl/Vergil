@@ -1,5 +1,5 @@
 #include "Patches\GameEngineSettings.hpp"
-#include "Blam\BitStream.hpp"
+#include "Bungie\BitStream.hpp"
 #include "Patch.hpp"
 
 namespace
@@ -15,7 +15,7 @@ namespace
 		uint8_t field_6;
 		uint8_t field_7;
 
-		void Serialize(Blam::BitStream &stream)
+		void Serialize(Bungie::BitStream &stream)
 		{
 			stream.WriteUnsigned(DamageResistance, 4);
 			stream.WriteUnsigned(ShieldRechargeRate, 4);
@@ -24,7 +24,7 @@ namespace
 			stream.WriteUnsigned(ShieldVampirism, 3);
 		}
 
-		void Deserialize(Blam::BitStream &stream)
+		void Deserialize(Bungie::BitStream &stream)
 		{
 			DamageResistance = stream.ReadUnsigned<uint8_t>(4);
 			if (DamageResistance > 15)
@@ -55,7 +55,7 @@ namespace
 		uint8_t InfiniteAmmo;
 		uint8_t WeaponPickup;
 
-		void Serialize(Blam::BitStream &stream)
+		void Serialize(Bungie::BitStream &stream)
 		{
 			stream.WriteUnsigned(DamageModifier, 4);
 			stream.WriteUnsigned(PrimaryWeaponIndex, 8);
@@ -66,7 +66,7 @@ namespace
 			stream.WriteUnsigned(WeaponPickup, 2);
 		}
 
-		void Deserialize(Blam::BitStream &stream)
+		void Deserialize(Bungie::BitStream &stream)
 		{
 			DamageModifier = stream.ReadUnsigned<uint8_t>(4);
 			if (DamageModifier > 12)
@@ -111,14 +111,14 @@ namespace
 		uint8_t VehicleUse;
 		uint8_t field_3;
 
-		void Serialize(Blam::BitStream &stream)
+		void Serialize(Bungie::BitStream &stream)
 		{
 			stream.WriteUnsigned(PlayerSpeed, 4);
 			stream.WriteUnsigned(PlayerGravity, 4);
 			stream.WriteUnsigned(VehicleUse, 2);
 		}
 
-		void Deserialize(Blam::BitStream &stream)
+		void Deserialize(Bungie::BitStream &stream)
 		{
 			PlayerSpeed = stream.ReadUnsigned<uint8_t>(4);
 			if (PlayerSpeed > 15)
@@ -140,7 +140,7 @@ namespace
 		uint8_t Aura;  // now player size
 		uint8_t ForcedColor;
 
-		void Serialize(Blam::BitStream &stream)
+		void Serialize(Bungie::BitStream &stream)
 		{
 			stream.WriteUnsigned(ActiveCamo, 3);
 			stream.WriteUnsigned(Waypoint, 3);
@@ -148,7 +148,7 @@ namespace
 			stream.WriteUnsigned(ForcedColor, 4);
 		}
 
-		void Deserialize(Blam::BitStream &stream)
+		void Deserialize(Bungie::BitStream &stream)
 		{
 			ActiveCamo = stream.ReadUnsigned<uint8_t>(3);
 			if (ActiveCamo > 4)
@@ -171,13 +171,13 @@ namespace
 		uint16_t MotionTrackerMode;
 		uint16_t MotionTrackerRange;
 
-		void Serialize(Blam::BitStream &stream)
+		void Serialize(Bungie::BitStream &stream)
 		{
 			stream.WriteUnsigned(MotionTrackerMode, 3);
 			stream.WriteUnsigned(MotionTrackerRange, 3);
 		}
 
-		void Deserialize(Blam::BitStream &stream)
+		void Deserialize(Bungie::BitStream &stream)
 		{
 			MotionTrackerMode = stream.ReadUnsigned<uint8_t>(3);
 			if (MotionTrackerMode > 4)
@@ -197,7 +197,7 @@ namespace
 		c_player_appearance_traits Appearance;
 		c_player_sensor_traits Sensory;
 
-		void Serialize(Blam::BitStream &stream)
+		void Serialize(Bungie::BitStream &stream)
 		{
 			Health.Serialize(stream);
 			Weapon.Serialize(stream);
@@ -206,7 +206,7 @@ namespace
 			Sensory.Serialize(stream);
 		}
 
-		void Deserialize(Blam::BitStream &stream)
+		void Deserialize(Bungie::BitStream &stream)
 		{
 			Health.Deserialize(stream);
 			Weapon.Deserialize(stream);
@@ -221,18 +221,18 @@ namespace
 	float __fastcall c_player_movement_traits__get_walking_speed_hook(uint8_t *thisptr, void *unused);
 	float __fastcall c_player_movement_traits__get_personal_gravity_hook(c_player_movement_traits *thisptr, void *unused);
 
-	void __fastcall c_player_trait_profile__serialize_hook(c_player_trait_profile &profile, void *unused, Blam::BitStream &stream) { profile.Serialize(stream); }
-	void __fastcall c_player_trait_profile__deserialize_hook(c_player_trait_profile &profile, void *unused, Blam::BitStream &stream) { profile.Deserialize(stream); }
-	void __fastcall c_player_health_traits__serialize_hook(c_player_health_traits &traits, void *unused, Blam::BitStream &stream) { traits.Serialize(stream); }
-	void __fastcall c_player_weapon_traits__serialize_hook(c_player_weapon_traits &traits, void *unused, Blam::BitStream &stream) { traits.Serialize(stream); }
-	void __fastcall c_player_movement_traits__serialize_hook(c_player_movement_traits &traits, void *unused, Blam::BitStream &stream) { traits.Serialize(stream); }
-	void __fastcall c_player_appearance_traits__serialize_hook(c_player_appearance_traits &traits, void *unused, Blam::BitStream &stream) { traits.Serialize(stream); }
-	void __fastcall c_player_sensor_traits__serialize_hook(c_player_sensor_traits &traits, void *unused, Blam::BitStream &stream) { traits.Serialize(stream); }
-	void __fastcall c_player_health_traits__deserialize_hook(c_player_health_traits &traits, void *unused, Blam::BitStream &stream) { traits.Deserialize(stream); }
-	void __fastcall c_player_weapon_traits__deserialize_hook(c_player_weapon_traits &traits, void *unused, Blam::BitStream &stream) { traits.Deserialize(stream); }
-	void __fastcall c_player_movement_traits__deserialize_hook(c_player_movement_traits &traits, void *unused, Blam::BitStream &stream) { traits.Deserialize(stream); }
-	void __fastcall c_player_appearance_traits__deserialize_hook(c_player_appearance_traits &traits, void *unused, Blam::BitStream &stream) { traits.Deserialize(stream); }
-	void __fastcall c_player_sensor_traits__deserialize_hook(c_player_sensor_traits &traits, void *unused, Blam::BitStream &stream) { traits.Deserialize(stream); }
+	void __fastcall c_player_trait_profile__serialize_hook(c_player_trait_profile &profile, void *unused, Bungie::BitStream &stream) { profile.Serialize(stream); }
+	void __fastcall c_player_trait_profile__deserialize_hook(c_player_trait_profile &profile, void *unused, Bungie::BitStream &stream) { profile.Deserialize(stream); }
+	void __fastcall c_player_health_traits__serialize_hook(c_player_health_traits &traits, void *unused, Bungie::BitStream &stream) { traits.Serialize(stream); }
+	void __fastcall c_player_weapon_traits__serialize_hook(c_player_weapon_traits &traits, void *unused, Bungie::BitStream &stream) { traits.Serialize(stream); }
+	void __fastcall c_player_movement_traits__serialize_hook(c_player_movement_traits &traits, void *unused, Bungie::BitStream &stream) { traits.Serialize(stream); }
+	void __fastcall c_player_appearance_traits__serialize_hook(c_player_appearance_traits &traits, void *unused, Bungie::BitStream &stream) { traits.Serialize(stream); }
+	void __fastcall c_player_sensor_traits__serialize_hook(c_player_sensor_traits &traits, void *unused, Bungie::BitStream &stream) { traits.Serialize(stream); }
+	void __fastcall c_player_health_traits__deserialize_hook(c_player_health_traits &traits, void *unused, Bungie::BitStream &stream) { traits.Deserialize(stream); }
+	void __fastcall c_player_weapon_traits__deserialize_hook(c_player_weapon_traits &traits, void *unused, Bungie::BitStream &stream) { traits.Deserialize(stream); }
+	void __fastcall c_player_movement_traits__deserialize_hook(c_player_movement_traits &traits, void *unused, Bungie::BitStream &stream) { traits.Deserialize(stream); }
+	void __fastcall c_player_appearance_traits__deserialize_hook(c_player_appearance_traits &traits, void *unused, Bungie::BitStream &stream) { traits.Deserialize(stream); }
+	void __fastcall c_player_sensor_traits__deserialize_hook(c_player_sensor_traits &traits, void *unused, Bungie::BitStream &stream) { traits.Deserialize(stream); }
 
 	void AuraTraitDefaultFixHook();
 }

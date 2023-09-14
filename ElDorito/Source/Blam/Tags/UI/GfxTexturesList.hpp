@@ -1,12 +1,12 @@
 #pragma once
 #include <cstdint>
-#include "Blam\Tags\Tags.hpp"
+#include "Bungie\Tags\Tags.hpp"
 
-namespace Blam::Tags::UI
+namespace Bungie::Tags::UI
 {
-	using Blam::Tags::TagBlock;
-	using Blam::Tags::TagGroup;
-	using Blam::Tags::TagReference;
+	using Bungie::Tags::TagBlock;
+	using Bungie::Tags::TagGroup;
+	using Bungie::Tags::TagReference;
 
 	struct GfxTexturesList : TagGroup<'gfxt'>
 	{

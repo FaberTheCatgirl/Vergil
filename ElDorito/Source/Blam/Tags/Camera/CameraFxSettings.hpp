@@ -1,8 +1,8 @@
 #pragma once
-#include "Blam\Tags\Enum.hpp"
-#include "Blam\Tags\Tags.hpp"
+#include "Bungie\Tags\Enum.hpp"
+#include "Bungie\Tags\Tags.hpp"
 
-namespace Blam::Tags::Camera
+namespace Bungie::Tags::Camera
 {
 	struct FxSettings : TagGroup<'cfxs'>
 	{

@@ -4,7 +4,7 @@
 #include "new\tag_files\tag_mapping.hpp"
 #include "new\shaders\render_method.hpp"
 
-namespace blam
+namespace Bungie
 {
 	enum { k_particle_group_tag = 'prt3' };
 

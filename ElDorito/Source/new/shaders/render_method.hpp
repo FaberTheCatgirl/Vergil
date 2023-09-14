@@ -2,7 +2,7 @@
 #include "new\tag_files\tag_groups.hpp"
 #include "new\tag_files\tag_mapping.hpp"
 
-namespace blam
+namespace Bungie
 {
 	enum { k_render_method_group_tag = 'rm  ' };
 

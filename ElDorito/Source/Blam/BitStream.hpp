@@ -4,7 +4,7 @@
 
 #include <cstdint>
 
-namespace Blam
+namespace Bungie
 {
 	// Interface for the bitstream objects the engine uses
 	class BitStream

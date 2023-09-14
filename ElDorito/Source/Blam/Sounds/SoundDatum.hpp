@@ -1,14 +1,14 @@
 #pragma once
 #include <stdint.h>
-#include "Blam\Tags\Sounds\Sound\Sound.hpp"
-#include "Blam\BlamData.hpp"
+#include "Bungie\Tags\Sounds\Sound\Sound.hpp"
+#include "Bungie\BlamData.hpp"
 
 
-//using namespace Blam::Tags::Sounds;
+//using namespace Bungie::Tags::Sounds;
 
-namespace Blam {
+namespace Bungie {
 
-	using namespace Blam::Tags::Sounds;
+	using namespace Bungie::Tags::Sounds;
 
 	struct XboxSoundDatum : DatumBase{
 		int16_t NumberTimesRequested;

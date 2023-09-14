@@ -3,7 +3,7 @@
 #include <string>
 #include <bitset>
 #include <memory>
-#include "Blam\BlamNetwork.hpp"
+#include "Bungie\BlamNetwork.hpp"
 namespace Server::Voting
 {
 	// Chat message types.

@@ -2,7 +2,7 @@
 
 #include "new\cseries\cseries.hpp"
 
-namespace blam
+namespace Bungie
 {
 	// 32-bit data array index handle
 	typedef unsigned long datum_index;

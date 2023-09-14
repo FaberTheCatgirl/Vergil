@@ -1,10 +1,10 @@
-#include "Blam\Tags\Objects\Biped.hpp"
+#include "Bungie\Tags\Objects\Biped.hpp"
 #include "Definitions\EnumDefinition.hpp"
 
-using namespace Blam::Tags::Objects;
+using namespace Bungie::Tags::Objects;
 using namespace Definitions;
 
-namespace Blam::Tags
+namespace Bungie::Tags
 {
 	const EnumDefinition LockOnFlagsValuesEnum =
 	{

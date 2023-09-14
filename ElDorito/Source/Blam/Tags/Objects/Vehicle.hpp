@@ -1,10 +1,10 @@
 #pragma once
-#include "Blam\Math\RealPoint3D.hpp"
-#include "Blam\Text\StringID.hpp"
-#include "Blam\Tags\Tags.hpp"
-#include "Blam\Tags\Objects\Unit.hpp"
+#include "Bungie\Math\RealPoint3D.hpp"
+#include "Bungie\Text\StringID.hpp"
+#include "Bungie\Tags\Tags.hpp"
+#include "Bungie\Tags\Objects\Unit.hpp"
 
-namespace Blam::Tags::Objects
+namespace Bungie::Tags::Objects
 {
 	struct Vehicle : TagGroup<'vehi'>
 	{
@@ -602,7 +602,7 @@ namespace Blam::Tags::Objects
 			{
 				struct PhantomShapeSphere
 				{
-					Blam::Math::RealPoint3D Position;
+					Bungie::Math::RealPoint3D Position;
 					float Radius;
 				};
 

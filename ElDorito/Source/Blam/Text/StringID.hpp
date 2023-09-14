@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-namespace Blam::Text
+namespace Bungie::Text
 {
 	typedef uint32_t StringID;
 }

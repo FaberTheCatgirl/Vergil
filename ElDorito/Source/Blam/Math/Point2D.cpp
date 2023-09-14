@@ -1,6 +1,6 @@
-#include "Blam\Math\Point2D.hpp"
+#include "Bungie\Math\Point2D.hpp"
 
-namespace Blam::Math
+namespace Bungie::Math
 {
 	Point2D::Point2D()
 		: Point2D(0, 0)

@@ -1,6 +1,6 @@
-#include "Blam\Math\ColorRGB.hpp"
+#include "Bungie\Math\ColorRGB.hpp"
 
-namespace Blam::Math
+namespace Bungie::Math
 {
 	ColorRGB::ColorRGB()
 		: ColorRGB(0, 0, 0)

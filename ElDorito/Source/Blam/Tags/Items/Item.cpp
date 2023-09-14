@@ -1,10 +1,10 @@
-#include "Blam\Tags\Items\Item.hpp"
+#include "Bungie\Tags\Items\Item.hpp"
 #include "Definitions\EnumDefinition.hpp"
 
-using namespace Blam::Tags::Items;
+using namespace Bungie::Tags::Items;
 using namespace Definitions;
 
-namespace Blam::Tags
+namespace Bungie::Tags
 {
 	const EnumDefinition ItemFlagsEnum =
 	{

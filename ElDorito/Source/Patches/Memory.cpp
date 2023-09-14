@@ -1,6 +1,6 @@
 #include "Patches\Memory.hpp"
 #include <cstdint>
-#include "Blam\BlamData.hpp"
+#include "Bungie\BlamData.hpp"
 
 namespace
 {
@@ -23,48 +23,48 @@ namespace Patches::Memory
 		uint32_t newXboxSoundCount = oldXboxSoundCount * 2;
 		uint32_t xboxSoundSize = 12;
 		*reinterpret_cast<uint32_t*>(0x66009A + 1) = newXboxSoundCount;
-		extraSize += Blam::CalculateDatumArraySize(newXboxSoundCount, xboxSoundSize, 0) - 
-			Blam::CalculateDatumArraySize(oldXboxSoundCount, xboxSoundSize, 0);
+		extraSize += Bungie::CalculateDatumArraySize(newXboxSoundCount, xboxSoundSize, 0) - 
+			Bungie::CalculateDatumArraySize(oldXboxSoundCount, xboxSoundSize, 0);
 
 		// expand sound sources
 		uint32_t oldSoundSourceCount = 384;
 		uint32_t newSoundSourceCount = oldSoundSourceCount * 2;
 		uint32_t soundSourceSize = 200;
 		*reinterpret_cast<uint32_t*>(0x517AEC + 1) = newSoundSourceCount;
-		extraSize += Blam::CalculateDatumArraySize(newSoundSourceCount, soundSourceSize, 0) -
-			Blam::CalculateDatumArraySize(oldSoundSourceCount, soundSourceSize, 0);
+		extraSize += Bungie::CalculateDatumArraySize(newSoundSourceCount, soundSourceSize, 0) -
+			Bungie::CalculateDatumArraySize(oldSoundSourceCount, soundSourceSize, 0);
 
 		// sound playback controllers
 		uint8_t oldSoundPlaybackControllersCount = 64;
 		uint8_t newSoundPlaybackControllersCount = 120;	// NOTE: max of 127 unless we hook it
 		uint32_t soundPlaybackControllerSize = 28;
 		*reinterpret_cast<uint8_t*>(0x669712 + 1) = newSoundPlaybackControllersCount;
-		extraSize += Blam::CalculateDatumArraySize(newSoundPlaybackControllersCount, soundPlaybackControllerSize, 0) -
-			Blam::CalculateDatumArraySize(oldSoundPlaybackControllersCount, soundPlaybackControllerSize, 0);
+		extraSize += Bungie::CalculateDatumArraySize(newSoundPlaybackControllersCount, soundPlaybackControllerSize, 0) -
+			Bungie::CalculateDatumArraySize(oldSoundPlaybackControllersCount, soundPlaybackControllerSize, 0);
 
 		// expand looping sounds
 		uint32_t oldLoopingSoundCount = 128;
 		uint32_t newLoopingSoundCount = oldLoopingSoundCount * 2;
 		uint32_t loopingSoundSize = 296;
 		*reinterpret_cast<uint32_t*>(0x664745 + 1) = newLoopingSoundCount;
-		extraSize += Blam::CalculateDatumArraySize(newLoopingSoundCount, loopingSoundSize, 0) -
-			Blam::CalculateDatumArraySize(oldLoopingSoundCount, loopingSoundSize, 0);
+		extraSize += Bungie::CalculateDatumArraySize(newLoopingSoundCount, loopingSoundSize, 0) -
+			Bungie::CalculateDatumArraySize(oldLoopingSoundCount, loopingSoundSize, 0);
 
 		// sounds effects
 		uint32_t oldSoundEffectsCount = 16;
 		uint32_t newSoundEffectsCount = oldSoundEffectsCount * 2;	// NOTE: max of 127 unless we hook it
 		uint32_t soundEffectsSize = 100;
 		*reinterpret_cast<uint8_t*>(0x6689B2 + 1) = newSoundEffectsCount;
-		extraSize += Blam::CalculateDatumArraySize(newSoundEffectsCount, soundEffectsSize, 0) -
-			Blam::CalculateDatumArraySize(oldSoundEffectsCount, soundEffectsSize, 0);
+		extraSize += Bungie::CalculateDatumArraySize(newSoundEffectsCount, soundEffectsSize, 0) -
+			Bungie::CalculateDatumArraySize(oldSoundEffectsCount, soundEffectsSize, 0);
 
 		// sound tracker data
 		uint32_t oldSoundTrackerDataCount = 384;
 		uint32_t newSoundTrackerDataCount = oldSoundTrackerDataCount * 2;
 		uint32_t soundTrackerDataSize = 64;
 		*reinterpret_cast<uint32_t*>(0x66A312 + 1) = newSoundTrackerDataCount;
-		extraSize += Blam::CalculateDatumArraySize(newSoundTrackerDataCount, soundTrackerDataSize, 0) -
-			Blam::CalculateDatumArraySize(oldSoundTrackerDataCount, soundTrackerDataSize, 0);
+		extraSize += Bungie::CalculateDatumArraySize(newSoundTrackerDataCount, soundTrackerDataSize, 0) -
+			Bungie::CalculateDatumArraySize(oldSoundTrackerDataCount, soundTrackerDataSize, 0);
 
 		// expand memory map allocation
 		uint32_t newRuntimeGlobalsSize = origRuntimeGlobalsSize + extraSize + 0xFFFF & 0xFFFF0000;
@@ -85,8 +85,8 @@ namespace Patches::Memory
 		uint32_t newCachedObjectRenderStatesCount = 1000;
 		uint32_t cachedObjectRenderStatesSize = 0x4D8;
 		*reinterpret_cast<uint32_t*>(0xA452BC + 1) = newCachedObjectRenderStatesCount;
-		subAllocation4ExtraSize += Blam::CalculateDatumArraySize(newCachedObjectRenderStatesCount, cachedObjectRenderStatesSize, 0) -
-			Blam::CalculateDatumArraySize(oldCachedObjectRenderStatesCount, cachedObjectRenderStatesSize, 0);
+		subAllocation4ExtraSize += Bungie::CalculateDatumArraySize(newCachedObjectRenderStatesCount, cachedObjectRenderStatesSize, 0) -
+			Bungie::CalculateDatumArraySize(oldCachedObjectRenderStatesCount, cachedObjectRenderStatesSize, 0);
 
 		// research by xbox7887
 		// expand unknown game state sub-allocations

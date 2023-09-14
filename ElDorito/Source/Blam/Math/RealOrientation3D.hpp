@@ -1,8 +1,8 @@
 #pragma once
-#include "Blam\Math\RealPoint3D.hpp"
-#include "Blam\Math\RealQuaternion.hpp"
+#include "Bungie\Math\RealPoint3D.hpp"
+#include "Bungie\Math\RealQuaternion.hpp"
 
-namespace Blam::Math
+namespace Bungie::Math
 {
 	struct RealOrientation3D
 	{

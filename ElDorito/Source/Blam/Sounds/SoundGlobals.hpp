@@ -1,7 +1,7 @@
 #pragma once
-#include "Blam\Sounds\SoundDatum.hpp"
+#include "Bungie\Sounds\SoundDatum.hpp"
 
-namespace Blam{
+namespace Bungie{
 
 	extern DataArray<XboxSoundDatum>** xboxSounds;
 	extern DataArray<SoundPlaybackControllerDatum>** soundPlaybackControllers;

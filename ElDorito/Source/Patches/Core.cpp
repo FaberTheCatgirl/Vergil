@@ -1,31 +1,31 @@
 #include "Patches\Core.hpp"
 
-#include "Blam\Cache\StringIdCache.hpp"
+#include "Bungie\Cache\StringIdCache.hpp"
 
-#include "Blam\Geometry\RenderGeometry.hpp"
+#include "Bungie\Geometry\RenderGeometry.hpp"
 
-#include "Blam\Math\RealColorARGB.hpp"
-#include "Blam\Math\RealMatrix4x3.hpp"
-#include "Blam\Math\RealQuaternion.hpp"
-#include "Blam\Math\RealVector3D.hpp"
+#include "Bungie\Math\RealColorARGB.hpp"
+#include "Bungie\Math\RealMatrix4x3.hpp"
+#include "Bungie\Math\RealQuaternion.hpp"
+#include "Bungie\Math\RealVector3D.hpp"
 
-#include "Blam\Memory\TlsData.hpp"
+#include "Bungie\Memory\TlsData.hpp"
 
-#include "Blam\Preferences\Preferences.hpp"
+#include "Bungie\Preferences\Preferences.hpp"
 
-#include "Blam\Tags\TagInstance.hpp"
-#include "Blam\Tags\Effects\DecalSystem.hpp"
-#include "Blam\Tags\Game\Globals.hpp"
-#include "Blam\Tags\Items\DefinitionWeapon.hpp"
-#include "Blam\Tags\Scenario\Scenario.hpp"
+#include "Bungie\Tags\TagInstance.hpp"
+#include "Bungie\Tags\Effects\DecalSystem.hpp"
+#include "Bungie\Tags\Game\Globals.hpp"
+#include "Bungie\Tags\Items\DefinitionWeapon.hpp"
+#include "Bungie\Tags\Scenario\Scenario.hpp"
 
-#include "Blam\BlamData.hpp"
-#include "Blam\BlamEvents.hpp"
-#include "Blam\BlamInput.hpp"
-#include "Blam\BlamPlayers.hpp"
-#include "Blam\BlamNetwork.hpp"
-#include "Blam\BlamObjects.hpp"
-#include "Blam\BlamTypes.hpp"
+#include "Bungie\BlamData.hpp"
+#include "Bungie\BlamEvents.hpp"
+#include "Bungie\BlamInput.hpp"
+#include "Bungie\BlamPlayers.hpp"
+#include "Bungie\BlamNetwork.hpp"
+#include "Bungie\BlamObjects.hpp"
+#include "Bungie\BlamTypes.hpp"
 
 #include "Patches\Weapon.hpp"
 
@@ -151,12 +151,12 @@ namespace
 	void GrenadeLoadoutHook();
 	void ShutdownHook();
 	const char *GetMapsFolderHook();
-	bool main_game_change_immediate_hook(Blam::GameOptions *data);
+	bool main_game_change_immediate_hook(Bungie::GameOptions *data);
 	void maps_store_map_info_hook(uint8_t* mapinfo, char a2, char *mapsPath, char a4);
 	void GameStartHook();
 	bool __cdecl map_load_hook(int campaign_id, int map_id, char *scenario_path);
 	void __fastcall EdgeDropHook(void* thisptr, void* unused, int a2, int a3, int a4, float* a5);
-	void __cdecl BipedFeetZoneOffsetHook(uint32_t bipedObjectIndex, Blam::Math::RealVector3D *position, float *height, float *radius);
+	void __cdecl BipedFeetZoneOffsetHook(uint32_t bipedObjectIndex, Bungie::Math::RealVector3D *position, float *height, float *radius);
 	char GetBinkVideoPathHook(int p_VideoID, char *p_DestBuf);
 	void DirtyDiskErrorHook();
 	int __cdecl GetScreenshotFolderHook(wchar_t *path);
@@ -194,7 +194,7 @@ namespace
 
 		preferences_set_defaults();
 
-		Blam::Preferences *preferences = ElDorito::GetMainTls(0x18)[0];
+		Bungie::Preferences *preferences = ElDorito::GetMainTls(0x18)[0];
 
 		const auto& moduleSettings = Modules::ModuleSettings::Instance();
 		const auto& moduleCamera = Modules::ModuleCamera::Instance();
@@ -377,10 +377,10 @@ namespace
 	}
 
 	MultiHook *campaignScoringHook = 0;
-	void __fastcall campaign_scoring_sub_6E59A0(char *scoreboard, void *, Blam::DatumHandle handle, Blam::Events::EventType event_type, short a4, Blam::ePlayerStatType player_stat_type, char a6)
+	void __fastcall campaign_scoring_sub_6E59A0(char *scoreboard, void *, Bungie::DatumHandle handle, Bungie::Events::EventType event_type, short a4, Bungie::ePlayerStatType player_stat_type, char a6)
 	{
-		static const auto data_array_sub_55B710 = reinterpret_cast<unsigned long(__cdecl *)(Blam::DataArrayBase *, Blam::DatumHandle)>(0x55B710);
-		static const auto scoreboard_sub_6E5A90 = reinterpret_cast<void(__thiscall *)(char *, unsigned int, Blam::Events::EventType, short, int)>(0x6E5A90);
+		static const auto data_array_sub_55B710 = reinterpret_cast<unsigned long(__cdecl *)(Bungie::DataArrayBase *, Bungie::DatumHandle)>(0x55B710);
+		static const auto scoreboard_sub_6E5A90 = reinterpret_cast<void(__thiscall *)(char *, unsigned int, Bungie::Events::EventType, short, int)>(0x6E5A90);
 
 		if (Modules::ModuleTweaks::Instance().VarDisableMetagame->ValueInt != 0)
 			return;
@@ -426,9 +426,9 @@ namespace
 
 		if (a6)
 		{
-			if (blam::game_get_current_engine() && blam::game_is_team_game())
+			if (Bungie::game_get_current_engine() && Bungie::game_is_team_game())
 			{
-				auto player_datum = (Blam::Players::PlayerDatum*)data_array_sub_55B710(ElDorito::Instance().GetMainTls(0x40).Read<Blam::DataArray<Blam::Players::PlayerDatum>*>(), handle);
+				auto player_datum = (Bungie::Players::PlayerDatum*)data_array_sub_55B710(ElDorito::Instance().GetMainTls(0x40).Read<Bungie::DataArray<Bungie::Players::PlayerDatum>*>(), handle);
 
 				if (player_datum)
 				{
@@ -458,13 +458,13 @@ namespace
 	{
 		const auto sub_694430 = (int(__fastcall *)(void * /*this*/, void * /*unused*/, int))0x694430;
 
-		if (!blam::game_is_campaign())
+		if (!Bungie::game_is_campaign())
 		{
 			((void(__cdecl *)(int))0x6948C0)(a1);
 			return;
 		}
 
-		auto *tls = (Blam::Memory::tls_data *)ElDorito::Instance().GetMainTls();
+		auto *tls = (Bungie::Memory::tls_data *)ElDorito::Instance().GetMainTls();
 
 		if (tls->decal_system == nullptr || *(long *)0x46DE700 <= 0)
 			return;
@@ -485,7 +485,7 @@ namespace
 			if (decalTagIndex == -1)
 				continue;
 
-			auto *decs = Blam::Tags::TagInstance(decalTagIndex & 0xFFFF).GetDefinition<Blam::Tags::Effects::DecalSystem>();
+			auto *decs = Bungie::Tags::TagInstance(decalTagIndex & 0xFFFF).GetDefinition<Bungie::Tags::Effects::DecalSystem>();
 
 			auto decalBlockIndex = *(DWORD *)(v3 + 4);
 
@@ -500,7 +500,7 @@ namespace
 		}
 	}
 
-	void *__cdecl datum_get_hook(Blam::DataArrayBase *array, Blam::DatumHandle handle)
+	void *__cdecl datum_get_hook(Bungie::DataArrayBase *array, Bungie::DatumHandle handle)
 	{
 		if (array == nullptr)
 			return nullptr;
@@ -508,21 +508,21 @@ namespace
 		return array->Get(handle);
 	}
 
-	bool __cdecl player_action_test_cinematic_skip(blam::player_action action)
+	bool __cdecl player_action_test_cinematic_skip(Bungie::player_action action)
 	{
-		if (Blam::Input::GetKeyTicks(Blam::Input::eKeyCodeEnd, Blam::Input::eInputTypeUi) > 0)
+		if (Bungie::Input::GetKeyTicks(Bungie::Input::eKeyCodeEnd, Bungie::Input::eInputTypeUi) > 0)
 			return true;
-		else if (Blam::Input::GetKeyTicks(Blam::Input::eKeyCodeEnd, Blam::Input::eInputTypeGame) > 0)
+		else if (Bungie::Input::GetKeyTicks(Bungie::Input::eKeyCodeEnd, Bungie::Input::eInputTypeGame) > 0)
 			return true;
-		else if (Blam::Input::GetKeyTicks(Blam::Input::eKeyCodeEnd, Blam::Input::eInputTypeSpecial) > 0)
+		else if (Bungie::Input::GetKeyTicks(Bungie::Input::eKeyCodeEnd, Bungie::Input::eInputTypeSpecial) > 0)
 			return true;
 
-		return ((bool(__cdecl *)(blam::player_action)) 0x5CFF70)(action);
+		return ((bool(__cdecl *)(Bungie::player_action)) 0x5CFF70)(action);
 	}
 
 	int __cdecl sub_5F46C0_hook(int structure_bsp_index, int seam_mapping_index)
 	{
-		auto *tls = (Blam::Memory::tls_data *)ElDorito::Instance().GetMainTls();
+		auto *tls = (Bungie::Memory::tls_data *)ElDorito::Instance().GetMainTls();
 
 		if (!tls || !tls->structure_seam_globals)
 			return -1;
@@ -620,7 +620,7 @@ namespace
 
 	bool __cdecl simulation_player_left_game_hook(void *a1)
 	{
-		if (blam::game_is_campaign())
+		if (Bungie::game_is_campaign())
 			return false;
 
 		return ((bool(__cdecl *)(void *))0x4A81D0)(a1);
@@ -655,7 +655,7 @@ namespace
 			break;
 		case 2:
 			*(const char **)0x7B5E8C = "levels\\ui\\mainmenu\\mainmenu";
-			*(int *)0x7B5E97 = Blam::MapType::eMapTypeMainmenu;
+			*(int *)0x7B5E97 = Bungie::MapType::eMapTypeMainmenu;
 			((void(__cdecl *)())0x7B5E40)();
 			break;
 		}
@@ -948,7 +948,7 @@ namespace
 		static const auto GetLocalPlayerUnitObjectIndex = (uint32_t(*)(int playerIndex))0x589CC0;
 		static const auto SpawnScreenEffect = (void(*)(uint32_t tagIndex, uint32_t unitObjectIndex, int a3, void* a4, void* a5))0x683060;
 
-		auto scnrDefinition = Blam::Tags::Scenario::GetCurrentScenario();
+		auto scnrDefinition = Bungie::Tags::Scenario::GetCurrentScenario();
 		if (scnrDefinition->DefaultScreenFx.TagIndex == -1)
 			return;
 
@@ -957,24 +957,24 @@ namespace
 
 	int get_spartan_representation_index()
 	{
-		static Blam::Text::StringID *campaign_name = nullptr;
-		static Blam::Text::StringID *multiplayer_name = nullptr;
+		static Bungie::Text::StringID *campaign_name = nullptr;
+		static Bungie::Text::StringID *multiplayer_name = nullptr;
 
 		if (campaign_name == nullptr)
 		{
-			campaign_name = new Blam::Text::StringID;
-			*campaign_name = Blam::Cache::StringIDCache::Instance.GetStringID("mp_spartan"); //Allow Player Customization in Campaign
+			campaign_name = new Bungie::Text::StringID;
+			*campaign_name = Bungie::Cache::StringIDCache::Instance.GetStringID("mp_spartan"); //Allow Player Customization in Campaign
 		}
 
 		if (multiplayer_name == nullptr)
 		{
-			multiplayer_name = new Blam::Text::StringID;
-			*multiplayer_name = Blam::Cache::StringIDCache::Instance.GetStringID("mp_spartan");
+			multiplayer_name = new Bungie::Text::StringID;
+			*multiplayer_name = Bungie::Cache::StringIDCache::Instance.GetStringID("mp_spartan");
 		}
 
-		auto name = blam::game_is_campaign() ? *campaign_name : *multiplayer_name;
+		auto name = Bungie::game_is_campaign() ? *campaign_name : *multiplayer_name;
 
-		auto matg = Blam::Tags::TagInstance::Find('matg', "globals\\globals").GetDefinition<Blam::Tags::Game::Globals>();
+		auto matg = Bungie::Tags::TagInstance::Find('matg', "globals\\globals").GetDefinition<Bungie::Tags::Game::Globals>();
 
 		for (auto i = 0; i < matg->PlayerRepresentation.Count; i++)
 			if (name == matg->PlayerRepresentation[i].Name)
@@ -985,24 +985,24 @@ namespace
 
 	int get_elite_representation_index()
 	{
-		static Blam::Text::StringID *campaign_name = nullptr;
-		static Blam::Text::StringID *multiplayer_name = nullptr;
+		static Bungie::Text::StringID *campaign_name = nullptr;
+		static Bungie::Text::StringID *multiplayer_name = nullptr;
 
 		if (campaign_name == nullptr)
 		{
-			campaign_name = new Blam::Text::StringID;
-			*campaign_name = Blam::Cache::StringIDCache::Instance.GetStringID("mp_elite"); //Allow Player Customization in Campaign
+			campaign_name = new Bungie::Text::StringID;
+			*campaign_name = Bungie::Cache::StringIDCache::Instance.GetStringID("mp_elite"); //Allow Player Customization in Campaign
 		}
 
 		if (multiplayer_name == nullptr)
 		{
-			multiplayer_name = new Blam::Text::StringID;
-			*multiplayer_name = Blam::Cache::StringIDCache::Instance.GetStringID("mp_elite");
+			multiplayer_name = new Bungie::Text::StringID;
+			*multiplayer_name = Bungie::Cache::StringIDCache::Instance.GetStringID("mp_elite");
 		}
 
-		auto name = blam::game_is_campaign() ? *campaign_name : *multiplayer_name;
+		auto name = Bungie::game_is_campaign() ? *campaign_name : *multiplayer_name;
 
-		auto matg = Blam::Tags::TagInstance::Find('matg', "globals\\globals").GetDefinition<Blam::Tags::Game::Globals>();
+		auto matg = Bungie::Tags::TagInstance::Find('matg', "globals\\globals").GetDefinition<Bungie::Tags::Game::Globals>();
 
 		for (auto i = 0; i < matg->PlayerRepresentation.Count; i++)
 			if (name == matg->PlayerRepresentation[i].Name)
@@ -1011,9 +1011,9 @@ namespace
 		return 3;
 	}
 
-	bool main_game_change_immediate_hook(Blam::GameOptions *data)
+	bool main_game_change_immediate_hook(Bungie::GameOptions *data)
 	{
-		typedef bool(*LoadMapPtr)(Blam::GameOptions *data);
+		typedef bool(*LoadMapPtr)(Bungie::GameOptions *data);
 		auto LoadMap = reinterpret_cast<LoadMapPtr>(0x566EF0);
 		if (!LoadMap(data))
 			return false;
@@ -1042,7 +1042,7 @@ namespace
 				*(float *)((*soundSystemPtr) + 0x44) = 1.0f;
 		}
 
-		campaignScoringHook->Apply(data->MapType != Blam::eMapTypeCampaign);
+		campaignScoringHook->Apply(data->MapType != Bungie::eMapTypeCampaign);
 
 		for (auto &&callback : mapLoadedCallbacks)
 			callback(data->ScenarioPath); // hax
@@ -1123,11 +1123,11 @@ namespace
 
 		const auto view_get_clip_planes = (void(*)(float *nearPlane, float *farPlane))(0x00A25AA0);
 
-		const auto playerIndex = Blam::Players::GetLocalPlayer(0);
-		const Blam::Players::PlayerDatum *player;
-		if (playerIndex != Blam::DatumHandle::Null && (player = Blam::Players::GetPlayers().Get(playerIndex)))
+		const auto playerIndex = Bungie::Players::GetLocalPlayer(0);
+		const Bungie::Players::PlayerDatum *player;
+		if (playerIndex != Bungie::DatumHandle::Null && (player = Bungie::Players::GetPlayers().Get(playerIndex)))
 		{
-			auto unitObject = Blam::Objects::Get(player->SlaveUnit);
+			auto unitObject = Bungie::Objects::Get(player->SlaveUnit);
 			float activeCamoPower = 0.0f;
 
 			if (unitObject)
@@ -1170,11 +1170,11 @@ namespace
 		}
 
 		// Get the player's grenade setting
-		auto &players = Blam::Players::GetPlayers();
+		auto &players = Bungie::Players::GetPlayers();
 		auto grenadeSetting = players[playerIndex].SpawnGrenadeSetting;
 
 		// Get the current scenario tag
-		auto scenario = Blam::Tags::Scenario::GetCurrentScenario();
+		auto scenario = Bungie::Tags::Scenario::GetCurrentScenario();
 
 		// If the setting is none (2) or the scenario has invalid starting
 		// profile data, set the grenade counts to 0 and return
@@ -1212,7 +1212,7 @@ namespace
 
 	float GetNewPhysicsRate()
 	{
-		auto *tls = (Blam::Memory::tls_data *)ElDorito::Instance().GetMainTls();
+		auto *tls = (Bungie::Memory::tls_data *)ElDorito::Instance().GetMainTls();
 		auto gameGlobalsPtr = tls->game_globals;
 		if (!gameGlobalsPtr || gameGlobalsPtr->game_options.FrameLimit == 60)
 			return 0.5f;
@@ -1230,11 +1230,11 @@ namespace
 		sub_724BB0(thisptr, a2, a3, a4, a5);
 	}
 
-	void __cdecl BipedFeetZoneOffsetHook(uint32_t bipedObjectIndex, Blam::Math::RealVector3D *position, float *height, float *radius)
+	void __cdecl BipedFeetZoneOffsetHook(uint32_t bipedObjectIndex, Bungie::Math::RealVector3D *position, float *height, float *radius)
 	{
-		const auto sub_B6E850 = (void(*)(uint32_t unitObjectIndex, Blam::Math::RealVector3D *outPosition, float *a3, float *outRadius))(0xB6E850);
+		const auto sub_B6E850 = (void(*)(uint32_t unitObjectIndex, Bungie::Math::RealVector3D *outPosition, float *a3, float *outRadius))(0xB6E850);
 		sub_B6E850(bipedObjectIndex, position, height, radius);
-		auto bipedObject = Blam::Objects::Get(bipedObjectIndex);
+		auto bipedObject = Bungie::Objects::Get(bipedObjectIndex);
 		if (bipedObject)
 			*position += bipedObject->Up * 0.05f; // offset feet
 	}
@@ -1305,7 +1305,7 @@ namespace
 		}
 	}
 
-	void HillColor(Blam::Math::RealColorARGB &color)
+	void HillColor(Bungie::Math::RealColorARGB &color)
 	{
 		// if the color luminosity is less than the visible threshold, bump it up
 		auto l = 0.2126f*color.Red + 0.7152*color.Green + 0.0722*color.Blue;
@@ -1337,19 +1337,19 @@ namespace
 
 	bool IsForgeVariantLoaded(std::string name, char *MapVariant)
 	{
-		if (std::string(Utils::String::ThinString(((Blam::MapVariant *)MapVariant)->ContentHeader.Name)).find(name) == std::string::npos)
+		if (std::string(Utils::String::ThinString(((Bungie::MapVariant *)MapVariant)->ContentHeader.Name)).find(name) == std::string::npos)
 			return false;
 		return true;
 	}
 
 	bool IsGameVariantLoaded(std::string name, char *GameVariant)
 	{
-		if (std::string(Utils::String::ThinString(((Blam::GameVariant *)GameVariant)->Name)).find(name) == std::string::npos)
+		if (std::string(Utils::String::ThinString(((Bungie::GameVariant *)GameVariant)->Name)).find(name) == std::string::npos)
 			return false;
 		return true;
 	}
 
-	bool IsMap(Blam::GameOptions *data, std::string map_name)
+	bool IsMap(Bungie::GameOptions *data, std::string map_name)
 	{
 		if (std::string(data->ScenarioPath).find(map_name) == std::string::npos)
 			return false;
@@ -1360,7 +1360,7 @@ namespace
 	unsigned short game_insertion_point_set(char is_survival)
 	{
 		uint16_t mapinfo_current_insertion_index = Pointer(0x19A5EC4).Read<short>();
-		auto scnrDefinition = Blam::Tags::Scenario::GetCurrentScenario();
+		auto scnrDefinition = Bungie::Tags::Scenario::GetCurrentScenario();
 
 		if (!is_survival)
 			return 0;
@@ -1372,20 +1372,20 @@ namespace
 	}
 
 	// todo: make these user configurable, campaign_prefs.cfg?
-	void *NewGameOptions(Blam::GameOptions *data)
+	void *NewGameOptions(Bungie::GameOptions *data)
 	{
-		if (data->MapType == Blam::eMapTypeCampaign)
+		if (data->MapType == Bungie::eMapTypeCampaign)
 		{
 			auto moduleCampaign = &Modules::ModuleCampaign::Instance();
 			data->FrameLimit = (int16_t)moduleCampaign->VarFrameLimit->ValueInt;
-			data->CampaignDifficultyLevel = (Blam::CampaignDifficultyLevel)moduleCampaign->VarDifficultyLevel->ValueInt;
-			data->CampaignMetagameScoringOption = (Blam::CampaignMetagameScoringOption)moduleCampaign->VarMetagameScoringOption->ValueInt;
+			data->CampaignDifficultyLevel = (Bungie::CampaignDifficultyLevel)moduleCampaign->VarDifficultyLevel->ValueInt;
+			data->CampaignMetagameScoringOption = (Bungie::CampaignMetagameScoringOption)moduleCampaign->VarMetagameScoringOption->ValueInt;
 			data->CampaignMetagameEnabled = (bool)moduleCampaign->VarMetagameEnabled->ValueInt;
 			if (moduleCampaign->VarSurvivalModeEnabled->ValueInt)
 				data->SurvivalModeEnabled = true;
-			data->CampaignInsertionPoint = (Blam::CampaignInsertionPoint)game_insertion_point_set(data->SurvivalModeEnabled);
+			data->CampaignInsertionPoint = (Bungie::CampaignInsertionPoint)game_insertion_point_set(data->SurvivalModeEnabled);
 			if (moduleCampaign->VarInsertionPoint->ValueInt)
-				data->CampaignInsertionPoint = (Blam::CampaignInsertionPoint)moduleCampaign->VarInsertionPoint->ValueInt;
+				data->CampaignInsertionPoint = (Bungie::CampaignInsertionPoint)moduleCampaign->VarInsertionPoint->ValueInt;
 		}
 		else
 			if (Pointer(0x165C83C).Read<int>() != 60)
@@ -1396,7 +1396,7 @@ namespace
 
 	void *__cdecl GameOptionsGetHook()
 	{
-		auto *tls = (Blam::Memory::tls_data *)ElDorito::Instance().GetMainTls();
+		auto *tls = (Bungie::Memory::tls_data *)ElDorito::Instance().GetMainTls();
 		auto gameGlobalsPtr = tls->game_globals;
 		if (!gameGlobalsPtr)
 			return false;
@@ -1406,7 +1406,7 @@ namespace
 
 	void PrintLevelInfo()
 	{
-		auto *tls = (Blam::Memory::tls_data *)ElDorito::Instance().GetMainTls();
+		auto *tls = (Bungie::Memory::tls_data *)ElDorito::Instance().GetMainTls();
 		auto gameGlobalsPtr = tls->game_globals;
 		if (!gameGlobalsPtr)
 			return;
@@ -1424,38 +1424,38 @@ namespace
 		ss << "\tBSP is loaded: " << bool_string[gameGlobalsPtr->bsp_load_state] << std::endl << std::endl;
 
 		ss << "\tFrame Limit: " << GameOptions->FrameLimit << std::endl;
-		ss << "\tGame Simulation: " << Blam::GameSimulationNames[GameOptions->GameSimulation] << std::endl;
+		ss << "\tGame Simulation: " << Bungie::GameSimulationNames[GameOptions->GameSimulation] << std::endl;
 		ss << "\tDeterminism Version: " << GameOptions->DeterminismVersion << std::endl << std::endl;
 
-		ss << "\tGame Playback: " << Blam::GamePlaybackNames[GameOptions->GamePlayback] << std::endl;
-		ss << "\tTheater Mode: " << bool_string[GameOptions->GamePlayback == Blam::eGamePlaybackLocal] << std::endl << std::endl;
+		ss << "\tGame Playback: " << Bungie::GamePlaybackNames[GameOptions->GamePlayback] << std::endl;
+		ss << "\tTheater Mode: " << bool_string[GameOptions->GamePlayback == Bungie::eGamePlaybackLocal] << std::endl << std::endl;
 
 		ss << "\tCinematic Debug Mode: " << bool_string[Pointer(0x24B0A3E).Read<bool>()] << std::endl << std::endl;
 
-		ss << "\tMap type: " << Blam::MapTypeNames[GameOptions->MapType] << std::endl;
+		ss << "\tMap type: " << Bungie::MapTypeNames[GameOptions->MapType] << std::endl;
 
 		ss << "\tMap Id: " << GameOptions->MapId << std::endl;
 		ss << "\tMap Path: " << GameOptions->ScenarioPath << std::endl << std::endl;
 
-		if (GameOptions->MapType == Blam::eMapTypeCampaign)
+		if (GameOptions->MapType == Bungie::eMapTypeCampaign)
 		{
 			ss << "\tCampaign Id: " << GameOptions->CampaignId << std::endl;
-			ss << "\tRally Point: " << Blam::CampaignInsertionPointNames[GameOptions->CampaignInsertionPoint] << std::endl;
+			ss << "\tRally Point: " << Bungie::CampaignInsertionPointNames[GameOptions->CampaignInsertionPoint] << std::endl;
 			ss << "\tZoneset Index: " << GameOptions->ZonesetIndex << std::endl << std::endl;
 
-			ss << "\tCampaign Difficulty: " << Blam::GameDifficultNames[GameOptions->CampaignDifficultyLevel] << std::endl;
+			ss << "\tCampaign Difficulty: " << Bungie::GameDifficultNames[GameOptions->CampaignDifficultyLevel] << std::endl;
 			ss << "\tMetagame Enable: " << bool_string[GameOptions->CampaignMetagameEnabled] << std::endl;
-			ss << "\tMetagame Scoring: " << Blam::CampaignMetagameScoringOptionNames[GameOptions->CampaignMetagameScoringOption] << std::endl;
+			ss << "\tMetagame Scoring: " << Bungie::CampaignMetagameScoringOptionNames[GameOptions->CampaignMetagameScoringOption] << std::endl;
 			ss << "\tSurvival Mode Enable: " << bool_string[GameOptions->SurvivalModeEnabled] << std::endl << std::endl;
 
 			// TODO: figure out / fix
-			ss << "\tActive Primary Skulls: " << Blam::SkullNames[GameOptions->CampaignSkullsPrimary] << std::endl;
-			ss << "\tActive Secondary Skulls: " << Blam::SkullNames[GameOptions->CampaignSkullsSecondary] << std::endl << std::endl;
+			ss << "\tActive Primary Skulls: " << Bungie::SkullNames[GameOptions->CampaignSkullsPrimary] << std::endl;
+			ss << "\tActive Secondary Skulls: " << Bungie::SkullNames[GameOptions->CampaignSkullsSecondary] << std::endl << std::endl;
 		}
 		else
 		{
 			auto GameVariant = &GameOptions->GameVariant;
-			ss << "\t(Game Variant)->Game Type: " << Blam::GameTypeNames[GameVariant->GameType] << std::endl;
+			ss << "\t(Game Variant)->Game Type: " << Bungie::GameTypeNames[GameVariant->GameType] << std::endl;
 			ss << "\t(Game Variant)->Name: " << Utils::String::ThinString(GameVariant->Name) << std::endl;
 			ss << "\t(Game Variant)->Author: " << GameVariant->Author << std::endl;
 			ss << "\t(Game Variant)->Description: " << GameVariant->Description << std::endl << std::endl;
@@ -1485,7 +1485,7 @@ namespace
 			auto participant = GameOptions->InitialParticipantsArray;
 			do
 			{
-				auto properties = (Blam::Players::PlayerProperties *)participant->PlayerProperties;
+				auto properties = (Bungie::Players::PlayerProperties *)participant->PlayerProperties;
 				if (participant->IsValid)
 				{
 					ss << "\tPlayer " << player_index + 1 << ": ";
@@ -1494,7 +1494,7 @@ namespace
 
 					switch (GameVariant->GameType)
 					{
-					case Blam::eGameTypeInfection:
+					case Bungie::eGameTypeInfection:
 						ss << ", " << (properties->TeamIndex ? "Human" : "Zombie");
 					default:
 						ss << ", " << TeamNames[properties->TeamIndex];
@@ -1517,52 +1517,52 @@ namespace
 			Console::WriteLine(ss.str());
 	}
 
-	std::vector<Blam::e_primary_skull> primary_skulls
+	std::vector<Bungie::e_primary_skull> primary_skulls
 	{
-		{ Blam::e_primary_skull::_iron, false },
-		{ Blam::e_primary_skull::_black_eye, false },
-		{ Blam::e_primary_skull::_tough_luck, false },
-		{ Blam::e_primary_skull::_catch, false },
-		{ Blam::e_primary_skull::_fog, false },
-		{ Blam::e_primary_skull::_famine, false },
-		{ Blam::e_primary_skull::_thunderstorm, false },
-		{ Blam::e_primary_skull::_tilt, false },
-		{ Blam::e_primary_skull::_mythic, false }
+		{ Bungie::e_primary_skull::_iron, false },
+		{ Bungie::e_primary_skull::_black_eye, false },
+		{ Bungie::e_primary_skull::_tough_luck, false },
+		{ Bungie::e_primary_skull::_catch, false },
+		{ Bungie::e_primary_skull::_fog, false },
+		{ Bungie::e_primary_skull::_famine, false },
+		{ Bungie::e_primary_skull::_thunderstorm, false },
+		{ Bungie::e_primary_skull::_tilt, false },
+		{ Bungie::e_primary_skull::_mythic, false }
 	};
 
-	std::vector<Blam::e_secondary_skull> secondary_skulls
+	std::vector<Bungie::e_secondary_skull> secondary_skulls
 	{
-		{ Blam::e_secondary_skull::_assassin, false },
-		{ Blam::e_secondary_skull::_blind, false },
-		{ Blam::e_secondary_skull::_superman, false },
-		{ Blam::e_secondary_skull::_birthday_party, false },
-		{ Blam::e_secondary_skull::_daddy, false },
-		{ Blam::e_secondary_skull::_third_person, false },
-		{ Blam::e_secondary_skull::_directors_cut, false }
+		{ Bungie::e_secondary_skull::_assassin, false },
+		{ Bungie::e_secondary_skull::_blind, false },
+		{ Bungie::e_secondary_skull::_superman, false },
+		{ Bungie::e_secondary_skull::_birthday_party, false },
+		{ Bungie::e_secondary_skull::_daddy, false },
+		{ Bungie::e_secondary_skull::_third_person, false },
+		{ Bungie::e_secondary_skull::_directors_cut, false }
 	};
 
 	void primary_skull_toggle_hook(__int16 skull, char enable)
 	{
-		if (skull < Blam::e_primary_skull::k_number_of_primary_skulls)
+		if (skull < Bungie::e_primary_skull::k_number_of_primary_skulls)
 			primary_skulls[skull].enabled = enable ? true : false;
 	}
 
 	void secondary_skull_toggle_hook(__int16 skull, char enable)
 	{
-		if (skull < Blam::e_secondary_skull::k_number_of_secondary_skulls)
+		if (skull < Bungie::e_secondary_skull::k_number_of_secondary_skulls)
 			secondary_skulls[skull].enabled = enable ? true : false;
 	}
 
 	bool __cdecl primary_skull_is_active_hook(__int16 skull)
 	{
-		if (skull < Blam::e_primary_skull::k_number_of_primary_skulls)
+		if (skull < Bungie::e_primary_skull::k_number_of_primary_skulls)
 			return primary_skulls[skull].enabled;
 		return false;
 	}
 
 	bool __cdecl secondary_skull_is_active_hook(__int16 skull)
 	{
-		if (skull < Blam::e_secondary_skull::k_number_of_secondary_skulls)
+		if (skull < Bungie::e_secondary_skull::k_number_of_secondary_skulls)
 			return secondary_skulls[skull].enabled;
 		return false;
 	}

@@ -1,6 +1,6 @@
-#include "Blam\Tags\Sounds\Sound\Sound.hpp"
+#include "Bungie\Tags\Sounds\Sound\Sound.hpp"
 
-namespace Blam::Tags::Sounds
+namespace Bungie::Tags::Sounds
 {
 	Scale* GetScale(Sound* sound) {
 		return &sound->Scale;

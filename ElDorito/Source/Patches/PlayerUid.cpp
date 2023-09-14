@@ -5,7 +5,7 @@
 #include "Patch.hpp"
 #include "Patches\PlayerPropertiesExtension.hpp"
 #include "Utils\Cryptography.hpp"
-#include "Blam\BlamPlayers.hpp"
+#include "Bungie\BlamPlayers.hpp"
 #include "Utils\String.hpp"
 
 #include <openssl\sha.h>
@@ -27,17 +27,17 @@ namespace
 			*out = Patches::PlayerUid::Get();
 		}
 
-		void ApplyData(int playerIndex, Blam::Players::PlayerProperties *properties, const uint64_t &data) override
+		void ApplyData(int playerIndex, Bungie::Players::PlayerProperties *properties, const uint64_t &data) override
 		{
 			properties->Uid = data;
 		}
 
-		void Serialize(Blam::BitStream *stream, const uint64_t &data) override
+		void Serialize(Bungie::BitStream *stream, const uint64_t &data) override
 		{
 			stream->WriteUnsigned(data, 64);
 		}
 
-		void Deserialize(Blam::BitStream *stream, uint64_t *out) override
+		void Deserialize(Bungie::BitStream *stream, uint64_t *out) override
 		{
 			*out = stream->ReadUnsigned<uint64_t>(64);
 		}

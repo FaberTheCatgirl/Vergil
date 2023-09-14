@@ -1,6 +1,6 @@
-#include "Blam\Math\RealColorARGB.hpp"
+#include "Bungie\Math\RealColorARGB.hpp"
 
-namespace Blam::Math
+namespace Bungie::Math
 {
 	RealColorARGB::RealColorARGB()
 		: RealColorARGB(1.0f, 0.0f, 0.0f, 0.0f)

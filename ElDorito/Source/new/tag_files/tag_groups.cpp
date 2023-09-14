@@ -1,6 +1,6 @@
 #include "new\tag_files\tag_groups.hpp"
 
-namespace blam
+namespace Bungie
 {
 	const tag_group tag_group::none = { _tag_none, _string_id_invalid };
 

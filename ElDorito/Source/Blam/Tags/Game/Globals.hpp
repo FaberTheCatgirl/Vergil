@@ -1,21 +1,21 @@
 #pragma once
 #include <cstdint>
-#include "Blam\Math\Bounds.hpp"
-#include "Blam\Math\RealPoint2D.hpp"
-#include "Blam\Math\RealPoint3D.hpp"
-#include "Blam\Tags\Tags.hpp"
-#include "Blam\Text\StringID.hpp"
+#include "Bungie\Math\Bounds.hpp"
+#include "Bungie\Math\RealPoint2D.hpp"
+#include "Bungie\Math\RealPoint3D.hpp"
+#include "Bungie\Tags\Tags.hpp"
+#include "Bungie\Text\StringID.hpp"
 
-namespace Blam::Tags::Game
+namespace Bungie::Tags::Game
 {
-	using Blam::Math::Bounds;
-	using Blam::Math::RealPoint2D;
-	using Blam::Math::RealPoint3D;
-	using Blam::Tags::TagBlock;
-	using Blam::Tags::TagData;
-	using Blam::Tags::TagGroup;
-	using Blam::Tags::TagReference;
-	using Blam::Text::StringID;
+	using Bungie::Math::Bounds;
+	using Bungie::Math::RealPoint2D;
+	using Bungie::Math::RealPoint3D;
+	using Bungie::Tags::TagBlock;
+	using Bungie::Tags::TagData;
+	using Bungie::Tags::TagGroup;
+	using Bungie::Tags::TagReference;
+	using Bungie::Text::StringID;
 
 	struct Globals : TagGroup<'matg'>
 	{

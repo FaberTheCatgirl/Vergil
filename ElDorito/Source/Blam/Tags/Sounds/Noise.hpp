@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-namespace Blam::Tags::Sounds
+namespace Bungie::Tags::Sounds
 {
 	enum class NoiseLevel : int16_t
 	{

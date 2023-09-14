@@ -2,7 +2,7 @@
 
 #include <cstdint>
 
-namespace Blam::Input
+namespace Bungie::Input
 {
 	enum UiButtonCode : uint32_t
 	{

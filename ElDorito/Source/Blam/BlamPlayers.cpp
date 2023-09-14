@@ -1,4 +1,4 @@
-#include "Blam\BlamPlayers.hpp"
+#include "Bungie\BlamPlayers.hpp"
 #include "ElDorito.hpp"
 #include <iomanip>
 
@@ -7,7 +7,7 @@ namespace
 	const size_t PlayersTlsOffset = 0x40;
 }
 
-namespace Blam::Players
+namespace Bungie::Players
 {
 	DataArray<PlayerDatum>& GetPlayers()
 	{

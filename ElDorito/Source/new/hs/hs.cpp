@@ -3,7 +3,7 @@
 
 #include "new\hs\hs.hpp"
 
-namespace blam
+namespace Bungie
 {
 	const char *hs_type_names[k_number_of_hs_types] =
 	{

@@ -1,12 +1,12 @@
 #pragma once
 #include <cstdint>
-#include "Blam\Tags\Tags.hpp"
-#include "Blam\Text\StringID.hpp"
-#include "Blam\Tags\Game\GameVariant.hpp"
+#include "Bungie\Tags\Tags.hpp"
+#include "Bungie\Text\StringID.hpp"
+#include "Bungie\Tags\Game\GameVariant.hpp"
 
-namespace Blam::Tags::Game
+namespace Bungie::Tags::Game
 {
-	using Blam::Text::StringID;
+	using Bungie::Text::StringID;
 
 	struct KOTHVariant : GameVariant
 	{

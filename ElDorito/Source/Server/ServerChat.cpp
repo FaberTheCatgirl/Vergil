@@ -21,7 +21,7 @@ namespace
 
 	std::shared_ptr<ChatMessagePacketSender> PacketSender;
 
-	bool HostReceivedMessage(Blam::Network::Session *session, int peer, const ChatMessage &message);
+	bool HostReceivedMessage(Bungie::Network::Session *session, int peer, const ChatMessage &message);
 	void ClientReceivedMessage(const ChatMessage &message);
 
 	struct ClientSpamStats
@@ -44,7 +44,7 @@ namespace
 	class ChatMessagePacketHandler: public Patches::CustomPackets::PacketHandler<ChatMessage>
 	{
 	public:
-		void Serialize(Blam::BitStream *stream, const ChatMessage *data) override
+		void Serialize(Bungie::BitStream *stream, const ChatMessage *data) override
 		{
 			// Message type
 			stream->WriteUnsigned(static_cast<uint32_t>(data->Type), 0U, static_cast<uint32_t>(ChatMessageType::Count));
@@ -54,14 +54,14 @@ namespace
 
 			// For non-server messages, serialize the sender index
 			if (data->Type != ChatMessageType::Server)
-				stream->WriteUnsigned<uint8_t>(data->SenderPlayer, 0, Blam::Network::MaxPlayers - 1);
+				stream->WriteUnsigned<uint8_t>(data->SenderPlayer, 0, Bungie::Network::MaxPlayers - 1);
 
 			// For whisper messages, serialize the target index
 			if (data->Type == ChatMessageType::Whisper)
-				stream->WriteUnsigned<uint8_t>(data->TargetPlayer, 0, Blam::Network::MaxPlayers - 1);
+				stream->WriteUnsigned<uint8_t>(data->TargetPlayer, 0, Bungie::Network::MaxPlayers - 1);
 		}
 
-		bool Deserialize(Blam::BitStream *stream, ChatMessage *data) override
+		bool Deserialize(Bungie::BitStream *stream, ChatMessage *data) override
 		{
 			memset(data, 0, sizeof(*data));
 
@@ -76,18 +76,18 @@ namespace
 
 			// For non-server messages, deserialize the sender index
 			if (data->Type != ChatMessageType::Server)
-				data->SenderPlayer = stream->ReadUnsigned<uint8_t>(0, Blam::Network::MaxPlayers - 1);
+				data->SenderPlayer = stream->ReadUnsigned<uint8_t>(0, Bungie::Network::MaxPlayers - 1);
 
 			// For whisper messages, deserialize the target index
 			if (data->Type == ChatMessageType::Whisper)
-				data->TargetPlayer = stream->ReadUnsigned<uint8_t>(0, Blam::Network::MaxPlayers - 1);
+				data->TargetPlayer = stream->ReadUnsigned<uint8_t>(0, Bungie::Network::MaxPlayers - 1);
 
 			return true;
 		}
 
-		void HandlePacket(Blam::Network::ObserverChannel *sender, const ChatMessagePacket *packet) override
+		void HandlePacket(Bungie::Network::ObserverChannel *sender, const ChatMessagePacket *packet) override
 		{
-			auto session = Blam::Network::GetActiveSession();
+			auto session = Bungie::Network::GetActiveSession();
 			if (!session)
 				return;
 			auto peer = session->GetChannelPeer(sender);
@@ -115,7 +115,7 @@ namespace
 	}
 
 	// Broadcasts a message to a set of peers.
-	bool BroadcastMessage(Blam::Network::Session *session, int senderPeer, ChatMessage *message, PeerBitSet peers)
+	bool BroadcastMessage(Bungie::Network::Session *session, int senderPeer, ChatMessage *message, PeerBitSet peers)
 	{
 		if (senderPeer < 0)
 			return false;
@@ -143,7 +143,7 @@ namespace
 	}
 
 	// Gets a bitset of peers on the same team as a peer.
-	bool GetTeamPeers(Blam::Network::Session *session, int senderPeer, PeerBitSet *result)
+	bool GetTeamPeers(Bungie::Network::Session *session, int senderPeer, PeerBitSet *result)
 	{
 		result->reset();
 
@@ -165,7 +165,7 @@ namespace
 	}
 
 	// Gets a bitset of peers to send a message to.
-	bool GetMessagePeers(Blam::Network::Session *session, int senderPeer, const ChatMessage &message, PeerBitSet *result)
+	bool GetMessagePeers(Bungie::Network::Session *session, int senderPeer, const ChatMessage &message, PeerBitSet *result)
 	{
 		switch (message.Type)
 		{
@@ -183,9 +183,9 @@ namespace
 	}
 
 	// Gets the name of a message's sender.
-	std::string GetSenderName(Blam::Network::Session *session, const ChatMessage &message)
+	std::string GetSenderName(Bungie::Network::Session *session, const ChatMessage &message)
 	{
-		if (message.Type == ChatMessageType::Server || message.SenderPlayer >= Blam::Network::MaxPlayers)
+		if (message.Type == ChatMessageType::Server || message.SenderPlayer >= Bungie::Network::MaxPlayers)
 			return "SERVER";
 		auto &membership = session->MembershipInfo;
 		auto &player = membership.PlayerSessions[message.SenderPlayer];
@@ -204,7 +204,7 @@ namespace
 	}
 
 	// Checks a message against the flood filter and returns true if it should be thrown out.
-	bool FloodFilterMessage(Blam::Network::Session *session, int peer, const ChatMessage &message)
+	bool FloodFilterMessage(Bungie::Network::Session *session, int peer, const ChatMessage &message)
 	{
 		// Increase the IP's spam score and put it in timeout if it exceeds the maximum
 		auto ip = session->GetPeerAddress(peer).Address.IPv4;
@@ -244,7 +244,7 @@ namespace
 	}
 
 	// Writes a message to the log file.
-	std::string GetLogString(Blam::Network::Session *session, int peer, const ChatMessage &message)
+	std::string GetLogString(Bungie::Network::Session *session, int peer, const ChatMessage &message)
 	{
 
 		// Get the UTC time
@@ -265,7 +265,7 @@ namespace
 		std::ostringstream ss;
 
 		char uidStr[17];
-		Blam::Players::FormatUid(uidStr, uid);
+		Bungie::Players::FormatUid(uidStr, uid);
 
 
 		ss << "[" << std::put_time(&gmTime, "%m/%d/%y %H:%M:%S") << "] "; // Timestamp
@@ -277,7 +277,7 @@ namespace
 	}
 
 	// Writes a message to the log file.
-	void LogMessage(Blam::Network::Session *session, int peer, const ChatMessage &message)
+	void LogMessage(Bungie::Network::Session *session, int peer, const ChatMessage &message)
 	{
 		auto &serverModule = Modules::ModuleServer::Instance();
 		if (!serverModule.VarChatLogEnabled->ValueInt)
@@ -294,7 +294,7 @@ namespace
 	}
 
 	// Callback for when a message is received as the host.
-	bool HostReceivedMessage(Blam::Network::Session *session, int peer, const ChatMessage &message)
+	bool HostReceivedMessage(Bungie::Network::Session *session, int peer, const ChatMessage &message)
 	{
 		// Verify that the message isn't empty and that the type is valid
 		// TODO: Implement support for message types other than Global
@@ -348,7 +348,7 @@ namespace
 	}
 
 	// Sends a message as a client.
-	bool SendClientMessage(Blam::Network::Session *session, const ChatMessage &message)
+	bool SendClientMessage(Bungie::Network::Session *session, const ChatMessage &message)
 	{
 		if (session->IsHost())
 		{
@@ -413,7 +413,7 @@ namespace Server::Chat
 
 	bool SendGlobalMessage(const std::string &body)
 	{
-		auto session = Blam::Network::GetActiveSession();
+		auto session = Bungie::Network::GetActiveSession();
 		if (!session || !session->IsEstablished())
 			return false;
 
@@ -423,7 +423,7 @@ namespace Server::Chat
 	//Sends a server message to all peers.
 	bool SendServerMessage(const std::string &body)
 	{
-		auto session = Blam::Network::GetActiveSession();
+		auto session = Bungie::Network::GetActiveSession();
 		if (!session || !session->IsEstablished() || !session->IsHost())
 			return false;
 
@@ -434,7 +434,7 @@ namespace Server::Chat
 	}
 	bool SendTeamMessage(const std::string &body)
 	{
-		auto session = Blam::Network::GetActiveSession();
+		auto session = Bungie::Network::GetActiveSession();
 		if (!session || !session->IsEstablished() || !session->HasTeams())
 			return false;
 
@@ -444,7 +444,7 @@ namespace Server::Chat
 
 	bool SendAndLogServerMessage(const std::string &body)
 	{
-		auto session = Blam::Network::GetActiveSession();
+		auto session = Bungie::Network::GetActiveSession();
 		if (!session || !session->IsEstablished() || !session->IsHost())
 			return false;
 
@@ -461,7 +461,7 @@ namespace Server::Chat
 	//So I dont have to create a new PeerBitSet all the time when sending it to just one peer
 	bool SendServerMessage(const std::string &body, int peer)
 	{
-		auto session = Blam::Network::GetActiveSession();
+		auto session = Bungie::Network::GetActiveSession();
 		if (!session || !session->IsEstablished() || !session->IsHost())
 			return false;
 
@@ -472,7 +472,7 @@ namespace Server::Chat
 	}
 	bool SendServerMessage(const std::string &body, PeerBitSet peers)
 	{
-		auto session = Blam::Network::GetActiveSession();
+		auto session = Bungie::Network::GetActiveSession();
 		if (!session || !session->IsEstablished() || !session->IsHost())
 			return false;
 
@@ -487,7 +487,7 @@ namespace Server::Chat
 
 	std::string GetSenderName(const ChatMessage &message)
 	{
-		return ::GetSenderName(Blam::Network::GetActiveSession(), message);
+		return ::GetSenderName(Bungie::Network::GetActiveSession(), message);
 	}
 
 	ChatMessage::ChatMessage(ChatMessageType type, const std::string &body)

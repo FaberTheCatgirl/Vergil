@@ -1,6 +1,6 @@
-#include "Blam\Math\RealEulerAngles3D.hpp"
+#include "Bungie\Math\RealEulerAngles3D.hpp"
 
-namespace Blam::Math
+namespace Bungie::Math
 {
 	RealEulerAngles3D::RealEulerAngles3D()
 		: RealEulerAngles3D(Angle(), Angle(), Angle())

@@ -1,6 +1,6 @@
 #pragma once
 
-namespace blam
+namespace Bungie
 {
 	typedef float real;
 	static_assert(sizeof(real) == 0x4);

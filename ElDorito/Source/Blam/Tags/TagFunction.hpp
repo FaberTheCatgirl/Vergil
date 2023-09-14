@@ -1,7 +1,7 @@
 #pragma once
-#include "Blam\Tags\TagData.hpp"
+#include "Bungie\Tags\TagData.hpp"
 
-namespace Blam::Tags
+namespace Bungie::Tags
 {
 	struct TagFunction
 	{

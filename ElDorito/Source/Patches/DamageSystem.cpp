@@ -1,6 +1,6 @@
 #include "Patches\DamageSystem.hpp"
-#include "Blam\BlamObjects.hpp"
-#include "Blam\BlamPlayers.hpp"
+#include "Bungie\BlamObjects.hpp"
+#include "Bungie\BlamPlayers.hpp"
 #include "Patch.hpp"
 
 namespace
@@ -32,13 +32,13 @@ namespace
 
 	bool UnitHasInvincibleTrait(uint32_t unitObjectIndex)
 	{
-		auto unitObject = Blam::Objects::Get(unitObjectIndex);
+		auto unitObject = Bungie::Objects::Get(unitObjectIndex);
 		if (!unitObject)
 			return false;
 		auto playerIndex = *(uint32_t*)((char*)unitObject + 0x198);
 		if (playerIndex == -1)
 			return false;
-		auto player = Blam::Players::GetPlayers().Get(playerIndex);
+		auto player = Bungie::Players::GetPlayers().Get(playerIndex);
 		if (!player)
 			return false;
 

@@ -1,10 +1,10 @@
-#include "Blam\Tags\Objects\Vehicle.hpp"
+#include "Bungie\Tags\Objects\Vehicle.hpp"
 #include "Definitions\EnumDefinition.hpp"
 
-using namespace Blam::Tags::Objects;
+using namespace Bungie::Tags::Objects;
 using namespace Definitions;
 
-namespace Blam::Tags
+namespace Bungie::Tags
 {
 	const StructDefinition EarlyMoverPropertiesStruct =
 	{

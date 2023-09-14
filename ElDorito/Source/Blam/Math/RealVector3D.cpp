@@ -1,10 +1,10 @@
-#include "Blam\Math\RealVector3D.hpp"
-#include "Blam\Math\RealQuaternion.hpp"
+#include "Bungie\Math\RealVector3D.hpp"
+#include "Bungie\Math\RealQuaternion.hpp"
 #include <cmath>
 #include <cassert>
 #include <limits>
 
-namespace Blam::Math
+namespace Bungie::Math
 {
 	RealVector3D::RealVector3D()
 		: RealVector3D(0.0f, 0.0f, 0.0f)

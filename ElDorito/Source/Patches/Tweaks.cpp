@@ -1,17 +1,17 @@
 #include "Patches\Tweaks.hpp"
 
-#include "Blam\Tags\TagInstance.hpp"
-#include "Blam\Tags\Camera\CameraFxSettings.hpp"
-#include "Blam\Tags\Game\Globals.hpp"
-#include "Blam\Tags\Game\MultiplayerGlobals.hpp"
-#include "Blam\Tags\Globals\CacheFileGlobalTags.hpp"
-#include "Blam\Tags\Models\Model.hpp"
-#include "Blam\Tags\Objects\Biped.hpp"
-#include "Blam\Tags\Objects\Projectile.hpp"
-#include "Blam\Tags\Sounds\SoundClasses\SoundClasses.hpp"
-#include "Blam\Tags\Scenario\Scenario.hpp"
-#include "Blam\Tags\UI\ChudGlobalsDefinition.hpp"
-#include "Blam\Tags\UI\ChudDefinition.hpp"
+#include "Bungie\Tags\TagInstance.hpp"
+#include "Bungie\Tags\Camera\CameraFxSettings.hpp"
+#include "Bungie\Tags\Game\Globals.hpp"
+#include "Bungie\Tags\Game\MultiplayerGlobals.hpp"
+#include "Bungie\Tags\Globals\CacheFileGlobalTags.hpp"
+#include "Bungie\Tags\Models\Model.hpp"
+#include "Bungie\Tags\Objects\Biped.hpp"
+#include "Bungie\Tags\Objects\Projectile.hpp"
+#include "Bungie\Tags\Sounds\SoundClasses\SoundClasses.hpp"
+#include "Bungie\Tags\Scenario\Scenario.hpp"
+#include "Bungie\Tags\UI\ChudGlobalsDefinition.hpp"
+#include "Bungie\Tags\UI\ChudDefinition.hpp"
 #include "Modules\ModuleTweaks.hpp"
 #include "Modules\ModuleServer.hpp"
 #include "Utils\Logger.hpp"
@@ -65,9 +65,9 @@ namespace Patches::Tweaks
 
 	void UpdateUnitHUD()
 	{ 
-		using namespace Blam::Tags; 
+		using namespace Bungie::Tags; 
  
-		using Blam::Tags::Objects::Biped; 
+		using Bungie::Tags::Objects::Biped; 
  
 		auto masterChief = TagInstance::Find('bipd', "objects\\characters\\masterchief\\mp_masterchief\\mp_masterchief"); 
 		if (masterChief.Index == 0xFFFF) 
@@ -86,19 +86,19 @@ namespace Patches::Tweaks
 
 namespace
 {
-	using namespace Blam::Tags;
+	using namespace Bungie::Tags;
 
-	Blam::Tags::Game::Globals *GetGlobalsDefinition()
+	Bungie::Tags::Game::Globals *GetGlobalsDefinition()
 	{
 		auto matgTags = TagInstance::GetInstancesInGroup('matg');
 		if (matgTags.size() < 1)
 			return nullptr;
-		return matgTags[0].GetDefinition<Blam::Tags::Game::Globals>();
+		return matgTags[0].GetDefinition<Bungie::Tags::Game::Globals>();
 	}
 
 	void EnableIntelBloomFix()
 	{
-		using CameraFxSettings = Blam::Tags::Camera::FxSettings;
+		using CameraFxSettings = Bungie::Tags::Camera::FxSettings;
 
 		auto cfxsTags = TagInstance::GetInstancesInGroup('cfxs');
 		for (auto &cfxsTag : cfxsTags)
@@ -111,7 +111,7 @@ namespace
 
 	void EnableReachStyleFrags()
 	{
-		using Blam::Tags::Objects::Projectile;
+		using Bungie::Tags::Objects::Projectile;
 
 		auto fragProjectile = TagInstance::Find('proj', "objects\\weapons\\grenade\\frag_grenade\\frag_grenade");
 		auto trailEffect = TagInstance::Find('effe', "objects\\equipment\\bombrun\\projectiles\\bombrun_grenade\\fx\\projectile");
@@ -119,7 +119,7 @@ namespace
 		if (fragProjectile.Index != 0xFFFF && trailEffect.Index != 0xFFFF)
 		{
 			auto fragDefinition = fragProjectile.GetDefinition<Projectile>();
-			auto trailTagReference = Blam::Tags::TagReference('effe', trailEffect.Index);
+			auto trailTagReference = Bungie::Tags::TagReference('effe', trailEffect.Index);
 
 			if (fragDefinition->Attachments.Count > 0)
 				fragDefinition->Attachments[0].Tag = trailTagReference;
@@ -130,7 +130,7 @@ namespace
 	{
 		for (auto scnrTag : TagInstance::GetInstancesInGroup('scnr'))
 		{
-			auto scnrDefinition = scnrTag.GetDefinition<Blam::Tags::Scenario::Scenario>();
+			auto scnrDefinition = scnrTag.GetDefinition<Bungie::Tags::Scenario::Scenario>();
 			if (scnrDefinition && scnrDefinition->MapId == 700)
 			{
 				scnrDefinition->EffectScenery[01].PaletteIndex = -1;
@@ -142,7 +142,7 @@ namespace
 
 	void EnableAggressiveAudioDiscarding()
 	{
-		using SoundClasses = Blam::Tags::Sounds::Classes;
+		using SoundClasses = Bungie::Tags::Sounds::Classes;
 
 		auto matgDefinition = GetGlobalsDefinition();
 		if (!matgDefinition)
@@ -164,7 +164,7 @@ namespace
 
 		for (int i = 0; i < snclDefinition->ClassProperties.Count; i++)
 		{
-			snclDefinition->ClassProperties[i].CacheMissMode = Blam::Tags::Sounds::CacheMissMode::Discard;
+			snclDefinition->ClassProperties[i].CacheMissMode = Bungie::Tags::Sounds::CacheMissMode::Discard;
 			snclDefinition->ClassProperties[i].Priority = 0;
 
 			switch (i)
@@ -189,8 +189,8 @@ namespace
 
 	void EnableHitmarkersInternal(bool enabled)
 	{
-		using Blam::Tags::Objects::Biped;
-		using Blam::Tags::UI::ChudDefinition;
+		using Bungie::Tags::Objects::Biped;
+		using Bungie::Tags::UI::ChudDefinition;
 
 		auto matgDefinition = GetGlobalsDefinition();
 		if (!matgDefinition)

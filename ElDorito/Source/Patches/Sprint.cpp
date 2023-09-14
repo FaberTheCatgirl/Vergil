@@ -1,8 +1,8 @@
 #include "Patches\Sprint.hpp"
 #include "Patch.hpp"
 #include "ElDorito.hpp"
-#include "Blam\BlamTypes.hpp"
-#include "Blam\Memory\TlsData.hpp"
+#include "Bungie\BlamTypes.hpp"
+#include "Bungie\Memory\TlsData.hpp"
 
 namespace
 {
@@ -33,7 +33,7 @@ namespace Patches::Sprint
 	void Tick()
 	{
 		// Show/hide the sprint meter
-		Blam::Memory::chud_player_hud_elements *persistentUserDataChud = ElDorito::GetMainTls(GameGlobals::PersistentUserDataChud::TLSOffset)[0](GameGlobals::PersistentUserDataChud::HUDElementsOffset);
+		Bungie::Memory::chud_player_hud_elements *persistentUserDataChud = ElDorito::GetMainTls(GameGlobals::PersistentUserDataChud::TLSOffset)[0](GameGlobals::PersistentUserDataChud::HUDElementsOffset);
 		if (persistentUserDataChud)
 			persistentUserDataChud->stamina = sprintEnabled;
 	}

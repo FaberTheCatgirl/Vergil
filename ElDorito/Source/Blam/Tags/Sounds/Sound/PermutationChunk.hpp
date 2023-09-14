@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Blam\Tags\Tags.hpp"
-#include "Blam\Math\Bounds.hpp"
+#include "Bungie\Tags\Tags.hpp"
+#include "Bungie\Math\Bounds.hpp"
 
-namespace Blam::Tags::Sounds
+namespace Bungie::Tags::Sounds
 {
 	struct PermutationChunk
 	{

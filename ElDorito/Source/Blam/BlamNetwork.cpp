@@ -1,15 +1,15 @@
 #include <WS2tcpip.h>
 #define WIN32_LEAN_AND_MEAN
 
-#include "Blam\BlamNetwork.hpp"
+#include "Bungie\BlamNetwork.hpp"
 #include "Pointer.hpp"
 //#include "Discord\DiscordRPC.h"
 
 namespace
 {
-	Blam::Network::PingPacket MakePingPacket(uint16_t id)
+	Bungie::Network::PingPacket MakePingPacket(uint16_t id)
 	{
-		Blam::Network::PingPacket packet;
+		Bungie::Network::PingPacket packet;
 		packet.ID = id;
 		packet.QosResponse = false;
 		packet.Timestamp = timeGetTime();
@@ -17,7 +17,7 @@ namespace
 	}
 }
 
-namespace Blam::Network
+namespace Bungie::Network
 {
 	Session *GetActiveSession()
 	{
@@ -219,7 +219,7 @@ namespace Blam::Network
 
 	void PacketTable::Register(int index, const char *name, int unk8, int minSize, int maxSize, SerializePacketFn serializeFunc, DeserializePacketFn deserializeFunc, int unk1C, int unk20)
 	{
-		typedef void(__thiscall *RegisterPacketPtr)(PacketTable *thisPtr, int id, const char *name, int unk8, int minSize, int maxSize, Blam::Network::SerializePacketFn serializeFunc, Blam::Network::DeserializePacketFn deserializeFunc, int unk1C, int unk20);
+		typedef void(__thiscall *RegisterPacketPtr)(PacketTable *thisPtr, int id, const char *name, int unk8, int minSize, int maxSize, Bungie::Network::SerializePacketFn serializeFunc, Bungie::Network::DeserializePacketFn deserializeFunc, int unk1C, int unk20);
 		auto RegisterPacket = reinterpret_cast<RegisterPacketPtr>(0x4801B0);
 		RegisterPacket(this, index, name, unk8, minSize, maxSize, serializeFunc, deserializeFunc, unk1C, unk20);
 	}
@@ -298,7 +298,7 @@ namespace Blam::Network
 		struct in_addr inAddr;
 		if (!inet_pton(AF_INET, addr.c_str(), &inAddr))
 			return false;
-		*result = Blam::Network::NetworkAddress::FromInAddr(inAddr.S_un.S_addr, port);
+		*result = Bungie::Network::NetworkAddress::FromInAddr(inAddr.S_un.S_addr, port);
 		return true;
 	}
 

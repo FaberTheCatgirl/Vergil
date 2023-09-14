@@ -1,11 +1,11 @@
 #pragma once
-#include "Blam\Text\StringID.hpp"
-#include "Blam\Tags\TagBlock.hpp"
-#include "Blam\Tags\TagFunction.hpp"
-#include "Blam\Tags\TagMapping.hpp"
-#include "Blam\Tags\TagReference.hpp"
+#include "Bungie\Text\StringID.hpp"
+#include "Bungie\Tags\TagBlock.hpp"
+#include "Bungie\Tags\TagFunction.hpp"
+#include "Bungie\Tags\TagMapping.hpp"
+#include "Bungie\Tags\TagReference.hpp"
 
-namespace Blam::Tags::Shaders
+namespace Bungie::Tags::Shaders
 {
 	struct RenderMethodUnknownBlock1
 	{

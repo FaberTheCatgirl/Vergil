@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Blam\Tags\Tags.hpp"
+#include "Bungie\Tags\Tags.hpp"
 
-namespace Blam::Tags::Sounds
+namespace Bungie::Tags::Sounds
 {
 	struct Language
 	{

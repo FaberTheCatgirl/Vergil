@@ -5,7 +5,7 @@
 #include "Web\Ui\WebForge.hpp"
 #include "Web\Ui\WebScoreboard.hpp"
 #include "CommandMap.hpp"
-#include "Blam\BlamNetwork.hpp"
+#include "Bungie\BlamNetwork.hpp"
 //#include "Discord\DiscordRPC.h"
 #include "Patches\Network.hpp"
 #include "Patches\Input.hpp"
@@ -26,7 +26,7 @@ namespace
 	uint16_t PingId;
 	bool PingHandlerRegistered;
 
-	void PongReceived(const Blam::Network::NetworkAddress &from, uint32_t timestamp, uint16_t id, uint32_t latency);
+	void PongReceived(const Bungie::Network::NetworkAddress &from, uint32_t timestamp, uint16_t id, uint32_t latency);
 }
 
 namespace Anvil::Client::Rendering::Bridge::ClientFunctions
@@ -76,8 +76,8 @@ namespace Anvil::Client::Rendering::Bridge::ClientFunctions
 		}
 
 		// Parse it
-		Blam::Network::NetworkAddress blamAddress;
-		if (!Blam::Network::NetworkAddress::Parse(s_AddressValue->value.GetString(), s_port->value.GetInt(), &blamAddress))
+		Bungie::Network::NetworkAddress blamAddress;
+		if (!Bungie::Network::NetworkAddress::Parse(s_AddressValue->value.GetString(), s_port->value.GetInt(), &blamAddress))
 		{
 			*p_Result = "Invalid argument: The \"address\" argument is not a valid IP address.";
 			return QueryError_InvalidArgument;
@@ -91,7 +91,7 @@ namespace Anvil::Client::Rendering::Bridge::ClientFunctions
 		}
 
 		// Send a ping message
-		auto session = Blam::Network::GetActiveSession();
+		auto session = Bungie::Network::GetActiveSession();
 		if (!session || !session->Gateway->Ping(blamAddress, PingId))
 		{
 			*p_Result = "Network error: Failed to send ping";
@@ -131,7 +131,7 @@ namespace Anvil::Client::Rendering::Bridge::ClientFunctions
 	QueryError OnMapVariantInfo(const rapidjson::Value &p_Args, std::string *p_Result)
 	{
 		// Get the map variant session parameter
-		auto session = Blam::Network::GetActiveSession();
+		auto session = Bungie::Network::GetActiveSession();
 		if (!session || !session->IsEstablished())
 		{
 			*p_Result = "Not available: A game session is not active";
@@ -169,7 +169,7 @@ namespace Anvil::Client::Rendering::Bridge::ClientFunctions
 
 	QueryError OnScoreboard(const rapidjson::Value &p_Args, std::string *p_Result)
 	{
-		auto session = Blam::Network::GetActiveSession();
+		auto session = Bungie::Network::GetActiveSession();
 		if (!session || !session->IsEstablished())
 		{
 			*p_Result = "Cannot get scoreboard data when there is not an active session.";
@@ -189,7 +189,7 @@ namespace Anvil::Client::Rendering::Bridge::ClientFunctions
 	QueryError OnGameVariantInfo(const rapidjson::Value &p_Args, std::string *p_Result)
 	{
 		// Get the game variant session parameter
-		auto session = Blam::Network::GetActiveSession();
+		auto session = Bungie::Network::GetActiveSession();
 		if (!session || !session->IsEstablished())
 		{
 			*p_Result = "Not available: A game session is not active";
@@ -216,13 +216,13 @@ namespace Anvil::Client::Rendering::Bridge::ClientFunctions
 		auto rawGameVariant = reinterpret_cast<uint8_t*>(gameVariant);
 		switch (gameVariant->GameType)
 		{
-		case Blam::eGameTypeSlayer: scoreToWin = *reinterpret_cast<int16_t*>(rawGameVariant + 0x1D4); break;
-		case Blam::eGameTypeOddball: scoreToWin = *reinterpret_cast<int16_t*>(rawGameVariant + 0x1D8); break;
-		case Blam::eGameTypeKOTH: scoreToWin = *reinterpret_cast<int16_t*>(rawGameVariant + 0x1D8); break;
-		case Blam::eGameTypeCTF: scoreToWin = *reinterpret_cast<int16_t*>(rawGameVariant + 0x1DC); break;
-		case Blam::eGameTypeAssault: scoreToWin = *reinterpret_cast<int16_t*>(rawGameVariant + 0x1DC); break;
-		case Blam::eGameTypeJuggernaut: scoreToWin = *reinterpret_cast<int16_t*>(rawGameVariant + 0x1D4); break;
-		case Blam::eGameTypeVIP: scoreToWin = *reinterpret_cast<int16_t*>(rawGameVariant + 0x1D4); break;
+		case Bungie::eGameTypeSlayer: scoreToWin = *reinterpret_cast<int16_t*>(rawGameVariant + 0x1D4); break;
+		case Bungie::eGameTypeOddball: scoreToWin = *reinterpret_cast<int16_t*>(rawGameVariant + 0x1D8); break;
+		case Bungie::eGameTypeKOTH: scoreToWin = *reinterpret_cast<int16_t*>(rawGameVariant + 0x1D8); break;
+		case Bungie::eGameTypeCTF: scoreToWin = *reinterpret_cast<int16_t*>(rawGameVariant + 0x1DC); break;
+		case Bungie::eGameTypeAssault: scoreToWin = *reinterpret_cast<int16_t*>(rawGameVariant + 0x1DC); break;
+		case Bungie::eGameTypeJuggernaut: scoreToWin = *reinterpret_cast<int16_t*>(rawGameVariant + 0x1D4); break;
+		case Bungie::eGameTypeVIP: scoreToWin = *reinterpret_cast<int16_t*>(rawGameVariant + 0x1D4); break;
 		}
 
 		// Build a JSON response
@@ -377,7 +377,7 @@ namespace Anvil::Client::Rendering::Bridge::ClientFunctions
 		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
 
 		writer.StartObject();
-		auto session = Blam::Network::GetActiveSession();
+		auto session = Bungie::Network::GetActiveSession();
 		if (!session || !session->IsEstablished())
 		{
 			writer.Key("established");
@@ -414,7 +414,7 @@ namespace Anvil::Client::Rendering::Bridge::ClientFunctions
 			writer.String(Utils::String::ThinString(session->MembershipInfo.GetLocalPlayerSession().Properties.DisplayName).c_str());
 			writer.Key("Uid");
 			char uid[17];
-			Blam::Players::FormatUid(uid, session->MembershipInfo.GetLocalPlayerSession().Properties.Uid);
+			Bungie::Players::FormatUid(uid, session->MembershipInfo.GetLocalPlayerSession().Properties.Uid);
 			writer.String(uid);
 			writer.EndObject();
 		}
@@ -436,7 +436,7 @@ namespace Anvil::Client::Rendering::Bridge::ClientFunctions
 			return QueryError_BadQuery;
 		}
 
-		auto session = Blam::Network::GetActiveSession();
+		auto session = Bungie::Network::GetActiveSession();
 		if (!session || !session->IsEstablished())
 		{
 			*p_Result = "Cannot get stat data when there is not an active session.";
@@ -451,8 +451,8 @@ namespace Anvil::Client::Rendering::Bridge::ClientFunctions
 			{
 				rapidjson::StringBuffer buffer;
 				rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
-				auto playerStats = Blam::Players::GetStats(playerIdx);
-				auto pvpStats = Blam::Players::GetPVPStats(playerIdx);
+				auto playerStats = Bungie::Players::GetStats(playerIdx);
+				auto pvpStats = Bungie::Players::GetPVPStats(playerIdx);
 				writer.StartObject();
 
 				writer.Key("playerkilledplayer");
@@ -496,17 +496,17 @@ namespace Anvil::Client::Rendering::Bridge::ClientFunctions
 
 				writer.Key("medals");
 				writer.StartObject();
-				for (int medal = 0; medal < Blam::Tags::Objects::MedalType::MedalCount; medal++)
+				for (int medal = 0; medal < Bungie::Tags::Objects::MedalType::MedalCount; medal++)
 				{
-					writer.Key(Blam::Tags::Objects::MedalTypeNames[medal].c_str());
+					writer.Key(Bungie::Tags::Objects::MedalTypeNames[medal].c_str());
 					writer.Int(playerStats.Medals[medal]);
 				}
 				writer.EndObject();
 				writer.Key("weapons");
 				writer.StartObject();
-				for (int weapon = 0; weapon < Blam::Tags::Objects::DamageReportingType::DamageCount; weapon++)
+				for (int weapon = 0; weapon < Bungie::Tags::Objects::DamageReportingType::DamageCount; weapon++)
 				{
-					writer.Key(Blam::Tags::Objects::DamageReportingTypeNames[weapon].c_str());
+					writer.Key(Bungie::Tags::Objects::DamageReportingTypeNames[weapon].c_str());
 					writer.StartObject();
 
 					auto wep = playerStats.WeaponStats[weapon];
@@ -628,7 +628,7 @@ namespace Anvil::Client::Rendering::Bridge::ClientFunctions
 		writer.StartObject();
 
 		writer.Key("loading");
-		writer.Bool(blam::game_is_map_loading());
+		writer.Bool(Bungie::game_is_map_loading());
 		writer.EndObject();
 
 		*p_Result = buffer.GetString();
@@ -669,7 +669,7 @@ namespace Anvil::Client::Rendering::Bridge::ClientFunctions
 
 namespace
 {
-	void PongReceived(const Blam::Network::NetworkAddress &from, uint32_t timestamp, uint16_t id, uint32_t latency)
+	void PongReceived(const Bungie::Network::NetworkAddress &from, uint32_t timestamp, uint16_t id, uint32_t latency)
 	{
 		if (id != PingId)
 			return;

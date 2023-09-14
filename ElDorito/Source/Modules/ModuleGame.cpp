@@ -6,11 +6,11 @@
 #include "ElDorito.hpp"
 #include "Patches\Ui.hpp"
 #include "Patches\Logging.hpp"
-#include "Blam\BlamTypes.hpp"
-#include "Blam\BlamNetwork.hpp"
-#include "Blam\BlamGraphics.hpp"
-#include "Blam\Tags\Game\GameEngineSettings.hpp"
-#include "Blam\Tags\Scenario\Scenario.hpp"
+#include "Bungie\BlamTypes.hpp"
+#include "Bungie\BlamNetwork.hpp"
+#include "Bungie\BlamGraphics.hpp"
+#include "Bungie\Tags\Game\GameEngineSettings.hpp"
+#include "Bungie\Tags\Scenario\Scenario.hpp"
 #include "Patches\Core.hpp"
 #include "Patches\Forge.hpp"
 #include "Patches\Maps.hpp"
@@ -26,7 +26,7 @@
 #include "ThirdParty\rapidjson\writer.h"
 #include <unordered_map>
 #include <codecvt>
-#include "Blam\Tags\Camera\AreaScreenEffect.hpp"
+#include "Bungie\Tags\Camera\AreaScreenEffect.hpp"
 #include "new\game\game_globals.hpp"
 
 namespace
@@ -239,7 +239,7 @@ namespace
 		return true;
 	}
 	
-	auto GlobalGameOptions = (Blam::GameOptions *)0x2391800;
+	auto GlobalGameOptions = (Bungie::GameOptions *)0x2391800;
 	bool CommandGameForceLoad(const std::vector<std::string>& Arguments, std::string& returnInfo)
 	{
 		std::stringstream ss;
@@ -253,12 +253,12 @@ namespace
 				ss << std::endl << "\t" << map;
 
 			ss << std::endl << std::endl << "Valid gametypes:";
-			for (size_t i = 0; i < Blam::eGameTypeCount; i++)
-				ss << std::endl << "\t" << "[" << i << "] " << Blam::GameTypeNames[i];
+			for (size_t i = 0; i < Bungie::eGameTypeCount; i++)
+				ss << std::endl << "\t" << "[" << i << "] " << Bungie::GameTypeNames[i];
 
 			ss << std::endl << std::endl << "Valid maptypes:";
-			for (size_t i = 0; i < Blam::eMapTypeCount; i++)
-				ss << std::endl << "\t" << "[" << i << "] " << Blam::MapTypeNames[i];
+			for (size_t i = 0; i < Bungie::eMapTypeCount; i++)
+				ss << std::endl << "\t" << "[" << i << "] " << Bungie::MapTypeNames[i];
 
 			returnInfo = ss.str();
 			return false;
@@ -266,8 +266,8 @@ namespace
 
 		auto mapName = Arguments[0];
 
-		Blam::GameType gameType = Blam::GameType::eGameTypeBase;
-		Blam::MapType mapType = Blam::MapType::eMapTypeMultiplayer;
+		Bungie::GameType gameType = Bungie::GameType::eGameTypeBase;
+		Bungie::MapType mapType = Bungie::MapType::eMapTypeMultiplayer;
 
 		if (std::find(Modules::ModuleGame::Instance().MapList.begin(), Modules::ModuleGame::Instance().MapList.end(), mapName) == Modules::ModuleGame::Instance().MapList.end())
 		{
@@ -281,43 +281,43 @@ namespace
 		{
 			//Look up gametype string.
 			size_t i;
-			for (i = 0; i < Blam::eGameTypeCount; i++)
+			for (i = 0; i < Bungie::eGameTypeCount; i++)
 			{
-				if (!Utils::String::ToLower(Blam::GameTypeNames[i]).compare(Utils::String::ToLower(Arguments[1])))
+				if (!Utils::String::ToLower(Bungie::GameTypeNames[i]).compare(Utils::String::ToLower(Arguments[1])))
 				{
-					gameType = Blam::GameType(i);
+					gameType = Bungie::GameType(i);
 					break;
 				}
 			}
 
-			if (i == Blam::eGameTypeCount)
-				gameType = (Blam::GameType)std::atoi(Arguments[1].c_str());
+			if (i == Bungie::eGameTypeCount)
+				gameType = (Bungie::GameType)std::atoi(Arguments[1].c_str());
 
-			if (gameType > Blam::eGameTypeCount) // only valid gametypes are 1 to 10
-				gameType = Blam::GameType::eGameTypeSlayer;
+			if (gameType > Bungie::eGameTypeCount) // only valid gametypes are 1 to 10
+				gameType = Bungie::GameType::eGameTypeSlayer;
 		}
 
 		if (Arguments.size() >= 3)
 		{
 			//Look up maptype string.
 			size_t i;
-			for (i = 0; i < Blam::eMapTypeCount; i++)
+			for (i = 0; i < Bungie::eMapTypeCount; i++)
 			{
-				if (!Utils::String::ToLower(Blam::MapTypeNames[i]).compare(Utils::String::ToLower(Arguments[2])))
+				if (!Utils::String::ToLower(Bungie::MapTypeNames[i]).compare(Utils::String::ToLower(Arguments[2])))
 				{
-					mapType = Blam::MapType(i);
+					mapType = Bungie::MapType(i);
 					break;
 				}
 			}
 
-			if (i == Blam::eMapTypeCount)
-				mapType = (Blam::MapType)std::atoi(Arguments[2].c_str());
+			if (i == Bungie::eMapTypeCount)
+				mapType = (Bungie::MapType)std::atoi(Arguments[2].c_str());
 
-			if (mapType > Blam::eMapTypeCount) // only valid gametypes are 1 to 5
-				mapType = Blam::MapType::eMapTypeMultiplayer;
+			if (mapType > Bungie::eMapTypeCount) // only valid gametypes are 1 to 5
+				mapType = Bungie::MapType::eMapTypeMultiplayer;
 		}
 
-		ss << "Loading " << mapName << " gametype: " << Blam::GameTypeNames[gameType] << " maptype: " << Blam::MapTypeNames[mapType];
+		ss << "Loading " << mapName << " gametype: " << Bungie::GameTypeNames[gameType] << " maptype: " << Bungie::MapTypeNames[mapType];
 
 		// Game Type
 		GlobalGameOptions->GameVariant.GameType = gameType;
@@ -439,7 +439,7 @@ namespace
 			return false;
 
 		// Initialize an empty variant for the map
-		Patches::Maps::InitializeMapVariant((Blam::MapVariant*)out, mapId);
+		Patches::Maps::InitializeMapVariant((Bungie::MapVariant*)out, mapId);
 
 		// Make sure it actually loaded the map correctly by verifying that the
 		// variant is valid for the map
@@ -452,12 +452,12 @@ namespace
 	{
 		// Check the lobby type so we know where to save the variant
 		size_t variantOffset;
-		switch (Blam::Network::GetLobbyType())
+		switch (Bungie::Network::GetLobbyType())
 		{
-		case Blam::eLobbyTypeMultiplayer: // Customs
+		case Bungie::eLobbyTypeMultiplayer: // Customs
 			variantOffset = 0x7F0;
 			break;
-		case Blam::eLobbyTypeForge: // Forge
+		case Bungie::eLobbyTypeForge: // Forge
 			variantOffset = 0xEA98;
 			break;
 		default:
@@ -474,7 +474,7 @@ namespace
 
 	void SaveGameVariantToPreferences(const uint8_t *data)
 	{
-		if (Blam::Network::GetLobbyType() != Blam::eLobbyTypeMultiplayer)
+		if (Bungie::Network::GetLobbyType() != Bungie::eLobbyTypeMultiplayer)
 			return; // Only allow doing this from a customs lobby
 
 		// Copy the data in
@@ -492,8 +492,8 @@ namespace
 			returnInfo = "You must specify an internal map or Forge map name!";
 			return false;
 		}
-		auto lobbyType = Blam::Network::GetLobbyType();
-		if (lobbyType != Blam::eLobbyTypeMultiplayer && lobbyType != Blam::eLobbyTypeForge)
+		auto lobbyType = Bungie::Network::GetLobbyType();
+		if (lobbyType != Bungie::eLobbyTypeMultiplayer && lobbyType != Bungie::eLobbyTypeForge)
 		{
 			returnInfo = "You can only change maps from a Custom Games or Forge lobby.";
 			return false;
@@ -553,9 +553,9 @@ namespace
 	}
 
 	template<class T>
-	int FindDefaultGameVariant(const Blam::Tags::TagBlock<T> &variants, const std::string &name)
+	int FindDefaultGameVariant(const Bungie::Tags::TagBlock<T> &variants, const std::string &name)
 	{
-		static_assert(std::is_base_of<Blam::Tags::Game::GameVariant, T>::value, "T must be a GameVariantDefinition");
+		static_assert(std::is_base_of<Bungie::Tags::Game::GameVariant, T>::value, "T must be a GameVariantDefinition");
 		if (!variants)
 			return -1;
 		for (auto i = 0; i < variants.Count; i++)
@@ -566,27 +566,27 @@ namespace
 		return -1;
 	}
 
-	int FindDefaultGameVariant(Blam::Tags::Game::GameEngineSettingsDefinition *wezr, Blam::GameType type, const std::string &name)
+	int FindDefaultGameVariant(Bungie::Tags::Game::GameEngineSettingsDefinition *wezr, Bungie::GameType type, const std::string &name)
 	{
 		switch (type)
 		{
-		case Blam::eGameTypeCTF:
+		case Bungie::eGameTypeCTF:
 			return FindDefaultGameVariant(wezr->CTFVariants, name);
-		case Blam::eGameTypeSlayer:
+		case Bungie::eGameTypeSlayer:
 			return FindDefaultGameVariant(wezr->SlayerVariants, name);
-		case Blam::eGameTypeOddball:
+		case Bungie::eGameTypeOddball:
 			return FindDefaultGameVariant(wezr->OddballVariants, name);
-		case Blam::eGameTypeKOTH:
+		case Bungie::eGameTypeKOTH:
 			return FindDefaultGameVariant(wezr->KOTHVariants, name);
-		case Blam::eGameTypeVIP:
+		case Bungie::eGameTypeVIP:
 			return FindDefaultGameVariant(wezr->VIPVariants, name);
-		case Blam::eGameTypeJuggernaut:
+		case Bungie::eGameTypeJuggernaut:
 			return FindDefaultGameVariant(wezr->JuggernautVariants, name);
-		case Blam::eGameTypeTerritories:
+		case Bungie::eGameTypeTerritories:
 			return FindDefaultGameVariant(wezr->TerritoriesVariants, name);
-		case Blam::eGameTypeAssault:
+		case Bungie::eGameTypeAssault:
 			return FindDefaultGameVariant(wezr->AssaultVariants, name);
-		case Blam::eGameTypeInfection:
+		case Bungie::eGameTypeInfection:
 			return FindDefaultGameVariant(wezr->InfectionVariants, name);
 		default: // None, Forge
 			return -1;
@@ -596,7 +596,7 @@ namespace
 	bool LoadDefaultGameVariant(const std::string &name, uint8_t *out)
 	{
 		// Get a handle to the wezr tag
-		typedef Blam::Tags::Game::GameEngineSettingsDefinition *(*GetWezrTagPtr)();
+		typedef Bungie::Tags::Game::GameEngineSettingsDefinition *(*GetWezrTagPtr)();
 		auto GetWezrTag = reinterpret_cast<GetWezrTagPtr>(0x719290);
 		auto *wezr = GetWezrTag();
 		if (!wezr)
@@ -605,22 +605,22 @@ namespace
 		// Search through each variant type until something is found
 		auto index = -1;
 		int type;
-		for (type = 1; type < Blam::eGameTypeCount; type++)
+		for (type = 1; type < Bungie::eGameTypeCount; type++)
 		{
-			index = FindDefaultGameVariant(wezr, static_cast<Blam::GameType>(type), name);
+			index = FindDefaultGameVariant(wezr, static_cast<Bungie::GameType>(type), name);
 			if (index != -1)
 				break;
 		}
-		if (type == Blam::eGameTypeCount)
+		if (type == Bungie::eGameTypeCount)
 			return false;
 
 		const auto VariantDataSize = 0x264;
 		memset(out, 0, VariantDataSize);
 
 		// Ask the game to generate the variant data
-		typedef bool(*LoadBuiltInGameVariantPtr)(Blam::GameType type, int index, uint8_t *out);
+		typedef bool(*LoadBuiltInGameVariantPtr)(Bungie::GameType type, int index, uint8_t *out);
 		auto LoadBuiltInGameVariant = reinterpret_cast<LoadBuiltInGameVariantPtr>(0x572270);
-		return LoadBuiltInGameVariant(static_cast<Blam::GameType>(type), index, out);
+		return LoadBuiltInGameVariant(static_cast<Bungie::GameType>(type), index, out);
 	}
 
 	bool CommandGameType(const std::vector<std::string>& Arguments, std::string& returnInfo)
@@ -630,7 +630,7 @@ namespace
 			returnInfo = "You must specify a built-in gametype or custom gametype name!";
 			return false;
 		}
-		if (Blam::Network::GetLobbyType() != Blam::eLobbyTypeMultiplayer)
+		if (Bungie::Network::GetLobbyType() != Bungie::eLobbyTypeMultiplayer)
 		{
 			returnInfo = "You can only change gametypes from a Custom Games lobby.";
 			return false;
@@ -642,7 +642,7 @@ namespace
 		// corresponding to each supported game mode
 		std::ifstream gameVariant;
 		std::string variantFileName;
-		for (auto &&extension : Blam::GameTypeExtensions)
+		for (auto &&extension : Bungie::GameTypeExtensions)
 		{
 			variantFileName = "mods/variants/" + name + "/variant." + extension;
 			gameVariant.open(variantFileName, std::ios::binary);
@@ -683,7 +683,7 @@ namespace
 
 	bool CommandGameStart(const std::vector<std::string>& Arguments, std::string& returnInfo)
 	{
-		auto session = Blam::Network::GetActiveSession();
+		auto session = Bungie::Network::GetActiveSession();
 		if (!session || !session->Parameters.SetSessionMode(2))
 		{
 			returnInfo = "Unable to start the game!";
@@ -695,7 +695,7 @@ namespace
 
 	bool CommandGameStop(const std::vector<std::string>& Arguments, std::string& returnInfo)
 	{
-		auto session = Blam::Network::GetActiveSession();
+		auto session = Bungie::Network::GetActiveSession();
 		if (!session || !session->Parameters.SetSessionMode(1))
 		{
 			returnInfo = "Unable to stop the game!";
@@ -707,14 +707,14 @@ namespace
 
 	bool CommandGameLeave(const std::vector<std::string>& Arguments, std::string& returnInfo)
 	{
-		auto session = Blam::Network::GetActiveSession();
+		auto session = Bungie::Network::GetActiveSession();
 		if (!session || !session->IsEstablished())
 		{
 			returnInfo = "Unable to leave the game!";
 			return false;
 		}
 
-		Blam::Network::LeaveGame();
+		Bungie::Network::LeaveGame();
 
 		returnInfo = "Leaving game...";
 		return true;
@@ -722,14 +722,14 @@ namespace
 
 	bool CommandGameEnd(const std::vector<std::string>& Arguments, std::string& returnInfo)
 	{
-		auto session = Blam::Network::GetActiveSession();
+		auto session = Bungie::Network::GetActiveSession();
 		if (!session || !session->IsEstablished() || !session->IsHost())
 		{
 			returnInfo = "Unable to end the game!";
 			return false;
 		}
 
-		Blam::Network::EndGame();
+		Bungie::Network::EndGame();
 
 		returnInfo = "Ending game...";
 		return true;
@@ -840,7 +840,7 @@ namespace
 			std::reverse(tokens[1].begin(), tokens[1].end());
 			const char *tag = tokens[1].c_str();
 
-			*value = Blam::Tags::TagInstance::Find(*(Blam::Tags::Tag *)tag, tokens[0]).Index;
+			*value = Bungie::Tags::TagInstance::Find(*(Bungie::Tags::Tag *)tag, tokens[0]).Index;
 
 			return *value != 0xFFFF;
 		}
@@ -865,7 +865,7 @@ namespace
 		}
 
 		//Make sure the sound exists before playing
-		if (Blam::Tags::TagInstance::IsLoaded('snd!', tagIndex))
+		if (Bungie::Tags::TagInstance::IsLoaded('snd!', tagIndex))
 			Sound_PlaySoundEffect(tagIndex, 1.0f);
 		else
 			returnInfo = "Invalid sound index: " + arguments[0];
@@ -885,7 +885,7 @@ namespace
 		}
 
 		//Make sure the sound exists before playing
-		if (Blam::Tags::TagInstance::IsLoaded('lsnd', tagIndex))
+		if (Bungie::Tags::TagInstance::IsLoaded('lsnd', tagIndex))
 			Sound_LoopingSound_Start(tagIndex, -1, 1065353216, 0, 0);
 		else
 			returnInfo = "Invalid sound index: " + arguments[0];
@@ -905,7 +905,7 @@ namespace
 		}
 
 		//Make sure the sound exists before playing
-		if (Blam::Tags::TagInstance::IsLoaded('lsnd', tagIndex))
+		if (Bungie::Tags::TagInstance::IsLoaded('lsnd', tagIndex))
 			Sound_LoopingSound_Stop(tagIndex, -1);
 		else
 			returnInfo = "Invalid sound index: " + arguments[0];
@@ -915,7 +915,7 @@ namespace
 
 	bool CommandGameTakeScreenshot(const std::vector<std::string>& Arguments, std::string& returnInfo)
 	{
-		wchar_t *path = Blam::Graphics::TakeScreenshot();
+		wchar_t *path = Bungie::Graphics::TakeScreenshot();
 		std::wstring_convert<std::codecvt_utf8<wchar_t>> wstring_to_string;
 		std::string screenshot_path = wstring_to_string.to_bytes(path);
 
@@ -950,7 +950,7 @@ namespace
 			return false;
 		}
 
-		auto scnr = Blam::Tags::Scenario::GetCurrentScenario();
+		auto scnr = Bungie::Tags::Scenario::GetCurrentScenario();
 		if (!scnr)
 		{
 			returnInfo = "No scenario loaded";
@@ -1028,7 +1028,7 @@ namespace
 			return false;
 		}
 
-		auto scnr = Blam::Tags::Scenario::GetCurrentScenario();
+		auto scnr = Bungie::Tags::Scenario::GetCurrentScenario();
 		if (!scnr)
 		{
 			returnInfo = "A scenario must be loaded!";
@@ -1042,7 +1042,7 @@ namespace
 			return false;
 		}
 
-		auto sefc = Blam::Tags::TagInstance(sefcIndex.TagIndex).GetDefinition<Blam::Tags::Camera::AreaScreenEffect>();
+		auto sefc = Bungie::Tags::TagInstance(sefcIndex.TagIndex).GetDefinition<Bungie::Tags::Camera::AreaScreenEffect>();
 		if(sefc)
 		{
 			sefc->ScreenEffects[index].MaximumDistance = range;
@@ -1123,25 +1123,25 @@ namespace
 		if (Arguments.size() < 1)
 		{
 			int active = 0;
-			for (int i = 0; i < Blam::e_primary_skull::k_number_of_primary_skulls; i++)
-				active += blam::game_globals_primary_skull_is_active(i);
+			for (int i = 0; i < Bungie::e_primary_skull::k_number_of_primary_skulls; i++)
+				active += Bungie::game_globals_primary_skull_is_active(i);
 
 			ss << "Primary skulls active: " << active;
 			returnInfo = ss.str();
 			return false;
 		}
 
-		if (std::stol(Arguments[0]) < Blam::e_primary_skull::_iron || std::stol(Arguments[0]) > Blam::e_primary_skull::k_number_of_primary_skulls)
+		if (std::stol(Arguments[0]) < Bungie::e_primary_skull::_iron || std::stol(Arguments[0]) > Bungie::e_primary_skull::k_number_of_primary_skulls)
 		{
 			ss << "invalid parameters, valid parameters are:" << std::endl;
-			for (auto i = 0; i < Blam::e_primary_skull::k_number_of_primary_skulls; i++)
-				ss << ((Blam::e_primary_skull *)i)->value << ", " << ((Blam::e_primary_skull *)i)->GetName() << std::endl;
+			for (auto i = 0; i < Bungie::e_primary_skull::k_number_of_primary_skulls; i++)
+				ss << ((Bungie::e_primary_skull *)i)->value << ", " << ((Bungie::e_primary_skull *)i)->GetName() << std::endl;
 			returnInfo = ss.str();
 			return false;
 		}
 
-		Blam::e_primary_skull skull = *(Blam::e_primary_skull *)std::stol(Arguments[0]);
-		blam::game_globals_primary_skull_toggle(skull.value, skull.enabled);
+		Bungie::e_primary_skull skull = *(Bungie::e_primary_skull *)std::stol(Arguments[0]);
+		Bungie::game_globals_primary_skull_toggle(skull.value, skull.enabled);
 
 		ss << "Primary skull " << skull.GetName() << ": " << (skull.enabled ? "active." : "inactive.");
 		returnInfo = ss.str();
@@ -1154,24 +1154,24 @@ namespace
 		if (Arguments.size() < 1)
 		{
 			int active = 0;
-			for (int i = 0; i < Blam::e_secondary_skull::k_number_of_secondary_skulls; i++)
-				active += blam::game_globals_primary_skull_is_active(i);
+			for (int i = 0; i < Bungie::e_secondary_skull::k_number_of_secondary_skulls; i++)
+				active += Bungie::game_globals_primary_skull_is_active(i);
 
 			ss << "Secondary skulls active: " << active;
 			returnInfo = ss.str();
 			return false;
 		}
 
-		if (std::stol(Arguments[0]) < Blam::e_secondary_skull::_assassin || std::stol(Arguments[0]) > Blam::e_secondary_skull::k_number_of_secondary_skulls)
+		if (std::stol(Arguments[0]) < Bungie::e_secondary_skull::_assassin || std::stol(Arguments[0]) > Bungie::e_secondary_skull::k_number_of_secondary_skulls)
 		{
 			ss << "invalid parameters, valid parameters are:" << std::endl;
-			for (auto i = 0; i < Blam::e_secondary_skull::k_number_of_secondary_skulls; i++)
-				ss << ((Blam::e_primary_skull *)i)->value << ", " << ((Blam::e_primary_skull *)i)->GetName() << std::endl;
+			for (auto i = 0; i < Bungie::e_secondary_skull::k_number_of_secondary_skulls; i++)
+				ss << ((Bungie::e_primary_skull *)i)->value << ", " << ((Bungie::e_primary_skull *)i)->GetName() << std::endl;
 			return false;
 		}
 
-		Blam::e_secondary_skull skull = *(Blam::e_secondary_skull *)std::stol(Arguments[0]);
-		blam::game_globals_secondary_skull_toggle(skull.value, skull.enabled);
+		Bungie::e_secondary_skull skull = *(Bungie::e_secondary_skull *)std::stol(Arguments[0]);
+		Bungie::game_globals_secondary_skull_toggle(skull.value, skull.enabled);
 
 		ss << "Secondary skull " << skull.GetName() << ": " << (skull.enabled ? "active." : "inactive.");
 		returnInfo = ss.str();
@@ -1319,7 +1319,7 @@ namespace Modules
 		VarHideH3UI->ValueIntMin = 0;
 		VarHideH3UI->ValueIntMax = 1;
 
-		VarScreenshotsFolder = AddVariableString("ScreenshotsFolder", "screenshots_folder", "The location where the game will save screenshots", eCommandFlagsArchived, "%userprofile%\\Pictures\\Screenshots\\blam");
+		VarScreenshotsFolder = AddVariableString("ScreenshotsFolder", "screenshots_folder", "The location where the game will save screenshots", eCommandFlagsArchived, "%userprofile%\\Pictures\\Screenshots\\Bungie");
 		VarScreenshotNoticeDisabled = AddVariableInt("ScreenshotNoticeDisabled", "screenshot_notice_disabled", "Disables the screenshot notifications", eCommandFlagsArchived, 0);
 
 		VarCefMedals = AddVariableInt("CefMedals", "cef_medals", "Enable/disable cef medals. When disabled fallback to the H3 medal system.", eCommandFlagsArchived, 0);

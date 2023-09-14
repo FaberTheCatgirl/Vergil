@@ -1,6 +1,6 @@
-#include "Blam\Math\RealPoint2D.hpp"
+#include "Bungie\Math\RealPoint2D.hpp"
 
-namespace Blam::Math
+namespace Bungie::Math
 {
 	RealPoint2D::RealPoint2D()
 		: RealPoint2D(0, 0)

@@ -1,9 +1,9 @@
 #pragma once
-#include "Blam\Tags\Tags.hpp"
-#include "Blam\Tags\Sounds\SoundClasses\ClassProperty.hpp"
-#include "Blam\Tags\Sounds\SoundClasses\SoundClassEnum.hpp"
+#include "Bungie\Tags\Tags.hpp"
+#include "Bungie\Tags\Sounds\SoundClasses\ClassProperty.hpp"
+#include "Bungie\Tags\Sounds\SoundClasses\SoundClassEnum.hpp"
 
-namespace Blam::Tags::Sounds
+namespace Bungie::Tags::Sounds
 {
 	struct Classes : TagGroup<'sncl'>
 	{

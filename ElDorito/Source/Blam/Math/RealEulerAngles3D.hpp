@@ -1,7 +1,7 @@
 #pragma once
-#include "Blam\Math\Angle.hpp"
+#include "Bungie\Math\Angle.hpp"
 
-namespace Blam::Math
+namespace Bungie::Math
 {
 	struct RealEulerAngles3D
 	{

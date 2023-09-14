@@ -1,7 +1,7 @@
-#include "Blam\BlamObjects.hpp"
+#include "Bungie\BlamObjects.hpp"
 #include "ElDorito.hpp"
 
-namespace Blam::Objects
+namespace Bungie::Objects
 {
 	DataArray<ObjectHeader>& GetObjects()
 	{

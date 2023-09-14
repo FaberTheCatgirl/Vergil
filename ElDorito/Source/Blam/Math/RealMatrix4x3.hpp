@@ -1,8 +1,8 @@
 #pragma once
-#include "Blam\Math\RealPoint3D.hpp"
-#include "Blam\Math\RealVector3D.hpp"
+#include "Bungie\Math\RealPoint3D.hpp"
+#include "Bungie\Math\RealVector3D.hpp"
 
-namespace Blam::Math
+namespace Bungie::Math
 {
 	struct RealMatrix4x3
 	{

@@ -1,11 +1,11 @@
 #pragma once
-#include "Blam\Math\Bounds.hpp"
-#include "Blam\Math\RealPoint2D.hpp"
-#include "Blam\Text\StringID.hpp"
-#include "Blam\Tags\Shaders\RenderMethod.hpp"
-#include "Blam\Tags\TagBlock.hpp"
+#include "Bungie\Math\Bounds.hpp"
+#include "Bungie\Math\RealPoint2D.hpp"
+#include "Bungie\Text\StringID.hpp"
+#include "Bungie\Tags\Shaders\RenderMethod.hpp"
+#include "Bungie\Tags\TagBlock.hpp"
 
-namespace Blam::Tags::Effects
+namespace Bungie::Tags::Effects
 {
 	enum class DecalSystemFlags : long
 	{

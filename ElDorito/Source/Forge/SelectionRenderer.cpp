@@ -1,18 +1,18 @@
 #include "Forge\SelectionRenderer.hpp"
-#include "Blam\Math\RealMatrix4x3.hpp"
-#include "Blam\BlamObjects.hpp"
-#include "Blam\BlamTime.hpp"
+#include "Bungie\Math\RealMatrix4x3.hpp"
+#include "Bungie\BlamObjects.hpp"
+#include "Bungie\BlamTime.hpp"
 #include "Forge\ForgeUtil.hpp"
 #include "Forge\Selection.hpp"
 #include "Forge\ObjectSet.hpp"
-#include "Blam\Tags\TagInstance.hpp"
-#include "Blam\Math/MathUtil.hpp"
+#include "Bungie\Tags\TagInstance.hpp"
+#include "Bungie\Math/MathUtil.hpp"
 #include "Patch.hpp"
 #include "Forge\Geoemetry.hpp"
 #include "Forge\Magnets.hpp"
 #include "Modules\ModuleTweaks.hpp"
 
-using namespace Blam::Math;
+using namespace Bungie::Math;
 
 using namespace Forge::SelectionRenderer;
 
@@ -65,7 +65,7 @@ namespace Forge
 			s_NumActiveItems = 0;
 
 			const auto& selection = Forge::Selection::GetSelection();
-			auto& objects = Blam::Objects::GetObjects();
+			auto& objects = Bungie::Objects::GetObjects();
 			for (auto it = objects.begin(); it != objects.end() && s_NumActiveItems < MAX_ITEMS; ++it)
 			{
 				if (!selection.Contains(it.CurrentDatumIndex))
@@ -90,7 +90,7 @@ namespace Forge
 			}
 
 			static const auto PI2 = PI * 2.0f;
-			s_SelectionColorCounter += Blam::Time::GetSecondsPerTick() / 1.0f;
+			s_SelectionColorCounter += Bungie::Time::GetSecondsPerTick() / 1.0f;
 			if (s_SelectionColorCounter > PI2)
 				s_SelectionColorCounter -= PI2;
 		}
@@ -190,7 +190,7 @@ namespace
 		if (!s_Enabled || !UseDefaultShader(64, 0x14, 0, 0))
 			return;
 
-		auto shaderDef = Blam::Tags::TagInstance(SHADER_TAGINDEX).GetDefinition<void>();
+		auto shaderDef = Bungie::Tags::TagInstance(SHADER_TAGINDEX).GetDefinition<void>();
 		sub_A3CA60(SHADER_TAGINDEX, shaderDef, 20, 0, PT_TRIANGLESTRIP, 1);
 
 		for (auto i = 0; i < s_NumActiveItems; i++)

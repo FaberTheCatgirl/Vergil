@@ -1,7 +1,7 @@
 #include <fstream>
-#include "Blam\Cache\StringIDCache.hpp"
+#include "Bungie\Cache\StringIDCache.hpp"
 
-namespace Blam::Cache
+namespace Bungie::Cache
 {
 	StringIDCache StringIDCache::Instance;
 

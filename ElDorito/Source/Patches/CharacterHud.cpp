@@ -1,8 +1,8 @@
 #include "Patches\CharacterHud.hpp"
 #include <cstdint>
 #include "Patch.hpp"
-#include "Blam\Tags\Bitmap\Bitmap.hpp"
-#include "Blam\Tags\TagInstance.hpp"
+#include "Bungie\Tags\Bitmap\Bitmap.hpp"
+#include "Bungie\Tags\TagInstance.hpp"
 
 namespace
 {
@@ -26,11 +26,11 @@ namespace
 		int bitmapTagIndex = *(chudPersistentGlobalData + 0x30);
 
 		if (chudPersistentGlobalData && bitmapTagIndex != -1) {
-			Blam::Tags::Bitmap::Bitmap bitmap = *Blam::Tags::TagInstance(bitmapTagIndex).GetDefinition<Blam::Tags::Bitmap::Bitmap>();
+			Bungie::Tags::Bitmap::Bitmap bitmap = *Bungie::Tags::TagInstance(bitmapTagIndex).GetDefinition<Bungie::Tags::Bitmap::Bitmap>();
 			if (sequenceIndex >= 0 && sequenceIndex < bitmap.Sequences.Count) {
-				Blam::Tags::Bitmap::Sequence sequence = bitmap.Sequences[sequenceIndex];
+				Bungie::Tags::Bitmap::Sequence sequence = bitmap.Sequences[sequenceIndex];
 				if (sequence.Sprites.Count > 0) {
-					Blam::Tags::Bitmap::Sprite sprite = sequence.Sprites[0];
+					Bungie::Tags::Bitmap::Sprite sprite = sequence.Sprites[0];
 					positionOffset[0] = sprite.Left;
 					positionOffset[1] = sprite.Right;
 					positionOffset[2] = sprite.Top;

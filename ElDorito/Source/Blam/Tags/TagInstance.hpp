@@ -5,9 +5,9 @@
 #include <vector>
 #include <unordered_map>
 #include "ElDorito.hpp"
-#include "Blam\Tags\Tags.hpp"
+#include "Bungie\Tags\Tags.hpp"
 
-namespace Blam::Tags
+namespace Bungie::Tags
 {
 	const auto TagIndexTablePtr = (uint32_t**)0x022AAFFC;
 	const auto TagTablePtr = (uint8_t***)0x022AAFF8;
@@ -37,7 +37,7 @@ namespace Blam::Tags
 				if (tokens.size() != 2)
 					continue;
 
-				Blam::Tags::TagInstance::TagNames.emplace(std::make_pair(strtol(tokens.at(0).c_str(), nullptr, 0), tokens.at(1)));
+				Bungie::Tags::TagInstance::TagNames.emplace(std::make_pair(strtol(tokens.at(0).c_str(), nullptr, 0), tokens.at(1)));
 			}
 
 			tagListFile.close();

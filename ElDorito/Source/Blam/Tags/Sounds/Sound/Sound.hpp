@@ -1,23 +1,23 @@
 #pragma once
 
-#include "Blam\Tags\Tags.hpp"
-#include "Blam\Math\Bounds.hpp"
-#include "Blam\Text\StringID.hpp"
+#include "Bungie\Tags\Tags.hpp"
+#include "Bungie\Math\Bounds.hpp"
+#include "Bungie\Text\StringID.hpp"
 
-#include "Blam\Tags\Sounds\SoundClasses\SoundClassEnum.hpp"
+#include "Bungie\Tags\Sounds\SoundClasses\SoundClassEnum.hpp"
 
-#include "Blam\Tags\Sounds\Sound\ImportTypeEnum.hpp"
-#include "Blam\Tags\Sounds\Sound\SampleRateEnum.hpp"
-#include "Blam\Tags\Sounds\Sound\Scale.hpp"
-#include "Blam\Tags\Sounds\Sound\PlaybackParameters.hpp"
-#include "Blam\Tags\Sounds\Sound\PlatformCodec.hpp"
-#include "Blam\Tags\Sounds\Sound\Promotion.hpp"
-#include "Blam\Tags\Sounds\Sound\PitchRange.hpp"
-#include "Blam\Tags\Sounds\Sound\CustomPlayback.hpp"
-#include "Blam\Tags\Sounds\Sound\Language.hpp"
-#include "Blam\Tags\Sounds\Sound\ExtraInfo.hpp"
+#include "Bungie\Tags\Sounds\Sound\ImportTypeEnum.hpp"
+#include "Bungie\Tags\Sounds\Sound\SampleRateEnum.hpp"
+#include "Bungie\Tags\Sounds\Sound\Scale.hpp"
+#include "Bungie\Tags\Sounds\Sound\PlaybackParameters.hpp"
+#include "Bungie\Tags\Sounds\Sound\PlatformCodec.hpp"
+#include "Bungie\Tags\Sounds\Sound\Promotion.hpp"
+#include "Bungie\Tags\Sounds\Sound\PitchRange.hpp"
+#include "Bungie\Tags\Sounds\Sound\CustomPlayback.hpp"
+#include "Bungie\Tags\Sounds\Sound\Language.hpp"
+#include "Bungie\Tags\Sounds\Sound\ExtraInfo.hpp"
 
-namespace Blam::Tags::Sounds
+namespace Bungie::Tags::Sounds
 {
 	struct Sound : TagGroup<'snd!'>
 	{

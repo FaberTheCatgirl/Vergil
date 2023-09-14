@@ -1,7 +1,7 @@
 #pragma once
-#include "Blam\Tags\TagFunction.hpp"
+#include "Bungie\Tags\TagFunction.hpp"
 
-namespace Blam::Tags
+namespace Bungie::Tags
 {
 	enum class TagMappingVariableType : char
 	{

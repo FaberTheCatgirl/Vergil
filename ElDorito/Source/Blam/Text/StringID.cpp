@@ -1,5 +1,5 @@
-#include "Blam\Text\StringID.hpp"
+#include "Bungie\Text\StringID.hpp"
 
-namespace Blam::Text
+namespace Bungie::Text
 {
 }

@@ -1,8 +1,8 @@
 #pragma once
-#include "Blam\Tags\Tags.hpp"
-#include "Blam\Text\StringID.hpp"
+#include "Bungie\Tags\Tags.hpp"
+#include "Bungie\Text\StringID.hpp"
 
-namespace Blam::Tags::Models
+namespace Bungie::Tags::Models
 {
 	struct Model : TagGroup<'hlmt'>
 	{

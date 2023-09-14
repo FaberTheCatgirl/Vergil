@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Blam::Math
+namespace Bungie::Math
 {
 	struct Angle
 	{

@@ -1,8 +1,8 @@
 #pragma once
-#include "Blam\Tags\Tags.hpp"
-#include "Blam\Tags\Sounds\SoundClasses\CacheMissMode.hpp"
+#include "Bungie\Tags\Tags.hpp"
+#include "Bungie\Tags\Sounds\SoundClasses\CacheMissMode.hpp"
 
-namespace Blam::Tags::Sounds {
+namespace Bungie::Tags::Sounds {
 	struct ClassProperty
 	{
 		int16_t MaxSoundsPerTag;

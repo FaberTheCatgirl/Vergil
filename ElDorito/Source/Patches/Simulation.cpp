@@ -1,21 +1,21 @@
 #include "Patches\Simulation.hpp"
-#include "Blam\Math\RealVector3D.hpp"
-#include "Blam\BlamNetwork.hpp"
-#include "Blam\BlamTypes.hpp"
+#include "Bungie\Math\RealVector3D.hpp"
+#include "Bungie\BlamNetwork.hpp"
+#include "Bungie\BlamTypes.hpp"
 #include "Patches\Network.hpp"
-#include "Blam\Tags\Objects\Object.hpp"
-#include "Blam\BlamObjects.hpp"
-#include "Blam\BlamEvents.hpp"
+#include "Bungie\Tags\Objects\Object.hpp"
+#include "Bungie\BlamObjects.hpp"
+#include "Bungie\BlamEvents.hpp"
 #include "Patch.hpp"
 
 namespace
 {
-	using namespace Blam::Math;
+	using namespace Bungie::Math;
 
 	struct GenericEntitySimulationData;
 
-	bool __cdecl c_simulation_generic_entity__serialize2_hook(char a1, int a6, int a3, DWORD *a4, GenericEntitySimulationData *data, Blam::BitStream *stream, int a7, char a8, char a9);
-	bool __cdecl c_simulation_generic_entity__deserialize2_hook(int a1, int a2, GenericEntitySimulationData *data, Blam::BitStream *stream, char a5);
+	bool __cdecl c_simulation_generic_entity__serialize2_hook(char a1, int a6, int a3, DWORD *a4, GenericEntitySimulationData *data, Bungie::BitStream *stream, int a7, char a8, char a9);
+	bool __cdecl c_simulation_generic_entity__deserialize2_hook(int a1, int a2, GenericEntitySimulationData *data, Bungie::BitStream *stream, char a5);
 	uint32_t __fastcall c_simulation_generic_entity_definition__spawn_object_hook(int thisptr, void *unused, uint8_t *data, GenericEntitySimulationData *simulationData, int a4, uint8_t *newObject);
 	int ScenerySyncHook(uint32_t tagIndex, int a2, char a3);
 	void ProjectileAttachmentHook();
@@ -26,11 +26,11 @@ namespace
 	void simulation_control_encode(uint8_t *input, uint32_t unitObjectIndex, uint8_t *output);
 
 	void __fastcall c_simulation_game_engine_event_definition__event_payload_encode_hook(struct c_simulation_game_engine_event_definition *thisptr,
-		void *unused, long a2, const Blam::Events::Event *event_data, Blam::BitStream *bitstream, bool a5);
+		void *unused, long a2, const Bungie::Events::Event *event_data, Bungie::BitStream *bitstream, bool a5);
 
-	void OnMapVariantRequestChange(Blam::MapVariant *mapVariant);
+	void OnMapVariantRequestChange(Bungie::MapVariant *mapVariant);
 
-	Blam::MapVariant::VariantPlacement s_SyncPlacements[640] = { 0 };
+	Bungie::MapVariant::VariantPlacement s_SyncPlacements[640] = { 0 };
 }
 
 namespace Patches::Simulation
@@ -69,7 +69,7 @@ namespace Patches::Simulation
 
 namespace
 {
-	const auto GetMapVariant = (Blam::MapVariant* (__cdecl*)())(0x00583230);
+	const auto GetMapVariant = (Bungie::MapVariant* (__cdecl*)())(0x00583230);
 
 	struct GenericEntitySimulationData
 	{
@@ -111,9 +111,9 @@ namespace
 		int16_t VariantPlacementIndex;
 	};
 
-	bool __cdecl c_simulation_generic_entity__serialize2_hook(char a1, int a6, int a3, DWORD *a4, GenericEntitySimulationData *data, Blam::BitStream *stream, int a7, char a8, char a9)
+	bool __cdecl c_simulation_generic_entity__serialize2_hook(char a1, int a6, int a3, DWORD *a4, GenericEntitySimulationData *data, Bungie::BitStream *stream, int a7, char a8, char a9)
 	{
-		const auto sub_4AEB10 = (bool(*)(char a1, int a6, int a3, void *a4, GenericEntitySimulationData *data, Blam::BitStream *stream, int a7, char a8, char a9))(0x4AEB10);
+		const auto sub_4AEB10 = (bool(*)(char a1, int a6, int a3, void *a4, GenericEntitySimulationData *data, Bungie::BitStream *stream, int a7, char a8, char a9))(0x4AEB10);
 
 		auto ret = sub_4AEB10(a1, a6, a3, a4, data, stream, a7, a8, a9);
 
@@ -138,9 +138,9 @@ namespace
 		return ret && stream->Position() <= 8 * stream->Size();
 	}
 
-	bool __cdecl c_simulation_generic_entity__deserialize2_hook(int a1, int a2, GenericEntitySimulationData *data, Blam::BitStream *stream, char a5)
+	bool __cdecl c_simulation_generic_entity__deserialize2_hook(int a1, int a2, GenericEntitySimulationData *data, Bungie::BitStream *stream, char a5)
 	{
-		const auto sub_4AE5F0 = (bool(*)(int a1, int a2, GenericEntitySimulationData *data, Blam::BitStream *stream, char a5))(0x4AE5F0);
+		const auto sub_4AE5F0 = (bool(*)(int a1, int a2, GenericEntitySimulationData *data, Bungie::BitStream *stream, char a5))(0x4AE5F0);
 		auto ret = sub_4AE5F0(a1, a2, data, stream, a5);
 
 		if (ret && stream->ReadBool())
@@ -154,7 +154,7 @@ namespace
 	{
 		const auto c_simulation_generic_entity_definition__spawn_object = (uint32_t(__thiscall*)(int thisptr,
 			uint8_t *data, GenericEntitySimulationData *simulationData, int a4, uint8_t *newObject))(0x004AD3E0);
-		const auto Object_SyncPlacementProperties = (void(__thiscall *)(void *thisptr, Blam::MapVariant::VariantProperties *placementProps,
+		const auto Object_SyncPlacementProperties = (void(__thiscall *)(void *thisptr, Bungie::MapVariant::VariantProperties *placementProps,
 			int objectIndex_1))(0x00580E80);
 
 		auto placementIndex = *(int16_t*)(uint8_t*)(data + 0x4);
@@ -180,7 +180,7 @@ namespace
 		return objectIndex;
 	}
 
-	void OnMapVariantRequestChange(Blam::MapVariant *mapVariant)
+	void OnMapVariantRequestChange(Bungie::MapVariant *mapVariant)
 	{
 		for (auto i = 0; i < 640; i++)
 			s_SyncPlacements[i] = mapVariant->Placements[i];
@@ -190,14 +190,14 @@ namespace
 	{
 		const auto sub_4AFA90 = (int(__cdecl *)(uint32_t tagIndex, int a2, char a3))(0x4AFA90);
 
-		auto def = Blam::Tags::TagInstance(tagIndex).GetDefinition<Blam::Tags::Objects::Object>();
+		auto def = Bungie::Tags::TagInstance(tagIndex).GetDefinition<Bungie::Tags::Objects::Object>();
 		if (def)
 
-		switch (Blam::Objects::ObjectType(def->ObjectType))
+		switch (Bungie::Objects::ObjectType(def->ObjectType))
 		{
-		case Blam::Objects::eObjectTypeScenery:
+		case Bungie::Objects::eObjectTypeScenery:
 			return 16;
-		case Blam::Objects::eObjectTypeCrate:
+		case Bungie::Objects::eObjectTypeCrate:
 			return (a3 != 0) + 0x10;
 		}
 	
@@ -208,7 +208,7 @@ namespace
 	{
 		const auto object_is_phased = (bool(*)(uint32_t objectIndex))(0x0059A7B0);
 
-		auto parentObject = Blam::Objects::Get(parentObjectIndex);
+		auto parentObject = Bungie::Objects::Get(parentObjectIndex);
 		if (!parentObject)
 			return false;
 
@@ -275,14 +275,14 @@ namespace
 	}
 
 	void __fastcall c_simulation_game_engine_event_definition__event_payload_encode_hook(struct c_simulation_game_engine_event_definition *thisptr,
-		void *unused, long a2, const Blam::Events::Event *event_data, Blam::BitStream *bitstream, bool a5)
+		void *unused, long a2, const Bungie::Events::Event *event_data, Bungie::BitStream *bitstream, bool a5)
 	{
 		static const auto c_simulation_game_engine_event_definition__event_payload_encode = (void(__thiscall*)(c_simulation_game_engine_event_definition *thisptr,
-			long a2, const Blam::Events::Event *event_data, Blam::BitStream *bitstream, bool a5))(0x004B6310);
+			long a2, const Bungie::Events::Event *event_data, Bungie::BitStream *bitstream, bool a5))(0x004B6310);
 
 		c_simulation_game_engine_event_definition__event_payload_encode(thisptr, a2, event_data, bitstream, a5);
 
-		if (event_data->Type == Blam::Events::eEventTypeTerritories)
+		if (event_data->Type == Bungie::Events::eEventTypeTerritories)
 			bitstream->WriteUnsigned(event_data->Unknown24 + 1, 4); // territory index
 	}
 }

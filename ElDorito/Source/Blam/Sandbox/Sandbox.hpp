@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Blam\BlamTypes.hpp"
-#include "Blam\Math\RealVector3D.hpp"
-#include "Blam\Math\RealMatrix4x3.hpp"
+#include "Bungie\BlamTypes.hpp"
+#include "Bungie\Math\RealVector3D.hpp"
+#include "Bungie\Math\RealMatrix4x3.hpp"
 
-namespace Blam::Sandbox
+namespace Bungie::Sandbox
 {
 	struct ZoneShape
 	{
@@ -65,9 +65,9 @@ namespace Blam::Sandbox
 	const auto PointIntersectsZone = (bool(__cdecl*)(const Math::RealVector3D* point, const ZoneShape* zone))(0x00BA11F0);
 	const auto GetObjectTransformationMatrix = (void(__cdecl*)(unsigned int objectIndex, Math::RealMatrix4x3* outMatrix))(0x00B2EC60);
 	const auto GetObjectPosition = (void(*)(unsigned int objectIndex, Math::RealVector3D *position))(0xB2E5A0);
-	const auto SpawnObject = (unsigned int(__thiscall *)(Blam::MapVariant* thisptr, unsigned int tagIndex, int a3, int16_t placementIndex,
+	const auto SpawnObject = (unsigned int(__thiscall *)(Bungie::MapVariant* thisptr, unsigned int tagIndex, int a3, int16_t placementIndex,
 		const Math::RealVector3D *position, const Math::RealVector3D *rightVec, const Math::RealVector3D *upVec, int16_t scnrPlacementBlockIndex,
-		int objectType, const Blam::MapVariant::VariantProperties* variantProperties, unsigned short placementFlags))(0x00582110);
+		int objectType, const Bungie::MapVariant::VariantProperties* variantProperties, unsigned short placementFlags))(0x00582110);
 	const auto GetPlayerHoldingObject = (unsigned int(__cdecl*)(int objectIndex))(0x0059BB90);
 	const auto GetEditorModeState = (bool(__cdecl *)(unsigned int playerIndex, unsigned int* heldObjectIndex, unsigned int* objectIndexUnderCrosshair))(0x59A6F0);
 	const auto GetSandboxGlobals = (SandboxGlobals&(*)())(0x0059BC10);

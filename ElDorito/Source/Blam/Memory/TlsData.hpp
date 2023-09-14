@@ -1,13 +1,13 @@
 #pragma once
 #include "ElDorito.hpp"
-#include "Blam\Preferences\Preferences.hpp"
-#include "Blam\BlamData.hpp"
-#include "Blam\BlamObjects.hpp"
-#include "Blam\BlamPlayers.hpp"
+#include "Bungie\Preferences\Preferences.hpp"
+#include "Bungie\BlamData.hpp"
+#include "Bungie\BlamObjects.hpp"
+#include "Bungie\BlamPlayers.hpp"
 
 #include "new\game\game.hpp"
 
-namespace Blam::Memory
+namespace Bungie::Memory
 {
 	struct tls_data;
 	struct simulation_gamestate_entities;
@@ -182,12 +182,12 @@ namespace Blam::Memory
 		main_gamestate_timing *main_gamestate_timing;
 		main_render_timing *main_render_timing;
 		main_time_globals *main_time_globals;
-		Blam::Preferences *preferences;
+		Bungie::Preferences *preferences;
 		char *unknown1C[6];
 		random_math_globals *random_math_globals;
 		char *filo_related;
 		game_globals *game_globals;
-		DataArray<Blam::Players::PlayerDatum> *players_header;
+		DataArray<Bungie::Players::PlayerDatum> *players_header;
 		players_globals *players_globals;
 		game_engine_globals *game_engine_globals;
 		local_game_engine_globals *local_game_engine_globals;
@@ -308,7 +308,7 @@ namespace Blam::Memory
 		first_person_weapon_globals *first_person_weapon_globals;
 		cortana_globals *cortana_globals;
 		campaign_objectives *campaign_objectives;
-		DataArray<Blam::Objects::ObjectHeader> *object_header;
+		DataArray<Bungie::Objects::ObjectHeader> *object_header;
 		object_globals *object_globals;
 		objects_memory_pool *objects_memory_pool;
 		object_name_list *object_name_list;
@@ -438,7 +438,7 @@ namespace Blam::Memory
 		unsigned long bsp_load_state;
 		unsigned long unknown8;
 		unsigned long unknownC;
-		Blam::GameOptions game_options;
+		Bungie::GameOptions game_options;
 		unsigned long unknown24B58; // mapname string_id?
 
 		struct 
@@ -853,16 +853,16 @@ namespace Blam::Memory
 	};
 	static_assert(sizeof(game_save_globals) == 0x18);
 
-	struct s_rasterizer_screen_effect : Blam::DatumBase
+	struct s_rasterizer_screen_effect : Bungie::DatumBase
 	{
 		uint16_t field_2;
 		uint32_t tag_index;
 		float seconds_active;
-		Blam::Math::RealVector3D position;
+		Bungie::Math::RealVector3D position;
 		uint32_t object_index;
 		uint32_t field_1c;
-		Blam::Math::RealVector3D field_20;
-		Blam::Math::RealVector3D field_2c;
+		Bungie::Math::RealVector3D field_20;
+		Bungie::Math::RealVector3D field_2c;
 		uint32_t field_38;
 	};
 	static_assert(sizeof(s_rasterizer_screen_effect) == 0x3C);
@@ -958,7 +958,7 @@ namespace Blam::Memory
 	};
 	static_assert(sizeof(deterministic_game_sound_globals) == 0x1300);
 
-	struct s_decal_system_datum : Blam::DatumBase
+	struct s_decal_system_datum : Bungie::DatumBase
 	{
 		short : 16;
 		long tag_index;
@@ -1040,7 +1040,7 @@ namespace Blam::Memory
 	};
 	static_assert(sizeof(scripted_camera_globals) == 0xF0);
 
-	struct s_particle_system_datum : Blam::DatumBase
+	struct s_particle_system_datum : Bungie::DatumBase
 	{
 		short particle_tag_index;
 		long unknown4;

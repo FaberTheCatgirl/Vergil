@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Blam\BlamData.hpp"
-#include "Blam\Math\RealVector3D.hpp"
+#include "Bungie\BlamData.hpp"
+#include "Bungie\Math\RealVector3D.hpp"
 
-namespace Blam::Objects
+namespace Bungie::Objects
 {
 	enum ObjectType : int8_t
 	{
@@ -73,7 +73,7 @@ namespace Blam::Objects
 		int16_t ScnrPlacementBlockIndex;
 		int16_t PlacementIndex;
 		int16_t ClusterIndex;
-		Blam::Math::RealVector3D Center;
+		Bungie::Math::RealVector3D Center;
 		float Radius;
 		uint32_t Unknown30;
 		uint32_t Unknown34;
@@ -84,11 +84,11 @@ namespace Blam::Objects
 		uint32_t Unknown48;
 		uint32_t Unknown4C;
 		uint32_t Unknown50;
-		Blam::Math::RealVector3D Position;
-		Blam::Math::RealVector3D Forward;
-		Blam::Math::RealVector3D Up;
-		Blam::Math::RealVector3D Velocity;
-		Blam::Math::RealVector3D Velocity2;
+		Bungie::Math::RealVector3D Position;
+		Bungie::Math::RealVector3D Forward;
+		Bungie::Math::RealVector3D Up;
+		Bungie::Math::RealVector3D Velocity;
+		Bungie::Math::RealVector3D Velocity2;
 		float Scale;
 		uint32_t Unknown94;
 		uint16_t Unknown98;

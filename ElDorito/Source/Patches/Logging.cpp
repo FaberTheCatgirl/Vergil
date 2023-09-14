@@ -1,10 +1,10 @@
 #include "Patches\Logging.hpp"
 #include "Patch.hpp"
 #include "ElDorito.hpp"
-#include "Blam\BlamNetwork.hpp"
+#include "Bungie\BlamNetwork.hpp"
 #include <Psapi.h>
 #include <fstream>
-#include "Blam\BlamMemory.hpp"
+#include "Bungie\BlamMemory.hpp"
 #include "Utils\Logger.hpp"
 #include "Patches\Core.hpp"
 #include "Modules\ModuleDebug.hpp"
@@ -19,13 +19,13 @@ namespace
 	int networkLogHook(char* format, ...);
 	void __cdecl sslLogHook(char a1, int a2, void* a3, void* a4, char a5);
 	void __cdecl uiLogHook(char a1, int a2, void* a3, void* a4, char a5);
-	bool __fastcall packetRecvHook(void *thisPtr, int unused, Blam::BitStream *stream, int *packetIdOut, int *packetSizeOut);
-	void __fastcall packetSendHook(void *thisPtr, int unused, Blam::BitStream *stream, int packetId, int packetSize);
+	bool __fastcall packetRecvHook(void *thisPtr, int unused, Bungie::BitStream *stream, int *packetIdOut, int *packetSizeOut);
+	void __fastcall packetSendHook(void *thisPtr, int unused, Bungie::BitStream *stream, int packetId, int packetSize);
 	void ExceptionHook(char* msg);
 	int __cdecl globalDataAllocateStructHook(int unk1, const char* name1, const char* name2, int size, int unk2, void* allocator, int unk3, int unk4);
-	void* __cdecl globalDataInitializeArrayHook(Blam::DataArrayBase* dataArray, const char* name, int maxCount, int datumSize, uint8_t alignmentBits, void** allocator);
-	int __cdecl globalDataInitializePoolHook(Blam::DataPoolBase* dataPool, const char* name, int size, int unk, void** allocator);
-	void** __cdecl globalDataInitializeCacheHook(Blam::LruvCacheBase* lruvCache, const char* name, int unk1, void* unk2, void* unk3, void* unk4, void* unk5, void** allocator, int unk7);
+	void* __cdecl globalDataInitializeArrayHook(Bungie::DataArrayBase* dataArray, const char* name, int maxCount, int datumSize, uint8_t alignmentBits, void** allocator);
+	int __cdecl globalDataInitializePoolHook(Bungie::DataPoolBase* dataPool, const char* name, int size, int unk, void** allocator);
+	void** __cdecl globalDataInitializeCacheHook(Bungie::LruvCacheBase* lruvCache, const char* name, int unk1, void* unk2, void* unk3, void* unk4, void* unk5, void** allocator, int unk7);
 	void* __stdcall virtualAllocHook(void* address, size_t size, uint32_t allocationType, uint32_t protect);
 	void GetTagDefinitionHook();
 	void HsEvalHook();
@@ -183,14 +183,14 @@ namespace
 		Utils::Logger::Instance().Log(Utils::LogTypes::Graphics, Utils::LogLevel::Info, (char*)logData1);
 	}
 
-	bool __fastcall packetRecvHook(void *thisPtr, int unused, Blam::BitStream *stream, int *packetIdOut, int *packetSizeOut)
+	bool __fastcall packetRecvHook(void *thisPtr, int unused, Bungie::BitStream *stream, int *packetIdOut, int *packetSizeOut)
 	{
-		typedef bool(__thiscall *DeserializePacketInfoPtr)(void *thisPtr, Blam::BitStream *stream, int *packetIdOut, int *packetSizeOut);
+		typedef bool(__thiscall *DeserializePacketInfoPtr)(void *thisPtr, Bungie::BitStream *stream, int *packetIdOut, int *packetSizeOut);
 		auto DeserializePacketInfo = reinterpret_cast<DeserializePacketInfoPtr>(0x47FFE0);
 		if (!DeserializePacketInfo(thisPtr, stream, packetIdOut, packetSizeOut))
 			return false;
 
-		auto packetTable = Blam::Network::GetPacketTable();
+		auto packetTable = Bungie::Network::GetPacketTable();
 		if (!packetTable)
 			return true;
 		auto packet = &packetTable->Packets[*packetIdOut];
@@ -198,13 +198,13 @@ namespace
 		return true;
 	}
 
-	void __fastcall packetSendHook(void *thisPtr, int unused, Blam::BitStream *stream, int packetId, int packetSize)
+	void __fastcall packetSendHook(void *thisPtr, int unused, Bungie::BitStream *stream, int packetId, int packetSize)
 	{
-		typedef bool(__thiscall *SerializePacketInfoPtr)(void *thisPtr, Blam::BitStream *stream, int packetId, int packetSize);
+		typedef bool(__thiscall *SerializePacketInfoPtr)(void *thisPtr, Bungie::BitStream *stream, int packetId, int packetSize);
 		auto SerializePacketInfo = reinterpret_cast<SerializePacketInfoPtr>(0x4800D0);
 		SerializePacketInfo(thisPtr, stream, packetId, packetSize);
 
-		auto packetTable = Blam::Network::GetPacketTable();
+		auto packetTable = Bungie::Network::GetPacketTable();
 		if (!packetTable)
 			return;
 		auto packet = &packetTable->Packets[packetId];
@@ -308,17 +308,17 @@ namespace
 		return unk;
 	}
 
-	void* __cdecl globalDataInitializeArrayHook(Blam::DataArrayBase* dataArray, const char* name, int maxCount, int datumSize, uint8_t alignmentBits, void** allocator)
+	void* __cdecl globalDataInitializeArrayHook(Bungie::DataArrayBase* dataArray, const char* name, int maxCount, int datumSize, uint8_t alignmentBits, void** allocator)
 	{
 		Utils::Logger::Instance().Log(Utils::LogTypes::Memory, Utils::LogLevel::Info, "InitGlobalArray - Address: 0x%08X, Allocator: 0x%08X, Name: %s, Count: %d, Size: %d, Alignment: %d, TotalSize: %d",
-			dataArray, allocator, name, maxCount, datumSize, alignmentBits, Blam::CalculateDatumArraySize(maxCount, datumSize, alignmentBits));
+			dataArray, allocator, name, maxCount, datumSize, alignmentBits, Bungie::CalculateDatumArraySize(maxCount, datumSize, alignmentBits));
 
 		int padding = alignmentBits >= 0x20 ? 1 << alignmentBits : 0;
 		char* data = reinterpret_cast<char*>(~((padding ^ (1 << alignmentBits)) - 1) &
 			reinterpret_cast<unsigned int>(&reinterpret_cast<char*>(dataArray)[(padding ^ (1 << alignmentBits)) + 83]));
 		char* activeIndies = reinterpret_cast<char*>(data + datumSize * maxCount);
 
-		memset(dataArray, 0, sizeof(Blam::DataArrayBase));
+		memset(dataArray, 0, sizeof(Bungie::DataArrayBase));
 		strncpy(dataArray->Name, name, sizeof(dataArray->Name));
 		dataArray->Alignment = alignmentBits;
 		dataArray->TotalSize = activeIndies - reinterpret_cast<char*>(dataArray);
@@ -334,12 +334,12 @@ namespace
 		return memset(activeIndies, 0, 4 * ((maxCount + 31) >> 5));
 	}
 
-	int __cdecl globalDataInitializePoolHook(Blam::DataPoolBase* dataPool, const char* name, int size, int unk, void** allocator)
+	int __cdecl globalDataInitializePoolHook(Bungie::DataPoolBase* dataPool, const char* name, int size, int unk, void** allocator)
 	{
 		Utils::Logger::Instance().Log(Utils::LogTypes::Memory, Utils::LogLevel::Info, "InitGlobalPool - Address: 0x%08X, Allocator: 0x%08X, Name: %s, Size: %d",
 			dataPool, allocator, name, size);
 
-		memset(dataPool, 0, sizeof(Blam::DataPoolBase));
+		memset(dataPool, 0, sizeof(Bungie::DataPoolBase));
 		dataPool->Signature = 'pool';
 		strncpy(dataPool->Name, name, sizeof(dataPool->Name));
 		dataPool->Allocator = allocator;
@@ -356,12 +356,12 @@ namespace
 		return size;
 	}
 
-	void** __cdecl globalDataInitializeCacheHook(Blam::LruvCacheBase* lruvCache, const char* name, int unk1, void* unk2, void* unk3, void* unk4, void* unk5, void** allocator, int unk7)
+	void** __cdecl globalDataInitializeCacheHook(Bungie::LruvCacheBase* lruvCache, const char* name, int unk1, void* unk2, void* unk3, void* unk4, void* unk5, void** allocator, int unk7)
 	{
 		Utils::Logger::Instance().Log(Utils::LogTypes::Memory, Utils::LogLevel::Info, "InitLruvCache - Address: 0x%08X, Name: %s, Allocator: 0x%X, Unknowns: %d,0x%X,0x%X,0x%X,0x%X,%d",
 			lruvCache, name, allocator, unk1, unk2, unk3, unk4, unk5, unk7);
 
-		ZeroMemory(lruvCache, sizeof(Blam::LruvCacheBase));
+		ZeroMemory(lruvCache, sizeof(Bungie::LruvCacheBase));
 		lruvCache->Unk124 = unk7;
 		lruvCache->Unk32 = unk2;
 		lruvCache->Unk36 = unk3;

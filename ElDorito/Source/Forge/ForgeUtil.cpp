@@ -1,26 +1,26 @@
 #include "Forge\ForgeUtil.hpp"
-#include "Blam\Tags\TagInstance.hpp"
-#include "Blam\BlamObjects.hpp"
-#include "Blam\BlamPlayers.hpp"
-#include "Blam\Math\RealVector3D.hpp"
-#include "Blam\Math\RealMatrix4x3.hpp"
+#include "Bungie\Tags\TagInstance.hpp"
+#include "Bungie\BlamObjects.hpp"
+#include "Bungie\BlamPlayers.hpp"
+#include "Bungie\Math\RealVector3D.hpp"
+#include "Bungie\Math\RealMatrix4x3.hpp"
 #include "Pointer.hpp"
 #include "ElDorito.hpp"
 
-using namespace Blam;
-using namespace Blam::Math;
+using namespace Bungie;
+using namespace Bungie::Math;
 
 namespace Forge
 {
-	Blam::MapVariant* GetMapVariant()
+	Bungie::MapVariant* GetMapVariant()
 	{
-		static auto GetMapVariant = (Blam::MapVariant* (__cdecl*)())(0x00583230);
+		static auto GetMapVariant = (Bungie::MapVariant* (__cdecl*)())(0x00583230);
 		return GetMapVariant();
 	}
 
 	const AABB* GetObjectBoundingBox(uint32_t tagIndex)
 	{
-		using namespace Blam::Tags;
+		using namespace Bungie::Tags;
 		auto objectDefPtr = Pointer(TagInstance(tagIndex).GetDefinition<void>());
 		if (!objectDefPtr)
 			return false;
@@ -37,7 +37,7 @@ namespace Forge
 		if (!modeDefPtr)
 			return false;
 
-		auto compressionInfoBlock = modeDefPtr(0x74).Read<Blam::Tags::TagBlock<uint8_t>>();
+		auto compressionInfoBlock = modeDefPtr(0x74).Read<Bungie::Tags::TagBlock<uint8_t>>();
 		if (compressionInfoBlock.Count < 1)
 			return false;
 
@@ -54,7 +54,7 @@ namespace Forge
 	{
 		auto mapv = GetMapVariant();
 
-		auto object = Blam::Objects::Get(objectIndex);
+		auto object = Bungie::Objects::Get(objectIndex);
 
 		if (!mapv || playerIndex == -1 || objectIndex == -1 || !object)
 			return -1;
@@ -118,8 +118,8 @@ namespace Forge
 		RealMatrix4x3 objectTransform;
 		GetObjectTransformationMatrix(objectIndex, &objectTransform);
 
-		auto& players = Blam::Players::GetPlayers();
-		auto& objects = Blam::Objects::GetObjects();
+		auto& players = Bungie::Players::GetPlayers();
+		auto& objects = Bungie::Objects::GetObjects();
 
 		auto player = players.Get(playerIndex);
 		if (!player)
@@ -129,7 +129,7 @@ namespace Forge
 
 		if (throwForce > 0.000099999997f)
 		{
-			auto unitObjectPtr = Blam::Objects::Get(player->SlaveUnit);
+			auto unitObjectPtr = Bungie::Objects::Get(player->SlaveUnit);
 			if (!unitObjectPtr)
 				return;
 
@@ -190,7 +190,7 @@ namespace Forge
 		return { totalAvailable, totalUsed };
 	}
 
-	bool PointInWorldBounds(Blam::Math::RealVector3D &point)
+	bool PointInWorldBounds(Bungie::Math::RealVector3D &point)
 	{
 		auto mapv = GetMapVariant();
 		return point.I >= mapv->WorldBoundsXMin && point.I <= mapv->WorldBoundsXMax
@@ -200,7 +200,7 @@ namespace Forge
 
 	bool ObjectInWorldBounds(uint32_t objectIndex)
 	{
-		Blam::Math::RealVector3D worldPos;
+		Bungie::Math::RealVector3D worldPos;
 		Forge::GetObjectPosition(objectIndex, &worldPos);
 		return PointInWorldBounds(worldPos);
 	}

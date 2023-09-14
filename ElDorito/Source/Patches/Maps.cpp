@@ -1,17 +1,17 @@
 #include "Patches\Maps.hpp"
 #include "Patch.hpp"
-#include "Blam\BlamTypes.hpp"
+#include "Bungie\BlamTypes.hpp"
 
 namespace
 {
-	void __fastcall c_map_variant_initialize_default_hook(Blam::MapVariant* thisptr, void* unused, int mapId);
+	void __fastcall c_map_variant_initialize_default_hook(Bungie::MapVariant* thisptr, void* unused, int mapId);
 	int EnumerateMapsHook(int a1);
 
 	int StartupMapType = -1;
 	std::string StartupMapName = "";
-	int __cdecl GameOptions__LoadIntoGlobalGameOptions_hook(Blam::GameOptions *GameOptions);
+	int __cdecl GameOptions__LoadIntoGlobalGameOptions_hook(Bungie::GameOptions *GameOptions);
 
-	bool TryLoadDefaultMapVariant(int mapId, Blam::MapVariant* buffer);
+	bool TryLoadDefaultMapVariant(int mapId, Bungie::MapVariant* buffer);
 }
 
 namespace Patches::Maps
@@ -32,9 +32,9 @@ namespace Patches::Maps
 		Hook(0x166E70, GameOptions__LoadIntoGlobalGameOptions_hook).Apply();
 	}
 
-	void InitializeMapVariant(Blam::MapVariant *mapv, int mapid)
+	void InitializeMapVariant(Bungie::MapVariant *mapv, int mapid)
 	{
-		const auto c_map_variant_initialize = (void(__thiscall *)(Blam::MapVariant* thisptr, int mapId))(0x00581F70);
+		const auto c_map_variant_initialize = (void(__thiscall *)(Bungie::MapVariant* thisptr, int mapId))(0x00581F70);
 		// if we can't load the variant in the .map file, default to one generated from the scenario
 		if (!TryLoadDefaultMapVariant(mapid, mapv))
 			c_map_variant_initialize(mapv, mapid);
@@ -98,7 +98,7 @@ namespace
 		return success;
 	}
 
-	bool TryLoadDefaultMapVariant(int mapId, Blam::MapVariant* buffer)
+	bool TryLoadDefaultMapVariant(int mapId, Bungie::MapVariant* buffer)
 	{
 		// get the path to the .map file
 		char mapPath[256];
@@ -122,7 +122,7 @@ namespace
 			&& (fileSize - offset) >= MAPV_SIZE && file_set_position(filo, offset, 0)
 			&& file_read(filo, MAPV_SIZE, 0, buff) && *(uint32_t*)buff == 'vpam')
 		{
-			memcpy((void*)buffer, buff + 0x10, sizeof(Blam::MapVariant));
+			memcpy((void*)buffer, buff + 0x10, sizeof(Bungie::MapVariant));
 			success = true;
 		}
 
@@ -130,7 +130,7 @@ namespace
 		return success;
 	}
 
-	void __fastcall c_map_variant_initialize_default_hook(Blam::MapVariant* thisptr, void* unused, int mapId)
+	void __fastcall c_map_variant_initialize_default_hook(Bungie::MapVariant* thisptr, void* unused, int mapId)
 	{
 		Patches::Maps::InitializeMapVariant(thisptr, mapId);
 	}
@@ -188,11 +188,11 @@ namespace
 	}
 
 	bool StartupInitialHasCalled = false;	
-	int __cdecl GameOptions__LoadIntoGlobalGameOptions_hook(Blam::GameOptions *GameOptions)
+	int __cdecl GameOptions__LoadIntoGlobalGameOptions_hook(Bungie::GameOptions *GameOptions)
 	{
-		if (!StartupInitialHasCalled && (StartupMapType > Blam::MapType::eMapTypeNone && StartupMapType < Blam::MapType::eMapTypeCount) && StartupMapName.c_str() != "")
+		if (!StartupInitialHasCalled && (StartupMapType > Bungie::MapType::eMapTypeNone && StartupMapType < Bungie::MapType::eMapTypeCount) && StartupMapName.c_str() != "")
 		{
-			GameOptions->GameVariant.GameType = Blam::GameType::eGameTypeSlayer;
+			GameOptions->GameVariant.GameType = Bungie::GameType::eGameTypeSlayer;
 			GameOptions->GameVariant.RoundTimeLimit = 0;
 			GameOptions->SetMapType(StartupMapType);
 			GameOptions->SetMapPath(StartupMapName.c_str());

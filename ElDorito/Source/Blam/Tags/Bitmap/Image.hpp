@@ -1,6 +1,6 @@
-#include "Blam\Tags\Tags.hpp"
+#include "Bungie\Tags\Tags.hpp"
 
-namespace Blam::Tags::Bitmap {
+namespace Bungie::Tags::Bitmap {
 	struct Image
 	{
 		int test;

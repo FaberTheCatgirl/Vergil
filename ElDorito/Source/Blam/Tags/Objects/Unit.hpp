@@ -1,22 +1,22 @@
 #pragma once
-#include "Blam\Math\Angle.hpp"
-#include "Blam\Math\Bounds.hpp"
-#include "Blam\Math\RealColorRGB.hpp"
-#include "Blam\Math\RealVector3D.hpp"
-#include "Blam\Tags\Tags.hpp"
-#include "Blam\Text\StringID.hpp"
-#include "Blam\Tags\Objects\Object.hpp"
+#include "Bungie\Math\Angle.hpp"
+#include "Bungie\Math\Bounds.hpp"
+#include "Bungie\Math\RealColorRGB.hpp"
+#include "Bungie\Math\RealVector3D.hpp"
+#include "Bungie\Tags\Tags.hpp"
+#include "Bungie\Text\StringID.hpp"
+#include "Bungie\Tags\Objects\Object.hpp"
 
-namespace Blam::Tags::Objects
+namespace Bungie::Tags::Objects
 {
-	using Blam::Math::Angle;
-	using Blam::Math::Bounds;
-	using Blam::Math::RealVector3D;
-	using Blam::Tags::Tag;
-	using Blam::Tags::TagBlock;
-	using Blam::Tags::TagGroup;
-	using Blam::Tags::TagReference;
-	using Blam::Text::StringID;
+	using Bungie::Math::Angle;
+	using Bungie::Math::Bounds;
+	using Bungie::Math::RealVector3D;
+	using Bungie::Tags::Tag;
+	using Bungie::Tags::TagBlock;
+	using Bungie::Tags::TagGroup;
+	using Bungie::Tags::TagReference;
+	using Bungie::Text::StringID;
 
 	struct Unit : TagGroup<'unit'>
 	{

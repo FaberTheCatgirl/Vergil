@@ -1,6 +1,6 @@
-#include "Blam\Math\ColorARGB.hpp"
+#include "Bungie\Math\ColorARGB.hpp"
 
-namespace Blam::Math
+namespace Bungie::Math
 {
 	ColorARGB::ColorARGB()
 		: ColorARGB(255, 0, 0, 0)

@@ -1,6 +1,6 @@
-#include "Blam\Math\RealRectangle3D.hpp"
+#include "Bungie\Math\RealRectangle3D.hpp"
 
-namespace Blam::Math
+namespace Bungie::Math
 {
 	RealRectangle3D::RealRectangle3D()
 		: RealRectangle3D(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f)

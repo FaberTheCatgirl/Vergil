@@ -1,6 +1,6 @@
-#include "Blam\Math\RealVector2D.hpp"
+#include "Bungie\Math\RealVector2D.hpp"
 
-namespace Blam::Math
+namespace Bungie::Math
 {
 	RealVector2D::RealVector2D()
 		: RealVector2D(0, 0)
