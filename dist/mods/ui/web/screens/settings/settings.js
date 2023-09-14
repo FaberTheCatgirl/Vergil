@@ -151,6 +151,9 @@ var controllerPresets = [
 var controllerIconPacks = [
     ['Xbox 360','360'],
     ['Xbox One','XboxOne']
+    ['Playstation 3','PS3'],
+    ['Playstation 4','PS4'],
+    ['Playstation 5','PS5']
 ];
 var bindChangeArray = [];
 var subPages = ['#page4','#page5','#page8','#page9','#page11'];

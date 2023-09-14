@@ -45,16 +45,16 @@ dew.on("show", function(e){
         });
     }else{
         $("#blackLayer").hide();
-        $.getJSON( "https://raw.githubusercontent.com/VaktorTV/ElDorito/master/currentRelease.json", function(data) {
+        $.getJSON( "https://raw.githubusercontent.com/FaberTheCatgirl/Vergil/master/currentRelease.json", function(data) {
             dew.getVersion().then(function (version) {
                 if(parseVersion(data.release[0].version) != parseVersion(version)) {
-                    dew.show('alert',{"title":"Update Available!", "body":"There is a newer version of ElDewrito available.|r|n|r|nWould you like to launch the updater?", "type":"update"});
+                    dew.show('alert',{"title":"Update Available!", "body":"There is a newer version of Vergil available.|r|n|r|nWould you like to launch the updater?", "type":"update"});
                 }
             });
         }); 
         dew.command('Game.FirstRun', {}).then(function(result){
             if(result == 1){
-                $.getJSON("http://scooterpsu.github.io/announcements.json", function(data) {
+                $.getJSON("http://FaberTheCatgirl.github.io/announcements.json", function(data) {
                     if(data.announcements.length){
                         for(var i = 0; i < data.announcements.length; i++){
                             $('#announcementBox').append(

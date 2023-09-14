@@ -38,7 +38,7 @@
  * Don't ruin the fun for everyone else.                                      *
  ******************************************************************************/
 
-#define CURRENT_VERSION V(2, 0, 0, 0)
+#define CURRENT_VERSION V(2, 1, 0, 0)
 
 #ifdef _DEBUG
 #define VERSION_SUFFIX "-debug"

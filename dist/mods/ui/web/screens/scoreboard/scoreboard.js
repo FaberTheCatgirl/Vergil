@@ -427,7 +427,7 @@ dew.on("scoreboard", function(e){
          var activePlayerSet = 0;
          var alivePlayerSet = 0;
          var playerHasObjectiveSet = 0;
-         var rebuildScoreboard = false;
+         var rebuildScoreboard = true;
          var teamsVisitedSet = 0;
 
          if(!scoreboardData || !scoreboardData.players) {

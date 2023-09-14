@@ -40,6 +40,7 @@ namespace Blam::Tags::UI
 		float MediumSensorBlipScale;
 		float SmallSensorBlipScale;
 		float LargeSensorBlipScale;
+		float VehicleSensorRange;
 		float SensorBlipGlowAmount;
 		float SensorBlipGlowRadius;
 		float SensorBlipGlowOpacity;
