@@ -40,6 +40,7 @@
 #include "Web\Ui\ScreenLayer.hpp"
 
 #include "new\game\game.hpp"
+#include <algorithm>
 
 using namespace Patches::Ui;
 
@@ -231,12 +232,12 @@ namespace Patches::Ui
 		}
 
 		// Remove Xbox Live from the network menu
-		Patch::NopFill(Pointer::Base(0x723D85), 0x17);
-		Pointer::Base(0x723DA1).Write<uint8_t>(0);
-		Pointer::Base(0x723DB8).Write<uint8_t>(1);
-		Patch::NopFill(Pointer::Base(0x723DFF), 0x3);
-		Pointer::Base(0x723E07).Write<uint8_t>(0);
-		Pointer::Base(0x723E1C).Write<uint8_t>(0);
+		//Patch::NopFill(Pointer::Base(0x723D85), 0x17);
+		//Pointer::Base(0x723DA1).Write<uint8_t>(0);
+		//Pointer::Base(0x723DB8).Write<uint8_t>(1);
+		//Patch::NopFill(Pointer::Base(0x723DFF), 0x3);
+		//Pointer::Base(0x723E07).Write<uint8_t>(0);
+		//Pointer::Base(0x723E1C).Write<uint8_t>(0);
 
 		// Localized string override hook
 		Hook(0x11E040, LocalizedStringHook).Apply();
@@ -337,11 +338,11 @@ namespace Patches::Ui
 		Pointer(0x016A6240).Write(uint32_t(&c_gui_bitmap_widget_update_render_data_hook));
 
 		// remove recent maps, fileshare menu items
-		Pointer(0x0169E270).Write(uint32_t(&c_gui_map_category_datasource_init));
+		//Pointer(0x0169E270).Write(uint32_t(&c_gui_map_category_datasource_init));
 		// remove game variants, fileshare menu items
-		Pointer(0x0169E510).Write(uint32_t(&c_gui_game_variant_category_datasource_init));
+		//Pointer(0x0169E510).Write(uint32_t(&c_gui_game_variant_category_datasource_init));
 
-		Hook(0x721F03, c_gui_screen_pregame_lobby_switch_network_hook).Apply();
+		//Hook(0x721F03, c_gui_screen_pregame_lobby_switch_network_hook).Apply();
 
 		// prevent transition_out immediately after saving
 		Hook(0x6A8706, UI_GameVariantSavePromptFix, HookFlags::IsCall).Apply();
@@ -648,18 +649,18 @@ namespace
 						case 4376: //mp_spartan
 							spartanChdtIndex = bipd->Unit.HudInterfaces[0].UnitHudInterface.TagIndex;
 							break;
-							//case 4377: //mp_elite
-							//	eliteChdtIndex = bipd->Unit.HudInterfaces[0].UnitHudInterface.TagIndex;
-							//	break;
-							//case 4379: //monitor
-							//	monitorChdtIndex = bipd->Unit.HudInterfaces[0].UnitHudInterface.TagIndex;
-							//	break;
+						case 4377: //mp_elite
+							eliteChdtIndex = bipd->Unit.HudInterfaces[0].UnitHudInterface.TagIndex;
+							break;
+						case 4379: //monitor
+							monitorChdtIndex = bipd->Unit.HudInterfaces[0].UnitHudInterface.TagIndex;
+							break;
 						default:
 							continue;
 						}
 
 						//If all the tag indices are found, move on.
-						if (spartanChdtIndex != NULL /*&& eliteChdtIndex != NULL && monitorChdtIndex != NULL*/)
+						if (spartanChdtIndex != NULL && eliteChdtIndex != NULL && monitorChdtIndex != NULL)
 							goto findPttLsnd;
 					}
 

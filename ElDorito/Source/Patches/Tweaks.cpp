@@ -23,7 +23,6 @@ namespace
 	void EnableHitmarkersInternal(bool enabled);
 	void EnableIntelBloomFix();
 	void EnableReachStyleFrags();
-	void DisableReactorFog();
 	void EnableAggressiveAudioDiscarding();
 }
 
@@ -41,11 +40,6 @@ namespace Patches::Tweaks
 		if (Modules::ModuleTweaks::Instance().VarAggressiveAudioDiscarding->ValueInt)
 		{
 			EnableAggressiveAudioDiscarding();
-		}
-
-		if (Modules::ModuleTweaks::Instance().VarDisableReactorFog->ValueInt)
-		{
-			DisableReactorFog();
 		}
 
 		if (Modules::ModuleTweaks::Instance().VarReachStyleFrags->ValueInt)
@@ -123,20 +117,6 @@ namespace
 
 			if (fragDefinition->Attachments.Count > 0)
 				fragDefinition->Attachments[0].Tag = trailTagReference;
-		}
-	}
-
-	void DisableReactorFog()
-	{
-		for (auto scnrTag : TagInstance::GetInstancesInGroup('scnr'))
-		{
-			auto scnrDefinition = scnrTag.GetDefinition<Bungie::Tags::Scenario::Scenario>();
-			if (scnrDefinition && scnrDefinition->MapId == 700)
-			{
-				scnrDefinition->EffectScenery[01].PaletteIndex = -1;
-				scnrDefinition->EffectScenery[02].PaletteIndex = -1;
-				scnrDefinition->EffectScenery[61].PaletteIndex = -1;
-			}
 		}
 	}
 

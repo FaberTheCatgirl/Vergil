@@ -4,7 +4,7 @@
 
 namespace
 {
-	size_t globalCachIncrease = 100;
+	size_t globalCacheIncrease = 4096;
 }
 
 namespace Patches::Memory
@@ -135,7 +135,7 @@ namespace Patches::Memory
 	void ExpandMainGlobalMemoryMap()
 	{
 		size_t dataSizeIncrease = 0;
-		size_t cacheSizeIncrease = 1024 * 1024 * globalCachIncrease;
+		size_t cacheSizeIncrease = 1024 * 1024 * globalCacheIncrease;
 		dataSizeIncrease += ExpandGameStateGlobals();
 		//dataSizeIncrease += ExpandRuntimeStateGlobals();
 		// TODO: other allocations
@@ -182,7 +182,7 @@ namespace Patches::Memory
 	void SetGlobalCacheIncrease(size_t size)
 	{
 		// TODO: more mapping and testing is required before this is ready for prime time
-		globalCachIncrease = size;
+		globalCacheIncrease = size;
 		ExpandMainGlobalMemoryMap();
 	}
 

@@ -351,19 +351,19 @@ void ElDorito::OnMainMenuShown()
 }
 
 // This is for the watermark in the bottom right corner (hidden by default)
-void ElDorito::setWatermarkText(const std::string& Message)
-{
-	static wchar_t msgBuf[256];
-	wmemset(msgBuf, 0, 256);
-
-	std::wstring msgUnicode = Utils::String::WidenString(Message);
-	wcscpy_s(msgBuf, 256, msgUnicode.c_str());
-
-	Pointer::Base(0x2E5338).Write<uint8_t>(0x68);
-	Pointer::Base(0x2E5339).Write(&msgBuf);
-	Pointer::Base(0x2E533D).Write<uint8_t>(0x90);
-	Pointer::Base(0x2E533E).Write<uint8_t>(0x90);
-}
+//void ElDorito::setWatermarkText(const std::string& Message)
+//{
+//	static wchar_t msgBuf[256];
+//	wmemset(msgBuf, 0, 256);
+//
+//	std::wstring msgUnicode = Utils::String::WidenString(Message);
+//	wcscpy_s(msgBuf, 256, msgUnicode.c_str());
+//
+//	Pointer::Base(0x2E5338).Write<uint8_t>(0x68);
+//	Pointer::Base(0x2E5339).Write(&msgBuf);
+//	Pointer::Base(0x2E533D).Write<uint8_t>(0x90);
+//	Pointer::Base(0x2E533E).Write<uint8_t>(0x90);
+//}
 
 void* _mainTLS;
 Pointer ElDorito::GetMainTls(size_t tlsOffset)
