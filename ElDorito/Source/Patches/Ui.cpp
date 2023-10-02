@@ -652,6 +652,9 @@ namespace
 						case 4377: //mp_elite
 							eliteChdtIndex = bipd->Unit.HudInterfaces[0].UnitHudInterface.TagIndex;
 							break;
+						case 4378: //odst01
+							odstChdtIndex = bipd->Unit.HudInterfaces[0].UnitHudInterface.TagIndex;
+							break;
 						case 4379: //monitor
 							monitorChdtIndex = bipd->Unit.HudInterfaces[0].UnitHudInterface.TagIndex;
 							break;
@@ -660,7 +663,7 @@ namespace
 						}
 
 						//If all the tag indices are found, move on.
-						if (spartanChdtIndex != NULL && eliteChdtIndex != NULL && monitorChdtIndex != NULL)
+						if (spartanChdtIndex != NULL && eliteChdtIndex != NULL && monitorChdtIndex != NULL && odstChdtIndex != NULL)
 							goto findPttLsnd;
 					}
 
@@ -754,13 +757,15 @@ namespace
 		using Bungie::Tags::UI::ChudGlobalsDefinition;
 		using Bungie::Tags::UI::ChudDefinition;
 
-		if (!TagInstance::IsLoaded('chgd', chgdIndex))
+		if (!TagInstance::IsLoaded('chgd', chgdIndex)) // Chud Globals
 			return;
-		else if (!TagInstance::IsLoaded('chdt', spartanChdtIndex))
+		else if (!TagInstance::IsLoaded('chdt', spartanChdtIndex)) //Chud
 			return;
 
 		auto *globals = TagInstance(chgdIndex).GetDefinition<ChudGlobalsDefinition>();
 		auto *spartanChud = Bungie::Tags::TagInstance(spartanChdtIndex).GetDefinition<Bungie::Tags::UI::ChudDefinition>();
+		auto *eliteChud = Bungie::Tags::TagInstance(eliteChdtIndex).GetDefinition<Bungie::Tags::UI::ChudDefinition>();
+		auto* odstChud = Bungie::Tags::TagInstance(odstChdtIndex).GetDefinition < Bungie::Tags::UI::ChudDefinition>();
 
 		// Store initial HUD resolution values the first time the resolution is changed.
 		HUDResolutionWidth = globals->HudGlobals[0].HudAttributes[0].ResolutionWidth;
