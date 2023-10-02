@@ -8,24 +8,24 @@ skip_branch_with_pr: false
 
 environment:
   APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-  _zip: '%APPVEYOR_BUILD_FOLDER%\ElDewrito-%APPVEYOR_BUILD_VERSION%.zip'
-  _zipD: '%APPVEYOR_BUILD_FOLDER%\ElDewrito-%APPVEYOR_BUILD_VERSION%-debug.zip'
+  _zip: '%APPVEYOR_BUILD_FOLDER%\HaloOnline-%APPVEYOR_BUILD_VERSION%.zip'
+  _zipD: '%APPVEYOR_BUILD_FOLDER%\HaloOnline-%APPVEYOR_BUILD_VERSION%-debug.zip'
   _7z: 7z -tzip a %_zip% -r -x!*.config -x!*.exp -x!*.lib -x!*.pdb
   _7zD: 7z -tzip a %_zipD% -r -x!*.config -x!*.exp -x!*.lib -x!*.ilk
-  _vInfo: '%APPVEYOR_BUILD_FOLDER%\ElDorito\Source\Utils\VersionInfo.cpp'
+  _vInfo: '%APPVEYOR_BUILD_FOLDER%\HaloOnline\Source\Utils\VersionInfo.cpp'
 
 init:
   - git config --global core.autocrlf input
 
-clone_folder: c:\projects\ElDorito
+clone_folder: c:\projects\HaloOnline
 
 shallow_clone: true
 
 build_script:
 - cmd: >-
-    "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin\MSBuild.exe" /nologo /m:2 /p:Configuration="Release" /p:Platform="Win32" /verbosity:minimal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll" "%APPVEYOR_BUILD_FOLDER%\ElDorito.sln"
+    "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin\MSBuild.exe" /nologo /m:2 /p:Configuration="Release" /p:Platform="Win32" /verbosity:minimal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll" "%APPVEYOR_BUILD_FOLDER%\HaloOnline.sln"
 
-    "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin\MSBuild.exe" /nologo /m:2 /p:Configuration="Debug" /p:Platform="Win32" /verbosity:minimal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll" "%APPVEYOR_BUILD_FOLDER%\ElDorito.sln"
+    "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin\MSBuild.exe" /nologo /m:2 /p:Configuration="Debug" /p:Platform="Win32" /verbosity:minimal /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll" "%APPVEYOR_BUILD_FOLDER%\HaloOnline.sln"
 
 before_build:
 - cmd: >-
@@ -43,7 +43,7 @@ after_build:
 
     echo D|xcopy /e /y ..\Release\* .\
 
-    appveyor PushArtifact .\mtndew.dll
+    appveyor PushArtifact .\haloonline.dll
 
     %_7z% *
 
@@ -57,10 +57,10 @@ after_build:
 
     appveyor PushArtifact %_zipD%
 
-    move mtndew.dll mtndew-debug.dll
+    move haloonline.dll haloonline-debug.dll
 
-    appveyor PushArtifact mtndew-debug.dll
+    appveyor PushArtifact haloonline-debug.dll
 
-    move mtndew.pdb mtndew-debug.pdb
+    move haloonline.pdb haloonline-debug.pdb
 
-    appveyor PushArtifact mtndew-debug.pdb
+    appveyor PushArtifact haloonline-debug.pdb

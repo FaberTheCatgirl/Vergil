@@ -1,5 +1,0 @@
-LIBRARY
-
-EXPORTS
-        GetEDVersion @1
-        GetAdaptersInfo @64

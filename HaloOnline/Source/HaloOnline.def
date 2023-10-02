@@ -1,0 +1,5 @@
+LIBRARY
+
+EXPORTS
+        GetHaloOnlineVersion @1
+        GetAdaptersInfo @64

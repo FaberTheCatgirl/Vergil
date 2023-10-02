@@ -1,5 +1,5 @@
 /**
- * Creates a new DewError object which represents an ElDewrito communication error.
+ * Creates a new DewError object which represents an HaloOnline communication error.
  *
  * @class
  * @param {string} message - The error message.
@@ -288,25 +288,25 @@ CommandType = {
     });
 
     /**
-     * Methods for interfacing with ElDewrito.
+     * Methods for interfacing with HaloOnline.
      *
      * @namespace dew
      */
 
     /**
-     * A promise made by an asynchronous ElDewrito method.
+     * A promise made by an asynchronous HaloOnline method.
      *
-     * If the promise is rejected for a reason related to ElDewrito, it will be rejected with a {@link DewError} object.
+     * If the promise is rejected for a reason related to HaloOnline, it will be rejected with a {@link DewError} object.
      * This object includes an [error code]{@link DewErrorCode} which can be used to easily figure out what went wrong.
      *
      * If the promise is rejected for any other reason, it may be rejected with a generic Error.
-     * Therefore, you must use `instanceof DewError` to check that the error is actually an ElDewrito error before getting specific information.
+     * Therefore, you must use `instanceof DewError` to check that the error is actually an HaloOnline error before getting specific information.
      *
      * @typedef {Promise<*|Error>} DewPromise
      */
 
     /**
-     * (ASYNCHRONOUS) Retrieves the current version of ElDewrito.
+     * (ASYNCHRONOUS) Retrieves the current version of HaloOnline.
      *
      * @returns {DewPromise<string>} - A promise for the version string.
      */

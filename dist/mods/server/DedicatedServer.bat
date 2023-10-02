@@ -1,10 +1,10 @@
 @echo off
-title ElDewrito dedicated server
+title HaloOnline dedicated server
 cd ../../
 set n=0
 
 color 0e
-echo Starting ElDewrito dedicated server...
+echo Starting HaloOnline dedicated server...
 echo [%DATE% %TIME:~0,-3%] Started >> DedicatedServer.log
 
 start eldorado.exe -launcher -dedicated -window -height 200 -width 200 -minimized
@@ -21,10 +21,10 @@ if errorlevel 1 (
 	color 0c
 	taskkill /f /im eldorado.exe
 	if errorlevel 1 (
-		echo ElDewrito dedicated server was not running, restarting...
+		echo HaloOnline dedicated server was not running, restarting...
 		echo [%DATE% %TIME:~0,-3%] Restarted >> DedicatedServer.log
 	) else (
-		echo ElDewrito dedicated server has crashed! Restarting...
+		echo HaloOnline dedicated server has crashed! Restarting...
 		echo [%DATE% %TIME:~0,-3%] Crashed >> DedicatedServer.log
 	)
 	start eldorado.exe -launcher -dedicated -window -height 200 -width 200 -minimized
@@ -34,7 +34,7 @@ if errorlevel 1 (
 	cls
 	set /a n=%n%+1
 	color 0f
-	echo ElDewrito dedicated server is running! ^(%n%^)
+	echo HaloOnline dedicated server is running! ^(%n%^)
 
 )
 

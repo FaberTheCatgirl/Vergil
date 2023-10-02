@@ -200,19 +200,19 @@ progress::-webkit-progress-value {
     background-repeat: no-repeat;
 }
 
-.genericLoader .eldorito {
+.genericLoader .HaloOnline {
     position: absolute;
     margin: 0;
     bottom: 42%;
     width: 100%;
     height: 15%;
-    background-image: url(dew://assets/ed//EldoritoLogoFinalSmall.png);
+    background-image: url(dew://assets/ed//HaloOnlineLogoFinalSmall.png);
     background-size: auto 100%;
     background-position: 50%;
     background-repeat: no-repeat;
 }
 
-.genericLoader .eldorito.loading {
-    background-image: url(dew://assets/ed//EldoritoLogoFinalBlueSmall.png);
+.genericLoader .HaloOnline.loading {
+    background-image: url(dew://assets/ed//HaloOnlineLogoFinalBlueSmall.png);
     -webkit-clip-path: inset(100% 0 0 0);
 }

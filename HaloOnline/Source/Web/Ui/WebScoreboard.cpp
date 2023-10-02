@@ -1,0 +1,470 @@
+#include "Web\Ui\WebScoreboard.hpp"
+#include "Web\Ui\ScreenLayer.hpp"
+#include "Bungie\BungieNetwork.hpp"
+#include "Bungie\BungieEvents.hpp"
+#include "Bungie\BungieTypes.hpp"
+#include "Bungie\Tags\Objects\Damage.hpp"
+#include "Patches\Events.hpp"
+#include "Patches\Scoreboard.hpp"
+#include "Patches\Input.hpp"
+#include "Pointer.hpp"
+#include "Modules\ModuleInput.hpp"
+#include "Modules\ModuleServer.hpp"
+#include "ThirdParty\rapidjson\writer.h"
+#include "ThirdParty\rapidjson\stringbuffer.h"
+#include "Utils\String.hpp"
+#include "HaloOnline.hpp"
+
+#include <iomanip>
+#include "Bungie\BungieObjects.hpp"
+#include "Bungie\Tags\Items\DefinitionWeapon.hpp"
+#include "Bungie\BungieTime.hpp"
+#include "Modules\ModuleGame.hpp"
+#include "Console.hpp"
+
+#include "new\game\game.hpp"
+
+using namespace Bungie::Input;
+using namespace Bungie::Events;
+
+namespace
+{
+	const float kScoreboardUpdateRateSeconds = 0.25f;
+
+	bool scoreboardShown = false;
+	bool locked = false;
+	bool postgame = false;
+	bool pregame = false;
+	bool returningToLobby = false;
+	bool forcedBackToLobby = false;
+	bool acceptsInput = true;
+	bool pressedLastTick = false;
+	bool spawningSoon = false;
+	bool roundInProgress = false;
+	int lastPressedTime = 0;
+	time_t postgameDisplayed;
+	const uint32_t postgameDelayTime = 2;
+	uint32_t scoreboardSentTime = 0;
+
+	void OnEvent(Bungie::DatumHandle player, const Event *event, const EventDefinition *definition);
+	void OnGameInputUpdated();
+	void getScoreboardInternal(rapidjson::Writer<rapidjson::StringBuffer>& writer);
+}
+
+namespace Web::Ui::WebScoreboard
+{
+	void Init()
+	{
+		Patches::Events::OnEvent(OnEvent);
+		Patches::Input::RegisterDefaultInputHandler(OnGameInputUpdated);
+		scoreboardSentTime = 0;
+	}
+
+	void Show(bool locked, bool postgame)
+	{
+		rapidjson::StringBuffer jsonBuffer;
+		rapidjson::Writer<rapidjson::StringBuffer> jsonWriter(jsonBuffer);
+
+		jsonWriter.StartObject();
+		jsonWriter.Key("expanded");
+		jsonWriter.Bool(Modules::ModuleGame::Instance().VarExpandedScoreboard->ValueInt != 0);
+		jsonWriter.Key("locked");
+		jsonWriter.Bool(locked);
+		jsonWriter.Key("postgame");
+		jsonWriter.Bool(postgame);
+		jsonWriter.Key("scoreboardData");
+		getScoreboardInternal(jsonWriter);
+		jsonWriter.EndObject();
+
+		scoreboardShown = true;
+		ScreenLayer::Show("scoreboard", jsonBuffer.GetString());
+	}
+
+	void Hide()
+	{
+		scoreboardShown = false;
+		ScreenLayer::Hide("scoreboard");
+	}
+
+	void Tick()
+	{
+		const auto game_engine_round_in_progress = (bool(*)())(0x00550F90);
+		static auto previousMapLoadingState = 0;
+		static auto previousEngineState = 0;
+		static bool previousHasUnit = false;
+
+		if (!Bungie::game_is_multiplayer() && !Bungie::game_is_mainmenu())
+			return;
+
+		time_t curTime;
+		time(&curTime);
+		if (postgame)
+		{
+			if (((curTime - postgameDisplayed) > postgameDelayTime))
+			{
+				Web::Ui::WebScoreboard::Show(locked, postgame);
+				acceptsInput = false;
+				postgame = false;
+				returningToLobby = true;
+			}
+		}
+
+		if (returningToLobby && !forcedBackToLobby)
+		{
+			auto timeout = Modules::ModuleServer::Instance().VarReturnToLobbyTimeoutSeconds->ValueInt;
+			if ((curTime - postgameDisplayed) > (timeout + postgameDelayTime))
+			{
+				auto session = Bungie::Network::GetActiveSession();
+				if (session && session->IsEstablished())
+				{
+					session->Parameters.SetSessionMode(1);
+					forcedBackToLobby = true;
+				}
+			}
+		}
+
+		if (!postgame && !Bungie::game_is_mainmenu()) {
+			time_t curTime1;
+			time(&curTime1);
+
+			if (scoreboardShown && Bungie::Time::TicksToSeconds(scoreboardSentTime++) > kScoreboardUpdateRateSeconds)
+			{
+				scoreboardSentTime = 0;
+				Web::Ui::ScreenLayer::NotifyScreen("scoreboard", "scoreboard", getScoreboard());
+			}
+		}
+
+		auto currentMapLoadingState = *(bool*)0x023917F0;
+		if (previousMapLoadingState && !currentMapLoadingState)
+		{
+			if (Bungie::game_is_mainmenu())
+			{
+				returningToLobby = false;
+				acceptsInput = true;
+				Web::Ui::WebScoreboard::Hide();
+			}
+			else
+			{
+				locked = false;
+				postgame = false;
+				acceptsInput = false;
+				pregame = true;
+				Web::Ui::WebScoreboard::Show(locked, postgame);
+			}
+		}
+		else if (!previousMapLoadingState && currentMapLoadingState && Bungie::game_is_mainmenu() && !returningToLobby)
+		{
+			locked = false;
+			postgame = false;
+			Web::Ui::WebScoreboard::Hide();
+		}
+		previousMapLoadingState = currentMapLoadingState;
+
+		auto engineGlobals = HaloOnline::GetMainTls(0x48)[0];
+		if (!engineGlobals)
+			return;
+
+		auto currentEngineState = engineGlobals(0xE110).Read<uint8_t>();
+		if (previousEngineState & 8 && !(currentEngineState & 8)) // summary ui
+		{
+			locked = false;
+			postgame = false;
+			acceptsInput = true;
+			Web::Ui::WebScoreboard::Hide();
+		}
+		previousEngineState = currentEngineState;
+
+		roundInProgress = game_engine_round_in_progress();
+		if (roundInProgress)
+		{
+			Bungie::Players::PlayerDatum *player{ nullptr };
+			auto playerIndex = Bungie::Players::GetLocalPlayer(0);
+			if (playerIndex == Bungie::DatumHandle::Null || !(player = Bungie::Players::GetPlayers().Get(playerIndex)))
+				return;
+
+			auto secondsUntilSpawn = Pointer(player)(0x2CBC).Read<int>();
+			auto firstTimeSpawning = Pointer(player)(0x4).Read<uint32_t>() & 8;
+
+			if (player->SlaveUnit != Bungie::DatumHandle::Null)
+			{
+				spawningSoon = false;
+				pregame = false;
+				if (!previousHasUnit)
+				{
+					acceptsInput = true;
+					Web::Ui::WebScoreboard::Hide();
+				}
+			}
+			else
+			{
+				if (!spawningSoon && !firstTimeSpawning && secondsUntilSpawn > 0 && secondsUntilSpawn < 2)
+				{
+					spawningSoon = true;
+					locked = false;
+					postgame = false;
+					acceptsInput = false;
+					Web::Ui::WebScoreboard::Show(locked, postgame);
+				}
+			}
+
+			previousHasUnit = player->SlaveUnit != Bungie::DatumHandle::Null;
+		}
+	}
+
+	std::string getScoreboard()
+	{
+		rapidjson::StringBuffer jsonBuffer;
+		rapidjson::Writer<rapidjson::StringBuffer> jsonWriter(jsonBuffer);
+		getScoreboardInternal(jsonWriter);
+		return jsonBuffer.GetString();
+	}
+}
+
+namespace
+{
+	void OnEvent(Bungie::DatumHandle player, const Event *event, const EventDefinition *definition)
+	{
+		if (event->NameStringId == 0x4004D || event->NameStringId == 0x4005A) // "general_event_game_over" / "general_event_round_over"
+		{
+			postgameDisplayed = Bungie::Time::GetGameTicks();
+			time(&postgameDisplayed);
+			postgame = true;
+
+			Web::Ui::ScreenLayer::NotifyScreen("scoreboard", "scoreboard", Web::Ui::WebScoreboard::getScoreboard());
+		}
+	}
+
+
+	void OnGameInputUpdated()
+	{
+		if (!acceptsInput)
+			return;
+
+		auto uiSelect = GetActionState(eGameActionUiSelect);
+
+		if (!(uiSelect->Flags & eActionStateFlagsHandled) && uiSelect->Ticks == 1)
+		{
+			uiSelect->Flags |= eActionStateFlagsHandled;
+
+			if (strcmp((char*)Pointer(0x22AB018)(0x1A4), "mainmenu") != 0)
+			{
+				locked = false;
+
+				auto values = reinterpret_cast<float*>(0x244D1F0 + 0x2FC);
+				auto movementAmount = 0.0f;
+				for (auto i = 0; i < 8; i++)
+					movementAmount += values[i] * values[i];
+
+				//If shift is held down or was pressed again within the repeat delay, lock the scoreboard
+				if (GetKeyTicks(eKeyCodeShift, eInputTypeUi) || ((GetTickCount() - lastPressedTime) < 250
+					&& Modules::ModuleInput::Instance().VarTapScoreboard->ValueInt == 1))
+				{
+					locked = true;
+				}
+
+
+				Web::Ui::WebScoreboard::Show(locked, postgame);
+
+				lastPressedTime = GetTickCount();
+				pressedLastTick = true;
+			}
+			else
+			{
+				Web::Ui::WebScoreboard::Show(true, false);
+			}
+		}
+		//Hide the scoreboard when you release tab. Only check when the scoreboard isn't locked.
+		else if (!locked && !postgame && pressedLastTick && uiSelect->Ticks == 0)
+		{
+			Web::Ui::WebScoreboard::Hide();
+			pressedLastTick = false;
+		}
+	}
+
+	bool UnitHasObjective(uint32_t unitObjectIndex)
+	{
+		auto unitObject = (uint8_t*)Bungie::Objects::Get(unitObjectIndex);
+		if (!unitObject)
+			return false;
+		auto rightWeaponIndex = *(unitObject + 0x2Ca);
+		if (rightWeaponIndex == 0xFF)
+			return false;
+
+		auto weaponObjectIndex = *(uint32_t*)(unitObject + 0x2D0 + 4 * rightWeaponIndex);
+		auto rightWeaponObject = Bungie::Objects::Get(weaponObjectIndex);
+		if (!rightWeaponObject)
+			return false;
+
+		auto weap = Bungie::Tags::TagInstance(rightWeaponObject->TagIndex).GetDefinition<Bungie::Tags::Items::Weapon>();
+		return weap->MultiplayerWeaponType != Bungie::Tags::Items::Weapon::MultiplayerType::None;
+	}
+
+	void getScoreboardInternal(rapidjson::Writer<rapidjson::StringBuffer> &writer)
+	{
+		writer.StartObject();
+
+		auto session = Bungie::Network::GetActiveSession();
+		auto get_multiplayer_scoreboard = (Bungie::MutiplayerScoreboard*(*)())(0x00550B80);
+		auto* scoreboard = get_multiplayer_scoreboard();
+		if (!session || !session->IsEstablished() || !scoreboard)
+		{
+			writer.EndObject();
+			return;
+		}
+
+		writer.Key("playersInfo");
+		writer.String(Modules::ModuleServer::Instance().VarPlayersInfoClient->ValueString.c_str());
+
+		writer.Key("hasTeams");
+		writer.Bool(session->HasTeams());
+
+		auto get_number_of_rounds = (int(*)())(0x005504C0);
+		auto get_current_round = (int(*)())(0x00550AD0);
+
+		writer.Key("numberOfRounds");
+		writer.Int(get_number_of_rounds());
+
+		writer.Key("currentRound");
+		writer.Int(get_current_round());
+
+
+		writer.Key("totalScores");
+		writer.StartArray();
+		for (int t = 0; t < 8; t++)
+		{
+			writer.Int(scoreboard->TeamScores[t].TotalScore);
+		}
+		writer.EndArray();
+
+		writer.Key("teamScores");
+		writer.StartArray();
+		for (int t = 0; t < 8; t++)
+		{
+			writer.Int(scoreboard->TeamScores[t].Score);
+		}
+		writer.EndArray();
+
+		int32_t variantType = Pointer(0x023DAF18).Read<int32_t>();
+
+		if (variantType >= 0 && variantType < Bungie::eGameTypeCount)
+		{
+			writer.Key("gameType");
+			writer.String(Bungie::GameTypeNames[variantType].c_str());
+		}
+
+		auto& playersGlobal = HaloOnline::GetMainTls(0x40)[0];
+		uint32_t playerStatusBase = 0x2161808;
+
+		writer.Key("players");
+		writer.StartArray();
+		int playerIdx = session->MembershipInfo.FindFirstPlayer();
+		uint16_t teamHasObjectiveSet = 0;
+		while (playerIdx != -1)
+		{
+			auto player = session->MembershipInfo.PlayerSessions[playerIdx];
+			auto playerStats = Bungie::Players::GetStats(playerIdx);
+
+			bool isAlive = !roundInProgress;
+			bool hasObjective = false;
+			const auto& playerDatum = Bungie::Players::GetPlayers()[playerIdx];
+			if (playerDatum.GetSalt())
+			{
+				if (roundInProgress)
+					isAlive = playerDatum.SlaveUnit != Bungie::DatumHandle::Null || pregame || postgame;
+
+				if (UnitHasObjective(playerDatum.SlaveUnit))
+				{
+					hasObjective = true;
+					if (hasObjective && session->HasTeams()) {
+						teamHasObjectiveSet |= (1 << player.Properties.TeamIndex);
+						if (session->MembershipInfo.GetPeerTeam(session->MembershipInfo.LocalPeerIndex) != player.Properties.TeamIndex)
+							hasObjective = false;
+					}
+				}
+			}
+
+			writer.StartObject();
+			// Player information
+			writer.Key("name");
+			writer.String(Utils::String::ThinString(player.Properties.DisplayName).c_str());
+			writer.Key("serviceTag");
+			writer.String(Utils::String::ThinString(player.Properties.ServiceTag).c_str());
+			writer.Key("team");
+			writer.Int(player.Properties.TeamIndex);
+			char buff[17];
+			sprintf_s(buff, "#%06X", player.Properties.Customization.Colors[Bungie::Players::ColorIndices::Primary]);
+			writer.Key("color");
+			writer.String(buff);
+			Bungie::Players::FormatUid(buff, player.Properties.Uid);
+			writer.Key("UID");
+			writer.String(buff);
+			writer.Key("isHost");
+			if (Modules::ModuleServer::Instance().VarServerDedicatedClient->ValueInt == 1)
+				writer.Bool(false);
+			else {
+				writer.Bool(playerIdx == session->MembershipInfo.HostPeerIndex);
+			}
+
+			//uint8_t alive = Pointer(playerStatusBase + (176 * playerIdx)).Read<uint8_t>();
+			writer.Key("isAlive");
+			//writer.Bool(alive == 1);
+			writer.Bool(isAlive);
+			// Generic score information
+			writer.Key("kills");
+			writer.Int(scoreboard->PlayerScores[playerIdx].Kills);
+			writer.Key("assists");
+			writer.Int(scoreboard->PlayerScores[playerIdx].Assists);
+			writer.Key("deaths");
+			writer.Int(scoreboard->PlayerScores[playerIdx].Deaths);
+			writer.Key("score");
+			writer.Int(scoreboard->PlayerScores[playerIdx].Score);
+			writer.Key("totalScore");
+			writer.Int(scoreboard->PlayerScores[playerIdx].TotalScore);
+			writer.Key("playerIndex");
+			writer.Int(playerIdx);
+			writer.Key("bestStreak");
+			writer.Int(playerStats.BestStreak);
+
+
+
+			writer.Key("hasObjective");
+			writer.Bool(hasObjective);
+
+			//gametype specific stats
+			if (variantType == Bungie::eGameTypeCTF || variantType == Bungie::eGameTypeAssault || variantType == Bungie::eGameTypeOddball)
+			{
+				writer.Key("flagKills");
+				writer.Int(playerStats.WeaponStats[Bungie::Tags::Objects::DamageReportingType::Flag].Kills);
+				writer.Key("ballKills");
+				writer.Int(playerStats.WeaponStats[Bungie::Tags::Objects::DamageReportingType::Ball].Kills);
+			}
+			else if (variantType == Bungie::eGameTypeKOTH)
+			{
+				writer.Key("kingsKilled");
+				writer.Int(playerStats.KingsKilled);
+				writer.Key("timeInHill");
+				writer.Int(playerStats.TimeInHill);
+				writer.Key("timeControllingHill");
+				writer.Int(playerStats.TimeControllingHill);
+			}
+			else if (variantType == Bungie::eGameTypeInfection)
+			{
+				writer.Key("humansInfected");
+				writer.Int(playerStats.HumansInfected);
+				writer.Key("zombiesKilled");
+				writer.Int(playerStats.ZombiesKilled);
+			}
+
+			writer.EndObject();
+			playerIdx = session->MembershipInfo.FindNextPlayer(playerIdx);
+		}
+		writer.EndArray();
+
+		if (session->HasTeams()) {
+			writer.Key("teamHasObjective");
+			writer.Int(teamHasObjectiveSet);
+		}
+
+		writer.EndObject();
+	}
+}
