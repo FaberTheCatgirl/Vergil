@@ -14,7 +14,7 @@ namespace Bungie
 			_black_eye,
 			_tough_luck,
 			_catch,
-			_fog,
+			_fog, //fog is a reach skull
 			_famine,
 			_thunderstorm,
 			_tilt,
@@ -32,7 +32,7 @@ namespace Bungie
 				"black eye",
 				"tough luck",
 				"catch",
-				"fog",
+				"fog", //fog is a reach skull
 				"famine",
 				"thunderstorm",
 				"tilt",
@@ -49,8 +49,8 @@ namespace Bungie
 			_assassin = 0,
 			_blind,
 			_superman,
-			_birthday_party,
-			_daddy,
+			_grunt_birthday_party,
+			_iwhbyd,
 			_third_person,
 			_directors_cut,
 
@@ -65,8 +65,8 @@ namespace Bungie
 				"assassin",
 				"blind",
 				"superman",
-				"birthday party",
-				"daddy",
+				"grunt birthday party",
+				"iwhbyd",
 				"third person",
 				"directors cut"
 			};
@@ -99,6 +99,11 @@ namespace Bungie
 		"Koth",
 		"Forge",
 		"VIP",
+		"Invasion",
+		"Stockpile",
+		"ActionSack",
+		"Race",
+		"PreGameWarmUp",
 		"Juggernaut",
 		"Territories",
 		"Assault",
