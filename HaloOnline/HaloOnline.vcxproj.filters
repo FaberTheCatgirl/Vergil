@@ -517,8 +517,8 @@
     <ClCompile Include="Source\CommandMap.cpp" />
     <ClCompile Include="Source\Console.cpp" />
     <ClCompile Include="Source\HaloOnline.cpp" />
-    <ClCompile Include="Source\ElModules.cpp" />
-    <ClCompile Include="Source\ElPatches.cpp" />
+    <ClCompile Include="Source\HaloOnlineModules.cpp" />
+    <ClCompile Include="Source\HaloOnlinePatches.cpp" />
     <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="Source\Patch.cpp" />
     <ClCompile Include="Source\Pointer.cpp" />
@@ -1283,8 +1283,8 @@
     <ClInclude Include="Source\CommandMap.hpp" />
     <ClInclude Include="Source\Console.hpp" />
     <ClInclude Include="Source\HaloOnline.hpp" />
-    <ClInclude Include="Source\ElModules.hpp" />
-    <ClInclude Include="Source\ElPatches.hpp" />
+    <ClInclude Include="Source\HaloOnlineModules.hpp" />
+    <ClInclude Include="Source\HaloOnlinePatches.hpp" />
     <ClInclude Include="Source\Patch.hpp" />
     <ClInclude Include="Source\Pointer.hpp" />
     <ClInclude Include="Source\Settings.hpp" />

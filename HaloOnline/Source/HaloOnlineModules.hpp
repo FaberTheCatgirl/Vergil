@@ -4,10 +4,10 @@
 
 namespace Modules
 {
-	class ElModules : public Utils::Singleton<ElModules>, public ModuleBase
+	class HaloOnlineModules : public Utils::Singleton<HaloOnlineModules>, public ModuleBase
 	{
 	public:
-		ElModules();
+		HaloOnlineModules();
 
 	private:
 	};

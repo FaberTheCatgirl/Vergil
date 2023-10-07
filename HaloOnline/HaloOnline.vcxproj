@@ -99,8 +99,8 @@
     <ClCompile Include="Source\Patches\DamageSystem.cpp" />
     <ClCompile Include="Source\Patches\DirectXHook.cpp" />
     <ClCompile Include="Source\HaloOnline.cpp" />
-    <ClCompile Include="Source\ElModules.cpp" />
-    <ClCompile Include="Source\ElPatches.cpp" />
+    <ClCompile Include="Source\HaloOnlineModules.cpp" />
+    <ClCompile Include="Source\HaloOnlinePatches.cpp" />
     <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="Source\Modules\ModuleBase.cpp" />
     <ClCompile Include="Source\Modules\ModuleCamera.cpp" />
@@ -375,8 +375,8 @@
     <ClInclude Include="Source\Patches\DamageSystem.hpp" />
     <ClInclude Include="Source\Patches\DirectXHook.hpp" />
     <ClInclude Include="Source\HaloOnline.hpp" />
-    <ClInclude Include="Source\ElModules.hpp" />
-    <ClInclude Include="Source\ElPatches.hpp" />
+    <ClInclude Include="Source\HaloOnlineModules.hpp" />
+    <ClInclude Include="Source\HaloOnlinePatches.hpp" />
     <ClInclude Include="Source\Modules\ModuleBase.hpp" />
     <ClInclude Include="Source\Modules\ModuleCamera.hpp" />
     <ClInclude Include="Source\Modules\ModuleDebug.hpp" />
@@ -538,9 +538,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <UseOfMfc>false</UseOfMfc>
-    <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -638,6 +636,7 @@
       </DebugInformationFormat>
       <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>4348;4834;4996;</DisableSpecificWarnings>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;NOMINMAX;PSAPI_VERSION=1;MINIUPNP_STATICLIB;HaloOnline_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>

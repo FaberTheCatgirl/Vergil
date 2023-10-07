@@ -140,6 +140,7 @@ namespace
 	uint32_t hudMessagesUnicIndex;
 	uint32_t spartanChdtIndex;
 	uint32_t eliteChdtIndex; //Uncomment as needed.
+	uint32_t odstChdtIndex;
 	uint32_t monitorChdtIndex;
 	uint32_t scoreboardChdtIndex;
 	uint32_t chgdIndex;
@@ -761,6 +762,10 @@ namespace
 			return;
 		else if (!TagInstance::IsLoaded('chdt', spartanChdtIndex)) //Chud
 			return;
+		else if (!TagInstance::IsLoaded('chdt', odstChdtIndex))
+			return;
+		//else if (!TagInstance::IsLoaded(('chdt', eliteChdtIndex))
+			//return;
 
 		auto *globals = TagInstance(chgdIndex).GetDefinition<ChudGlobalsDefinition>();
 		auto *spartanChud = Bungie::Tags::TagInstance(spartanChdtIndex).GetDefinition<Bungie::Tags::UI::ChudDefinition>();

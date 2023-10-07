@@ -1,7 +1,7 @@
 #include "HaloOnline.hpp"
 
 #include "Utils\Utils.hpp"
-#include "ElPatches.hpp"
+#include "HaloOnlinePatches.hpp"
 #include "Patches\Network.hpp"
 #include "Server\DedicatedServer.hpp"
 #include "Server\Stats.hpp"
@@ -112,7 +112,7 @@ void HaloOnline::Initialize()
 
 	// init our command modules
 	Console::Init();
-	Modules::ElModules::Instance();
+	Modules::HaloOnlineModules::Instance();
 	Server::TempBanList::Instance();
 
 	//Get the local appdata folder
@@ -257,7 +257,7 @@ void HaloOnline::Initialize()
 		}
 	}
 
-	setWatermarkText("Vergil | Version: " + Utils::Version::GetVersionString() + " | Build Date: " __DATE__);
+	//setWatermarkText("Vergil | Version: " + Utils::Version::GetVersionString() + " | Build Date: " __DATE__);
 
 	// Ensure a ban list file exists
 	Server::SaveDefaultBanList(Server::LoadDefaultBanList());

@@ -112,7 +112,7 @@ void HaloOnline::Initialize()
 
 	// init our command modules
 	Console::Init();
-	Modules::ElModules::Instance();
+	Modules::HaloOnlineModules::Instance();
 	Server::TempBanList::Instance();
 
 	//Get the local appdata folder

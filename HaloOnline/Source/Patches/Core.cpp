@@ -43,7 +43,7 @@
 #include "Console.hpp"
 
 #include "HaloOnline.hpp"
-#include "ElPatches.hpp"
+#include "HaloOnlinePatches.hpp"
 #include "Patch.hpp"
 
 #include <boost\filesystem.hpp>
@@ -844,10 +844,10 @@ namespace Patches::Core
 		//Hook(0x1A857B, simulation_player_left_game_hook).Apply(); // jmp, not call
 
 		// skulls
-		Hook(0x132B50, primary_skull_toggle_hook);
-		Hook(0x132EE0, secondary_skull_toggle_hook);
-		Hook(0x20AE20, primary_skull_is_active_hook);
-		Hook(0x20AE50, secondary_skull_is_active_hook);
+		//Hook(0x132B50, primary_skull_toggle_hook);
+		//Hook(0x132EE0, secondary_skull_toggle_hook);
+		//Hook(0x20AE20, primary_skull_is_active_hook);
+		//Hook(0x20AE50, secondary_skull_is_active_hook);
 
 		// Fix default weapon fov value to match H3
 		Patch::NopFill(Pointer::Base(0x25FAB6), 8);
@@ -1449,8 +1449,8 @@ namespace
 			ss << "\tSurvival Mode Enable: " << bool_string[GameOptions->SurvivalModeEnabled] << std::endl << std::endl;
 
 			// TODO: figure out / fix
-			ss << "\tActive Primary Skulls: " << Bungie::SkullNames[GameOptions->CampaignSkullsPrimary] << std::endl;
-			ss << "\tActive Secondary Skulls: " << Bungie::SkullNames[GameOptions->CampaignSkullsSecondary] << std::endl << std::endl;
+			//ss << "\tActive Primary Skulls: " << Bungie::SkullNames[GameOptions->CampaignSkullsPrimary] << std::endl;
+			//ss << "\tActive Secondary Skulls: " << Bungie::SkullNames[GameOptions->CampaignSkullsSecondary] << std::endl << std::endl;
 		}
 		else
 		{
@@ -1501,9 +1501,9 @@ namespace
 						break;
 					}
 
-					//ss << ", " << (properties->PlayerRepresentation ? "Spartan" : "Monitor");
-					//ss << ", " << (properties->Gender ? "Female" : "Male");
-					//ss << ", " << std::hex << properties->Uid;
+					ss << ", " << (properties->PlayerRepresentation ? "Spartan", "Elite", "Odst" : "Monitor");
+					ss << ", " << (properties->Gender ? "Female", "Non-Binary" : "Male");
+					ss << ", " << std::hex << properties->Uid;
 
 					ss << std::endl;
 				}
@@ -1535,8 +1535,8 @@ namespace
 		{ Bungie::e_secondary_skull::_assassin, false },
 		{ Bungie::e_secondary_skull::_blind, false },
 		{ Bungie::e_secondary_skull::_superman, false },
-		{ Bungie::e_secondary_skull::_birthday_party, false },
-		{ Bungie::e_secondary_skull::_daddy, false },
+		{ Bungie::e_secondary_skull::_grunt_birthday_party, false },
+		{ Bungie::e_secondary_skull::_iwhbyd, false },
 		{ Bungie::e_secondary_skull::_third_person, false },
 		{ Bungie::e_secondary_skull::_directors_cut, false }
 	};
