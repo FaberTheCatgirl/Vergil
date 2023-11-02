@@ -88,9 +88,9 @@ void HaloOnline::Initialize()
 {
 	::CreateDirectoryA(GetDirectory().c_str(), NULL);
 
-	if (!SOP_CheckProfile("Vergil"))
+	if (!SOP_CheckProfile("Halo Online"))
 	{
-		SOP_SetProfile("Vergil", "eldorado.exe");
+		SOP_SetProfile("Halo Online", "eldorado.exe");
 	}
 
 	// Parse command-line commands
@@ -120,7 +120,7 @@ void HaloOnline::Initialize()
 	SHGetKnownFolderPath(FOLDERID_LocalAppData, NULL, NULL, &localAppdata);
 	auto wide_haloonline_appdata = std::wstring(localAppdata);
 	auto haloonline_appdata = Utils::String::ThinString(wide_haloonline_appdata);
-	haloonline_appdata += "\\Vergil";
+	haloonline_appdata += "\\Halo Online";
 	::CreateDirectoryA(haloonline_appdata.c_str(), NULL);
 
 	// load variables/commands from cfg file
