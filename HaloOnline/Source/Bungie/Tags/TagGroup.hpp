@@ -4,10 +4,5 @@
 
 namespace Bungie::Tags
 {
-	template <const Tag GroupTagValue>
-	struct TagGroup
-	{
-		static const Tag GroupTag = GroupTagValue;
-		static const Definitions::StructDefinition Definition;
-	};
+	extern s_tag_group const* const tag_groups[];
 }

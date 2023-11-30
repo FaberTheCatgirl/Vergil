@@ -1,0 +1,70 @@
+#pragma once
+
+namespace blofeld
+{
+
+	extern s_tag_block_definition PuppetPathPointBlock_block;
+	extern s_tag_struct_definition PuppetActionBlock_block_struct;
+	extern s_tag_block_definition PuppetActionBlock_block;
+	extern s_tag_struct_definition PuppetSubActionBranchElementBlock_block_struct;
+	extern s_tag_block_definition PuppetSubActionBranchElementBlock_block;
+	extern s_tag_struct_definition PuppetScriptTextBlock_block_struct;
+	extern s_tag_block_definition PuppetScriptTextBlock_block;
+	extern s_tag_struct_definition PuppetSubActionBlock_block_struct;
+	extern s_tag_block_definition PuppetSubActionBlock_block;
+	extern s_tag_struct_definition SubTracksBlock_block_struct;
+	extern s_tag_block_definition SubTracksBlock_block;
+	extern s_tag_struct_definition PuppetBlock_block_struct;
+	extern s_tag_block_definition PuppetBlock_block;
+	extern s_tag_block_definition PuppetHeaderBlock_block;
+	extern s_tag_block_definition PuppetActionHeaderBlock_block;
+	extern s_tag_block_definition PuppetSubActionHeaderBlock_block;
+	extern s_tag_block_definition PuppetAnimationBlock_block;
+	extern s_tag_block_definition PuppetPathBlock_block;
+	extern s_tag_block_definition PuppetPointBlock_block;
+	extern s_tag_block_definition PuppetBranchBlock_block;
+	extern s_tag_block_definition PuppetScriptBlock_block;
+	extern s_tag_struct_definition CommentsBlock_block_struct;
+	extern s_tag_block_definition CommentsBlock_block;
+	extern s_tag_struct_definition PuppetShowsBlock_block_struct;
+	extern s_tag_block_definition PuppetShowsBlock_block;
+
+	extern s_tag_struct_definition PuppetHeaderStruct_struct_definition;
+	extern s_tag_struct_definition PuppetPathPointStruct_struct_definition;
+	extern s_tag_struct_definition PuppetActionHeaderStruct_struct_definition;
+	extern s_tag_struct_definition PuppetActionAnimationStruct_struct_definition;
+	extern s_tag_struct_definition PuppetActionPathStruct_struct_definition;
+	extern s_tag_struct_definition PuppetSubActionHeaderStruct_struct_definition;
+	extern s_tag_struct_definition PuppetSubActionPointStruct_struct_definition;
+	extern s_tag_struct_definition PuppetSubActionBranchStruct_struct_definition;
+	extern s_tag_struct_definition PuppetSubActionScriptStruct_struct_definition;
+
+	extern c_versioned_string_list PuppetIndexTypeEnum_strings;
+	extern s_string_list_definition PuppetIndexTypeEnum;
+	extern c_versioned_string_list PuppetActionTypeEnum_strings;
+	extern s_string_list_definition PuppetActionTypeEnum;
+	extern c_versioned_string_list PuppetActionBlendTypeEnum_strings;
+	extern s_string_list_definition PuppetActionBlendTypeEnum;
+	extern c_versioned_string_list PuppetSubActionTypeEnum_strings;
+	extern s_string_list_definition PuppetSubActionTypeEnum;
+	extern c_versioned_string_list SubActionTimeTypeEnum_strings;
+	extern s_string_list_definition SubActionTimeTypeEnum;
+	extern c_versioned_string_list PuppetPathPointTypeEnum_strings;
+	extern s_string_list_definition PuppetPathPointTypeEnum;
+	extern c_versioned_string_list AnimPositionTypeEnum_strings;
+	extern s_string_list_definition AnimPositionTypeEnum;
+	extern c_versioned_string_list PuppetPathPointFlagsDefinition_strings;
+	extern s_string_list_definition PuppetPathPointFlagsDefinition;
+	extern c_versioned_string_list PuppetFlagsDefinition_strings;
+	extern s_string_list_definition PuppetFlagsDefinition;
+	extern c_versioned_string_list PuppetShowFlagsDefinition_strings;
+	extern s_string_list_definition PuppetShowFlagsDefinition;
+	extern c_versioned_string_list PuppetAnimationFlagsDefinition_strings;
+	extern s_string_list_definition PuppetAnimationFlagsDefinition;
+	extern c_versioned_string_list SubActionPointFlagsDefinition_strings;
+	extern s_string_list_definition SubActionPointFlagsDefinition;
+	extern c_versioned_string_list PuppetEditorFlagsDefinition_strings;
+	extern s_string_list_definition PuppetEditorFlagsDefinition;
+
+} // namespace blofeld
+
