@@ -1,17 +1,17 @@
 #include "Patches\Events.hpp"
-#include "Bungie\BungieEvents.hpp"
+#include "Blam\BlamEvents.hpp"
 #include "Patch.hpp"
 #include "Web\Ui\WebScoreboard.hpp"
 #include "Web\Ui\ScreenLayer.hpp"
 
 #include <vector>
 
-using namespace Bungie::Events;
+using namespace Blam::Events;
 using namespace Patches::Events;
 
 namespace
 {
-	void RunEventHook(Bungie::DatumHandle player, const Event *event, const EventDefinition *definition);
+	void RunEventHook(Blam::DatumHandle player, const Event *event, const EventDefinition *definition);
 	std::vector<EventCallback> OnEventCallbacks;
 
 }
@@ -33,14 +33,14 @@ namespace Patches::Events
 
 namespace
 {
-	void RunEventHook(Bungie::DatumHandle player, const Event *event, const EventDefinition *definition)
+	void RunEventHook(Blam::DatumHandle player, const Event *event, const EventDefinition *definition)
 	{
 		// Dispatch the event to handlers
 		for (auto &&callback : OnEventCallbacks)
 			callback(player, event, definition);
 
 		// Call the original function
-		typedef void(*RunEventPtr)(Bungie::DatumHandle player, const Event *event, const EventDefinition *definition);
+		typedef void(*RunEventPtr)(Blam::DatumHandle player, const Event *event, const EventDefinition *definition);
 		auto RunEvent = reinterpret_cast<RunEventPtr>(0x5666B0);
 		RunEvent(player, event, definition);
 	}

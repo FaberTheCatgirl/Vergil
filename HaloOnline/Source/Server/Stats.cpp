@@ -1,8 +1,8 @@
 #include <WS2tcpip.h>
 #include <fstream>
 #include "Server\Stats.hpp"
-#include "Bungie\BungieEvents.hpp"
-#include "Bungie\BungieNetwork.hpp"
+#include "Blam\BlamEvents.hpp"
+#include "Blam\BlamNetwork.hpp"
 #include "Patches\Events.hpp"
 #include "Patches\Core.hpp"
 #include "Modules\ModuleServer.hpp"
@@ -94,7 +94,7 @@ namespace Server::Stats
 		if (playersInfoEndpoint.empty())
 			return false;
 
-		auto* session = Bungie::Network::GetActiveSession();
+		auto* session = Blam::Network::GetActiveSession();
 
 		rapidjson::StringBuffer s;
 		rapidjson::Writer<rapidjson::StringBuffer> writer(s);
@@ -120,7 +120,7 @@ namespace Server::Stats
 				inet_ntop(AF_INET, &inAddr, ipStr, sizeof(ipStr));
 
 				char uid[17];
-				Bungie::Players::FormatUid(uid, player->Properties.Uid);
+				Blam::Players::FormatUid(uid, player->Properties.Uid);
 
 				writer.StartObject();
 				writer.Key("name");
@@ -185,8 +185,8 @@ namespace Server::Stats
 
 	DWORD WINAPI CommandServerAnnounceStats_Thread(LPVOID lpParam)
 	{
-		auto* session = Bungie::Network::GetActiveSession();
-		if (Bungie::Network::GetLobbyType() != Bungie::eLobbyTypeMultiplayer || Bungie::Network::GetNetworkMode() != Bungie::eNetworkModeSystemLink)
+		auto* session = Blam::Network::GetActiveSession();
+		if (Blam::Network::GetLobbyType() != Blam::eLobbyTypeMultiplayer || Blam::Network::GetNetworkMode() != Blam::eNetworkModeSystemLink)
 			return false;
 
 		std::vector<std::string> statsEndpoints;
@@ -225,7 +225,7 @@ namespace Server::Stats
 
 		int32_t variantType = Pointer(0x023DAF18).Read<int32_t>();
 		
-		if ((Bungie::game_globals_get()->current_game_mode == Bungie::game_mode::mainmenu) && (mapName == "mainmenu"))
+		if ((Blam::game_globals_get()->current_game_mode == Blam::game_mode::mainmenu) && (mapName == "mainmenu"))
 		{
 			mapName = std::string((char*)Pointer(0x19A5E49));
 			variantName = std::wstring((wchar_t*)Pointer(0x179254));
@@ -239,10 +239,10 @@ namespace Server::Stats
 		writer.Key("variant");
 		writer.String(Utils::String::ThinString(variantName).c_str());
 
-		if (variantType >= 0 && variantType < Bungie::eGameTypeCount)
+		if (variantType >= 0 && variantType < Blam::eGameTypeCount)
 		{
 			writer.Key("variantType");
-			writer.String(Bungie::GameTypeNames[variantType].c_str());
+			writer.String(Blam::GameTypeNames[variantType].c_str());
 		}
 
 		uint32_t TeamMode = Pointer(0x019A6210).Read<uint32_t>();
@@ -263,7 +263,7 @@ namespace Server::Stats
 
 				for (int t = 0; t < 8; t++)
 				{
-					auto teamScore = engineGobals(t * 0x1A).Read<Bungie::TEAM_SCORE>();
+					auto teamScore = engineGobals(t * 0x1A).Read<Blam::TEAM_SCORE>();
 
 					if (numberOfRounds > 1)
 						writer.Int(teamScore.TotalScore);
@@ -287,11 +287,11 @@ namespace Server::Stats
 			if (playerIdx == -1)
 				continue;
 
-			auto playerStats = Bungie::Players::GetStats(playerIdx);
+			auto playerStats = Blam::Players::GetStats(playerIdx);
 			auto* player = &session->MembershipInfo.PlayerSessions[playerIdx];
 
 			std::stringstream color;
-			color << "#" << std::setw(6) << std::setfill('0') << std::hex << player->Properties.Customization.Colors[Bungie::Players::ColorIndices::Primary];
+			color << "#" << std::setw(6) << std::setfill('0') << std::hex << player->Properties.Customization.Colors[Blam::Players::ColorIndices::Primary];
 
 			struct in_addr inAddr;
 			inAddr.S_un.S_addr = session->GetPeerAddress(peerIdx).ToInAddr();
@@ -301,7 +301,7 @@ namespace Server::Stats
 			uint16_t team = Pointer(playerInfoBase + (5696 * playerIdx) + 32).Read<uint16_t>();
 
 			char uid[17];
-			Bungie::Players::FormatUid(uid, player->Properties.Uid);
+			Blam::Players::FormatUid(uid, player->Properties.Uid);
 
 			Pointer pvpBase(0x23F5A98);
 
@@ -350,13 +350,13 @@ namespace Server::Stats
 			writer.Key("playerMedals");
 			writer.StartArray();
 
-			for (int i = 0; i < Bungie::Tags::Objects::MedalType::MedalCount; i++)
+			for (int i = 0; i < Blam::Tags::Objects::MedalType::MedalCount; i++)
 			{
 				if (playerStats.Medals[i] > 0)
 				{
 					writer.StartObject();
 					writer.Key("medalName");
-					writer.String(Bungie::Tags::Objects::MedalTypeNames[i].c_str());
+					writer.String(Blam::Tags::Objects::MedalTypeNames[i].c_str());
 					writer.Key("count");
 					writer.Int(playerStats.Medals[i]);
 					writer.EndObject();
@@ -370,14 +370,14 @@ namespace Server::Stats
 			writer.Key("playerWeapons");
 			writer.StartArray();
 
-			for (int i = 0; i < Bungie::Tags::Objects::DamageReportingType::DamageCount; i++)
+			for (int i = 0; i < Blam::Tags::Objects::DamageReportingType::DamageCount; i++)
 			{
 				if (playerStats.WeaponStats[i].Initialized == 1)
 				{
 					writer.StartObject();
 
 					writer.Key("weaponName");
-					writer.String(Bungie::Tags::Objects::DamageReportingTypeNames[i].c_str());
+					writer.String(Blam::Tags::Objects::DamageReportingTypeNames[i].c_str());
 					writer.Key("weaponIndex");
 					writer.Int(i + 1);
 					writer.Key("kills");
@@ -464,16 +464,16 @@ namespace Server::Stats
 		return true;
 	}
 
-	void LifeCycleStateChanged(Bungie::LifeCycleState newState)
+	void LifeCycleStateChanged(Blam::LifeCycleState newState)
 	{
-		auto* session = Bungie::Network::GetActiveSession();
+		auto* session = Blam::Network::GetActiveSession();
 		
 		if (!session || !session->IsEstablished() || !session->IsHost())
 			return;
 
 		switch (newState)
 		{
-			case Bungie::eLifeCycleStateStartGame:
+			case Blam::eLifeCycleStateStartGame:
 			{
 				auto thread = CreateThread(NULL, 0, GetPlayersInfo_Thread, (LPVOID)"", 0, NULL);
 				break;
@@ -483,7 +483,7 @@ namespace Server::Stats
 
 	void OnGameStart()
 	{
-		auto* session = Bungie::Network::GetActiveSession();
+		auto* session = Blam::Network::GetActiveSession();
 		if (!session || !session->IsEstablished() || !session->IsHost())
 			return;
 
@@ -491,9 +491,9 @@ namespace Server::Stats
 		numberOfRounds = get_number_of_rounds();
 	}
 
-	void OnEvent(Bungie::DatumHandle player, const Bungie::Events::Event *event, const Bungie::Events::EventDefinition *definition)
+	void OnEvent(Blam::DatumHandle player, const Blam::Events::Event *event, const Blam::Events::EventDefinition *definition)
 	{
-		auto* session = Bungie::Network::GetActiveSession();
+		auto* session = Blam::Network::GetActiveSession();
 
 		if (!session || !session->IsEstablished() || !session->IsHost())
 			return;
@@ -524,7 +524,7 @@ namespace Server::Stats
 
 	void Tick()
 	{
-		auto* session = Bungie::Network::GetActiveSession();
+		auto* session = Blam::Network::GetActiveSession();
 
 		if (!session || !session->IsEstablished() || !session->IsHost())
 			return;

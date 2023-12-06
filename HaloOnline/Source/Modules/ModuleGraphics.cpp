@@ -3,7 +3,7 @@
 #include <unordered_set>
 #include <algorithm>
 #include "HaloOnline.hpp"
-#include "Bungie\BungieTypes.hpp"
+#include "Blam\BlamTypes.hpp"
 #include "Patches\Camera.hpp"
 #include "Patches\Ui.hpp"
 #include "ThirdParty\rapidjson\stringbuffer.h"

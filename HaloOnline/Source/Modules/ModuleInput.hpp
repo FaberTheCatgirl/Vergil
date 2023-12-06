@@ -2,7 +2,7 @@
 
 #include "Modules\ModuleBase.hpp"
 
-namespace Bungie
+namespace Blam
 {
 	namespace Input
 	{
@@ -31,7 +31,7 @@ namespace Modules
 
 		ModuleInput();
 
-		static Bungie::Input::BindingsTable *GetBindings();
+		static Blam::Input::BindingsTable *GetBindings();
 		static void UpdateBindings();
 		std::string ExportBindings() const;
 		bool IsCommandBound(std::string command);

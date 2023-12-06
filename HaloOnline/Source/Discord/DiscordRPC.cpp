@@ -2,7 +2,7 @@
 
 #include <time.h>
 
-#include "Bungie\BungieNetwork.hpp"
+#include "Blam\BlamNetwork.hpp"
 #include "Patches\Network.hpp"
 #include "Patches\Core.hpp"
 #include "Modules\ModuleServer.hpp"
@@ -80,11 +80,11 @@ namespace
 
 	void UpdateRichPresence()
 	{
-		auto get_multiplayer_scoreboard = (Bungie::MutiplayerScoreboard * (*)())(0x00550B80);
+		auto get_multiplayer_scoreboard = (Blam::MutiplayerScoreboard * (*)())(0x00550B80);
 		Discord::DiscordRPC::Instance().detailString.clear();
 		memset(&Discord::DiscordRPC::Instance().discordPresence, 0, sizeof(Discord::DiscordRPC::discordPresence));
 
-		auto* session = Bungie::Network::GetActiveSession();
+		auto* session = Blam::Network::GetActiveSession();
 		if (session && session->IsEstablished())
 		{
 			auto game = session->Parameters.GameVariant.Get();
@@ -94,7 +94,7 @@ namespace
 			{
 				Discord::DiscordRPC::Instance().discordPresence.largeImageKey = "default";
 				Discord::DiscordRPC::Instance().discordPresence.largeImageText = "Mainmenu";
-				if (Bungie::Network::GetNetworkMode() == 3)
+				if (Blam::Network::GetNetworkMode() == 3)
 					Discord::DiscordRPC::Instance().discordPresence.details = "In an Online Lobby";
 				else
 					Discord::DiscordRPC::Instance().discordPresence.details = "In an Offline Lobby";
@@ -113,10 +113,10 @@ namespace
 					Discord::DiscordRPC::Instance().detailString = ss.str(); //Need a variable that will stay active
 					Discord::DiscordRPC::Instance().discordPresence.details = Discord::DiscordRPC::Instance().detailString.c_str();
 
-					Discord::DiscordRPC::Instance().gameTypeString = Bungie::GameTypeNames[game->GameType];
+					Discord::DiscordRPC::Instance().gameTypeString = Blam::GameTypeNames[game->GameType];
 					Discord::DiscordRPC::Instance().gameTypeString[0] = toupper(Discord::DiscordRPC::Instance().gameTypeString[0]);
 					Discord::DiscordRPC::Instance().discordPresence.smallImageText = Discord::DiscordRPC::Instance().gameTypeString.c_str();
-					Discord::DiscordRPC::Instance().discordPresence.smallImageKey = Bungie::GameTypeNames[game->GameType].c_str();
+					Discord::DiscordRPC::Instance().discordPresence.smallImageKey = Blam::GameTypeNames[game->GameType].c_str();
 				}
 			}
 			int players = 0;
@@ -133,7 +133,7 @@ namespace
 			Discord::DiscordRPC::Instance().discordPresence.partyMax = session->MembershipInfo.SessionMaxPlayers;
 			if (game)
 			{
-				Discord::DiscordRPC::Instance().gameTypeString = Bungie::GameTypeNames[game->GameType];
+				Discord::DiscordRPC::Instance().gameTypeString = Blam::GameTypeNames[game->GameType];
 				Discord::DiscordRPC::Instance().gameTypeString[0] = toupper(Discord::DiscordRPC::Instance().gameTypeString[0]);
 				Discord::DiscordRPC::Instance().discordPresence.state = Discord::DiscordRPC::Instance().gameTypeString.c_str();
 			}
@@ -237,7 +237,7 @@ namespace Discord
 			return;
 		}
 
-		auto session = Bungie::Network::GetActiveSession();
+		auto session = Blam::Network::GetActiveSession();
 		if (networkMode == 3 && session->IsHost())
 		{
 			auto thread = CreateThread(NULL, 0, DiscordRetrieveExternalIP_Thread, NULL, 0, NULL);

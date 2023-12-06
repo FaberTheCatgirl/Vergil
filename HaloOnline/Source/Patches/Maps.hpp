@@ -1,11 +1,11 @@
 #pragma once
 
-#include "Bungie\BungieTypes.hpp"
+#include "Blam\BlamTypes.hpp"
 
 namespace Patches::Maps
 {
 	void ApplyAll();
-	void InitializeMapVariant(Bungie::MapVariant *mapv, int mapid);
+	void InitializeMapVariant(Blam::MapVariant *mapv, int mapid);
 
 	void StartupForceLoad(int type, std::string name);
 }

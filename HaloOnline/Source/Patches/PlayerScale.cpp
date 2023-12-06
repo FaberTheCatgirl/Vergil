@@ -1,13 +1,13 @@
 #include "Patches\PlayerScale.hpp"
 #include "Modules\ModulePlayer.hpp"
-#include "Bungie\BungieObjects.hpp"
-#include "Bungie\BungiePlayers.hpp"
-#include "Bungie\Tags\TagBlock.hpp"
-#include "Bungie\Tags\TagInstance.hpp"
-#include "Bungie\BungieTime.hpp"
-#include "Bungie\Math\RealMatrix4x3.hpp"
-#include "Bungie\Tags\Items\DefinitionWeapon.hpp"
-#include "Bungie\Tags\Objects\Biped.hpp"
+#include "Blam\BlamObjects.hpp"
+#include "Blam\BlamPlayers.hpp"
+#include "Blam\Tags\TagBlock.hpp"
+#include "Blam\Tags\TagInstance.hpp"
+#include "Blam\BlamTime.hpp"
+#include "Blam\Math\RealMatrix4x3.hpp"
+#include "Blam\Tags\Items\DefinitionWeapon.hpp"
+#include "Blam\Tags\Objects\Biped.hpp"
 #include "Patch.hpp"
 
 #include "new\game\game.hpp"
@@ -15,7 +15,7 @@
 
 namespace
 {
-	using Bungie::Math::RealVector3D;
+	using Blam::Math::RealVector3D;
 
 	struct s_biped_physics;
 	struct s_biped_physics_data1;
@@ -64,14 +64,14 @@ namespace
 	void *BipedPhysicsHook_B7156F(s_biped_physics *bipedPhysics, int shapeIndex);
 	void BipedPhysicsHook_BAF4CF();
 	void BipedCanStandUnobstructed_Teleporter_Hook();
-	void PlayerSpawnLocationHook(uint32_t playerIndex, Bungie::Math::RealVector3D *position, Bungie::Math::RealVector3D *orientation, int *pStartingLocationIndex);
+	void PlayerSpawnLocationHook(uint32_t playerIndex, Blam::Math::RealVector3D *position, Blam::Math::RealVector3D *orientation, int *pStartingLocationIndex);
 	bool PlayerZoneTestHook(uint32_t playerIndex, ZoneShape *zone);
-	void BipedShapeHook(uint32_t objectIndex, Bungie::Math::RealVector3D *outPosition, float *outHeight, float *outRadius);
+	void BipedShapeHook(uint32_t objectIndex, Blam::Math::RealVector3D *outPosition, float *outHeight, float *outRadius);
 	void MeleeRangeHook(uint32_t unitObjectIndex, uint32_t name, int a3, void *damageData);
 	bool SprintCameraShakeHook(uint32_t playerIndex, float *outValue);
 	void CollisionDamageHook();
 	bool PlayerCollisionDamageHook(uint32_t bipedObjectIndex, uint32_t otherBipedObjectIndex);
-	bool __fastcall WalkAnimationHook(void *thisptr, void *unused, uint32_t unitObjectIndex, Bungie::Math::RealVector3D *a3, bool a4);
+	bool __fastcall WalkAnimationHook(void *thisptr, void *unused, uint32_t unitObjectIndex, Blam::Math::RealVector3D *a3, bool a4);
 	void JumpVelocityScaleHook(uint32_t bipedObjectIndex);
 	void BipedMovementPhysics(s_biped_physics_data1 *data, int a2, char a3, char a4, char a5, char a6, int a7, float sneak);
 	void *__fastcall BipedCreateRigidBodyHook(void *thisptr, void *unused, s_biped_physics *bipedPhysics, int a4, int a5,
@@ -80,7 +80,7 @@ namespace
 	void LandingDamageResponseHook(uint32_t unitObjectIndex, uint32_t a2, uint32_t damageEffectTagIndex, RealVector3D *a4, RealVector3D *a5, float a6, float responseScale, int a8);
 	void DamageResponsePlayerEffectsHook(uint32_t uintObjectIndex, int localPlayerIndex, uint32_t damageResponseTagIndex, int a4, RealVector3D *a5, float a6, float scale, bool a8);
 	bool ModelTargetTestHook(int a1, uint32_t objectIndex, int a3, char a4, char a5, char a6, int a7, uint8_t *target,
-		int a9, int a10, Bungie::Math::RealVector3D *a11, int a12, void *data);
+		int a9, int a10, Blam::Math::RealVector3D *a11, int a12, void *data);
 	void ShieldDownParticleEffectHook(uint32_t effectDatumIndex, uint16_t eventIndex);
 	void BipedPhysicsHook2(uint32_t objectIndex, int a2, void *a3);
 	void BipedPhysicsHook1(int objectIndex);
@@ -184,7 +184,7 @@ namespace
 {
 	const auto objects_scripting_set_scale = (void(*)(uint32_t objectIndex, float scale, float a3))(0x00B965C0);
 	const auto object_set_havok_flags = (int(*)(uint32_t objectIndex, uint32_t havokFlags))(0x005C7380);
-	const auto object_get_origin = (void(*)(uint32_t objectIndex, Bungie::Math::RealVector3D *position))(0x00B2E5A0);
+	const auto object_get_origin = (void(*)(uint32_t objectIndex, Blam::Math::RealVector3D *position))(0x00B2E5A0);
 
 	template <typename t_shape>
 	struct s_havok_shape_data
@@ -216,9 +216,9 @@ namespace
 		uint32_t DeadMaterialName;
 		uint16_t LivingMaterialGlobalIndex;
 		uint16_t DeadMaterialIndex;
-		Bungie::Tags::TagBlock<uint8_t> DeadSphereShapes;
-		Bungie::Tags::TagBlock<s_havok_capsule_shape> PillShapes;
-		Bungie::Tags::TagBlock<uint8_t> SphereShapes;
+		Blam::Tags::TagBlock<uint8_t> DeadSphereShapes;
+		Blam::Tags::TagBlock<s_havok_capsule_shape> PillShapes;
+		Blam::Tags::TagBlock<uint8_t> SphereShapes;
 		//....
 	};
 
@@ -228,7 +228,7 @@ namespace
 		uint32_t HavokComponentIndex;
 		uint8_t field_1C[0x134];
 		float Boost;
-		Bungie::Math::RealVector3D Velocity;
+		Blam::Math::RealVector3D Velocity;
 		float GroundAcceleration;
 		float AirborneAcceleration;
 		void *Shape;
@@ -242,7 +242,7 @@ namespace
 		float Length;
 		float Top;
 		float Bottom;
-		Bungie::Math::RealMatrix4x3 Transform;
+		Blam::Math::RealMatrix4x3 Transform;
 		float BoundingRadius;
 	};
 
@@ -268,7 +268,7 @@ namespace
 
 		const auto effect_delete = (void(*)(uint32_t effectDatumIndex))(0x005B6000);
 
-		auto unitObject = Bungie::Objects::Get(objectIndex);
+		auto unitObject = Blam::Objects::Get(objectIndex);
 		if (!unitObject)
 			return;
 
@@ -294,7 +294,7 @@ namespace
 
 	void ObjectDeleteEffectAttachmentsRecursive(uint32_t unitObjectIndex)
 	{
-		auto unitObject = Bungie::Objects::Get(unitObjectIndex);
+		auto unitObject = Blam::Objects::Get(unitObjectIndex);
 		if (!unitObject)
 			return;
 
@@ -302,14 +302,14 @@ namespace
 		do
 		{
 			ObjectDeleteEffectAttachmentsRecursive(objectIndex);
-			auto childObject = Bungie::Objects::Get(objectIndex);
+			auto childObject = Blam::Objects::Get(objectIndex);
 			if (!childObject)
 				continue;
 
 			ObjectDeleteAttachedEffects(objectIndex);
 
 			objectIndex = childObject->NextSibling;
-		} while (objectIndex != Bungie::DatumHandle::Null);
+		} while (objectIndex != Blam::DatumHandle::Null);
 	}
 
 	void UpdatePlayerSize(uint32_t playerIndex)
@@ -323,7 +323,7 @@ namespace
 			playerState.PhysicsUpdateDeltaTime = 0;
 		}
 
-		auto player = Bungie::Players::GetPlayers().Get(playerIndex);
+		auto player = Blam::Players::GetPlayers().Get(playerIndex);
 		if (!player)
 			return;
 
@@ -336,7 +336,7 @@ namespace
 
 		playerState.DesiredScale = desiredScale;
 
-		auto unitObject = Bungie::Objects::Get(player->SlaveUnit);
+		auto unitObject = Blam::Objects::Get(player->SlaveUnit);
 		if (!unitObject)
 			return;
 
@@ -376,10 +376,10 @@ namespace
 				ObjectDeleteEffectAttachmentsRecursive(player->SlaveUnit);
 			}
 
-			currentScale = SmoothStep(currentScale, desiredScale, Bungie::Time::GetSecondsPerTick() * kTransitionRate, kTransitionMaxDelta);
+			currentScale = SmoothStep(currentScale, desiredScale, Blam::Time::GetSecondsPerTick() * kTransitionRate, kTransitionMaxDelta);
 			objects_scripting_set_scale(player->SlaveUnit, currentScale, 0.0f);
 
-			if (Bungie::Time::TicksToSeconds(playerState.PhysicsUpdateDeltaTime++) >= kPhysicsModelUpdateRate)
+			if (Blam::Time::TicksToSeconds(playerState.PhysicsUpdateDeltaTime++) >= kPhysicsModelUpdateRate)
 			{
 				playerState.PhysicsUpdateDeltaTime = 0;
 				object_set_havok_flags(player->SlaveUnit, 0);
@@ -389,7 +389,7 @@ namespace
 
 	bool UnitCanRagdoll(uint32_t unitObjectIndex)
 	{
-		auto unitObject = Bungie::Objects::Get(unitObjectIndex);
+		auto unitObject = Blam::Objects::Get(unitObjectIndex);
 		if (!unitObject)
 			return false;
 
@@ -443,10 +443,10 @@ namespace
 	{
 		const auto player_get_sprinting = (bool(*)(uint32_t playerIndex, float *outSpeed))(0x0053B590);
 
-		auto player = Bungie::Players::GetPlayers().Get(playerIndex);
-		if (!player || player->SlaveUnit == Bungie::DatumHandle::Null)
+		auto player = Blam::Players::GetPlayers().Get(playerIndex);
+		if (!player || player->SlaveUnit == Blam::DatumHandle::Null)
 			return false;
-		auto unitObject = Bungie::Objects::Get(player->SlaveUnit);
+		auto unitObject = Blam::Objects::Get(player->SlaveUnit);
 		if (!unitObject)
 			return false;
 
@@ -455,7 +455,7 @@ namespace
 
 	void *GetScaledShape(uint32_t bipedObjectIndex, s_biped_physics *bipedPhysicsData, int shapeIndex)
 	{
-		auto bipedObject = Bungie::Objects::Get(bipedObjectIndex);
+		auto bipedObject = Blam::Objects::Get(bipedObjectIndex);
 		if (!bipedObject)
 			return nullptr;
 
@@ -463,7 +463,7 @@ namespace
 		if (playerIndex == -1)
 			return nullptr;
 
-		auto player = Bungie::Players::GetPlayers().Get(playerIndex);
+		auto player = Blam::Players::GetPlayers().Get(playerIndex);
 		if (!player)
 			return nullptr;
 
@@ -495,7 +495,7 @@ namespace
 	{
 		if (bipedPhysics->PillShapes.Count)
 		{
-			auto bipedObject = Bungie::Objects::Get(bipedObjectIndex);
+			auto bipedObject = Blam::Objects::Get(bipedObjectIndex);
 			if (bipedObject)
 			{
 				auto playerIndex = *(uint32_t*)((uint8_t*)bipedObject + 0x198);
@@ -575,15 +575,15 @@ namespace
 		}
 	}
 
-	bool BipedCanStandUnobstructed(uint32_t bipedObjectIndex, Bungie::Math::RealVector3D *point, bool a3)
+	bool BipedCanStandUnobstructed(uint32_t bipedObjectIndex, Blam::Math::RealVector3D *point, bool a3)
 	{
-		const auto scenario_location_from_point = (void(*)(uint16_t *pClusterIndex, Bungie::Math::RealVector3D *point))(0x004EA940);
-		const auto sub_5C8010 = (bool(*)(void *shape, uint32_t havokComponentIndex, Bungie::Math::RealMatrix4x3 *transform, uint32_t collisionFilterInfo))(0x5C8010);
-		const auto sub_6D6AC0 = (bool(*)(uint32_t a1, uint32_t a2, Bungie::Math::RealVector3D *a3, int a4, int a5, signed int *a6))(0x6D6AC0);
+		const auto scenario_location_from_point = (void(*)(uint16_t *pClusterIndex, Blam::Math::RealVector3D *point))(0x004EA940);
+		const auto sub_5C8010 = (bool(*)(void *shape, uint32_t havokComponentIndex, Blam::Math::RealMatrix4x3 *transform, uint32_t collisionFilterInfo))(0x5C8010);
+		const auto sub_6D6AC0 = (bool(*)(uint32_t a1, uint32_t a2, Blam::Math::RealVector3D *a3, int a4, int a5, signed int *a6))(0x6D6AC0);
 
-		if (!Bungie::game_is_campaign() || Bungie::game_is_survival())
+		if (!Blam::game_is_campaign() || Blam::game_is_survival())
 		{
-			auto bipedObject = Bungie::Objects::Get(bipedObjectIndex);
+			auto bipedObject = Blam::Objects::Get(bipedObjectIndex);
 			if (!bipedObject)
 				return false;
 
@@ -591,14 +591,14 @@ namespace
 			scenario_location_from_point(&scenarioLocation, point);
 			if (!a3 || (scenarioLocation & 0xff) != 0xff)
 			{
-				auto bipedDefinition = Bungie::Tags::TagInstance(bipedObject->TagIndex).GetDefinition<uint8_t>();
+				auto bipedDefinition = Blam::Tags::TagInstance(bipedObject->TagIndex).GetDefinition<uint8_t>();
 
 				auto bipedPhysics = (s_biped_physics*)(bipedDefinition + 0x4D0);
 				auto heightStanding = bipedPhysics->HeightStanding * bipedObject->Scale;
 
 				auto standingShape = GetBipedPhysicsShape(bipedObjectIndex, bipedPhysics, 0);
 
-				Bungie::Math::RealMatrix4x3 matrix(1.0f, { 1.0f, 0, 0 }, { 0, 1.0f, 0 }, { 0, 0, 1.0f }, *point);
+				Blam::Math::RealMatrix4x3 matrix(1.0f, { 1.0f, 0, 0 }, { 0, 1.0f, 0 }, { 0, 0, 1.0f }, *point);
 				matrix.Position.K += 0.2f; // slack;
 
 				if (sub_5C8010(standingShape, -1, &matrix, 12))
@@ -624,18 +624,18 @@ namespace
 		}
 	}
 
-	void PlayerSpawnLocationHook(uint32_t playerIndex, Bungie::Math::RealVector3D *position, Bungie::Math::RealVector3D *orientation, int *pStartingLocationIndex)
+	void PlayerSpawnLocationHook(uint32_t playerIndex, Blam::Math::RealVector3D *position, Blam::Math::RealVector3D *orientation, int *pStartingLocationIndex)
 	{
-		using BipedDefinition = Bungie::Tags::Objects::Biped;
+		using BipedDefinition = Blam::Tags::Objects::Biped;
 
-		const auto player_get_spawn_location = (void(*)(uint32_t playerIndex, Bungie::Math::RealVector3D *position, Bungie::Math::RealVector3D *orientation, int *pStartingLocationIndex))(0x00539E30);
+		const auto player_get_spawn_location = (void(*)(uint32_t playerIndex, Blam::Math::RealVector3D *position, Blam::Math::RealVector3D *orientation, int *pStartingLocationIndex))(0x00539E30);
 		const auto player_get_third_person_representation = (uint32_t(*)(uint32_t playerIndex, uint32_t *unitTagIndex, uint32_t *variant))(0x00539F70);
 		
 		uint32_t thirdPersonUnitTagIndex;
 		player_get_third_person_representation(playerIndex, &thirdPersonUnitTagIndex, nullptr);
 		if (thirdPersonUnitTagIndex != -1)
 		{
-			auto bipedDefinition = Bungie::Tags::TagInstance(thirdPersonUnitTagIndex).GetDefinition<Bungie::Tags::Objects::Biped>();
+			auto bipedDefinition = Blam::Tags::TagInstance(thirdPersonUnitTagIndex).GetDefinition<Blam::Tags::Objects::Biped>();
 			if (bipedDefinition->PillShapes.Count == 2)
 			{
 				auto &playerState = state.Players[playerIndex & 0xf];
@@ -667,27 +667,27 @@ namespace
 
 	bool PlayerZoneTestHook(uint32_t playerIndex, ZoneShape *zone)
 	{
-		const auto object_get_center_of_masss = (void(*)(unsigned __int32 objectIndex, Bungie::Math::RealVector3D *center))(0x00B2DD90);
-		const auto zone_test_point = (bool(*)(Bungie::Math::RealVector3D *point, ZoneShape *zone))(0x00BA11F0);
+		const auto object_get_center_of_masss = (void(*)(unsigned __int32 objectIndex, Blam::Math::RealVector3D *center))(0x00B2DD90);
+		const auto zone_test_point = (bool(*)(Blam::Math::RealVector3D *point, ZoneShape *zone))(0x00BA11F0);
 
-		auto player = Bungie::Players::GetPlayers().Get(playerIndex);
-		if (!player || player->SlaveUnit == Bungie::DatumHandle::Null)
+		auto player = Blam::Players::GetPlayers().Get(playerIndex);
+		if (!player || player->SlaveUnit == Blam::DatumHandle::Null)
 			return false;
-		auto bipedObjectHeader = Bungie::Objects::GetObjects().Get(player->SlaveUnit);
+		auto bipedObjectHeader = Blam::Objects::GetObjects().Get(player->SlaveUnit);
 		if (!bipedObjectHeader)
 			return false;
 
-		if (bipedObjectHeader->Type == Bungie::Objects::eObjectTypeBiped)
+		if (bipedObjectHeader->Type == Blam::Objects::eObjectTypeBiped)
 		{
 			auto bipedObject = bipedObjectHeader->Data;
 
-			Bungie::Math::RealVector3D position;
+			Blam::Math::RealVector3D position;
 			float height, radius;
 			BipedShapeHook(player->SlaveUnit, &position, &height, &radius);
 
 			auto cameraHeight = *(float*)((uint8_t*)bipedObject + 0x5E8) * bipedObject->Scale;
 
-			Bungie::Math::RealVector3D points[2];
+			Blam::Math::RealVector3D points[2];
 			points[0].I = position.I;
 			points[0].J = position.J;
 			points[0].K = (-radius) + position.K;
@@ -701,19 +701,19 @@ namespace
 		}
 		else
 		{
-			Bungie::Math::RealVector3D centerOfMass;
+			Blam::Math::RealVector3D centerOfMass;
 			object_get_center_of_masss(player->SlaveUnit, &centerOfMass);
 			return zone_test_point(&centerOfMass, zone);
 		}
 	}
 
-	void BipedShapeHook(uint32_t objectIndex, Bungie::Math::RealVector3D *outPosition, float *outHeight, float *outRadius)
+	void BipedShapeHook(uint32_t objectIndex, Blam::Math::RealVector3D *outPosition, float *outHeight, float *outRadius)
 	{
-		auto bipedObject = Bungie::Objects::Get(objectIndex);
+		auto bipedObject = Blam::Objects::Get(objectIndex);
 		if (!bipedObject)
 			return;
 
-		auto bipedDefinition = Bungie::Tags::TagInstance(bipedObject->TagIndex).GetDefinition<uint8_t>();
+		auto bipedDefinition = Blam::Tags::TagInstance(bipedObject->TagIndex).GetDefinition<uint8_t>();
 		auto bipedPhysics = (s_biped_physics*)(bipedDefinition + 0x4D0);
 
 		auto radius = bipedPhysics->Radius * bipedObject->Scale;
@@ -749,11 +749,11 @@ namespace
 
 	void MeleeRangeHook(uint32_t unitObjectIndex, uint32_t name, int a3, void *damageData)
 	{
-		using WeaponDefinition = Bungie::Tags::Items::Weapon;
+		using WeaponDefinition = Blam::Tags::Items::Weapon;
 
 		const auto sub_B3C360 = (void(*)(int unitObjectIndex, uint32_t name, int a3, void *damageData))(0xB3C360);
 
-		auto unitObject = Bungie::Objects::Get(unitObjectIndex);
+		auto unitObject = Blam::Objects::Get(unitObjectIndex);
 		if (!unitObject)
 			return;
 
@@ -762,10 +762,10 @@ namespace
 		{
 			auto weapons = (uint32_t*)((uint8_t*)unitObject + 0x2D0);
 			auto weaponObjectIndex = weapons[equippedWeapons[0]];
-			auto weaponObject = Bungie::Objects::Get(weaponObjectIndex);
+			auto weaponObject = Blam::Objects::Get(weaponObjectIndex);
 			if (weaponObject)
 			{
-				auto weaponDefinition = Bungie::Tags::TagInstance(weaponObject->TagIndex).GetDefinition<WeaponDefinition>();
+				auto weaponDefinition = Blam::Tags::TagInstance(weaponObject->TagIndex).GetDefinition<WeaponDefinition>();
 
 				auto scale = std::pow(unitObject->Scale, kMeleeRangeExp);
 
@@ -782,7 +782,7 @@ namespace
 
 	void ScaleCollisionDamage(uint32_t objectIndex, uint8_t *damageData)
 	{
-		auto bipedObject = Bungie::Objects::Get(objectIndex);
+		auto bipedObject = Blam::Objects::Get(objectIndex);
 		if (bipedObject)
 		{
 			*(float*)damageData *= bipedObject->Scale;
@@ -816,14 +816,14 @@ namespace
 
 		auto scale = 1.0f;
 
-		auto havokComponents = *(Bungie::DataArray<Bungie::DatumBase>**)0x02446080;
+		auto havokComponents = *(Blam::DataArray<Blam::DatumBase>**)0x02446080;
 		uint8_t *havokComponent;
 		if (data->HavokComponentIndex != -1 && (havokComponent = (uint8_t*)havokComponents->Get(data->HavokComponentIndex)))
 		{
 			auto objectIndex = *(uint32_t*)((uint8_t*)havokComponent + 0x8);
 			if (objectIndex != -1)
 			{
-				auto object = Bungie::Objects::Get(objectIndex);
+				auto object = Blam::Objects::Get(objectIndex);
 				if (object)
 					scale = object->Scale;
 			}
@@ -840,11 +840,11 @@ namespace
 		data->Velocity.K *= s;
 	}
 
-	bool __fastcall WalkAnimationHook(void *thisptr, void *unused, uint32_t unitObjectIndex, Bungie::Math::RealVector3D *a3, bool a4)
+	bool __fastcall WalkAnimationHook(void *thisptr, void *unused, uint32_t unitObjectIndex, Blam::Math::RealVector3D *a3, bool a4)
 	{
-		const auto sub_6DEFF0 = (bool(__thiscall*)(void *thisptr, uint32_t unitObjectIndex, Bungie::Math::RealVector3D *a3, bool a4))(0x6DEFF0);
+		const auto sub_6DEFF0 = (bool(__thiscall*)(void *thisptr, uint32_t unitObjectIndex, Blam::Math::RealVector3D *a3, bool a4))(0x6DEFF0);
 
-		auto object = Bungie::Objects::Get(unitObjectIndex);
+		auto object = Blam::Objects::Get(unitObjectIndex);
 		if (object)
 		{
 			auto scale = object->Scale;
@@ -858,14 +858,14 @@ namespace
 
 	void JumpVelocityScaleHook(uint32_t bipedObjectIndex)
 	{
-		using BipedDefinition = Bungie::Tags::Objects::Biped;
+		using BipedDefinition = Blam::Tags::Objects::Biped;
 		const auto sub_BE1B30 = (char(*)(uint32_t bipedObjectIndex))(0x00BE1B30);
 
-		auto bipedObject = Bungie::Objects::Get(bipedObjectIndex);
+		auto bipedObject = Blam::Objects::Get(bipedObjectIndex);
 		if (!bipedObject)
 			return;
 
-		auto bipedDefinition = Bungie::Tags::TagInstance(bipedObject->TagIndex).GetDefinition<BipedDefinition>();
+		auto bipedDefinition = Blam::Tags::TagInstance(bipedObject->TagIndex).GetDefinition<BipedDefinition>();
 		auto oldJumpVelocity = bipedDefinition->JumpVelocity;
 		bipedDefinition->JumpVelocity *= std::pow(bipedObject->Scale, kJumpVelocityExp);
 		sub_BE1B30(bipedObjectIndex);
@@ -877,7 +877,7 @@ namespace
 		const auto c_player_movement_traits__get_personal_gravity = (float(__thiscall*)(void *traits))(0x005CC200);
 
 		auto s = 1.0f;
-		auto unitObject = Bungie::Objects::Get(unitObjectIndex);
+		auto unitObject = Blam::Objects::Get(unitObjectIndex);
 		if (unitObject)
 			s = std::pow(unitObject->Scale, kGravityExp);
 			
@@ -900,7 +900,7 @@ namespace
 		const auto BipedCreateRigidBody = (void *(__thiscall *)(void *thisptr, s_biped_physics *bipedPhysics, int a4, int a5,
 			uint32_t collisionFilter_, int shapeIndex, bool hasFriction, char a9))(0x005E22C0);
 
-		auto object = Bungie::Objects::Get(*(uint32_t*)((uint8_t*)thisptr + 0x8));
+		auto object = Blam::Objects::Get(*(uint32_t*)((uint8_t*)thisptr + 0x8));
 		if (object)
 		{
 			auto oldMass = bipedPhysics->Mass;
@@ -917,13 +917,13 @@ namespace
 	{
 		const auto multiplayer_object_should_cause_collision_damage = (bool(*)(uint32_t objectIndex, uint32_t otherObjectIndex))(0x00763710);
 
-		if (Bungie::game_globals_simulation_has_dist_server())
+		if (Blam::game_globals_simulation_has_dist_server())
 		{
-			auto objectHeaderA = Bungie::Objects::GetObjects().Get(bipedObjectIndex);
-			auto objectHeaderB = Bungie::Objects::GetObjects().Get(otherBipedObjectIndex);
+			auto objectHeaderA = Blam::Objects::GetObjects().Get(bipedObjectIndex);
+			auto objectHeaderB = Blam::Objects::GetObjects().Get(otherBipedObjectIndex);
 			if (objectHeaderA && objectHeaderB
-				&& objectHeaderA->Type == Bungie::Objects::eObjectTypeBiped
-				&& objectHeaderB->Type == Bungie::Objects::eObjectTypeBiped)
+				&& objectHeaderA->Type == Blam::Objects::eObjectTypeBiped
+				&& objectHeaderB->Type == Blam::Objects::eObjectTypeBiped)
 			{
 				auto minScale = objectHeaderA->Data->Scale < objectHeaderB->Data->Scale ? objectHeaderA->Data->Scale : objectHeaderB->Data->Scale;
 				auto maxScale = objectHeaderA->Data->Scale > objectHeaderB->Data->Scale ? objectHeaderA->Data->Scale : objectHeaderB->Data->Scale;
@@ -954,7 +954,7 @@ namespace
 	{
 		const auto sub_684F30 = (void(*)(uint32_t uintObjectIndex, int localPlayerIndex, uint32_t damageResponseTagIndex, int a4, RealVector3D *a5, float a6, float scale, bool a8))(0x684F30);
 
-		auto unitObject = Bungie::Objects::Get(uintObjectIndex);
+		auto unitObject = Blam::Objects::Get(uintObjectIndex);
 		if (unitObject)
 		{
 			if(state.IsLandingDamage)
@@ -974,7 +974,7 @@ namespace
 	{
 		const auto sub_B746B0 = (bool(*)(uint32_t bipedObjectIndex, float *deltaK))(0xBAE130);
 
-		auto unitObject = Bungie::Objects::Get(bipedObjectIndex);
+		auto unitObject = Blam::Objects::Get(bipedObjectIndex);
 		if (unitObject)
 		{
 			if (std::abs(1.0f - unitObject->Scale) > 0.25f)
@@ -988,7 +988,7 @@ namespace
 	{
 		const auto sub_B746B0 = (bool(*)(uint32_t bipedObjectIndex))(0xB746B0);
 
-		auto unitObject = Bungie::Objects::Get(bipedObjectIndex);
+		auto unitObject = Blam::Objects::Get(bipedObjectIndex);
 		if (unitObject)
 		{
 			if (std::abs(1.0f - unitObject->Scale) > 0.25f)
@@ -999,12 +999,12 @@ namespace
 	}
 
 	bool ModelTargetTestHook(int a1, uint32_t objectIndex, int a3, char a4, char a5, char a6, int a7, uint8_t *target,
-		int a9, int a10, Bungie::Math::RealVector3D *a11, int a12, void *data)
+		int a9, int a10, Blam::Math::RealVector3D *a11, int a12, void *data)
 	{
 		const auto model_target_test = (bool(*)(int a1, uint32_t objectIndex, int a3, char a4, char a5, char a6, int a7, uint8_t *target,
-			int a9, int a10, Bungie::Math::RealVector3D *a11, int a12, void *data))(0x0058AF40);
+			int a9, int a10, Blam::Math::RealVector3D *a11, int a12, void *data))(0x0058AF40);
 
-		auto object = Bungie::Objects::Get(objectIndex);
+		auto object = Blam::Objects::Get(objectIndex);
 		if (!object)
 			return false;
 
@@ -1021,7 +1021,7 @@ namespace
 	{
 		const auto ShieldDownParticleEffect = (void(*)(uint32_t effectDatumIndex, uint16_t eventIndex))(0x005BDF40);
 
-		struct s_effect_datum : Bungie::DatumBase
+		struct s_effect_datum : Blam::DatumBase
 		{
 			uint16_t field_2;
 			uint32_t field_4;
@@ -1032,16 +1032,16 @@ namespace
 			uint32_t primary_scale;
 			uint32_t field_1C;
 			uint32_t field_20;
-			Bungie::Math::RealVector3D field_24;
+			Blam::Math::RealVector3D field_24;
 			uint32_t ObjectIndex;
 			//...
 		};
 
-		auto effects = *(Bungie::DataArray<s_effect_datum>**)HaloOnline::GetMainTls(0xA0);
+		auto effects = *(Blam::DataArray<s_effect_datum>**)HaloOnline::GetMainTls(0xA0);
 		auto effect = effects->Get(effectDatumIndex);
 		if (effect && effect->primary_scale == 0x1CDC) // shield_down
 		{
-			auto object = Bungie::Objects::Get(effect->ObjectIndex);
+			auto object = Blam::Objects::Get(effect->ObjectIndex);
 			if (object->Scale < 0.75f)
 				return;
 		}
@@ -1052,7 +1052,7 @@ namespace
 	template <typename TCallback>
 	void ScaledBipedPhysicsForCall(uint32_t tagIndex, float scale, TCallback callback)
 	{
-		auto bipedDefinition = Bungie::Tags::TagInstance(tagIndex).GetDefinition<Bungie::Tags::Objects::Biped>();
+		auto bipedDefinition = Blam::Tags::TagInstance(tagIndex).GetDefinition<Blam::Tags::Objects::Biped>();
 		if (!bipedDefinition)
 			return;
 
@@ -1072,7 +1072,7 @@ namespace
 	{
 		static const auto sub_BB01B0 = (void(*)(uint32_t objectIndex, int a2, void *a3))(0xBB01B0);
 
-		auto object = Bungie::Objects::Get(objectIndex);
+		auto object = Blam::Objects::Get(objectIndex);
 		if (object)
 		{
 			return ScaledBipedPhysicsForCall(object->TagIndex, object->Scale, [=]() {
@@ -1087,7 +1087,7 @@ namespace
 	{
 		const auto sub_B73C00 = (void(*)(uint32_t bipedObjectIndex))(0xB73C00);
 
-		auto objectHeader = Bungie::Objects::GetObjects().Get(objectIndex);
+		auto objectHeader = Blam::Objects::GetObjects().Get(objectIndex);
 		if (objectHeader && objectHeader->Type == 0)
 		{
 			return ScaledBipedPhysicsForCall(objectHeader->Data->TagIndex, objectHeader->Data->Scale, [=]() {

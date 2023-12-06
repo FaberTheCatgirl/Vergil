@@ -1,6 +1,6 @@
 #include "Web\Ui\WebChat.hpp"
 #include "Web\Ui\ScreenLayer.hpp"
-#include "Bungie\BungiePlayers.hpp"
+#include "Blam\BlamPlayers.hpp"
 #include "Patches\Input.hpp"
 #include "Server\ServerChat.hpp"
 #include "ThirdParty\rapidjson\writer.h"
@@ -9,7 +9,7 @@
 
 #include <iomanip>
 
-using namespace Bungie::Input;
+using namespace Blam::Input;
 
 namespace
 {
@@ -95,20 +95,20 @@ namespace
 		jsonWriter.String(chatType);
 
 		if (message.Type != Server::Chat::ChatMessageType::Server) {
-			auto session = Bungie::Network::GetActiveSession();
+			auto session = Blam::Network::GetActiveSession();
 			if (session) {
 				auto player = session->MembershipInfo.PlayerSessions[message.SenderPlayer];
 				jsonWriter.Key("teamIndex");
 				jsonWriter.Int(player.Properties.TeamIndex);
 
 				char uid[17];
-				Bungie::Players::FormatUid(uid, player.Properties.Uid);
+				Blam::Players::FormatUid(uid, player.Properties.Uid);
 
 				jsonWriter.Key("UID");
 				jsonWriter.String(uid);
 
 				std::stringstream color;
-				color << "#" << std::setw(6) << std::setfill('0') << std::hex << player.Properties.Customization.Colors[Bungie::Players::ColorIndices::Primary];
+				color << "#" << std::setw(6) << std::setfill('0') << std::hex << player.Properties.Customization.Colors[Blam::Players::ColorIndices::Primary];
 				jsonWriter.Key("color");
 				jsonWriter.String(color.str().c_str());
 			}

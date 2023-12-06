@@ -2,10 +2,10 @@
 
 #include "../Patch.hpp"
 #include "../HaloOnline.hpp"
-#include "../Bungie/BlamTypes.hpp"
-#include "../Bungie/BlamData.hpp"
-#include "../Bungie/BlamPlayers.hpp"
-#include "../Bungie/Memory/DatumHandle.hpp"
+#include "../Blam/BlamTypes.hpp"
+#include "../Blam/BlamData.hpp"
+#include "../Blam/BlamPlayers.hpp"
+#include "../Blam/Memory/DatumHandle.hpp"
 
 #include <game\game_globals.hpp>
 
@@ -14,7 +14,7 @@ namespace
 	int g_insertion_point = 0;
 	int __cdecl game_insertion_point_get();
 
-	void __fastcall campaign_scoring_sub_6E59A0(char *scoreboard, void *, Bungie::DatumHandle handle, int a3, short a4, int a5, char a6);
+	void __fastcall campaign_scoring_sub_6E59A0(char *scoreboard, void *, Blam::DatumHandle handle, int a3, short a4, int a5, char a6);
 }
 
 namespace Patches::Campaign
@@ -35,17 +35,17 @@ namespace
 {
 	int __cdecl game_insertion_point_get()
 	{
-		auto *game_globals = Bungie::game_globals_get();
+		auto *game_globals = Blam::game_globals_get();
 
-		if (game_globals->current_game_mode == Bungie::game_mode::campaign)
+		if (game_globals->current_game_mode == Blam::game_mode::campaign)
 			return g_insertion_point;
 
 		return 0;
 	}
 
-	void __fastcall campaign_scoring_sub_6E59A0(char *scoreboard, void *, Bungie::DatumHandle handle, int a3, short a4, int a5, char a6)
+	void __fastcall campaign_scoring_sub_6E59A0(char *scoreboard, void *, Blam::DatumHandle handle, int a3, short a4, int a5, char a6)
 	{
-		static const auto data_array_sub_55B710 = reinterpret_cast<unsigned long(__cdecl *)(Bungie::DataArrayBase *, Bungie::DatumHandle)>(0x55B710);
+		static const auto data_array_sub_55B710 = reinterpret_cast<unsigned long(__cdecl *)(Blam::DataArrayBase *, Blam::DatumHandle)>(0x55B710);
 		static const auto game_get_current_engine = reinterpret_cast<int(*)()>(0x5CE150);
 		static const auto game_is_team_game = reinterpret_cast<bool(__cdecl *)()>(0x5565E0);
 		static const auto scoreboard_sub_6E5A90 = reinterpret_cast<void(__thiscall *)(char *, unsigned int, int, short, int)>(0x6E5A90);
@@ -93,7 +93,7 @@ namespace
 		{
 			if (game_get_current_engine() && game_is_team_game())
 			{
-				auto v11 = data_array_sub_55B710(HaloOnline::Instance().GetMainTls(0x40).Read<Bungie::DataArray<Bungie::Players::PlayerDatum> *>(), handle);
+				auto v11 = data_array_sub_55B710(HaloOnline::Instance().GetMainTls(0x40).Read<Blam::DataArray<Blam::Players::PlayerDatum> *>(), handle);
 
 				if (v11)
 				{

@@ -1,1 +1,0 @@
-#include "Bungie\Tags\Bitmap\Bitmap.hpp"

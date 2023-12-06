@@ -5,7 +5,7 @@
 #include "ThirdParty\rapidjson\writer.h"
 #include "ThirdParty\rapidjson\stringbuffer.h"
 
-using namespace Bungie::Input;
+using namespace Blam::Input;
 
 namespace
 {

@@ -6,19 +6,19 @@
 #include "Patch.hpp"
 #include "Modules\ModulePlayer.hpp"
 
-#include "Bungie\Cache\StringIdCache.hpp"
-#include "Bungie\Tags\Tags.hpp"
-#include "Bungie\Tags\TagInstance.hpp"
-#include "Bungie\Tags\Game\Globals.hpp"
-#include "Bungie\Tags\Game\MultiplayerGlobals.hpp"
-#include "Bungie\Tags\Globals\CacheFileGlobalTags.hpp"
-#include "Bungie\Tags\Scenario\Scenario.hpp"
+#include "Blam\Cache\StringIdCache.hpp"
+#include "Blam\Tags\Tags.hpp"
+#include "Blam\Tags\TagInstance.hpp"
+#include "Blam\Tags\Game\Globals.hpp"
+#include "Blam\Tags\Game\MultiplayerGlobals.hpp"
+#include "Blam\Tags\Globals\CacheFileGlobalTags.hpp"
+#include "Blam\Tags\Scenario\Scenario.hpp"
 #include "Modules\ModulePlayer.hpp"
-#include "Bungie\BungieObjects.hpp"
-#include "Bungie\Math\RealQuaternion.hpp"
+#include "Blam\BlamObjects.hpp"
+#include "Blam\Math\RealQuaternion.hpp"
 #include <boost\regex.hpp>
 
-using namespace Bungie::Players;
+using namespace Blam::Players;
 
 namespace
 {
@@ -32,7 +32,7 @@ namespace
 		};
 
 		uint16_t Flags;
-		Bungie::Math::RealVector3D Position;
+		Blam::Math::RealVector3D Position;
 		float RotationAngle;
 
 	} s_UiPlayerModelState;
@@ -121,7 +121,7 @@ namespace Game::Armor
 		memcpy(armorSessionData->Colors, data.Colors, sizeof(data.Colors));
 	}
 
-	void ArmorExtension::Serialize(Bungie::BitStream *stream, const PlayerCustomization &data)
+	void ArmorExtension::Serialize(Blam::BitStream *stream, const PlayerCustomization &data)
 	{
 		// Colors
 		for (int i = 0; i < ColorIndices::Count; i++)
@@ -134,7 +134,7 @@ namespace Game::Armor
 		stream->WriteUnsigned<uint32_t>(data.Unknown1C, 0, 0xFFFFFFFF);
 	}
 
-	void ArmorExtension::Deserialize(Bungie::BitStream *stream, PlayerCustomization *out)
+	void ArmorExtension::Deserialize(Blam::BitStream *stream, PlayerCustomization *out)
 	{
 		memset(out, 0, sizeof(PlayerCustomization));
 
@@ -154,7 +154,7 @@ namespace Game::Armor
 		updateUiPlayerArmor = true;
 	}
 
-	void AddArmorPermutations(const Bungie::Tags::Game::MultiplayerGlobals::Universal::ArmorCustomization &element, std::map<std::string, uint8_t> &map)
+	void AddArmorPermutations(const Blam::Tags::Game::MultiplayerGlobals::Universal::ArmorCustomization &element, std::map<std::string, uint8_t> &map)
 	{
 		for (auto i = 0; i < element.Permutations.Count; i++)
 		{
@@ -163,7 +163,7 @@ namespace Game::Armor
 			if (!perm.FirstPersonArmorModel && !perm.ThirdPersonArmorObject)
 				continue;
 
-			auto permName = std::string(Bungie::Cache::StringIDCache::Instance.GetString(perm.Name));
+			auto permName = std::string(Blam::Cache::StringIDCache::Instance.GetString(perm.Name));
 
 			map.emplace(permName, i);
 		}
@@ -171,16 +171,16 @@ namespace Game::Armor
 
 	void LoadArmorPermutations()
 	{
-		using Bungie::Tags::TagInstance;
-		using Bungie::Tags::Game::Globals;
-		using Bungie::Tags::Game::MultiplayerGlobals;
-		using Bungie::Tags::Globals::CacheFileGlobalTags;
+		using Blam::Tags::TagInstance;
+		using Blam::Tags::Game::Globals;
+		using Blam::Tags::Game::MultiplayerGlobals;
+		using Blam::Tags::Globals::CacheFileGlobalTags;
 
 		auto *mulg = TagInstance::GetDefinition<MultiplayerGlobals>("multiplayer\\multiplayer_globals");
 
 		for (auto &element : mulg->Universal->SpartanArmorCustomization)
 		{
-			auto string = std::string(Bungie::Cache::StringIDCache::Instance.GetString(element.PieceRegion));
+			auto string = std::string(Blam::Cache::StringIDCache::Instance.GetString(element.PieceRegion));
 
 			if (string == "helmet")
 				AddArmorPermutations(element, helmetIndices);
@@ -200,7 +200,7 @@ namespace Game::Armor
 
 		for (auto& element : mulg->Universal->EliteArmorCustomization)
 		{
-			auto string = std::string(Bungie::Cache::StringIDCache::Instance.GetString(element.PieceRegion));
+			auto string = std::string(Blam::Cache::StringIDCache::Instance.GetString(element.PieceRegion));
 
 			if (string == "helmet")
 				AddArmorPermutations(element, helmetIndices);
@@ -246,7 +246,7 @@ namespace Game::Armor
 
 	void CustomizeBiped(uint32_t bipedObject)
 	{
-		using Bungie::Tags::TagInstance;
+		using Blam::Tags::TagInstance;
 
 		auto &playerVars = Modules::ModulePlayer::Instance();
 
@@ -275,12 +275,12 @@ namespace Game::Armor
 		PoseWithWeapon(bipedObject, TagInstance::Find('weap', "objects\\weapons\\rifle\\assault_rifle\\assault_rifle").Index);
 	}
 
-	static const auto Object_SetTransform = (void(*)(int objectIndex, Bungie::Math::RealVector3D *position, Bungie::Math::RealVector3D *right, Bungie::Math::RealVector3D *up, int a5))(0x00B33530);
+	static const auto Object_SetTransform = (void(*)(int objectIndex, Blam::Math::RealVector3D *position, Blam::Math::RealVector3D *right, Blam::Math::RealVector3D *up, int a5))(0x00B33530);
 	static const auto GetCharPlatformBiped = (int(*)(int playerRepresentationIndex))(0x00BB5BD0);
 
 	void UpdateUiPlayerModelArmor()
 	{
-		using namespace Bungie::Math;
+		using namespace Blam::Math;
 
 		auto isElite = Modules::ModulePlayer::Instance().VarRepresentation->ValueString == "elite";
 
@@ -310,7 +310,7 @@ namespace Game::Armor
 		updateUiPlayerArmor = false;
 	}
 
-	void SetUiPlayerModelTransform(const Bungie::Math::RealVector3D* newPosition, const float* rotationAngle)
+	void SetUiPlayerModelTransform(const Blam::Math::RealVector3D* newPosition, const float* rotationAngle)
 	{
 		if (newPosition)
 		{

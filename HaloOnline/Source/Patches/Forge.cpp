@@ -1,21 +1,21 @@
 #include "Patches\Forge.hpp"
 #include "Patch.hpp"
-#include "Bungie\BungieObjects.hpp"
-#include "Bungie\BungieTypes.hpp"
-#include "Bungie\BungieInput.hpp"
-#include "Bungie\BungiePlayers.hpp"
-#include "Bungie\Tags\TagInstance.hpp"
-#include "Bungie\BungieTime.hpp"
-#include "Bungie\Tags\TagBlock.hpp"
-#include "Bungie\Math\RealQuaternion.hpp"
-#include "Bungie\Math\RealMatrix4x3.hpp"
-#include "Bungie\Math\MathUtil.hpp"
-#include "Bungie\BungieNetwork.hpp"
-#include "Bungie\Tags\Scenario\Scenario.hpp"
-#include "Bungie\Math\RealColorRGB.hpp"
-#include "Bungie\Tags\Camera\AreaScreenEffect.hpp"
-#include "Bungie\Tags\Items\DefinitionWeapon.hpp"
-#include "Bungie\Tags\Models\Model.hpp"
+#include "Blam\BlamObjects.hpp"
+#include "Blam\BlamTypes.hpp"
+#include "Blam\BlamInput.hpp"
+#include "Blam\BlamPlayers.hpp"
+#include "Blam\Tags\TagInstance.hpp"
+#include "Blam\BlamTime.hpp"
+#include "Blam\Tags\TagBlock.hpp"
+#include "Blam\Math\RealQuaternion.hpp"
+#include "Blam\Math\RealMatrix4x3.hpp"
+#include "Blam\Math\MathUtil.hpp"
+#include "Blam\BlamNetwork.hpp"
+#include "Blam\Tags\Scenario\Scenario.hpp"
+#include "Blam\Math\RealColorRGB.hpp"
+#include "Blam\Tags\Camera\AreaScreenEffect.hpp"
+#include "Blam\Tags\Items\DefinitionWeapon.hpp"
+#include "Blam\Tags\Models\Model.hpp"
 #include "HaloOnline.hpp"
 #include "Patches\Core.hpp"
 #include "Forge\Prefab.hpp"
@@ -36,16 +36,16 @@
 #include <queue>
 #include <stack>
 #include "CommandMap.hpp"
-#include "Bungie\Tags\Globals\ForgeGlobalsDefinition.hpp"
+#include "Blam\Tags\Globals\ForgeGlobalsDefinition.hpp"
 
 using namespace Forge;
-using namespace Bungie;
-using namespace Bungie::Objects;
-using namespace Bungie::Math;
+using namespace Blam;
+using namespace Blam::Objects;
+using namespace Blam::Math;
 
 namespace
 {
-	using Bungie::Tags::Globals::ForgeGlobalsDefinition;
+	using Blam::Tags::Globals::ForgeGlobalsDefinition;
 
 	const auto HELDOBJECT_DISTANCE_MIN = 0.1f;
 	const auto HELDOBJECT_DISTANCE_CHANGE_MULTIPLIER = 0.1f;
@@ -85,22 +85,22 @@ namespace
 	void RenderObjectTransparentHook();
 	void RenderObjectCompressionInfoHook(uint8_t *compressionInfo);
 	void UpdateObjectCachedColorPermutationRenderStateHook(uint32_t objectIndex, bool invalidated);
-	int CreateOrGetBudgetForItem(Bungie::MapVariant *thisptr, int tagIndex);
+	int CreateOrGetBudgetForItem(Blam::MapVariant *thisptr, int tagIndex);
 
 	int LightmapHook(RealVector3D *origin, RealVector3D *direction, int a3, int objectIndex, char a5, char a6, void *a7);
 	bool __cdecl sub_980E40_hook(int a1, uint32_t objectIndex);
 
-	void __fastcall MapVariant_SyncObjectPropertiesHook(Bungie::MapVariant* thisptr, void* unused,
-		Bungie::MapVariant::VariantProperties *placementProps, uint32_t objectIndex);
-	void __cdecl MapVariant_SyncVariantPropertiesHook(Bungie::MapVariant::VariantPlacement *placement);
+	void __fastcall MapVariant_SyncObjectPropertiesHook(Blam::MapVariant* thisptr, void* unused,
+		Blam::MapVariant::VariantProperties *placementProps, uint32_t objectIndex);
+	void __cdecl MapVariant_SyncVariantPropertiesHook(Blam::MapVariant::VariantPlacement *placement);
 	void __fastcall sub_584CF0_hook(MapVariant *thisptr, void *unused);
-	void __fastcall MapVariant_SyncObjectProperties_Object_Properties_Hook(Bungie::MapVariant* thisptr, void* unused,
-		Bungie::MapVariant::VariantProperties *placementProps, uint32_t objectIndex);
-	void MapVariant_BuildVariantPropertiesFromObjectHook(Bungie::MapVariant::VariantPlacement *placement);
+	void __fastcall MapVariant_SyncObjectProperties_Object_Properties_Hook(Blam::MapVariant* thisptr, void* unused,
+		Blam::MapVariant::VariantProperties *placementProps, uint32_t objectIndex);
+	void MapVariant_BuildVariantPropertiesFromObjectHook(Blam::MapVariant::VariantPlacement *placement);
 
-	void __fastcall c_map_variant_initialize_from_scenario_hook(Bungie::MapVariant *thisptr, void* unused);
-	void __fastcall c_map_variant_update_item_budget_hook(Bungie::MapVariant *thisptr, void* unused, int budgetIndex, char arg_4);
-	void __fastcall c_map_variant_copy_budget_hook(Bungie::MapVariant *thisptr, void *unused, Bungie::MapVariant *other);
+	void __fastcall c_map_variant_initialize_from_scenario_hook(Blam::MapVariant *thisptr, void* unused);
+	void __fastcall c_map_variant_update_item_budget_hook(Blam::MapVariant *thisptr, void* unused, int budgetIndex, char arg_4);
+	void __fastcall c_map_variant_copy_budget_hook(Blam::MapVariant *thisptr, void *unused, Blam::MapVariant *other);
 
 	void MapVariant_SpawnObjectHook();
 
@@ -148,7 +148,7 @@ namespace
 
 	struct SandboxPaletteItem
 	{
-		Bungie::Tags::TagReference Object;
+		Blam::Tags::TagReference Object;
 		uint32_t Name;
 		int32_t MaxAllowed;
 		float Cost;
@@ -156,7 +156,7 @@ namespace
 	};
 	static_assert(sizeof(SandboxPaletteItem) == 0x30, "Invalid SandboxPaletteItem size");
 
-	struct ScreenEffectDatum : Bungie::DatumBase
+	struct ScreenEffectDatum : Blam::DatumBase
 	{
 		uint8_t Unknown02;
 		uint8_t Unknown03;
@@ -172,7 +172,7 @@ namespace
 		uint32_t Unknown38;
 	};
 
-	struct s_object_looping_sound : Bungie::DatumBase
+	struct s_object_looping_sound : Blam::DatumBase
 	{
 		uint16_t field_2;
 		uint16_t Flags;
@@ -230,7 +230,7 @@ namespace
 		struct {
 			bool Enabled;
 			uint8_t WeatherIndex = 0xff;
-			Bungie::Math::RealColorRGB FogColor;
+			Blam::Math::RealColorRGB FogColor;
 			float FogDensity;
 			float FogVisibility;
 			float Brightness;	
@@ -443,11 +443,11 @@ namespace Patches::Forge
 				mapModifierState.IsValid = true;
 				mapModifierState.IsActive = false;
 
-				auto scenario = Bungie::Tags::Scenario::GetCurrentScenario();
+				auto scenario = Blam::Tags::Scenario::GetCurrentScenario();
 				if (scenario->SkyReferences.Count)
 					mapDefaultSky.Object = scenario->SkyReferences[0].SkyObject;
 				else
-					mapDefaultSky.Object = Bungie::Tags::TagReference(0, -1);
+					mapDefaultSky.Object = Blam::Tags::TagReference(0, -1);
 				mapDefaultSky.GlobalLighting = scenario->GlobalLighing;
 				mapDefaultSky.Parameters = scenario->SkyParameters;
 				mapDefaultSky.ScreenFX = scenario->DefaultScreenFx;
@@ -495,7 +495,7 @@ namespace
 	ForgeGlobalsDefinition *GetForgeGlobals()
 	{
 		if (!forgeGlobals_)
-			forgeGlobals_ = Bungie::Tags::TagInstance::Find('forg', "multiplayer\\forge_globals").GetDefinition<ForgeGlobalsDefinition>();
+			forgeGlobals_ = Blam::Tags::TagInstance::Find('forg', "multiplayer\\forge_globals").GetDefinition<ForgeGlobalsDefinition>();
 		return forgeGlobals_;
 	}
 
@@ -530,7 +530,7 @@ namespace
 		if (activeScreenCount > 0)
 			return;
 
-		auto playerIndex = Bungie::Players::GetLocalPlayer(0);
+		auto playerIndex = Blam::Players::GetLocalPlayer(0);
 		if (playerIndex == DatumHandle::Null)
 			return;
 
@@ -563,12 +563,12 @@ namespace
 
 			if (heldObjectIndex == -1)
 			{
-				auto cloneAction = GetActionState(Bungie::Input::eGameActionUiB);
-				if ((!(cloneAction->Flags & Bungie::Input::eActionStateFlagsHandled) && cloneAction->Ticks == 1))
+				auto cloneAction = GetActionState(Blam::Input::eGameActionUiB);
+				if ((!(cloneAction->Flags & Blam::Input::eActionStateFlagsHandled) && cloneAction->Ticks == 1))
 				{
-					cloneAction->Flags |= Bungie::Input::eActionStateFlagsHandled;
+					cloneAction->Flags |= Blam::Input::eActionStateFlagsHandled;
 
-					if (Bungie::Network::GetActiveSession()->IsHost())
+					if (Blam::Network::GetActiveSession()->IsHost())
 						DoClone(playerIndex, objectIndexUnderCrosshair);
 					else
 					{
@@ -577,17 +577,17 @@ namespace
 					}
 				}
 
-				auto uiRightAction = GetActionState(Bungie::Input::eGameActionUiRight);
-				if (!(uiRightAction->Flags & Bungie::Input::eActionStateFlagsHandled) && uiRightAction->Ticks == 50)
+				auto uiRightAction = GetActionState(Blam::Input::eGameActionUiRight);
+				if (!(uiRightAction->Flags & Blam::Input::eActionStateFlagsHandled) && uiRightAction->Ticks == 50)
 				{
 					Forge::Selection::Clear();
 					PrintKillFeedText(0, L"Selection Cleared", 0);
 				}
 			}
 
-			if (Bungie::Input::GetKeyTicks(Bungie::Input::eKeyCodeM, Bungie::Input::eInputTypeGame) == 1
-				|| (!(Bungie::Input::GetActionState(Bungie::Input::eGameActionUiDown)->Flags & Bungie::Input::eActionStateFlagsHandled)
-					&& Bungie::Input::GetActionState(Bungie::Input::eGameActionUiDown)->Ticks == 1))
+			if (Blam::Input::GetKeyTicks(Blam::Input::eKeyCodeM, Blam::Input::eInputTypeGame) == 1
+				|| (!(Blam::Input::GetActionState(Blam::Input::eGameActionUiDown)->Flags & Blam::Input::eActionStateFlagsHandled)
+					&& Blam::Input::GetActionState(Blam::Input::eGameActionUiDown)->Ticks == 1))
 			{
 				auto prevValue = moduleForge.VarMagnetsEnabled->ValueInt;
 				std::string previousValueStr;
@@ -608,7 +608,7 @@ namespace
 
 	uint32_t FindMapModifierObject()
 	{
-		auto objects = Bungie::Objects::GetObjects();
+		auto objects = Blam::Objects::GetObjects();
 		// Scan the object table to check if map modifier is spawned
 		for(auto it = objects.begin(); it != objects.end(); ++it)
 		{
@@ -623,7 +623,7 @@ namespace
 		return -1;
 	}
 
-	Bungie::Tags::Globals::ForgeGlobalsDefinition::Sky *GetForgeSky()
+	Blam::Tags::Globals::ForgeGlobalsDefinition::Sky *GetForgeSky()
 	{
 		auto forgeGlobals = GetForgeGlobals();
 		if (!forgeGlobals)
@@ -634,32 +634,32 @@ namespace
 		return &forgeGlobals->Skies[mapModifierState.ForgeSky.Index];
 	}
 
-	Bungie::DatumHandle FindObjectByName(Bungie::Objects::ObjectType type, uint16_t name)
+	Blam::DatumHandle FindObjectByName(Blam::Objects::ObjectType type, uint16_t name)
 	{
 		if (name == 0xffff)
-			return Bungie::DatumHandle::Null;
+			return Blam::DatumHandle::Null;
 
-		auto objects = Bungie::Objects::GetObjects();
+		auto objects = Blam::Objects::GetObjects();
 		for (auto it = objects.begin(); it != objects.end(); ++it)
 		{
 			if (it->Type == type && *(uint16_t*)((uint8_t*)it->Data + 0x9c) == name)
 				return it.CurrentDatumIndex;
 		}
-		return Bungie::DatumHandle::Null;
+		return Blam::DatumHandle::Null;
 	}
 
 	void ReplaceForgeSkyScenery(uint32_t newSceneryTagIndex)
 	{
 		// delete map default sky scenery children
-		auto scenario = Bungie::Tags::Scenario::GetCurrentScenario();
+		auto scenario = Blam::Tags::Scenario::GetCurrentScenario();
 		for (auto &skyRef : scenario->SkyReferences)
 		{
 			for (auto &scenery : scenario->Scenery2)
 			{
 				if (scenery.ParentNameIndex != 0xffff && scenery.ParentNameIndex == skyRef.NameIndex)
 				{
-					auto objectIndex = FindObjectByName(Bungie::Objects::ObjectType(scenery.Type), scenery.NameIndex);
-					if (objectIndex != Bungie::DatumHandle::Null && Bungie::Objects::Get(objectIndex))
+					auto objectIndex = FindObjectByName(Blam::Objects::ObjectType(scenery.Type), scenery.NameIndex);
+					if (objectIndex != Blam::DatumHandle::Null && Blam::Objects::Get(objectIndex))
 						object_dispose(objectIndex);
 				}
 			}
@@ -668,7 +668,7 @@ namespace
 		// delete the old sky scenery
 		if (mapModifierState.ForgeSky.SceneryObjectIndex != -1)
 		{
-			if (Bungie::Objects::Get(mapModifierState.ForgeSky.SceneryObjectIndex))
+			if (Blam::Objects::Get(mapModifierState.ForgeSky.SceneryObjectIndex))
 				object_dispose(mapModifierState.ForgeSky.SceneryObjectIndex);
 			mapModifierState.ForgeSky.SceneryObjectIndex = -1;
 		}
@@ -684,7 +684,7 @@ namespace
 		auto skySceneryIndex = object_spawn(objectPlacementData);
 		if (skySceneryIndex != -1)
 		{
-			auto skyObject = Bungie::Objects::Get(skySceneryIndex);
+			auto skyObject = Blam::Objects::Get(skySceneryIndex);
 			if (skyObject)
 			{
 				mapModifierState.ForgeSky.SceneryObjectIndex = skySceneryIndex;
@@ -715,7 +715,7 @@ namespace
 		auto &forgeSkyState = mapModifierState.ForgeSky;
 		if (desiredSkyIndex != forgeSkyState.Index)
 		{
-			auto scenario = Bungie::Tags::Scenario::GetCurrentScenario();
+			auto scenario = Blam::Tags::Scenario::GetCurrentScenario();
 
 			ForgeGlobalsDefinition::Sky *desiredSky{ nullptr };
 
@@ -729,7 +729,7 @@ namespace
 				desiredSky = &forgeGlobals->Skies[desiredSkyIndex];
 			}
 
-			auto screenEffects = HaloOnline::GetMainTls(0x338).Read<Bungie::DataArray<ScreenEffectDatum>*>();
+			auto screenEffects = HaloOnline::GetMainTls(0x338).Read<Blam::DataArray<ScreenEffectDatum>*>();
 
 			// if the scenario has a screen effect, delete it
 			if (scenario->DefaultScreenFx.TagIndex != -1)
@@ -752,7 +752,7 @@ namespace
 			// spawn the new screen effect
 			if (desiredSky->ScreenFX.TagIndex != -1)
 			{
-				auto screenEffects = HaloOnline::GetMainTls(0x338).Read<Bungie::DataArray<ScreenEffectDatum>*>();
+				auto screenEffects = HaloOnline::GetMainTls(0x338).Read<Blam::DataArray<ScreenEffectDatum>*>();
 				auto unitObjectIndex = GetLocalPlayerUnitObjectIndex(*(uint32_t*)0x018BF52C);
 
 				uint8_t unk[0x3C] = { 0 };
@@ -769,15 +769,15 @@ namespace
 			if (forgeSkyState.SceneryObjectIndex == -1)
 			{
 				auto skyObjectTagIndex = scenario->SkyReferences[0].SkyObject.TagIndex;
-				auto objects = Bungie::Objects::GetObjects();
+				auto objects = Blam::Objects::GetObjects();
 				for (auto it = objects.begin(); it != objects.end(); ++it)
 				{
-					if (it->Type == Bungie::Objects::eObjectTypeScenery && skyObjectTagIndex == it->Data->TagIndex)
+					if (it->Type == Blam::Objects::eObjectTypeScenery && skyObjectTagIndex == it->Data->TagIndex)
 						forgeSkyState.SceneryObjectIndex = it.CurrentDatumIndex;
 				}
 			}
 
-			auto loopingSounds = HaloOnline::GetMainTls(0xCC).Read<Bungie::DataArray<s_object_looping_sound>*>();
+			auto loopingSounds = HaloOnline::GetMainTls(0xCC).Read<Blam::DataArray<s_object_looping_sound>*>();
 			// delete any existing background sounds
 			for (auto it = loopingSounds->begin(); it != loopingSounds->end(); ++it)
 			{
@@ -813,7 +813,7 @@ namespace
 				
 				if (mapModifierState.ForgeSky.Flags & eForgeSkyFlags_UseMapModifierTransform)
 				{
-					auto mapModifierObject = Bungie::Objects::Get(mapModifierState.ObjectIndex);
+					auto mapModifierObject = Blam::Objects::Get(mapModifierState.ObjectIndex);
 					if (mapModifierObject)
 					{
 						auto zOffset = ((mapModifierProperties->AtmosphereProperties.SkyboxZOffset / 255.0f * 2.0f) - 1.0f) * 500.0f;
@@ -870,19 +870,19 @@ namespace
 				{
 					auto forgeSkyState = mapModifierState.ForgeSky;
 
-					auto scenario = Bungie::Tags::Scenario::GetCurrentScenario();
+					auto scenario = Blam::Tags::Scenario::GetCurrentScenario();
 					ReplaceForgeSkyScenery(mapDefaultSky.Object.TagIndex);
 
 					if (forgeSkyState.BackgroundSoundDatumIndex != -1)
 					{
-						auto loopingSounds = HaloOnline::GetMainTls(0xCC).Read<Bungie::DataArray<s_object_looping_sound>*>();
+						auto loopingSounds = HaloOnline::GetMainTls(0xCC).Read<Blam::DataArray<s_object_looping_sound>*>();
 						loopingSounds->Delete(forgeSkyState.BackgroundSoundDatumIndex);
 						forgeSkyState.BackgroundSoundDatumIndex = -1;
 					}
 
 					if (forgeSkyState.ScreenEffectDatumIndex != -1)
 					{
-						auto screenEffects = HaloOnline::GetMainTls(0x338).Read<Bungie::DataArray<ScreenEffectDatum>*>();
+						auto screenEffects = HaloOnline::GetMainTls(0x338).Read<Blam::DataArray<ScreenEffectDatum>*>();
 						screenEffects->Delete(forgeSkyState.ScreenEffectDatumIndex);
 						forgeSkyState.ScreenEffectDatumIndex = -1;
 					}
@@ -905,7 +905,7 @@ namespace
 		if (!mapModifierState.IsValid || !roundInProgress)
 			return;
 
-		auto mapModifierObject = Bungie::Objects::Get(mapModifierObjectIndex);
+		auto mapModifierObject = Blam::Objects::Get(mapModifierObjectIndex);
 
 		auto mpProperties = mapModifierObject->GetMultiplayerProperties();
 		if (!mpProperties)
@@ -1016,13 +1016,13 @@ namespace
 
 	void CanvasMap()
 	{
-		const auto c_map_variant_placement__ctor = (void(__thiscall*)(Bungie::MapVariant::VariantPlacement *thisptr))(0x004AC1D0);
+		const auto c_map_variant_placement__ctor = (void(__thiscall*)(Blam::MapVariant::VariantPlacement *thisptr))(0x004AC1D0);
 
 		auto mapv = GetMapVariant();
 		if (!mapv)
 			return;
 
-		auto playerHandle = Bungie::Players::GetLocalPlayer(0);
+		auto playerHandle = Blam::Players::GetLocalPlayer(0);
 
 		for (auto i = 0; i < 640; i++)
 		{
@@ -1103,7 +1103,7 @@ namespace
 		{
 			if (Prefabs::Load(moduleForge.CommandState.Prefabs.Path))
 			{
-				GrabSelection(Bungie::Players::GetLocalPlayer(0));
+				GrabSelection(Blam::Players::GetLocalPlayer(0));
 			}
 			else
 			{
@@ -1128,11 +1128,11 @@ namespace
 		if (tagIndex == -1)
 			return;
 
-		auto playerHandle = Bungie::Players::GetLocalPlayer(0);
+		auto playerHandle = Blam::Players::GetLocalPlayer(0);
 		if (playerHandle == DatumHandle::Null || !GetEditorModeState(playerHandle, nullptr, nullptr))
 			return;
 
-		Bungie::Tags::TagInstance instance(tagIndex);
+		Blam::Tags::TagInstance instance(tagIndex);
 		auto def = instance.GetDefinition<void>();
 		auto groupTag = def ? instance.GetGroupTag() : 0;
 
@@ -1207,13 +1207,13 @@ namespace
 			return -1;
 
 		const auto Forge_SetPlacementVariantProperties = (void(*)(uint32_t playerIndex,
-			int placementIndex, Bungie::MapVariant::VariantProperties *properties))(0x0059B720);
+			int placementIndex, Blam::MapVariant::VariantProperties *properties))(0x0059B720);
 
 		RealVector3D forward(1, 0, 0), up(0, 0, 1);
 		auto mapModifierObjectIndex = Forge::SpawnObject(mapv, MAP_MODIFIER_TAG_INDEX, -1, -1,
 			&Forge::GetSandboxGlobals().CrosshairPoints[0], &forward, &up, -1, -1, nullptr, 0);
 
-		auto mapModifierObject = Bungie::Objects::Get(mapModifierObjectIndex);
+		auto mapModifierObject = Blam::Objects::Get(mapModifierObjectIndex);
 
 		if (mapModifierObjectIndex == -1 || !mapModifierObject || mapModifierObject->PlacementIndex == -1)
 		{
@@ -1221,7 +1221,7 @@ namespace
 			return -1;
 		}
 
-		auto playerIndex = Bungie::Players::GetLocalPlayer(0);
+		auto playerIndex = Blam::Players::GetLocalPlayer(0);
 
 		auto &placement = mapv->Placements[mapModifierObject->PlacementIndex];
 		placement.Properties.ZoneShape = 4; // phased
@@ -1263,16 +1263,16 @@ namespace
 
 	void HandleRotationReset()
 	{
-		using namespace Bungie::Input;
+		using namespace Blam::Input;
 
 		auto uiUpAction = GetActionState(eGameActionUiUp);
 		if ((!(uiUpAction->Flags & eActionStateFlagsHandled) && uiUpAction->Ticks == 1)
 			|| GetMouseButtonTicks(eMouseButtonMiddle, eInputTypeGame) == 1)
 		{
-			uiUpAction->Flags |= Bungie::Input::eActionStateFlagsHandled;
+			uiUpAction->Flags |= Blam::Input::eActionStateFlagsHandled;
 
 			uint32_t heldObjectIndex;
-			if (Forge::GetEditorModeState(Bungie::Players::GetLocalPlayer(0), &heldObjectIndex, nullptr))
+			if (Forge::GetEditorModeState(Blam::Players::GetLocalPlayer(0), &heldObjectIndex, nullptr))
 			{
 				Forge::RotationSnap::RotateToScripted(heldObjectIndex, RealQuaternion());
 			}
@@ -1281,12 +1281,12 @@ namespace
 
 	void HandleMovementSpeed()
 	{
-		using namespace Bungie::Input;
+		using namespace Blam::Input;
 
 		static auto Object_SetVelocity = (void(__cdecl *)(uint32_t objectIndex, RealVector3D* a2, RealVector3D *a3))(0x00B34040);
 		static auto& moduleForge = Modules::ModuleForge::Instance();
 
-		auto player = Bungie::Players::GetPlayers().Get(Bungie::Players::GetLocalPlayer(0));
+		auto player = Blam::Players::GetPlayers().Get(Blam::Players::GetLocalPlayer(0));
 		if (!player)
 			return;
 
@@ -1294,7 +1294,7 @@ namespace
 		if ((!(movementSpeedAction->Flags & eActionStateFlagsHandled) && movementSpeedAction->Ticks == 1) ||
 			GetKeyTicks(eKeyCodeF, eInputTypeGame) == 1)
 		{
-			movementSpeedAction->Flags |= Bungie::Input::eActionStateFlagsHandled;
+			movementSpeedAction->Flags |= Blam::Input::eActionStateFlagsHandled;
 
 			auto currentSpeed = moduleForge.VarMonitorSpeed->ValueInt;
 
@@ -1340,10 +1340,10 @@ namespace
 
 		const auto& moduleForge = Modules::ModuleForge::Instance();
 
-		auto player = Bungie::Players::GetPlayers().Get(Bungie::Players::GetLocalPlayer(0));
+		auto player = Blam::Players::GetPlayers().Get(Blam::Players::GetLocalPlayer(0));
 		if (!player)
 			return;
-		auto unitObject = Bungie::Objects::Get(player->SlaveUnit.Handle);
+		auto unitObject = Blam::Objects::Get(player->SlaveUnit.Handle);
 		if (!unitObject)
 			return;
 
@@ -1358,7 +1358,7 @@ namespace
 
 		if (noclipping)
 		{
-			auto havokComponents = *(Bungie::DataArray<Bungie::DatumBase>**)0x02446080;
+			auto havokComponents = *(Blam::DataArray<Blam::DatumBase>**)0x02446080;
 			auto havokComponent = (uint8_t*)havokComponents->Get(unitObject->HavokComponent);
 			if (!havokComponent)
 				return;
@@ -1380,7 +1380,7 @@ namespace
 		const auto currentSnap = moduleForge.VarRotationSnap->ValueInt;
 		const auto rotationSensitvity = moduleForge.VarRotationSensitivity->ValueFloat;
 
-		if (DatumHandle(playerIndex) != Bungie::Players::GetLocalPlayer(0))
+		if (DatumHandle(playerIndex) != Blam::Players::GetLocalPlayer(0))
 		{
 			RotateHeldObject(playerIndex, objectIndex, xRot, yRot, zRot);
 			return;
@@ -1398,11 +1398,11 @@ namespace
 			return;
 		}
 
-		auto& players = Bungie::Players::GetPlayers();
-		auto& objects = Bungie::Objects::GetObjects();
+		auto& players = Blam::Players::GetPlayers();
+		auto& objects = Blam::Objects::GetObjects();
 
 		auto player = players.Get(playerIndex);
-		auto unitObject = Bungie::Objects::Get(player->SlaveUnit);
+		auto unitObject = Blam::Objects::Get(player->SlaveUnit);
 		if (!unitObject)
 			return;
 
@@ -1440,9 +1440,9 @@ namespace
 	{
 		monitorState.GrabOffset = RealVector3D(0, 0, 0);
 
-		auto player = Bungie::Players::GetPlayers().Get(playerIndex);
-		auto objectPtr = Pointer(Bungie::Objects::GetObjects().Get(objectIndex))[0xC];
-		auto unitObjectPtr = Bungie::Objects::GetObjects().Get(player->SlaveUnit);
+		auto player = Blam::Players::GetPlayers().Get(playerIndex);
+		auto objectPtr = Pointer(Blam::Objects::GetObjects().Get(objectIndex))[0xC];
+		auto unitObjectPtr = Blam::Objects::GetObjects().Get(player->SlaveUnit);
 		if (!player || !unitObjectPtr || !objectPtr)
 			return;
 
@@ -1460,14 +1460,14 @@ namespace
 
 	uint32_t FindComplexObjectRigidBodyRootNode(uint32_t objectIndex)
 	{
-		auto object = Bungie::Objects::Get(objectIndex);
+		auto object = Blam::Objects::Get(objectIndex);
 		if (!object)
 			return -1;
-		auto objectDefinition = Bungie::Tags::TagInstance(object->TagIndex).GetDefinition<Bungie::Tags::Objects::Object>();
+		auto objectDefinition = Blam::Tags::TagInstance(object->TagIndex).GetDefinition<Blam::Tags::Objects::Object>();
 		auto modelDefinition = objectDefinition->Model.GetDefinition<uint8_t>();
 		if (!modelDefinition)
 			return -1;
-		auto physicsModelDefinition = Bungie::Tags::TagInstance(*(uint32_t*)(modelDefinition + 0x3C)).GetDefinition<uint8_t>();
+		auto physicsModelDefinition = Blam::Tags::TagInstance(*(uint32_t*)(modelDefinition + 0x3C)).GetDefinition<uint8_t>();
 		if (!physicsModelDefinition)
 			return -1;
 		auto rigidBodyCount = *(long*)(physicsModelDefinition + 0x58);
@@ -1492,7 +1492,7 @@ namespace
 	{
 		static auto ObjectGrabbed2 = (void(__cdecl*)(uint32_t, uint32_t))(0x0059CF50);
 
-		if (playerIndex == Bungie::Players::GetLocalPlayer(0).Handle)
+		if (playerIndex == Blam::Players::GetLocalPlayer(0).Handle)
 		{
 			monitorState.HeldObjectIndex = objectIndex;
 			monitorState.HeldObjectComplexRootRigidBodyNodeIndex = FindComplexObjectRigidBodyRootNode(objectIndex);
@@ -1507,12 +1507,12 @@ namespace
 		static auto ObjectAttach = (void(__cdecl*)(uint32_t parentobjectIndex, uint32_t objectIndex, int a3))(0x00B2A250);
 		static auto sub_59A620 = (void(__cdecl *)(int objectIndex, char a2))(0x59A620);
 
-		auto& objects = Bungie::Objects::GetObjects();
+		auto& objects = Blam::Objects::GetObjects();
 		auto mapv = GetMapVariant();
 
 		auto objectIndex = mapv->Placements[placementIndex].ObjectIndex;
 
-		if (playerIndex == Bungie::Players::GetLocalPlayer(0).Handle)
+		if (playerIndex == Blam::Players::GetLocalPlayer(0).Handle)
 		{
 			monitorState.HeldObjectIndex = objectIndex;
 		}
@@ -1584,13 +1584,13 @@ namespace
 		static auto Object_GetPosition = (void(*)(uint32_t objectIndex, RealVector3D *position))(0x00B2E5A0);
 
 		auto mapv = GetMapVariant();
-		auto& objects = Bungie::Objects::GetObjects();
+		auto& objects = Blam::Objects::GetObjects();
 
 		auto droppedObjectIndex = mapv->Placements[placementIndex].ObjectIndex;
 		if (droppedObjectIndex == -1)
 			return;
 
-		auto droppedObject = Bungie::Objects::Get(droppedObjectIndex);
+		auto droppedObject = Blam::Objects::Get(droppedObjectIndex);
 		if (!droppedObject)
 			return;
 
@@ -1607,7 +1607,7 @@ namespace
 		{
 			for (auto objectIndex = droppedObject->FirstChild; objectIndex != DatumHandle::Null;)
 			{
-				auto object = Bungie::Objects::Get(objectIndex);
+				auto object = Blam::Objects::Get(objectIndex);
 				if (!object)
 					continue;
 
@@ -1625,7 +1625,7 @@ namespace
 		}
 
 		auto playerIndex = GetPlayerHoldingObject(droppedObjectIndex);
-		if (playerIndex == Bungie::Players::GetLocalPlayer(0).Handle)
+		if (playerIndex == Blam::Players::GetLocalPlayer(0).Handle)
 		{
 			monitorState.HeldObjectIndex = -1;
 		}
@@ -1650,7 +1650,7 @@ namespace
 			static auto AssignPlacement = (int(__thiscall *)(void *thisptr, uint32_t objectIndex, int16_t placementIndex))(0x5855E0);
 			static auto sub_B313E0 = (void(__cdecl *)(int objectIndex, bool arg_4))(0xB313E0);
 
-			auto object = Bungie::Objects::Get(objectIndex);
+			auto object = Blam::Objects::Get(objectIndex);
 			if (!object)
 				continue;
 
@@ -1682,7 +1682,7 @@ namespace
 		auto editorState = GetEditorModeState(playerIndex, &heldObjectIndex, &crosshairObjectIndex);
 		if (heldObjectIndex != -1 && crosshairObjectIndex != -1)
 		{
-			auto heldObject = Bungie::Objects::Get(heldObjectIndex);
+			auto heldObject = Blam::Objects::Get(heldObjectIndex);
 			if (placementIndex != heldObject->PlacementIndex)
 				placementIndex = heldObject->PlacementIndex;
 		}
@@ -1716,7 +1716,7 @@ namespace
 
 		auto& sandboxGlobals = GetSandboxGlobals();
 
-		if (playerIndex = Bungie::Players::GetLocalPlayer(0))
+		if (playerIndex = Blam::Players::GetLocalPlayer(0))
 			monitorState.GrabOffset = RealVector3D(0, 0, 0);
 
 		ObjectSpawned(tagIndex, playerIndex, position);
@@ -1751,8 +1751,8 @@ namespace
 	{
 		static auto UnitFlying = (void(__cdecl *)(int a1, int a2, int a3, int a4, int a5, int a6, int a7))(0x7205D0);
 
-		auto playerIndex = Bungie::Players::GetLocalPlayer(0);
-		auto& players = Bungie::Players::GetPlayers();
+		auto playerIndex = Blam::Players::GetLocalPlayer(0);
+		auto& players = Blam::Players::GetPlayers();
 		auto player = players.Get(playerIndex);
 
 		if (player && player->SlaveUnit == DatumHandle(unitObjectIndex) && GetEditorModeState(playerIndex, nullptr, nullptr))
@@ -1767,27 +1767,27 @@ namespace
 			if (activeScreenCount != 0)
 				return;
 
-			auto unitObject = Bungie::Objects::Get(unitObjectIndex);
+			auto unitObject = Blam::Objects::Get(unitObjectIndex);
 			if (!unitObject)
 				return;
 
-			auto unitDefPtr = Pointer(Bungie::Tags::TagInstance(unitObject->TagIndex).GetDefinition<void>());
+			auto unitDefPtr = Pointer(Blam::Tags::TagInstance(unitObject->TagIndex).GetDefinition<void>());
 			auto maxVelocity = *(float*)unitDefPtr(0x564) * monitorSpeed;
 			auto acceleration = *(float*)unitDefPtr(0x56C);
 			auto deceleration = *(float*)unitDefPtr(0x570);
 
-			auto uiRightBumper = Bungie::Input::GetActionState(Bungie::Input::eGameActionUiRightBumper);
-			auto uiLeftBumper = Bungie::Input::GetActionState(Bungie::Input::eGameActionUiLeftBumper);
+			auto uiRightBumper = Blam::Input::GetActionState(Blam::Input::eGameActionUiRightBumper);
+			auto uiLeftBumper = Blam::Input::GetActionState(Blam::Input::eGameActionUiLeftBumper);
 
 			auto direction = 0;
-			if (!(uiRightBumper->Flags & Bungie::Input::eActionStateFlagsHandled) && uiRightBumper->Ticks > 0)
+			if (!(uiRightBumper->Flags & Blam::Input::eActionStateFlagsHandled) && uiRightBumper->Ticks > 0)
 				direction = 1;
-			else if (!(uiLeftBumper->Flags & Bungie::Input::eActionStateFlagsHandled) && uiLeftBumper->Ticks > 0)
+			else if (!(uiLeftBumper->Flags & Blam::Input::eActionStateFlagsHandled) && uiLeftBumper->Ticks > 0)
 				direction = -1;
 
 			static float s_Velocity = 0;
 
-			auto t = Bungie::Time::GetSecondsPerTick();
+			auto t = Blam::Time::GetSecondsPerTick();
 			auto destination = direction * maxVelocity;
 			s_Velocity = s_Velocity * (1.0f - t * acceleration) + destination * (t * deceleration);
 
@@ -1805,7 +1805,7 @@ namespace
 	{
 		static auto Object_Transform = (void(*)(bool a1, int objectIndex, RealVector3D *position, RealVector3D *right, RealVector3D *up))(0x0059E340);
 
-		auto heldObject = Bungie::Objects::Get(objectIndex);
+		auto heldObject = Blam::Objects::Get(objectIndex);
 		if (!heldObject)
 			return;
 
@@ -1882,7 +1882,7 @@ namespace
 
 	bool CanThemeObject(uint32_t objectIndex)
 	{
-		auto object = Bungie::Objects::Get(objectIndex);
+		auto object = Blam::Objects::Get(objectIndex);
 		if (!object)
 			return false;
 
@@ -1894,14 +1894,14 @@ namespace
 
 		if (!object->GetMultiplayerProperties())
 			return false;
-		auto objectDef = Bungie::Tags::TagInstance(object->TagIndex).GetDefinition<uint8_t>();
+		auto objectDef = Blam::Tags::TagInstance(object->TagIndex).GetDefinition<uint8_t>();
 
-		auto hlmtDef = Bungie::Tags::TagInstance(*(uint32_t*)(objectDef + 0x40)).GetDefinition<uint8_t>();
+		auto hlmtDef = Blam::Tags::TagInstance(*(uint32_t*)(objectDef + 0x40)).GetDefinition<uint8_t>();
 		if (!hlmtDef)
 			return false;
 		auto modeTagIndex = *(uint32_t*)(hlmtDef + 0xC);
 
-		const auto modeDefinitionPtr = Pointer(Bungie::Tags::TagInstance(modeTagIndex).GetDefinition<uint8_t>());
+		const auto modeDefinitionPtr = Pointer(Blam::Tags::TagInstance(modeTagIndex).GetDefinition<uint8_t>());
 		if (!modeDefinitionPtr)
 			return false;
 
@@ -1909,7 +1909,7 @@ namespace
 		if (!materialCount)
 			return false;
 
-		const auto& firstMaterialShaderTagRef = modeDefinitionPtr(0x4c)[0].Read<Bungie::Tags::TagReference>();
+		const auto& firstMaterialShaderTagRef = modeDefinitionPtr(0x4c)[0].Read<Blam::Tags::TagReference>();
 		if (firstMaterialShaderTagRef.TagIndex == REFORGE_DEFAULT_SHADER)
 		{
 			cachedReforgeTagIndexSet[object->TagIndex] = true;
@@ -1924,16 +1924,16 @@ namespace
 		auto modeTagIndex = Pointer(renderData)(0x4).Read<uint32_t>();
 		auto objectIndex = Pointer(renderData)(0x6c).Read<uint32_t>();
 
-		const auto modeDefinitionPtr = Pointer(Bungie::Tags::TagInstance(modeTagIndex).GetDefinition<uint8_t>());
+		const auto modeDefinitionPtr = Pointer(Blam::Tags::TagInstance(modeTagIndex).GetDefinition<uint8_t>());
 		if (!modeDefinitionPtr)
 			return false;
 
 		const auto materialCount = modeDefinitionPtr(0x48).Read<int32_t>();
-		const auto& firstMaterialShaderTagRef = modeDefinitionPtr(0x4c)[0].Read<Bungie::Tags::TagReference>();
+		const auto& firstMaterialShaderTagRef = modeDefinitionPtr(0x4c)[0].Read<Blam::Tags::TagReference>();
 		if (!materialCount || firstMaterialShaderTagRef.TagIndex != REFORGE_DEFAULT_SHADER)
 			return false;
 
-		const auto object = Bungie::Objects::Get(objectIndex);
+		const auto object = Blam::Objects::Get(objectIndex);
 		if (!object)
 			return false;
 
@@ -1964,16 +1964,16 @@ namespace
 
 		auto modeTagIndex = Pointer(renderData)(0x4).Read<uint32_t>();
 
-		const auto modeDefinitionPtr = Pointer(Bungie::Tags::TagInstance(modeTagIndex).GetDefinition<uint8_t>());
+		const auto modeDefinitionPtr = Pointer(Blam::Tags::TagInstance(modeTagIndex).GetDefinition<uint8_t>());
 		if (!modeDefinitionPtr)
 			return false;
 
 		const auto materialCount = modeDefinitionPtr(0x48).Read<int32_t>();
-		const auto& firstMaterialShaderTagRef = modeDefinitionPtr(0x4c)[0].Read<Bungie::Tags::TagReference>();
+		const auto& firstMaterialShaderTagRef = modeDefinitionPtr(0x4c)[0].Read<Blam::Tags::TagReference>();
 		if (!materialCount || firstMaterialShaderTagRef.TagIndex != REFORGE_DEFAULT_SHADER)
 			return false;
 
-		const auto object = Bungie::Objects::Get(objectIndex);
+		const auto object = Blam::Objects::Get(objectIndex);
 		if (!object)
 			return false;
 
@@ -1993,7 +1993,7 @@ namespace
 		if (materialRenderMethodTagIndex == -1)
 			return false;
 
-		auto renderMethod = Bungie::Tags::TagInstance(materialRenderMethodTagIndex).GetDefinition<uint8_t>();
+		auto renderMethod = Blam::Tags::TagInstance(materialRenderMethodTagIndex).GetDefinition<uint8_t>();
 		
 		return *(int32_t*)(*(uint8_t**)(renderMethod + 0x2C) + 0x68);
 	}
@@ -2091,24 +2091,24 @@ namespace
 	{
 		const auto kSpartanScaleThreshold = 1.5f;
 
-		auto object = Bungie::Objects::Get(objectIndex);
+		auto object = Blam::Objects::Get(objectIndex);
 		if (!object)
 			return false;
 
 		auto objectType = *((uint8_t*)object + 0x9A);
 		
 		// biped object
-		if (objectType == Bungie::Objects::eObjectTypeBiped && object->Scale > kSpartanScaleThreshold)
+		if (objectType == Blam::Objects::eObjectTypeBiped && object->Scale > kSpartanScaleThreshold)
 			return true;
 		// armor parts
-		if (objectType == Bungie::Objects::eObjectTypeScenery && object->Parent != Bungie::DatumHandle::Null)
+		if (objectType == Blam::Objects::eObjectTypeScenery && object->Parent != Blam::DatumHandle::Null)
 		{
-			auto parentObject = Bungie::Objects::Get(object->Parent);
+			auto parentObject = Blam::Objects::Get(object->Parent);
 			if (!parentObject)
 				return false;
 
 			auto parentObjectType = *((uint8_t*)parentObject + 0x9A);
-			if (parentObjectType == Bungie::Objects::eObjectTypeBiped
+			if (parentObjectType == Blam::Objects::eObjectTypeBiped
 				&& parentObject->Scale > kSpartanScaleThreshold)
 			{
 				return true;
@@ -2129,7 +2129,7 @@ namespace
 			return;
 
 		auto objectIndex = Pointer(renderData)(0x6c).Read<uint32_t>();
-		auto object = Bungie::Objects::Get(objectIndex);
+		auto object = Blam::Objects::Get(objectIndex);
 		if (object)
 		{
 			switch (object->TagIndex)
@@ -2162,12 +2162,12 @@ namespace
 				if (materialIndex == int16_t(INVISIBLE_MATERIAL_INDEX))
 				{
 					if (!Modules::ModuleForge::Instance().VarShowInvisibles->ValueInt
-						&& !Forge::GetEditorModeState(Bungie::Players::GetLocalPlayer(0), nullptr, nullptr))
+						&& !Forge::GetEditorModeState(Blam::Players::GetLocalPlayer(0), nullptr, nullptr))
 						return;
 				}
 
 				auto modeTagIndex = Pointer(renderData)(0x4).Read<uint32_t>();
-				const auto modeDefinitionPtr = Pointer(Bungie::Tags::TagInstance(modeTagIndex).GetDefinition<uint8_t>());
+				const auto modeDefinitionPtr = Pointer(Blam::Tags::TagInstance(modeTagIndex).GetDefinition<uint8_t>());
 				const auto meshPart = modeDefinitionPtr(0x6C)[0](0x4)[0];
 				const auto materialIndexPtr = (uint16_t*)modeDefinitionPtr(0x6C)[0](4)[0];
 
@@ -2207,12 +2207,12 @@ namespace
 
 	void* ObjectPropertiesUIAllocateHook(int size)
 	{
-		auto playerIndex = Bungie::Players::GetLocalPlayer(0);
+		auto playerIndex = Blam::Players::GetLocalPlayer(0);
 		uint32_t objectIndexUnderCrosshair, heldObjectIndex;
 		if (Forge::GetEditorModeState(playerIndex, &heldObjectIndex, &objectIndexUnderCrosshair))
 		{
 			auto currentObjectIndex = heldObjectIndex != -1 ? heldObjectIndex : objectIndexUnderCrosshair;
-			auto currentObject = Bungie::Objects::Get(currentObjectIndex);
+			auto currentObject = Blam::Objects::Get(currentObjectIndex);
 			if (currentObject && currentObject->PlacementIndex != -1)
 			{
 				auto mapv = Forge::GetMapVariant();
@@ -2234,7 +2234,7 @@ namespace
 	{
 		static auto Forge_UpdatePlayerEditorGlobals = (bool(*)(int16_t playerIndex, uint32_t* pObjectIndex))(0x0059E720);
 
-		if (Bungie::Players::GetLocalPlayer(0).Index == playerIndex)
+		if (Blam::Players::GetLocalPlayer(0).Index == playerIndex)
 		{
 			auto& editorGlobals = Forge::GetSandboxGlobals();
 
@@ -2251,16 +2251,16 @@ namespace
 		return Forge_UpdatePlayerEditorGlobals(playerIndex, pObjectIndex);
 	}
 
-	void __fastcall MapVariant_SyncObjectPropertiesHook(Bungie::MapVariant* thisptr, void* unused,
-		Bungie::MapVariant::VariantProperties *properties, uint32_t objectIndex)
+	void __fastcall MapVariant_SyncObjectPropertiesHook(Blam::MapVariant* thisptr, void* unused,
+		Blam::MapVariant::VariantProperties *properties, uint32_t objectIndex)
 	{
-		const auto MapVariant_SyncObjectProperties = (void(__thiscall *)(Bungie::MapVariant* thisptr,
-			Bungie::MapVariant::VariantProperties *properties, uint32_t objectIndex))(0x00580E80);
+		const auto MapVariant_SyncObjectProperties = (void(__thiscall *)(Blam::MapVariant* thisptr,
+			Blam::MapVariant::VariantProperties *properties, uint32_t objectIndex))(0x00580E80);
 		const auto sub_59A620 = (void(__cdecl *)(int objectIndex, char a2))(0x59A620);
 
 		MapVariant_SyncObjectProperties(thisptr, properties, objectIndex);
 
-		auto object = Bungie::Objects::Get(objectIndex);
+		auto object = Blam::Objects::Get(objectIndex);
 		if (!object)
 			return;
 
@@ -2281,14 +2281,14 @@ namespace
 		}
 	}
 
-	void __fastcall MapVariant_SyncObjectProperties_Object_Properties_Hook(Bungie::MapVariant* thisptr, void* unused,
-		Bungie::MapVariant::VariantProperties *properties, uint32_t objectIndex)
+	void __fastcall MapVariant_SyncObjectProperties_Object_Properties_Hook(Blam::MapVariant* thisptr, void* unused,
+		Blam::MapVariant::VariantProperties *properties, uint32_t objectIndex)
 	{
-		const auto MapVariant_SyncObjectProperties = (void(__thiscall *)(Bungie::MapVariant* thisptr,
-			Bungie::MapVariant::VariantProperties *properties, uint32_t objectIndex))(0x00580E80);
+		const auto MapVariant_SyncObjectProperties = (void(__thiscall *)(Blam::MapVariant* thisptr,
+			Blam::MapVariant::VariantProperties *properties, uint32_t objectIndex))(0x00580E80);
 		const auto sub_59A620 = (void(__cdecl *)(int objectIndex, char a2))(0x59A620);
 
-		auto object = Bungie::Objects::Get(objectIndex);
+		auto object = Blam::Objects::Get(objectIndex);
 		if (!object)
 			return;
 
@@ -2319,13 +2319,13 @@ namespace
 		}
 	}
 
-	void MapVariant_BuildVariantPropertiesFromObjectHook(Bungie::MapVariant::VariantPlacement *placement)
+	void MapVariant_BuildVariantPropertiesFromObjectHook(Blam::MapVariant::VariantPlacement *placement)
 	{
 		const auto sub_B63150 = (uint16_t(*)(uint32_t objectIndex, uint16_t, bool))(0xB63150);
 
 		if (placement->ObjectIndex == -1)
 			return;
-		auto objectHeader = Bungie::Objects::GetObjects().Get(placement->ObjectIndex);
+		auto objectHeader = Blam::Objects::GetObjects().Get(placement->ObjectIndex);
 		if (!objectHeader)
 			return;
 		auto mpProperties = objectHeader->Data->GetMultiplayerProperties();
@@ -2369,9 +2369,9 @@ namespace
 
 		// spare clips
 		placement->Properties.ObjectType = mpProperties->ObjectType;
-		if (objectHeader->Type == Bungie::Objects::eObjectTypeWeapon)
+		if (objectHeader->Type == Blam::Objects::eObjectTypeWeapon)
 		{
-			auto weaponDefinition = Bungie::Tags::TagInstance(objectHeader->Data->TagIndex).GetDefinition<Bungie::Tags::Items::Weapon>();
+			auto weaponDefinition = Blam::Tags::TagInstance(objectHeader->Data->TagIndex).GetDefinition<Blam::Tags::Items::Weapon>();
 			if (weaponDefinition->Magazines.Count > 0)
 			{
 				auto &magazine = weaponDefinition->Magazines[0];
@@ -2391,8 +2391,8 @@ namespace
 
 	SandboxPaletteItem* FindSandboxPaletteItem(uint32_t tagIndex)
 	{
-		using namespace Bungie::Tags;
-		auto scenarioDef = Bungie::Tags::Scenario::GetCurrentScenario();
+		using namespace Blam::Tags;
+		auto scenarioDef = Blam::Tags::Scenario::GetCurrentScenario();
 
 		for (auto i = 0; i < 7; i++)
 		{
@@ -2407,11 +2407,11 @@ namespace
 		return nullptr;
 	}
 
-	void __fastcall c_map_variant_initialize_from_scenario_hook(Bungie::MapVariant *thisptr, void* unused)
+	void __fastcall c_map_variant_initialize_from_scenario_hook(Blam::MapVariant *thisptr, void* unused)
 	{
 		struct s_scenario_palette_item
 		{
-			Bungie::Tags::TagReference Object;
+			Blam::Tags::TagReference Object;
 			uint32_t Unknown10;
 			uint32_t Unknown14;
 			uint32_t Unknown18;
@@ -2426,9 +2426,9 @@ namespace
 		const auto crc32 = (uint32_t(*)(uint32_t def, uint8_t *data, long size))(0x0052CD20);
 		const auto sub_B734F0 = (void*(*)(int objectType))(0x00B734F0);
 		const auto scenario_get_placement_block = (void*(*)(void *scenario, int objectType, long *pSize))(0x00B5A880);
-		const auto scenario_get_palette_block = (Bungie::Tags::TagBlock<s_scenario_palette_item>*(*)(void *scenario, int objectType))(0x00B5A8B0);
+		const auto scenario_get_palette_block = (Blam::Tags::TagBlock<s_scenario_palette_item>*(*)(void *scenario, int objectType))(0x00B5A8B0);
 
-		auto scenario = *(Bungie::Tags::Scenario::Scenario**)0x022AAEB4;
+		auto scenario = *(Blam::Tags::Scenario::Scenario**)0x022AAEB4;
 		auto mapid = scenario->MapId;
 
 		c_map_variant_initialize(thisptr, mapid);
@@ -2443,11 +2443,11 @@ namespace
 		auto scnrPlacementOffset = 0;
 		for (auto objectType = 0; objectType < 15; objectType++)
 		{
-			if (objectType == Bungie::Objects::ObjectType::eObjectTypeScenery
-				|| objectType == Bungie::Objects::ObjectType::eObjectTypeCrate
-				|| objectType == Bungie::Objects::ObjectType::eObjectTypeVehicle
-				|| objectType == Bungie::Objects::ObjectType::eObjectTypeWeapon
-				|| objectType == Bungie::Objects::ObjectType::eObjectTypeEquipment)
+			if (objectType == Blam::Objects::ObjectType::eObjectTypeScenery
+				|| objectType == Blam::Objects::ObjectType::eObjectTypeCrate
+				|| objectType == Blam::Objects::ObjectType::eObjectTypeVehicle
+				|| objectType == Blam::Objects::ObjectType::eObjectTypeWeapon
+				|| objectType == Blam::Objects::ObjectType::eObjectTypeEquipment)
 			{
 				auto v6 = (uint8_t*)sub_B734F0(objectType);
 				if (-1 != *(int16_t *)(v6 + 0xA) && -1 != *(int16_t *)(v6 + 0xC))
@@ -2493,9 +2493,9 @@ namespace
 		thisptr->MaxBudget = scenario->SandboxBudget;
 	}
 
-	int CreateOrGetBudgetForItem(Bungie::MapVariant *thisptr, int tagIndex)
+	int CreateOrGetBudgetForItem(Blam::MapVariant *thisptr, int tagIndex)
 	{
-		static auto c_map_variant_get_budget_index_for_item = (int(__thiscall*)(Bungie::MapVariant *thisptr, int tagIndex))(0x005831C0);
+		static auto c_map_variant_get_budget_index_for_item = (int(__thiscall*)(Blam::MapVariant *thisptr, int tagIndex))(0x005831C0);
 		const auto sub_4B2570 = (void(*)(void *a1))(0x4B2570);
 		const auto  game_simulation_is_client = (bool(*)())(0x005319C0);
 
@@ -2551,9 +2551,9 @@ namespace
 		return index;
 	}
 
-	void __fastcall c_map_variant_update_item_budget_hook(Bungie::MapVariant *thisptr, void* unused, int budgetIndex, char arg_4)
+	void __fastcall c_map_variant_update_item_budget_hook(Blam::MapVariant *thisptr, void* unused, int budgetIndex, char arg_4)
 	{
-		static auto c_map_variant_update_item_budget = (void(__thiscall *)(Bungie::MapVariant *thisptr, int budgetIndex, char arg_4))(0x00584E10);
+		static auto c_map_variant_update_item_budget = (void(__thiscall *)(Blam::MapVariant *thisptr, int budgetIndex, char arg_4))(0x00584E10);
 		c_map_variant_update_item_budget(thisptr, budgetIndex, arg_4);
 		const auto IsForge = (bool(*)())(0x0059A780);
 
@@ -2561,7 +2561,7 @@ namespace
 	
 		if (IsForge())
 		{
-			auto objectDef = Bungie::Tags::TagInstance(budget.TagIndex).GetDefinition<Bungie::Tags::Objects::Object>();
+			auto objectDef = Blam::Tags::TagInstance(budget.TagIndex).GetDefinition<Blam::Tags::Objects::Object>();
 			if (objectDef && objectDef->MultiplayerProperties.Count)
 			{
 				auto engineFlags = objectDef->MultiplayerProperties.Elements[0].EngineFlags;
@@ -2581,7 +2581,7 @@ namespace
 		}
 	}
 
-	void __fastcall c_map_variant_copy_budget_hook(Bungie::MapVariant *thisptr, void *unused, Bungie::MapVariant *other)
+	void __fastcall c_map_variant_copy_budget_hook(Blam::MapVariant *thisptr, void *unused, Blam::MapVariant *other)
 	{
 		for (auto i = 0; i < other->BudgetEntryCount; i++)
 		{
@@ -2642,14 +2642,14 @@ namespace
 		const auto sub_715E90 = (char(__cdecl *)(float a1, float boundingRadius, int a3, int a4,
 			int a5, const RealVector3D *a6, int a7, int a8, RealVector3D *newPosition, char a10))(0x715E90);
 
-		auto object = Bungie::Tags::TagInstance(tagIndex).GetDefinition<Bungie::Tags::Objects::Object>();
+		auto object = Blam::Tags::TagInstance(tagIndex).GetDefinition<Blam::Tags::Objects::Object>();
 		if (!object)
 			return false;
 
 		auto boundingRadius = object->BoundingRadius;
 		if (object->Model.TagIndex != -1)
 		{
-			auto hlmtDef = Bungie::Tags::TagInstance(object->Model.TagIndex).GetDefinition<Bungie::Tags::Models::Model>();
+			auto hlmtDef = Blam::Tags::TagInstance(object->Model.TagIndex).GetDefinition<Blam::Tags::Models::Model>();
 			if (hlmtDef && hlmtDef->ModelObjectData.Count)
 			{
 				const auto &modelobjectData = hlmtDef->ModelObjectData.Elements[0];
@@ -2667,7 +2667,7 @@ namespace
 		return CreateOrGetBudgetForItem(GetMapVariant(), tagIndex) != -1;
 	}
 
-	struct LightDatum : public Bungie::DatumBase
+	struct LightDatum : public Blam::DatumBase
 	{
 		__int16 Flags;
 		int TagIndex;
@@ -2727,13 +2727,13 @@ namespace
 		const auto sub_949CE0 = (float(__thiscall *)(void *thisptr, float a1, float a2))(0x00949CE0);
 		const auto LightIlluminationFunction = (float(__thiscall*)(void *thisptr, float value, float scale))(0x00949CE0);
 
-		auto& lightArray = HaloOnline::GetMainTls(0x498)[0].Read<Bungie::DataArray<LightDatum>>();
+		auto& lightArray = HaloOnline::GetMainTls(0x498)[0].Read<Blam::DataArray<LightDatum>>();
 		auto light = lightArray.Get(lightDatumIndex);
 
-		auto lightObject = Bungie::Objects::Get(light->ObjectIndex);
+		auto lightObject = Blam::Objects::Get(light->ObjectIndex);
 		if (lightObject)
 		{
-			auto lightDef = Bungie::Tags::TagInstance(light->TagIndex).GetDefinition<uint8_t>();
+			auto lightDef = Blam::Tags::TagInstance(light->TagIndex).GetDefinition<uint8_t>();
 			auto lightFlags = *(uint32_t*)lightDef;
 
 			auto mpProperties = lightObject->GetMultiplayerProperties();
@@ -2785,12 +2785,12 @@ namespace
 	{
 		const auto sub_9498D0 = (void(__thiscall *)(void *thisptr, float t, float a3, RealColorRGB *rgb))(0x9498D0);
 
-		auto& lightArray = HaloOnline::GetMainTls(0x498)[0].Read<Bungie::DataArray<LightDatum>>();
+		auto& lightArray = HaloOnline::GetMainTls(0x498)[0].Read<Blam::DataArray<LightDatum>>();
 		auto light = lightArray.Get(lightDatumIndex);
-		auto lightObject = Bungie::Objects::Get(light->ObjectIndex);
+		auto lightObject = Blam::Objects::Get(light->ObjectIndex);
 		if (lightObject)
 		{
-			auto lightDef = Bungie::Tags::TagInstance(light->TagIndex).GetDefinition<uint8_t>();
+			auto lightDef = Blam::Tags::TagInstance(light->TagIndex).GetDefinition<uint8_t>();
 			auto lightFlags = *(uint32_t*)lightDef;
 
 			auto mpProperties = lightObject->GetMultiplayerProperties();
@@ -2835,14 +2835,14 @@ namespace
 			RealVector3D a6, float spread, float arg_30, float spreadb))(0xA66900);
 		const auto sub_A667F0 = (void(*)(uint32_t lightDatumIndex, int a2, float colorIntensity, int a4))(0xA667F0);
 
-		auto& lightArray = HaloOnline::GetMainTls(0x498)[0].Read<Bungie::DataArray<LightDatum>>();
+		auto& lightArray = HaloOnline::GetMainTls(0x498)[0].Read<Blam::DataArray<LightDatum>>();
 		auto light = lightArray.Get(lightDatumIndex);
 		if (!light)
 			return;
-		auto lightDef = Bungie::Tags::TagInstance(light->TagIndex).GetDefinition<uint8_t>();
+		auto lightDef = Blam::Tags::TagInstance(light->TagIndex).GetDefinition<uint8_t>();
 		auto lightFlags = *(uint32_t*)lightDef;
 
-		auto parentObject = Bungie::Objects::Get(light->ObjectIndex);
+		auto parentObject = Blam::Objects::Get(light->ObjectIndex);
 		if (lightFlags & (1 << 31) && parentObject)
 		{
 			auto props = parentObject->GetMultiplayerProperties();
@@ -2868,7 +2868,7 @@ namespace
 	}
 
 
-	void FillScreenEffectRenderData(Bungie::Tags::Camera::AreaScreenEffect::ScreenEffect& screenEffectDef, float t, ScreenEffectData *data)
+	void FillScreenEffectRenderData(Blam::Tags::Camera::AreaScreenEffect::ScreenEffect& screenEffectDef, float t, ScreenEffectData *data)
 	{
 		auto v29 = data->LightIntensity;
 		if (data->LightIntensity <= (t * screenEffectDef.LightIntensity))
@@ -2943,7 +2943,7 @@ namespace
 	void ScreenEffectsHook(RealVector3D *a1, RealVector3D *a2, ScreenEffectData *renderData, void *a4, int localPlayerIndex)
 	{
 		const auto sub_683190 = (void(*)(RealVector3D *a1, RealVector3D *a2, ScreenEffectData *data, int a4, int a5))(0x683190);
-		const auto sub_682C10 = (float(__thiscall *)(Bungie::Tags::Camera::AreaScreenEffect::ScreenEffect *screenEffect, float distance, float a3, float secondsAlive, float *a5))(0x682C10);
+		const auto sub_682C10 = (float(__thiscall *)(Blam::Tags::Camera::AreaScreenEffect::ScreenEffect *screenEffect, float distance, float a3, float secondsAlive, float *a5))(0x682C10);
 		const auto sub_682A90 = (unsigned __int32(__thiscall *)(void *thisptr, void *a2, float a3, float a4, int a5, void * a6))(0x682A90);
 		const auto sub_A44FD0 = (bool(*)(int localPlayerIndex, uint32_t objectIndex))(0xA44FD0);
 		const auto sub_4EEC40 = (float(*)(RealVector3D *position, RealVector3D *forward))(0x4EEC40);
@@ -2969,10 +2969,10 @@ namespace
 
 		*(DWORD *)((uint8_t*)a4 + 0x120) = 0;
 
-		auto &screenEffectDatumArray = HaloOnline::GetMainTls(0x338)[0].Read<Bungie::DataArray<ScreenEffectDatum>>();
+		auto &screenEffectDatumArray = HaloOnline::GetMainTls(0x338)[0].Read<Blam::DataArray<ScreenEffectDatum>>();
 		for (auto &screenEffectDatum : screenEffectDatumArray)
 		{
-			auto sefc = Bungie::Tags::TagInstance(screenEffectDatum.TagIndex).GetDefinition<Bungie::Tags::Camera::AreaScreenEffect>();
+			auto sefc = Blam::Tags::TagInstance(screenEffectDatum.TagIndex).GetDefinition<Blam::Tags::Camera::AreaScreenEffect>();
 			if (!sefc || sefc->ScreenEffects.Count <= 0)
 				continue;
 			auto screenEffectDef = sefc->ScreenEffects.Elements[0];
@@ -2994,16 +2994,16 @@ namespace
 			if (!(screenEffectDef.Flags & 0x10) || (sub_5F0C20(&a9[24]), *(WORD *)&a9[32] = -1,
 				!sub_6D67E0(*(uint32_t*)0x0471A8D0, *(uint32_t*)0x471A8D4, 0, a1, &screenEffectDatum.Position, -1, -1, -1, a9)))
 			{
-				auto object = Bungie::Objects::Get(screenEffectDatum.ObjectIndex);
+				auto object = Blam::Objects::Get(screenEffectDatum.ObjectIndex);
 				if (object && object->PlacementIndex != -1)
 				{
 					auto props = object->GetMultiplayerProperties();
 					auto properties = (ForgeScreenFxProperties*)((uint8_t*)props + 0x14);
 					if (properties)
 					{
-						auto playerIndex = Bungie::Players::GetLocalPlayer(localPlayerIndex);
-						Bungie::Players::PlayerDatum *player;
-						if ((playerIndex != DatumHandle::Null && (player = Bungie::Players::GetPlayers().Get(playerIndex))) &&
+						auto playerIndex = Blam::Players::GetLocalPlayer(localPlayerIndex);
+						Blam::Players::PlayerDatum *player;
+						if ((playerIndex != DatumHandle::Null && (player = Blam::Players::GetPlayers().Get(playerIndex))) &&
 							player->Properties.TeamIndex != props->TeamIndex && props->TeamIndex != 8)
 						{
 							screenEffectDef.MaximumDistance = 0;
@@ -3047,12 +3047,12 @@ namespace
 		}
 	}
 
-	void __cdecl MapVariant_SyncVariantPropertiesHook(Bungie::MapVariant::VariantPlacement *placement)
+	void __cdecl MapVariant_SyncVariantPropertiesHook(Blam::MapVariant::VariantPlacement *placement)
 	{
-		const auto MapVariant_UpdateObjectVariantProperties = (void(*)(Bungie::MapVariant::VariantPlacement *a1))(0x00586680);
+		const auto MapVariant_UpdateObjectVariantProperties = (void(*)(Blam::MapVariant::VariantPlacement *a1))(0x00586680);
 		MapVariant_UpdateObjectVariantProperties(placement);
 
-		auto object = Bungie::Objects::Get(placement->ObjectIndex);
+		auto object = Blam::Objects::Get(placement->ObjectIndex);
 		if (!object)
 			return;
 
@@ -3097,7 +3097,7 @@ namespace
 
 	bool ShouldOverrideColorPermutation(uint32_t objectIndex)
 	{
-		auto object = Bungie::Objects::Get(objectIndex);
+		auto object = Blam::Objects::Get(objectIndex);
 		if (!object)
 			return false;
 
@@ -3116,20 +3116,20 @@ namespace
 
 	void UpdateObjectCachedColorPermutationRenderStateHook(uint32_t objectIndex, bool invalidated)
 	{
-		using ObjectDefinition = Bungie::Tags::Objects::Object;
+		using ObjectDefinition = Blam::Tags::Objects::Object;
 
 		const auto sub_5A03E0 = (bool(*)(int a1))(0x5A03E0);
 		const auto sub_B31B80 = (void(*)(uint32_t objectIndex, int a2, bool invalidated))(0xB31B80);
 		const auto object_get_render_data = (void*(*)(uint32_t objectIndex))(0x00B2E800);
-		const auto object_get_color_permutation = (bool(*)(uint32_t objectIndex, int index, Bungie::Math::RealColorRGB *a3))(0x00B2DE50);
+		const auto object_get_color_permutation = (bool(*)(uint32_t objectIndex, int index, Blam::Math::RealColorRGB *a3))(0x00B2DE50);
 
 		if (sub_5A03E0(2))
 		{
-			auto object = Bungie::Objects::Get(objectIndex);
+			auto object = Blam::Objects::Get(objectIndex);
 			if (!object)
 				return;
 
-			auto objectDef = Bungie::Tags::TagInstance(object->TagIndex).GetDefinition<ObjectDefinition>();
+			auto objectDef = Blam::Tags::TagInstance(object->TagIndex).GetDefinition<ObjectDefinition>();
 			auto cachedRenderStateIndex = *(uint32_t*)object_get_render_data(objectIndex);
 
 			
@@ -3138,7 +3138,7 @@ namespace
 			if (cachedRenderStateIndex != -1 
 				&& (invalidated || (*((uint8_t*)objectDef + 0x1C) & 1) || (shouldOverride = ShouldOverrideColorPermutation(objectIndex)))) // player respawn location
 			{
-				auto object = Bungie::Objects::Get(objectIndex);
+				auto object = Blam::Objects::Get(objectIndex);
 				auto mpProperties = object->GetMultiplayerProperties();
 
 				uint8_t *cachedRenderStates = nullptr;
@@ -3157,7 +3157,7 @@ namespace
 				auto pColor = (DWORD *)(cachedRenderState + 0x460);
 				do
 				{
-					Bungie::Math::RealColorRGB color;
+					Blam::Math::RealColorRGB color;
 					if (object_get_color_permutation(objectIndex, ++index, &color))
 					{
 						if (shouldOverride && mpProperties)
@@ -3226,11 +3226,11 @@ namespace
 		if (!sub_980E40(a1, objectIndex))
 			return false;
 
-		auto object = Bungie::Objects::Get(objectIndex);
+		auto object = Blam::Objects::Get(objectIndex);
 		if (!object)
 			return false;
 
-		auto playerIndex = Bungie::Players::GetLocalPlayer(0);
+		auto playerIndex = Blam::Players::GetLocalPlayer(0);
 
 		switch (object->TagIndex)
 		{
@@ -3246,7 +3246,7 @@ namespace
 		{
 			auto reforgeProperties = (Forge::ReforgeObjectProperties*)&mpProperties->RadiusWidth;
 			if (reforgeProperties->Flags & Forge::ReforgeObjectProperties::Flags::MaterialAllowsProjectiles
-				&& !Forge::GetEditorModeState(Bungie::Players::GetLocalPlayer(0), nullptr, nullptr))
+				&& !Forge::GetEditorModeState(Blam::Players::GetLocalPlayer(0), nullptr, nullptr))
 			{
 				return false;
 			}
@@ -3258,7 +3258,7 @@ namespace
 	void sandbox_zone_shape_render_hook(ZoneShape *zone, float *color, uint32_t objectIndex)
 	{
 		const auto sandbox_zone_shape_render_hook = (void(*)(ZoneShape *zone, float *color, uint32_t objectIndex))(0x00BA0FC0);
-		auto object = Bungie::Objects::Get(objectIndex);
+		auto object = Blam::Objects::Get(objectIndex);
 		if (!object)
 			return;
 
@@ -3279,7 +3279,7 @@ namespace
 		const auto sub_724890 = (bool(__thiscall*)(void *thisptr, int a2, int a3, float *matrix))(0x724890);
 		auto ret = sub_724890(thisptr, a2, a3, matrix);
 
-		auto havokComponents = *(Bungie::DataArray<Bungie::DatumBase>**)0x02446080;
+		auto havokComponents = *(Blam::DataArray<Blam::DatumBase>**)0x02446080;
 		auto &groundHavokComponentIndex = *(uint32_t*)((uint8_t*)thisptr + 0x1c);
 		uint8_t *groundHavokComponent;
 		if (groundHavokComponentIndex != -1 && (groundHavokComponent = (uint8_t*)havokComponents->Get(groundHavokComponentIndex)))
@@ -3347,7 +3347,7 @@ namespace
 			uint32_t Name;
 			float LightSourceY;
 			float LightSourceX;
-			Bungie::Math::RealColorRGB FogColor;
+			Blam::Math::RealColorRGB FogColor;
 			float Brightness;
 			float FogGradientThreshold;
 			float LightIntensity;
@@ -3376,7 +3376,7 @@ namespace
 			float FogVelocityX;
 			float FogVelocityY;
 			float FogVelocityZ;
-			Bungie::Tags::TagReference Weather;
+			Blam::Tags::TagReference Weather;
 			float Unknown9C;
 			uint32_t UnknownA0;
 		};
@@ -3390,12 +3390,12 @@ namespace
 		const auto &atmosphereSettings = mapModifierState.Atmosphere;
 		if (atmosphereSettings.Enabled)
 		{
-			auto scenario = Bungie::Tags::Scenario::GetCurrentScenario();
-			auto skya = Bungie::Tags::TagInstance(scenario->SkyParameters.TagIndex).GetDefinition<uint8_t>();
+			auto scenario = Blam::Tags::Scenario::GetCurrentScenario();
+			auto skya = Blam::Tags::TagInstance(scenario->SkyParameters.TagIndex).GetDefinition<uint8_t>();
 			if (!skya)
 				return;
 
-			auto atmospherePropertiesBlock = (Bungie::Tags::TagBlock<sky_atm_parameters_properties_definition>*)(skya + 0x34);
+			auto atmospherePropertiesBlock = (Blam::Tags::TagBlock<sky_atm_parameters_properties_definition>*)(skya + 0x34);
 			if (!atmospherePropertiesBlock->Count)
 				return;
 
@@ -3553,7 +3553,7 @@ namespace
 		const auto HavokCleanup = (uint32_t(*)(signed int a1, int islandEntityIndex, char a3, char a4, char a5, int a6))(0x5C4E30);
 		auto objectIndex = HavokCleanup(a1, islandEntityIndex, a3, a4, a5, a6);
 
-		auto object = Bungie::Objects::Get(objectIndex);
+		auto object = Blam::Objects::Get(objectIndex);
 		if (!object)
 			return -1;
 

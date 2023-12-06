@@ -1,13 +1,13 @@
 #include "Forge\Selection.hpp"
 #include "Forge\ObjectSet.hpp"
-#include "Bungie\BungiePlayers.hpp"
-#include "Bungie\BungieObjects.hpp"
-#include "Bungie\BungieInput.hpp"
+#include "Blam\BlamPlayers.hpp"
+#include "Blam\BlamObjects.hpp"
+#include "Blam\BlamInput.hpp"
 #include "Forge\ForgeUtil.hpp"
 #include <stack>
 
-using namespace Bungie;
-using namespace Bungie::Math;
+using namespace Blam;
+using namespace Blam::Math;
 
 namespace
 {
@@ -37,9 +37,9 @@ namespace Forge
 
 	void Selection::SelectAll()
 	{
-		auto playerIndex = Bungie::Players::GetLocalPlayer(0);
+		auto playerIndex = Blam::Players::GetLocalPlayer(0);
 
-		auto currentObject = Bungie::Objects::Get(GetCurrentObjectIndex(playerIndex));
+		auto currentObject = Blam::Objects::Get(GetCurrentObjectIndex(playerIndex));
 		if (!currentObject)
 			return;
 
@@ -70,9 +70,9 @@ namespace Forge
 
 	void Selection::SelectAllMaterial()
 	{
-		auto playerIndex = Bungie::Players::GetLocalPlayer(0);
+		auto playerIndex = Blam::Players::GetLocalPlayer(0);
 
-		auto currentObject = Bungie::Objects::Get(GetCurrentObjectIndex(playerIndex));
+		auto currentObject = Blam::Objects::Get(GetCurrentObjectIndex(playerIndex));
 		if (!currentObject || currentObject->PlacementIndex == -1)
 			return;
 
@@ -96,9 +96,9 @@ namespace Forge
 
 	void Selection::DeselectAllOf()
 	{
-		auto playerIndex = Bungie::Players::GetLocalPlayer(0);
+		auto playerIndex = Blam::Players::GetLocalPlayer(0);
 
-		auto currentObject = Bungie::Objects::Get(GetCurrentObjectIndex(playerIndex));
+		auto currentObject = Blam::Objects::Get(GetCurrentObjectIndex(playerIndex));
 		if (!currentObject)
 			return;
 
@@ -188,10 +188,10 @@ namespace Forge
 		if (!mapv)
 			return;
 
-		auto playerHandle = Bungie::Players::GetLocalPlayer(0);
+		auto playerHandle = Blam::Players::GetLocalPlayer(0);
 		auto objectIndex = GetSandboxGlobals().CrosshairObjects[playerHandle.Index];
 
-		auto object = Bungie::Objects::Get(objectIndex);
+		auto object = Blam::Objects::Get(objectIndex);
 		if (!object)
 			return;
 
@@ -229,14 +229,14 @@ namespace Forge
 		if (cloneStack.empty())
 			return false;
 
-		auto referenceObject = Bungie::Objects::Get(cloneStack.top());
+		auto referenceObject = Blam::Objects::Get(cloneStack.top());
 		if (!referenceObject)
 			return false;
 
 		auto& selection = Forge::Selection::GetSelection();
 		selection.Clear();
 
-		auto playerHandle = Bungie::Players::GetLocalPlayer(0);
+		auto playerHandle = Blam::Players::GetLocalPlayer(0);
 
 		const auto& crosshairPoint = GetSandboxGlobals().CrosshairPoints[playerHandle.Index];
 		const auto& referencePoint = referenceObject->Position;
@@ -246,7 +246,7 @@ namespace Forge
 			auto objectIndex = cloneStack.top();
 			cloneStack.pop();
 
-			auto object = Bungie::Objects::Get(objectIndex);
+			auto object = Blam::Objects::Get(objectIndex);
 			if (!object)
 				continue;
 
@@ -272,11 +272,11 @@ namespace Forge
 
 	void Selection::Update()
 	{
-		using namespace Bungie::Input;
+		using namespace Blam::Input;
 
 		static bool s_IsPaintSelecting = false;
 
-		auto playerIndex = Bungie::Players::GetLocalPlayer(0);
+		auto playerIndex = Blam::Players::GetLocalPlayer(0);
 
 		uint32_t heldObjectIndex, crosshairObjectIndex;
 		if (!Forge::GetEditorModeState(playerIndex, &heldObjectIndex, &crosshairObjectIndex))

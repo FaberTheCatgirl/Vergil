@@ -6,7 +6,7 @@
 #include "Web\Ui\ScreenLayer.hpp"
 #include "ThirdParty\rapidjson\writer.h"
 #include "ThirdParty\rapidjson\stringbuffer.h"
-#include "Bungie\Tags\TagInstance.hpp"
+#include "Blam\Tags\TagInstance.hpp"
 
 #include "new\game\game.hpp"
 
@@ -52,7 +52,7 @@ namespace
 	void OnGameInputUpdated()
 	{
 		auto isUsingController = *(bool*)0x0244DE98;
-		Bungie::Input::BindingsTable bindings;
+		Blam::Input::BindingsTable bindings;
 		GetBindings(0, &bindings);
 		
 		if (Modules::ModuleVoIP::Instance().VarPTTEnabled->ValueInt == 1)
@@ -60,22 +60,22 @@ namespace
 			if (!Modules::ModuleVoIP::Instance().voipConnected)
 				return;
 
-			if (Bungie::game_is_mainmenu() && isUsingController)
+			if (Blam::game_is_mainmenu() && isUsingController)
 				return;
 			//keyboard/controller in-game
-			if (isChatting && Bungie::Input::GetActionState(Bungie::Input::eGameActionVoiceChat)->Ticks == 0)
+			if (isChatting && Blam::Input::GetActionState(Blam::Input::eGameActionVoiceChat)->Ticks == 0)
 			{
 				isChatting = false;
-				if (!Bungie::game_is_mainmenu())
+				if (!Blam::game_is_mainmenu())
 				{
 					Patches::Ui::TogglePTTSound(false);
 				}
 				Web::Ui::ScreenLayer::Notify("voip-ptt", "{\"talk\":0}", true);
 			}
-			else if (!isChatting && Bungie::Input::GetActionState(Bungie::Input::eGameActionVoiceChat)->Ticks == 1)
+			else if (!isChatting && Blam::Input::GetActionState(Blam::Input::eGameActionVoiceChat)->Ticks == 1)
 			{
 				isChatting = true;
-				if (!Bungie::game_is_mainmenu())
+				if (!Blam::game_is_mainmenu())
 				{
 					Patches::Ui::TogglePTTSound(true);
 				}
@@ -88,18 +88,18 @@ namespace
 	void OnUiInputUpdated()
 	{
 		auto isUsingController = *(bool*)0x0244DE98;
-		Bungie::Input::BindingsTable bindings;
+		Blam::Input::BindingsTable bindings;
 		GetBindings(0, &bindings);
 
 		//controller in lobby
-		if (Bungie::game_is_mainmenu() && isUsingController && Modules::ModuleVoIP::Instance().VarPTTEnabled->ValueInt == 1)
+		if (Blam::game_is_mainmenu() && isUsingController && Modules::ModuleVoIP::Instance().VarPTTEnabled->ValueInt == 1)
 		{
-			if (isChatting && Bungie::Input::GetActionState((Bungie::Input::GameAction)bindings.ControllerButtons[Bungie::Input::eGameActionVoiceChat])->Ticks == 0)
+			if (isChatting && Blam::Input::GetActionState((Blam::Input::GameAction)bindings.ControllerButtons[Blam::Input::eGameActionVoiceChat])->Ticks == 0)
 			{
 				isChatting = false;
 				Web::Ui::ScreenLayer::Notify("voip-ptt", "{\"talk\":0}", true);
 			}
-			else if (!isChatting && Bungie::Input::GetActionState((Bungie::Input::GameAction)bindings.ControllerButtons[Bungie::Input::eGameActionVoiceChat])->Ticks == 1)
+			else if (!isChatting && Blam::Input::GetActionState((Blam::Input::GameAction)bindings.ControllerButtons[Blam::Input::eGameActionVoiceChat])->Ticks == 1)
 			{
 				isChatting = true;
 				Web::Ui::ScreenLayer::Notify("voip-ptt", "{\"talk\":1}", true);

@@ -13,14 +13,14 @@ namespace
 	typedef Patches::CustomPackets::PacketSender<VotingMessage> VotingMessagePacketSender;
 
 	std::shared_ptr<VotingMessagePacketSender> VotingPacketSender;
-	void ReceivedVotingMessage(Bungie::Network::Session *session, int peer, const VotingMessage &message);
+	void ReceivedVotingMessage(Blam::Network::Session *session, int peer, const VotingMessage &message);
 
 
 	// Packet handler for voting messages
 	class VotingMessagePacketHandler : public Patches::CustomPackets::PacketHandler<VotingMessage>
 	{
 	public:
-		void Serialize(Bungie::BitStream *stream, const VotingMessage *data) override
+		void Serialize(Blam::BitStream *stream, const VotingMessage *data) override
 		{
 			// Message type
 			stream->WriteUnsigned(static_cast<uint32_t>(data->Type), 0U, static_cast<uint32_t>(VotingMessageType::Count));
@@ -45,7 +45,7 @@ namespace
 			{
 				for (int i = 0; i < 5; i++)
 				{
-					stream->WriteUnsigned<uint8_t>(data->votes[i], 0, Bungie::Network::MaxPlayers);
+					stream->WriteUnsigned<uint8_t>(data->votes[i], 0, Blam::Network::MaxPlayers);
 				}
 			}
 
@@ -59,7 +59,7 @@ namespace
 				
 		}
 
-		bool Deserialize(Bungie::BitStream *stream, VotingMessage *data) override
+		bool Deserialize(Blam::BitStream *stream, VotingMessage *data) override
 		{
 			memset(data, 0, sizeof(*data));
 
@@ -88,7 +88,7 @@ namespace
 			{
 				for (int i = 0; i < 5; i++)
 				{
-					data->votes[i] = stream->ReadUnsigned<uint8_t>(0, Bungie::Network::MaxPlayers);
+					data->votes[i] = stream->ReadUnsigned<uint8_t>(0, Blam::Network::MaxPlayers);
 				}
 			}
 
@@ -104,9 +104,9 @@ namespace
 			return true;
 		}
 
-		void HandlePacket(Bungie::Network::ObserverChannel *sender, const VotingMessagePacket *packet) override
+		void HandlePacket(Blam::Network::ObserverChannel *sender, const VotingMessagePacket *packet) override
 		{
-			auto session = Bungie::Network::GetActiveSession();
+			auto session = Blam::Network::GetActiveSession();
 			if (!session)
 				return;
 
@@ -119,7 +119,7 @@ namespace
 	std::vector<std::shared_ptr<VotingMessageHandler>> votingMessageHandlers;
 
 	// Callback for when a message is received.
-	void ReceivedVotingMessage(Bungie::Network::Session *session, int peer, const VotingMessage &message)
+	void ReceivedVotingMessage(Blam::Network::Session *session, int peer, const VotingMessage &message)
 	{
 		//Vote messages will not be passed on to the message handler. 
 		if (message.Type == VotingMessageType::Vote && peer >= 0)
@@ -138,7 +138,7 @@ namespace
 	}
 
 	// Sends a voting message to a peer as a packet.
-	bool SendVotingMessagePacket(Bungie::Network::Session *session, int peer, const VotingMessage &message)
+	bool SendVotingMessagePacket(Blam::Network::Session *session, int peer, const VotingMessage &message)
 	{
 		if (peer < 0)
 			return false;
@@ -179,7 +179,7 @@ namespace Server::Voting
 	//Sends a voting message to all peers
 	bool BroadcastVotingMessage(VotingMessage &message)
 	{
-		auto session = Bungie::Network::GetActiveSession();
+		auto session = Blam::Network::GetActiveSession();
 		auto membership = &session->MembershipInfo;
 		for (int peer = membership->FindFirstPeer(); peer >= 0; peer = membership->FindNextPeer(peer))
 		{
@@ -192,14 +192,14 @@ namespace Server::Voting
 	//Sends a voting message to a specific peer only
 	bool SendVotingMessageToPeer(VotingMessage &message, int peer)
 	{
-		auto session = Bungie::Network::GetActiveSession();
+		auto session = Blam::Network::GetActiveSession();
 		return SendVotingMessagePacket(session, peer, message);
 	}
 
 	//To be called anytime you vote for something. Vote gets sent to the host. 
 	bool SendVoteToHost(const int vote)
 	{
-		auto session = Bungie::Network::GetActiveSession();
+		auto session = Blam::Network::GetActiveSession();
 		if (!session)
 			return false;
 

@@ -84,7 +84,7 @@ namespace
 
 	bool CommandSetUiPlayerModelPosition(const std::vector<std::string>& Arguments, std::string& returnInfo)
 	{
-		Bungie::Math::RealVector3D position;
+		Blam::Math::RealVector3D position;
 		if (Arguments.size() < 3 ||
 			!TryParseFloat(Arguments[0], &position.I) ||
 			!TryParseFloat(Arguments[1], &position.J) ||

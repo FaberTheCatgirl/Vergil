@@ -1,8 +1,8 @@
 #include "Patches\BottomlessClip.hpp"
 #include "Patch.hpp"
 #include "HaloOnline.hpp"
-#include "Bungie\BungieObjects.hpp"
-#include "Bungie\BungiePlayers.hpp"
+#include "Blam\BlamObjects.hpp"
+#include "Blam\BlamPlayers.hpp"
 
 #include "new\game\game.hpp"
 
@@ -41,25 +41,25 @@ namespace
 		if (forced)
 			return true;
 
-		if (playerIndex == -1 || !Bungie::game_get_current_engine())
+		if (playerIndex == -1 || !Blam::game_get_current_engine())
 			return false;
 
-		const auto player = Bungie::Players::GetPlayers().Get(playerIndex);
+		const auto player = Blam::Players::GetPlayers().Get(playerIndex);
 		return player && *(uint8_t*)((uint8_t*)player + 0x2DBA) == 3;
 	}
 
 	inline bool unit_has_bottomless_clip(uint32_t unitObjectIndex)
 	{
-		if (!Bungie::game_get_current_engine())
+		if (!Blam::game_get_current_engine())
 			return false;
 
-		auto unitObject = (uint8_t*)Bungie::Objects::Get(unitObjectIndex);
+		auto unitObject = (uint8_t*)Blam::Objects::Get(unitObjectIndex);
 		return unitObject && player_has_bottomless_clip(*(uint32_t*)(unitObject + 0x198));
 	}
 
 	bool player_has_infnite_ammo_hook(uint32_t playerIndex)
 	{
-		auto player = Bungie::Players::GetPlayers().Get(playerIndex);
+		auto player = Blam::Players::GetPlayers().Get(playerIndex);
 		auto infiniteAmmo = *(uint8_t*)((uint8_t*)player + 0x2DBA);
 		return player && (infiniteAmmo == 2 || infiniteAmmo == 3 || forced);
 	}
@@ -70,16 +70,16 @@ namespace
 
 		chud_build_weapon_hud_render_data(thisptr, weaponObjectIndex, a3, a4);
 
-		auto weaponObject = (uint8_t*)Bungie::Objects::Get(weaponObjectIndex);
+		auto weaponObject = (uint8_t*)Blam::Objects::Get(weaponObjectIndex);
 		if (!weaponObject)
 			return;
 
-		Bungie::Objects::ObjectBase *unitObject{ nullptr };
+		Blam::Objects::ObjectBase *unitObject{ nullptr };
 		auto unitObjectIndex = *(uint32_t*)(weaponObject + 0x184);
-		if (unitObjectIndex == -1 || !(unitObject = Bungie::Objects::Get(unitObjectIndex)))
+		if (unitObjectIndex == -1 || !(unitObject = Blam::Objects::Get(unitObjectIndex)))
 			return;
 
-		Bungie::Players::PlayerDatum *player{ nullptr };
+		Blam::Players::PlayerDatum *player{ nullptr };
 		auto  playerIndex = *(uint32_t*)((uint8_t*)unitObject + 0x198);
 
 		if (playerIndex != -1 && player_has_bottomless_clip(playerIndex))

@@ -1,19 +1,19 @@
 #include "Forge\PrematchCamera.hpp"
-#include "Bungie\Math\RealVector3D.hpp"
-#include "Bungie\BungieObjects.hpp"
-#include "Bungie\BungiePlayers.hpp"
+#include "Blam\Math\RealVector3D.hpp"
+#include "Blam\BlamObjects.hpp"
+#include "Blam\BlamPlayers.hpp"
 #include "Forge\ForgeUtil.hpp"
 
 namespace Forge::PrematchCamera
 {
-	using namespace Bungie::Math;
+	using namespace Blam::Math;
 
 	uint32_t FindCameraObject()
 	{
 		if (CAMERA_OBJECT_TAG_INDEX == -1)
 			return -1;
 
-		auto objects = Bungie::Objects::GetObjects();
+		auto objects = Blam::Objects::GetObjects();
 		for (auto it = objects.begin(); it != objects.end(); ++it)
 		{
 			if (it->Data->TagIndex == CAMERA_OBJECT_TAG_INDEX)
@@ -31,16 +31,16 @@ namespace Forge::PrematchCamera
 		if (CAMERA_OBJECT_TAG_INDEX == -1)
 			return;
 
-		Bungie::Players::PlayerDatum *player{ nullptr };
-		auto playerIndex = Bungie::Players::GetLocalPlayer(0);
-		if (playerIndex == Bungie::DatumHandle::Null || !(player = Bungie::Players::GetPlayers().Get(playerIndex)))
+		Blam::Players::PlayerDatum *player{ nullptr };
+		auto playerIndex = Blam::Players::GetLocalPlayer(0);
+		if (playerIndex == Blam::DatumHandle::Null || !(player = Blam::Players::GetPlayers().Get(playerIndex)))
 			return;
 
 		auto mapv = Forge::GetMapVariant();
 		if (!mapv)
 			return;
 
-		Bungie::Math::RealMatrix4x3 unitTransform;
+		Blam::Math::RealMatrix4x3 unitTransform;
 		Forge::GetObjectTransformationMatrix(player->SlaveUnit, &unitTransform);
 
 		auto cameraObjectIndex = FindCameraObject();

@@ -1,7 +1,7 @@
 #include <WS2tcpip.h>
 #include "Server\DedicatedServer.hpp"
 #include "Modules\ModuleBase.hpp"
-#include "Bungie\BungieNetwork.hpp"
+#include "Blam\BlamNetwork.hpp"
 
 namespace Server::DedicatedServer
 {
@@ -9,21 +9,21 @@ namespace Server::DedicatedServer
 
 	void Init()
 	{
-		Bungie::Network::SetLobbyType(Bungie::eLobbyTypeMultiplayer);
+		Blam::Network::SetLobbyType(Blam::eLobbyTypeMultiplayer);
 		needToSetMode = true;
 	}
 	void Tick()
 	{
 		if (!needToSetMode) {
-			if (Bungie::Network::GetLobbyType() != Bungie::eLobbyTypeMultiplayer) {
-				Bungie::Network::SetLobbyType(Bungie::eLobbyTypeMultiplayer);
+			if (Blam::Network::GetLobbyType() != Blam::eLobbyTypeMultiplayer) {
+				Blam::Network::SetLobbyType(Blam::eLobbyTypeMultiplayer);
 				needToSetMode = true;
 			}
 			return;
 		}
 
-		if (Bungie::Network::GetLobbyType() == Bungie::eLobbyTypeMultiplayer) {
-			if (Bungie::Network::SetNetworkMode(Bungie::eNetworkModeSystemLink)) {
+		if (Blam::Network::GetLobbyType() == Blam::eLobbyTypeMultiplayer) {
+			if (Blam::Network::SetNetworkMode(Blam::eNetworkModeSystemLink)) {
 				needToSetMode = false;
 			}
 		}

@@ -1,10 +1,10 @@
 #include "Forge\ForgeVolumes.hpp"
-#include "Bungie\BungieTime.hpp"
-#include "Bungie\Math\RealVector3D.hpp"
-#include "Bungie\BungieObjects.hpp"
-#include "Bungie\BungiePlayers.hpp"
-#include "Bungie\Tags\TagInstance.hpp"
-#include "Bungie\Tags\Game\Globals.hpp"
+#include "Blam\BlamTime.hpp"
+#include "Blam\Math\RealVector3D.hpp"
+#include "Blam\BlamObjects.hpp"
+#include "Blam\BlamPlayers.hpp"
+#include "Blam\Tags\TagInstance.hpp"
+#include "Blam\Tags\Game\Globals.hpp"
 #include "Modules\ModuleForge.hpp"
 #include "Patches\Core.hpp"
 #include "Forge\ForgeUtil.hpp"
@@ -12,7 +12,7 @@
 namespace
 {
 	using namespace Forge;
-	using namespace Bungie::Math;
+	using namespace Blam::Math;
 
 	const auto kMaxVolumes = 64;
 	const auto kScanInterval = 1.0f;
@@ -58,9 +58,9 @@ namespace
 		int field_1C;
 		__int16 ClusterIndex;
 		__int16 field_22;
-		Bungie::Math::RealVector3D ObjectPosition;
-		Bungie::Math::RealVector3D EpicenterDirection;
-		Bungie::Math::RealVector3D Direction;
+		Blam::Math::RealVector3D ObjectPosition;
+		Blam::Math::RealVector3D EpicenterDirection;
+		Blam::Math::RealVector3D Direction;
 		int Direction2;
 		int field_4C;
 		int field_50;
@@ -119,7 +119,7 @@ namespace Forge::Volumes
 
 			if (state.IsValid)
 			{
-				if (Bungie::Time::TicksToSeconds(state.TicksSinceLastScan++) > kScanInterval)
+				if (Blam::Time::TicksToSeconds(state.TicksSinceLastScan++) > kScanInterval)
 				{
 					state.TicksSinceLastScan = 0;
 					FindVolumes();
@@ -139,8 +139,8 @@ namespace Forge::Volumes
 namespace
 {
 	const auto objects_get_in_cluster = (int16_t(*)(int a1, int objectTypeMask, int16_t *pClusterIndex,
-		Bungie::Math::RealVector3D *center, float radius, uint32_t *clusterObjects, int16_t maxObjects))(0x00B35B60);
-	const auto zone_intersect_point = (bool(*)(Bungie::Math::RealVector3D *point, ZoneShape *zone))(0x00BA11F0);
+		Blam::Math::RealVector3D *center, float radius, uint32_t *clusterObjects, int16_t maxObjects))(0x00B35B60);
+	const auto zone_intersect_point = (bool(*)(Blam::Math::RealVector3D *point, ZoneShape *zone))(0x00BA11F0);
 	const auto object_get_world_poisition = (void(*)(uint32_t objectIndex, RealVector3D *position))(0x00B2E5A0);
 	const auto multiplayer_globals_get_grenade_index = (int(*)(int tagIndex))(0x0052D1A0);
 	const auto weapons_get_multiplayer_weapon_type = (int16_t(*)(uint32_t objectIndex))(0x00B62DB0);
@@ -153,7 +153,7 @@ namespace
 
 		if (unitObjectIndex == -1)
 			return;
-		auto volumeObject = Bungie::Objects::Get(killVolume.ObjectIndex);
+		auto volumeObject = Blam::Objects::Get(killVolume.ObjectIndex);
 		if (!volumeObject)
 			return;
 		auto mpProperties = volumeObject->GetMultiplayerProperties();
@@ -170,7 +170,7 @@ namespace
 			damageCauseType = 1;
 			break;
 		case Forge::ForgeKillVolumeProperties::eKillVolumeDamageCause_Falling:
-			auto matg = *(Bungie::Tags::Game::Globals**)0x022AAEB8;
+			auto matg = *(Blam::Tags::Game::Globals**)0x022AAEB8;
 			damageEffectTagIndex = matg->PlayerFallingDamage.Elements[0].DistanceDamage.TagIndex;
 			damageCauseType = 2;
 			break;
@@ -202,9 +202,9 @@ namespace
 	void UpdateKillVolume(ForgeVolume &volume)
 	{
 		const auto ZoneShape__ContainsPlayer = (bool(__thiscall *)(void *thisptr, int playerIndex))(0x00765C80);
-		auto players = Bungie::Players::GetPlayers();
+		auto players = Blam::Players::GetPlayers();
 
-		auto volumeObject = Bungie::Objects::Get(volume.ObjectIndex);
+		auto volumeObject = Blam::Objects::Get(volume.ObjectIndex);
 		if (!volumeObject)
 			return;
 		auto mpProperties = volumeObject->GetMultiplayerProperties();
@@ -213,9 +213,9 @@ namespace
 
 		auto properties = (Forge::ForgeKillVolumeProperties*)&mpProperties->TeleporterChannel;
 
-		auto objectTypeMask = 1 << Bungie::Objects::eObjectTypeBiped;
+		auto objectTypeMask = 1 << Blam::Objects::eObjectTypeBiped;
 		if (properties->Flags & Forge::ForgeKillVolumeProperties::eKillVolumeFlags_DestroyVehicles)
-			objectTypeMask |= (1 << Bungie::Objects::eObjectTypeVehicle);
+			objectTypeMask |= (1 << Blam::Objects::eObjectTypeVehicle);
 
 		uint32_t clusterObjects[128];
 		auto clusterObjectCount = objects_get_in_cluster(0, objectTypeMask, &volumeObject->ClusterIndex,
@@ -223,39 +223,39 @@ namespace
 
 		for (auto i = 0; i < clusterObjectCount; i++)
 		{
-			auto clusterObject = Bungie::Objects::Get(clusterObjects[i]);
+			auto clusterObject = Blam::Objects::Get(clusterObjects[i]);
 			if (!clusterObject)
 				return;
 
 			auto objectType = *((uint8_t*)clusterObject + 0x9A);
 
-			if (objectType == Bungie::Objects::eObjectTypeBiped)
+			if (objectType == Blam::Objects::eObjectTypeBiped)
 			{
 				auto playerIndex = *(uint32_t*)((uint8_t*)clusterObject + 0x198);
-				Bungie::Players::PlayerDatum *player;
-				if (playerIndex != -1 && (player = Bungie::Players::GetPlayers().Get(playerIndex))
-					&& player->SlaveUnit != Bungie::DatumHandle::Null
+				Blam::Players::PlayerDatum *player;
+				if (playerIndex != -1 && (player = Blam::Players::GetPlayers().Get(playerIndex))
+					&& player->SlaveUnit != Blam::DatumHandle::Null
 					&& ZoneShape__ContainsPlayer(&volume.Zone, playerIndex))
 				{
 					if (volume.TeamIndex == player->Properties.TeamIndex || volume.TeamIndex == 8)
 						ApplyUnitDamage(volume, player->SlaveUnit);
 				}
 			}
-			else if (objectType == Bungie::Objects::eObjectTypeVehicle)
+			else if (objectType == Blam::Objects::eObjectTypeVehicle)
 			{
-				Bungie::Math::RealVector3D position;
+				Blam::Math::RealVector3D position;
 				object_get_world_poisition(clusterObjects[i], &position);
 				if (!zone_intersect_point(&position, &volume.Zone))
 					continue;
 
 				auto driverUnitObjectIndex = *(uint32_t*)((uint8_t*)clusterObject + 0x32c);
-				Bungie::Objects::ObjectBase *driverUnitObject;
-				if (driverUnitObjectIndex != -1 && (driverUnitObject = Bungie::Objects::Get(driverUnitObjectIndex)))
+				Blam::Objects::ObjectBase *driverUnitObject;
+				if (driverUnitObjectIndex != -1 && (driverUnitObject = Blam::Objects::Get(driverUnitObjectIndex)))
 				{
 					auto playerIndex = *(uint32_t*)((uint8_t*)driverUnitObject + 0x198);
-					Bungie::Players::PlayerDatum *player;
+					Blam::Players::PlayerDatum *player;
 					if (playerIndex != -1 && (player = players.Get(playerIndex))
-						&& player->SlaveUnit != Bungie::DatumHandle::Null)
+						&& player->SlaveUnit != Blam::DatumHandle::Null)
 					{
 						if (volume.TeamIndex != player->Properties.TeamIndex && volume.TeamIndex != 8)
 							continue;
@@ -269,16 +269,16 @@ namespace
 
 	bool ShouldGarbageCollectObject(uint32_t objectIndex, ForgeVolume &volume)
 	{
-		auto volumeObject = Bungie::Objects::Get(volume.ObjectIndex);
+		auto volumeObject = Blam::Objects::Get(volume.ObjectIndex);
 		if (!volumeObject)
 			return false;
 
 		auto garbageVolumeProperties = (Forge::ForgeGarbageVolumeProperties*)(&volumeObject->GetMultiplayerProperties()->TeleporterChannel);
 
-		auto object = Bungie::Objects::Get(objectIndex);
+		auto object = Blam::Objects::Get(objectIndex);
 		auto objectType = *((uint8_t*)object + 0x9A);
 
-		if (objectType == Bungie::Objects::eObjectTypeVehicle)
+		if (objectType == Blam::Objects::eObjectTypeVehicle)
 		{
 			if (!(garbageVolumeProperties->Flags & Forge::ForgeGarbageVolumeProperties::eGarbageVolumeFlags_CollectVehicles))
 				return false;
@@ -286,7 +286,7 @@ namespace
 			auto driverObjectIndex = *(uint32_t*)((uint8_t*)object + 0x32C);
 			return driverObjectIndex == -1;
 		}
-		if (objectType == Bungie::Objects::eObjectTypeWeapon)
+		if (objectType == Blam::Objects::eObjectTypeWeapon)
 		{
 			auto mpWeaponType = weapons_get_multiplayer_weapon_type(objectIndex);
 
@@ -303,7 +303,7 @@ namespace
 				return garbageVolumeProperties->Flags & Forge::ForgeGarbageVolumeProperties::eGarbageVolumeFlags_CollectWeapons;
 			}
 		}
-		else if (objectType == Bungie::Objects::eObjectTypeBiped)
+		else if (objectType == Blam::Objects::eObjectTypeBiped)
 		{
 			if (!(garbageVolumeProperties->Flags & Forge::ForgeGarbageVolumeProperties::eGarbageVolumeFlags_CollectDeadBipeds))
 				return false;
@@ -311,12 +311,12 @@ namespace
 			if (object->TagIndex == 0x00000C13)
 				return false;
 
-			for (auto player : Bungie::Players::GetPlayers())
-				if (player.SlaveUnit == Bungie::DatumHandle(objectIndex))
+			for (auto player : Blam::Players::GetPlayers())
+				if (player.SlaveUnit == Blam::DatumHandle(objectIndex))
 					return false;
 			return true;
 		}
-		else if (objectType == Bungie::Objects::eObjectTypeEquipment)
+		else if (objectType == Blam::Objects::eObjectTypeEquipment)
 		{
 			auto isGrenade = multiplayer_globals_get_grenade_index(object->TagIndex) != -1;
 			if (isGrenade)
@@ -394,11 +394,11 @@ namespace
 	{
 		const auto objects_dispose = (void(*)(uint32_t objectIndex))(0x00B2CD10);
 
-		auto objectHeader = Bungie::Objects::GetObjects().Get(objectIndex);
+		auto objectHeader = Blam::Objects::GetObjects().Get(objectIndex);
 		if (!objectHeader)
 			return;
 
-		if (objectHeader->Type == Bungie::Objects::eObjectTypeWeapon)
+		if (objectHeader->Type == Blam::Objects::eObjectTypeWeapon)
 		{
 			auto mpWeaponType = weapons_get_multiplayer_weapon_type(objectIndex);
 
@@ -415,12 +415,12 @@ namespace
 
 	void UpdateGarbageCollectionVolume(ForgeVolume &volume)
 	{
-		if (Bungie::Time::TicksToSeconds(volume.Data.GarbageVolume.CollectionTicks++) < kGarbageCollectionDelaySeconds)
+		if (Blam::Time::TicksToSeconds(volume.Data.GarbageVolume.CollectionTicks++) < kGarbageCollectionDelaySeconds)
 			return;
 
 		volume.Data.GarbageVolume.CollectionTicks = 0;
 
-		auto volumeObject = Bungie::Objects::Get(volume.ObjectIndex);
+		auto volumeObject = Blam::Objects::Get(volume.ObjectIndex);
 		if (!volumeObject)
 			return;
 
@@ -433,21 +433,21 @@ namespace
 		auto interval = kGarbageCollectionIntervals[intervalIndex];
 
 
-		const auto collectionMask = (1 << Bungie::Objects::eObjectTypeWeapon)
-			| (1 << Bungie::Objects::eObjectTypeVehicle)
-			| (1 << Bungie::Objects::eObjectTypeEquipment)
-			| (1 << Bungie::Objects::eObjectTypeBiped);
+		const auto collectionMask = (1 << Blam::Objects::eObjectTypeWeapon)
+			| (1 << Blam::Objects::eObjectTypeVehicle)
+			| (1 << Blam::Objects::eObjectTypeEquipment)
+			| (1 << Blam::Objects::eObjectTypeBiped);
 
 		uint32_t clusterObjects[128];
 
 		auto clusterObjectCount = objects_get_in_cluster(0, collectionMask, &volumeObject->ClusterIndex,
 			&volumeObject->Center, std::abs(volume.Zone.BoundingRadius), clusterObjects, 128);
 
-		auto currentTime = Bungie::Time::GetGameTicks();
+		auto currentTime = Blam::Time::GetGameTicks();
 		for (auto i = 0; i < clusterObjectCount; i++)
 		{
 			auto clusterObjectIndex = clusterObjects[i];
-			auto clusterObjectHeader = Bungie::Objects::GetObjects().Get(clusterObjectIndex);
+			auto clusterObjectHeader = Blam::Objects::GetObjects().Get(clusterObjectIndex);
 			if (!clusterObjectHeader)
 				continue;
 			
@@ -456,19 +456,19 @@ namespace
 			uint32_t lastActiveTicks = 0;
 			switch (clusterObjectHeader->Type)
 			{	
-			case Bungie::Objects::eObjectTypeVehicle:
-			case  Bungie::Objects::eObjectTypeBiped:
+			case Blam::Objects::eObjectTypeVehicle:
+			case  Blam::Objects::eObjectTypeBiped:
 				lastActiveTicks = *(uint32_t*)((uint8_t*)clusterObject + 0x4A8);
 				break;
-			case Bungie::Objects::eObjectTypeEquipment:
+			case Blam::Objects::eObjectTypeEquipment:
 				lastActiveTicks = *(uint32_t*)((uint8_t*)clusterObject + 0x180);
 				break;
-			case Bungie::Objects::eObjectTypeWeapon:
+			case Blam::Objects::eObjectTypeWeapon:
 				lastActiveTicks = *(uint32_t*)((uint8_t*)clusterObject + 0x12c);
 				break;
 			}
 
-			if (lastActiveTicks != -1 && Bungie::Time::TicksToSeconds((currentTime - lastActiveTicks)) > interval)
+			if (lastActiveTicks != -1 && Blam::Time::TicksToSeconds((currentTime - lastActiveTicks)) > interval)
 			{
 				if (!zone_intersect_point(&clusterObject->Center, &volume.Zone))
 					continue;
@@ -499,10 +499,10 @@ namespace
 
 	void FindVolumes()
 	{
-		auto objects = Bungie::Objects::GetObjects();
+		auto objects = Blam::Objects::GetObjects();
 		for (auto it = objects.begin(); it != objects.end(); ++it)
 		{
-			if (it->Type != Bungie::Objects::eObjectTypeCrate || !it->Data)
+			if (it->Type != Blam::Objects::eObjectTypeCrate || !it->Data)
 				continue;
 			auto mpProperties = it->Data->GetMultiplayerProperties();
 			if (!mpProperties)
@@ -549,7 +549,7 @@ namespace
 			if (volume.Type == eVolumeType_Disabled || volume.ObjectIndex == -1)
 				continue;
 
-			auto volumeObject = Bungie::Objects::Get(volume.ObjectIndex);
+			auto volumeObject = Blam::Objects::Get(volume.ObjectIndex);
 			if (!volumeObject)
 			{
 				ResetVolume(i);
@@ -580,11 +580,11 @@ namespace
 			if (volume.Type == eVolumeType_Disabled)
 				continue;
 
-			Bungie::Objects::ObjectBase *volumeObject;
-			if (volume.ObjectIndex == -1 || !(volumeObject = Bungie::Objects::Get(volume.ObjectIndex)))
+			Blam::Objects::ObjectBase *volumeObject;
+			if (volume.ObjectIndex == -1 || !(volumeObject = Blam::Objects::Get(volume.ObjectIndex)))
 				return;
 
-			if (!Forge::GetEditorModeState(Bungie::Players::GetLocalPlayer(0), nullptr, nullptr)
+			if (!Forge::GetEditorModeState(Blam::Players::GetLocalPlayer(0), nullptr, nullptr)
 				&& !(volume.Flags & eVolumeFlags_AlwaysVisible)
 				&& !Modules::ModuleForge::Instance().VarShowInvisibles->ValueInt)
 				continue;

@@ -12,23 +12,23 @@
 #include "Patches\Core.hpp"
 #include "Patches\Input.hpp"
 #include "Patches\Events.hpp"
-#include "Bungie\BungieEvents.hpp"
-#include "Bungie\BungieInput.hpp"
-#include "Bungie\BungieNetwork.hpp"
-#include "Bungie\BungieObjects.hpp"
-#include "Bungie\BungieTime.hpp"
-#include "Bungie\Tags\TagInstance.hpp"
-#include "Bungie\Tags\UI\ChudGlobalsDefinition.hpp"
-#include "Bungie\Tags\UI\ChudDefinition.hpp"
-#include "Bungie\Tags\Globals\CacheFileGlobalTags.hpp"
-#include "Bungie\Tags\Game\Globals.hpp"
-#include "Bungie\\Tags\Objects\Biped.hpp"
-#include "Bungie\Tags\Items\DefinitionWeapon.hpp"
-#include "Bungie\Tags\Globals\CacheFileGlobalTags.hpp"
-#include "Bungie\Tags\Game\Globals.hpp"
-#include "Bungie\Tags\Game\MultiplayerGlobals.hpp"
-#include "Bungie\Tags\UI\GfxTexturesList.hpp"
-#include "Bungie\Tags\UI\MultilingualUnicodeStringList.hpp"
+#include "Blam\BlamEvents.hpp"
+#include "Blam\BlamInput.hpp"
+#include "Blam\BlamNetwork.hpp"
+#include "Blam\BlamObjects.hpp"
+#include "Blam\BlamTime.hpp"
+#include "Blam\Tags\TagInstance.hpp"
+#include "Blam\Tags\UI\ChudGlobalsDefinition.hpp"
+#include "Blam\Tags\UI\ChudDefinition.hpp"
+#include "Blam\Tags\Globals\CacheFileGlobalTags.hpp"
+#include "Blam\Tags\Game\Globals.hpp"
+#include "Blam\\Tags\Objects\Biped.hpp"
+#include "Blam\Tags\Items\DefinitionWeapon.hpp"
+#include "Blam\Tags\Globals\CacheFileGlobalTags.hpp"
+#include "Blam\Tags\Game\Globals.hpp"
+#include "Blam\Tags\Game\MultiplayerGlobals.hpp"
+#include "Blam\Tags\UI\GfxTexturesList.hpp"
+#include "Blam\Tags\UI\MultilingualUnicodeStringList.hpp"
 #include "Modules\ModuleGraphics.hpp"
 #include "Modules\ModuleInput.hpp"
 #include "Modules\ModuleGame.hpp"
@@ -48,7 +48,7 @@ namespace
 {
 	void __fastcall UI_MenuUpdateHook(void* a1, int unused, int menuIdToLoad);
 
-	void OnEvent(Bungie::DatumHandle player, const Bungie::Events::Event *event, const Bungie::Events::EventDefinition *definition);
+	void OnEvent(Blam::DatumHandle player, const Blam::Events::Event *event, const Blam::Events::EventDefinition *definition);
 
 	int UI_ShowHalo3PauseMenu(uint32_t a1, uint32_t a2, uint32_t a3, uint32_t a4, uint32_t a5);
 	void UI_EndGame();
@@ -66,7 +66,7 @@ namespace
 	void UI_GetHUDGlobalsIndexHook();
 	void __fastcall UI_GameVariantSavePromptFix(void *thisptr, void *unused, int a2);
 
-	void __fastcall c_main_menu_screen_widget_item_select_hook(void* thisptr, void* unused, int a2, Bungie::Text::StringID a3, void* a4, void* a5);
+	void __fastcall c_main_menu_screen_widget_item_select_hook(void* thisptr, void* unused, int a2, Blam::Text::StringID a3, void* a4, void* a5);
 	void __fastcall c_start_menu_pane_screen_widget__handle_spinner_chosen_hook(void *thisptr, void *unused, uint8_t *widget);
 	void __fastcall c_ui_view_draw_hook(void* thisptr, void* unused);
 	void __fastcall c_gui_bitmap_widget_update_render_data_hook(void* thisptr, void* unused, void* renderData, int a3, int a4, int a5, int a6, int a7);
@@ -364,10 +364,10 @@ namespace Patches::Ui
 	}
 
 	const auto UI_Alloc = reinterpret_cast<void *(__cdecl *)(int32_t)>(0xAB4ED0);
-	const auto UI_OpenDialogById = reinterpret_cast<void *(__thiscall *)(void *, Bungie::Text::StringID, int32_t, int32_t, Bungie::Text::StringID)>(0xA92780);
+	const auto UI_OpenDialogById = reinterpret_cast<void *(__thiscall *)(void *, Blam::Text::StringID, int32_t, int32_t, Blam::Text::StringID)>(0xA92780);
 	const auto UI_PostMessage = reinterpret_cast<int(*)(void *)>(0xA93450);
 
-	void *ShowDialog(const Bungie::Text::StringID p_DialogID, const int32_t p_Arg1, const int32_t p_Flags, const Bungie::Text::StringID p_ParentID)
+	void *ShowDialog(const Blam::Text::StringID p_DialogID, const int32_t p_Arg1, const int32_t p_Flags, const Blam::Text::StringID p_ParentID)
 	{
 		auto *s_UIData = UI_Alloc(0x40);
 
@@ -398,7 +398,7 @@ namespace Patches::Ui
 	bool isPttSoundPlaying;
 	void TogglePTTSound(bool enabled)
 	{
-		if (Bungie::game_is_map_loading() || Bungie::game_is_mainmenu())
+		if (Blam::game_is_map_loading() || Blam::game_is_mainmenu())
 			return;
 
 		if (Modules::ModuleVoIP::Instance().VarPTTSoundEnabled->ValueInt == 0)
@@ -411,7 +411,7 @@ namespace Patches::Ui
 		static auto Sound_LoopingSound_Start = (void(*)(uint32_t sndTagIndex, int a2, int a3, int a4, char a5))(0x5DC530);
 
 		//Make sure the sound exists before playing
-		if (Bungie::Tags::TagInstance::IsLoaded('lsnd', pttLsndIndex))
+		if (Blam::Tags::TagInstance::IsLoaded('lsnd', pttLsndIndex))
 		{
 			if (enabled)
 				Sound_LoopingSound_Start(pttLsndIndex, -1, 1065353216, 0, 0);
@@ -464,9 +464,9 @@ namespace Patches::Ui
 			if (!tagsInitiallyLoaded)
 				return;
 
-			using Bungie::Tags::TagInstance;
-			using Bungie::Tags::UI::ChudGlobalsDefinition;
-			using Bungie::Tags::UI::ChudDefinition;
+			using Blam::Tags::TagInstance;
+			using Blam::Tags::UI::ChudGlobalsDefinition;
+			using Blam::Tags::UI::ChudDefinition;
 
 			if (!TagInstance::IsLoaded('chgd', chgdIndex))
 				return;
@@ -475,7 +475,7 @@ namespace Patches::Ui
 
 			auto *gameResolution = reinterpret_cast<int *>(0x19106C0);
 			auto *globals = TagInstance(chgdIndex).GetDefinition<ChudGlobalsDefinition>();
-			auto *spartanChud = Bungie::Tags::TagInstance(spartanChdtIndex).GetDefinition<Bungie::Tags::UI::ChudDefinition>();
+			auto *spartanChud = Blam::Tags::TagInstance(spartanChdtIndex).GetDefinition<Blam::Tags::UI::ChudDefinition>();
 			if (!globals || !spartanChud || globals->HudGlobals.Count == 0 || globals->HudGlobals[0].HudAttributes.Count == 0)
 				return;
 
@@ -586,12 +586,12 @@ namespace
 {
 	void FindUiTagIndices()
 	{
-		using Bungie::Tags::Globals::CacheFileGlobalTags;
-		using Bungie::Tags::Game::Globals;
-		using Bungie::Tags::TagInstance;
-		using Bungie::Tags::Objects::Biped;
-		using Bungie::Tags::UI::ChudGlobalsDefinition;
-		using Bungie::Tags::Game::MultiplayerGlobals;
+		using Blam::Tags::Globals::CacheFileGlobalTags;
+		using Blam::Tags::Game::Globals;
+		using Blam::Tags::TagInstance;
+		using Blam::Tags::Objects::Biped;
+		using Blam::Tags::UI::ChudGlobalsDefinition;
+		using Blam::Tags::Game::MultiplayerGlobals;
 
 		auto cfgtInstances = TagInstance::GetInstancesInGroup('cfgt');
 		for (auto &cfgtInstance : cfgtInstances)
@@ -690,8 +690,8 @@ namespace
 
 	void FindMapImages()
 	{
-		using Bungie::Tags::TagInstance;
-		using Bungie::Tags::UI::GfxTexturesList;
+		using Blam::Tags::TagInstance;
+		using Blam::Tags::UI::GfxTexturesList;
 
 		auto gfxtInstances = TagInstance::GetInstancesInGroup('gfxt');
 		for (auto &gfxtInstance : gfxtInstances)
@@ -733,13 +733,13 @@ namespace
 
 	void FindHUDDistortionTagData()
 	{
-		using Bungie::Tags::UI::ChudGlobalsDefinition;
-		using Bungie::Tags::TagInstance;
+		using Blam::Tags::UI::ChudGlobalsDefinition;
+		using Blam::Tags::TagInstance;
 
 		if (!TagInstance::IsLoaded('chgd', chgdIndex))
 			return;
 
-		auto *chgd = Bungie::Tags::TagInstance(chgdIndex).GetDefinition<ChudGlobalsDefinition>();
+		auto *chgd = Blam::Tags::TagInstance(chgdIndex).GetDefinition<ChudGlobalsDefinition>();
 
 		for each (ChudGlobalsDefinition::HudGlobal hudGlobal in chgd->HudGlobals)
 		{
@@ -754,9 +754,9 @@ namespace
 
 	void FindHUDResolutionTagData()
 	{
-		using Bungie::Tags::TagInstance;
-		using Bungie::Tags::UI::ChudGlobalsDefinition;
-		using Bungie::Tags::UI::ChudDefinition;
+		using Blam::Tags::TagInstance;
+		using Blam::Tags::UI::ChudGlobalsDefinition;
+		using Blam::Tags::UI::ChudDefinition;
 
 		if (!TagInstance::IsLoaded('chgd', chgdIndex)) // Chud Globals
 			return;
@@ -768,9 +768,9 @@ namespace
 			//return;
 
 		auto *globals = TagInstance(chgdIndex).GetDefinition<ChudGlobalsDefinition>();
-		auto *spartanChud = Bungie::Tags::TagInstance(spartanChdtIndex).GetDefinition<Bungie::Tags::UI::ChudDefinition>();
-		auto *eliteChud = Bungie::Tags::TagInstance(eliteChdtIndex).GetDefinition<Bungie::Tags::UI::ChudDefinition>();
-		auto* odstChud = Bungie::Tags::TagInstance(odstChdtIndex).GetDefinition < Bungie::Tags::UI::ChudDefinition>();
+		auto *spartanChud = Blam::Tags::TagInstance(spartanChdtIndex).GetDefinition<Blam::Tags::UI::ChudDefinition>();
+		auto *eliteChud = Blam::Tags::TagInstance(eliteChdtIndex).GetDefinition<Blam::Tags::UI::ChudDefinition>();
+		auto* odstChud = Blam::Tags::TagInstance(odstChdtIndex).GetDefinition < Blam::Tags::UI::ChudDefinition>();
 
 		// Store initial HUD resolution values the first time the resolution is changed.
 		HUDResolutionWidth = globals->HudGlobals[0].HudAttributes[0].ResolutionWidth;
@@ -796,14 +796,14 @@ namespace
 		if (enabled == lastDistortionEnabledValue)
 			return;
 
-		using Bungie::Tags::UI::ChudGlobalsDefinition;
-		using Bungie::Tags::TagInstance;
+		using Blam::Tags::UI::ChudGlobalsDefinition;
+		using Blam::Tags::TagInstance;
 
 		//Return if the tag cant be found, happens during loading.
 		if (!TagInstance::IsLoaded('chgd', chgdIndex))
 			return;
 
-		auto *chgd = Bungie::Tags::TagInstance(chgdIndex).GetDefinition<ChudGlobalsDefinition>();
+		auto *chgd = Blam::Tags::TagInstance(chgdIndex).GetDefinition<ChudGlobalsDefinition>();
 
 		for (size_t hudGlobalsIndex = 0; hudGlobalsIndex < chgd->HudGlobals.Count; hudGlobalsIndex++)
 		{
@@ -857,27 +857,27 @@ namespace
 
 	void UI_EndGame()
 	{
-		auto session = Bungie::Network::GetActiveSession();
+		auto session = Blam::Network::GetActiveSession();
 		if (!session || !session->IsEstablished())
 			return;
 		if (session->IsHost())
-			Bungie::Network::EndGame();
+			Blam::Network::EndGame();
 		else
-			Bungie::Network::LeaveGame();
+			Blam::Network::LeaveGame();
 	}
 
 	char __fastcall UI_Forge_ButtonPressHandlerHook(void* a1, int unused, uint8_t* controllerStruct)
 	{
 		uint32_t btnCode = *(uint32_t*)(controllerStruct + 0x1C);
 
-		if (btnCode == Bungie::Input::eUiButtonCodeLeft || btnCode == Bungie::Input::eUiButtonCodeRight ||
-			btnCode == Bungie::Input::eUiButtonCodeDpadLeft || btnCode == Bungie::Input::eUiButtonCodeDpadRight)
+		if (btnCode == Blam::Input::eUiButtonCodeLeft || btnCode == Blam::Input::eUiButtonCodeRight ||
+			btnCode == Blam::Input::eUiButtonCodeDpadLeft || btnCode == Blam::Input::eUiButtonCodeDpadRight)
 		{
-			if (btnCode == Bungie::Input::eUiButtonCodeLeft || btnCode == Bungie::Input::eUiButtonCodeDpadLeft) // analog left / arrow key left
-				*(uint32_t*)(controllerStruct + 0x1C) = Bungie::Input::eUiButtonCodeLB;
+			if (btnCode == Blam::Input::eUiButtonCodeLeft || btnCode == Blam::Input::eUiButtonCodeDpadLeft) // analog left / arrow key left
+				*(uint32_t*)(controllerStruct + 0x1C) = Blam::Input::eUiButtonCodeLB;
 
-			if (btnCode == Bungie::Input::eUiButtonCodeRight || btnCode == Bungie::Input::eUiButtonCodeDpadRight) // analog right / arrow key right
-				*(uint32_t*)(controllerStruct + 0x1C) = Bungie::Input::eUiButtonCodeRB;
+			if (btnCode == Blam::Input::eUiButtonCodeRight || btnCode == Blam::Input::eUiButtonCodeDpadRight) // analog right / arrow key right
+				*(uint32_t*)(controllerStruct + 0x1C) = Blam::Input::eUiButtonCodeRB;
 		}
 
 		typedef char(__thiscall *UI_Forge_ButtonPressHandler)(void* a1, void* controllerStruct);
@@ -1005,7 +1005,7 @@ namespace
 		}
 
 
-		if (!Bungie::Tags::TagInstance::IsLoaded('bitm', bitmapIndex))
+		if (!Blam::Tags::TagInstance::IsLoaded('bitm', bitmapIndex))
 			return;
 
 		*(uint32_t*)((uint8_t*)renderData + 0x2C) = bitmapIndex; // bitmap tag index
@@ -1052,9 +1052,9 @@ namespace
 	{
 		auto isUsingController = *(bool*)0x0244DE98;
 
-		if (isUsingController && Bungie::Input::GetActionState(Bungie::Input::eGameActionUiB)->Ticks == 1) //reset desired team after cancel
+		if (isUsingController && Blam::Input::GetActionState(Blam::Input::eGameActionUiB)->Ticks == 1) //reset desired team after cancel
 			localDesiredTeam = -1;
-		else if (Bungie::Input::GetKeyTicks(Bungie::Input::KeyCode::eKeyCodeB, Bungie::Input::InputType::eInputTypeGame) == 1) //kbm
+		else if (Blam::Input::GetKeyTicks(Blam::Input::KeyCode::eKeyCodeB, Blam::Input::InputType::eInputTypeGame) == 1) //kbm
 			localDesiredTeam = -1;
 	}
 
@@ -1096,7 +1096,7 @@ namespace
 		// Get whether teams are enabled by querying the session parameter
 		// TODO: Is there a better way of doing this? The code that H3E uses doesn't seem to work anymore...
 		static auto teamsEnabled = false; // This is static so that last value of this can be reused if the session closes
-		auto session = Bungie::Network::GetActiveSession();
+		auto session = Blam::Network::GetActiveSession();
 		if (session && session->IsEstablished())
 			teamsEnabled = session->HasTeams();
 
@@ -1190,11 +1190,11 @@ namespace
 
 		if (action->Type != 9 && action->Type != 1)
 			return false;
-		auto actionWeapObject = Bungie::Objects::Get(action->ObjectIndex);
+		auto actionWeapObject = Blam::Objects::Get(action->ObjectIndex);
 		if (!actionWeapObject)
 			return false;
 
-		auto actionWeapDef = Bungie::Tags::TagInstance(actionWeapObject->TagIndex).GetDefinition<Bungie::Tags::Items::Weapon>();
+		auto actionWeapDef = Blam::Tags::TagInstance(actionWeapObject->TagIndex).GetDefinition<Blam::Tags::Items::Weapon>();
 
 		if (action->Flags & 1)
 			HUD_DisplayHUDMessage(playerMappingIndex, actionWeapDef->Item.PickupMessage, -1, 0);
@@ -1223,7 +1223,7 @@ namespace
 
 	bool __cdecl GetBoundMouseButtonName(int code, wchar_t* buff)
 	{
-		using namespace Bungie::Input;
+		using namespace Blam::Input;
 
 		static auto GameActionFromUnicodeCode = (GameAction(__cdecl *)(int code))(0xABD240);
 
@@ -1273,7 +1273,7 @@ namespace
 		}
 	}
 
-	void __fastcall c_main_menu_screen_widget_item_select_hook(void* thisptr, void* unused, int a2, Bungie::Text::StringID screenName, void* a4, void* a5)
+	void __fastcall c_main_menu_screen_widget_item_select_hook(void* thisptr, void* unused, int a2, Blam::Text::StringID screenName, void* a4, void* a5)
 	{
 		static const auto c_main_menu_screen_widget_item_select = (void(__thiscall*)(void* thisptr, int a2, int a3, void* dataSource, void* a5))0xAE77D0;
 
@@ -1328,8 +1328,8 @@ namespace
 		if (!playerRepresentation)
 			return 0;
 
-		using Bungie::Tags::UI::ChudGlobalsDefinition;
-		auto *chgd = Bungie::Tags::TagInstance(chgdIndex).GetDefinition<ChudGlobalsDefinition>();
+		using Blam::Tags::UI::ChudGlobalsDefinition;
+		auto *chgd = Blam::Tags::TagInstance(chgdIndex).GetDefinition<ChudGlobalsDefinition>();
 
 		if (chudIndex > 0 && chudIndex <= chgd->HudGlobals.Count)
 			return chudIndex - 1;
@@ -1448,11 +1448,11 @@ namespace
 	//All values in this bitfield are broken.
 	int GetBrokenChudStateFlags2Values()
 	{
-		using Bungie::Players::PlayerDatum;
+		using Blam::Players::PlayerDatum;
 
 		auto sub_53A6F0 = (void*(*)(uint32_t))(0x53A6F0);
 
-		void* playerRepresentation = sub_53A6F0(Bungie::Players::GetLocalPlayer(0).Index);
+		void* playerRepresentation = sub_53A6F0(Blam::Players::GetLocalPlayer(0).Index);
 
 		auto nameId = *(uint32_t*)playerRepresentation;
 		switch (nameId)
@@ -1486,7 +1486,7 @@ namespace
 				}
 				else
 				{
-					if (Bungie::Input::GetActionState(Bungie::Input::eGameActionVoiceChat)->Ticks > 0)
+					if (Blam::Input::GetActionState(Blam::Input::eGameActionVoiceChat)->Ticks > 0)
 						flags |= 0x400; //talking
 					else
 					{
@@ -1531,7 +1531,7 @@ namespace
 				}
 				else
 				{
-					if (Bungie::Input::GetActionState(Bungie::Input::eGameActionVoiceChat)->Ticks > 0)
+					if (Blam::Input::GetActionState(Blam::Input::eGameActionVoiceChat)->Ticks > 0)
 						flags |= 0x400; //Bit10
 				}
 			}
@@ -1545,15 +1545,15 @@ namespace
 	{
 		int flags;
 
-		using ObjectArray = Bungie::DataArray<Bungie::Objects::ObjectHeader>;
-		using Bungie::Players::PlayerDatum;
+		using ObjectArray = Blam::DataArray<Blam::Objects::ObjectHeader>;
+		using Blam::Players::PlayerDatum;
 
 		auto objectsPtr = (ObjectArray**)HaloOnline::GetMainTls(0x448);
 
 		if (!objectsPtr)
 			return 0;
 
-		PlayerDatum *playerDatum = Bungie::Players::GetPlayers().Get(Bungie::Players::GetLocalPlayer(0));
+		PlayerDatum *playerDatum = Blam::Players::GetPlayers().Get(Blam::Players::GetLocalPlayer(0));
 
 		auto unitObjectDatum = (*objectsPtr)->Get(playerDatum->SlaveUnit);
 		auto unitObject = unitObjectDatum->Data;
@@ -1584,13 +1584,13 @@ namespace
 
 	int GetBrokenChudStateFlags33Values()
 	{
-		using Bungie::Players::PlayerDatum;
-		PlayerDatum *playerDatum = Bungie::Players::GetPlayers().Get(Bungie::Players::GetLocalPlayer(0));
+		using Blam::Players::PlayerDatum;
+		PlayerDatum *playerDatum = Blam::Players::GetPlayers().Get(Blam::Players::GetLocalPlayer(0));
 
 		int flags = 0;
 
 		//Team and FFA flags that were in Flags 1 in halo 3 are now here.
-		auto session = Bungie::Network::GetActiveSession();
+		auto session = Blam::Network::GetActiveSession();
 		if (session && session->IsEstablished())
 			if (session->HasTeams())
 				flags |= 0x2000; //Bit13, was inactive, now Teams Enabled
@@ -1776,7 +1776,7 @@ namespace
 
 		const auto alertStrings = 0x00000989;
 
-		auto &alerts = *(Bungie::Tags::TagBlock<Alert>*)(wigl + 0x9C);
+		auto &alerts = *(Blam::Tags::TagBlock<Alert>*)(wigl + 0x9C);
 		for (auto& alert : alerts)
 		{
 			if (alert.Name == name)
@@ -1803,11 +1803,11 @@ namespace
 		const auto c_hud_camera_view__render_outlines_hook = (void(__thiscall*)(void *thisptr, int localProfileIndex, int playerMappingIndex, void *a3))(0xA2E620);
 
 		const auto &moduleTweaks = Modules::ModuleTweaks::Instance();
-		const auto playerIndex = Bungie::Players::GetLocalPlayer(0); // no need to map until splitscreen is supported
-		Bungie::Players::PlayerDatum *player;
+		const auto playerIndex = Blam::Players::GetLocalPlayer(0); // no need to map until splitscreen is supported
+		Blam::Players::PlayerDatum *player;
 
-		if (playerIndex != Bungie::DatumHandle::Null && (player = Bungie::Players::GetPlayers().Get(playerIndex))
-			&& player->SlaveUnit != Bungie::DatumHandle::Null && Bungie::Objects::Get(player->SlaveUnit))
+		if (playerIndex != Blam::DatumHandle::Null && (player = Blam::Players::GetPlayers().Get(playerIndex))
+			&& player->SlaveUnit != Blam::DatumHandle::Null && Blam::Objects::Get(player->SlaveUnit))
 		{
 			// outlines are only rendered if we have a unit regardless
 			c_hud_camera_view__render_outlines_hook(thisptr, localProfileIndex, playerMappingIndex, a3);
@@ -1829,17 +1829,17 @@ namespace
 
 	bool PlayerMarkerIsDisabled(uint32_t playerIndex)
 	{
-		auto &players = Bungie::Players::GetPlayers();
+		auto &players = Blam::Players::GetPlayers();
 
 		if (playerIndex == -1)
 			return false;
 
-		auto player = Bungie::Players::GetPlayers().Get(playerIndex);
+		auto player = Blam::Players::GetPlayers().Get(playerIndex);
 		if (!player)
 			return false;
 
-		auto localPlayerDatumIndex = Bungie::Players::GetLocalPlayer(0);
-		if (localPlayerDatumIndex == Bungie::DatumHandle::Null)
+		auto localPlayerDatumIndex = Blam::Players::GetLocalPlayer(0);
+		if (localPlayerDatumIndex == Blam::DatumHandle::Null)
 			return false;
 
 		auto localPlayer = players.Get(localPlayerDatumIndex);
@@ -1871,7 +1871,7 @@ namespace
 			uint32_t field_14;
 			wchar_t text[5];
 			uint16_t field_22;
-			Bungie::Math::RealVector3D position;
+			Blam::Math::RealVector3D position;
 		};
 		static_assert(sizeof(s_chud_player_marker_data) == 0x30, "s_chud_player_marker_data invalid");
 
@@ -1924,17 +1924,17 @@ namespace
 				newState->is_valid = 1;
 				newState->state = -1;
 				newState->field_6C = 0;
-				newState->time = Bungie::Time::GetGameTicks();
+				newState->time = Blam::Time::GetGameTicks();
 				return;
 			}
 
 			// player scaling
 			if (data->player_index != -1)
 			{
-				auto player = Bungie::Players::GetPlayers().Get(data->player_index);
-				if (player && player->SlaveUnit != Bungie::DatumHandle::Null)
+				auto player = Blam::Players::GetPlayers().Get(data->player_index);
+				if (player && player->SlaveUnit != Blam::DatumHandle::Null)
 				{
-					auto unitObject = Bungie::Objects::Get(player->SlaveUnit);
+					auto unitObject = Blam::Objects::Get(player->SlaveUnit);
 					if (unitObject)
 						data->position.K = data->position.K - 0.05f + std::pow(unitObject->Scale, 1.0f) * 0.05f;
 				}
@@ -1942,13 +1942,13 @@ namespace
 
 			auto existingState = &((s_chud_player_marker_state*)thisptr)[index];
 			memcpy(&existingState->data, data, sizeof(s_chud_player_marker_data));
-			existingState->time = Bungie::Time::GetGameTicks();
+			existingState->time = Blam::Time::GetGameTicks();
 		}
 	}
 
 	unsigned int __stdcall IsPlayerSpeaking(int handle)
 	{
-		Bungie::Players::PlayerDatum* player = Bungie::Players::GetPlayers().Get(Bungie::DatumHandle(handle));
+		Blam::Players::PlayerDatum* player = Blam::Players::GetPlayers().Get(Blam::DatumHandle(handle));
 		std::string playerName(Utils::String::ThinString(player->Properties.DisplayName));
 
 		if (std::find(speakingPlayers.begin(), speakingPlayers.end(), playerName) != speakingPlayers.end())
@@ -2069,13 +2069,13 @@ namespace
 
 	PlayerMarkerBitmapSpriteIndex __stdcall GetPlayerMarkerSpriteIndex(int handle, int markerColorIndex)
 	{
-		using Bungie::GameType;
+		using Blam::GameType;
 
-		auto player = Bungie::Players::GetPlayers().Get(handle);
+		auto player = Blam::Players::GetPlayers().Get(handle);
 		if (!player)
 			return PlayerMarkerBitmapSpriteIndex::None;
 
-		auto session = Bungie::Network::GetActiveSession();
+		auto session = Blam::Network::GetActiveSession();
 		if (!session || !session->IsEstablished())
 			return PlayerMarkerBitmapSpriteIndex::None;
 
@@ -2132,9 +2132,9 @@ namespace
 
 	bool __stdcall DoesPlayerMarkerHaveObjective(PlayerMarkerIconIndex markerIconIndex)
 	{
-		using Bungie::GameType;
+		using Blam::GameType;
 
-		auto session = Bungie::Network::GetActiveSession();
+		auto session = Blam::Network::GetActiveSession();
 		if (!session || !session->IsEstablished())
 			return false;
 
@@ -2421,13 +2421,13 @@ namespace
 
 	bool respawning;
 
-	void OnEvent(Bungie::DatumHandle player, const Bungie::Events::Event *event, const Bungie::Events::EventDefinition *definition)
+	void OnEvent(Blam::DatumHandle player, const Blam::Events::Event *event, const Blam::Events::EventDefinition *definition)
 	{
 		if (event->NameStringId == 0x4004D) // "general_event_game_over" 
 		{
-			winnerDisplayed = Bungie::Time::GetGameTicks();
-			auto session = Bungie::Network::GetActiveSession();
-			auto get_multiplayer_scoreboard = (Bungie::MutiplayerScoreboard*(*)())(0x00550B80);
+			winnerDisplayed = Blam::Time::GetGameTicks();
+			auto session = Blam::Network::GetActiveSession();
+			auto get_multiplayer_scoreboard = (Blam::MutiplayerScoreboard*(*)())(0x00550B80);
 			auto* scoreboard = get_multiplayer_scoreboard();
 
 			if (!session || !session->IsEstablished() || !scoreboard)
@@ -2510,10 +2510,10 @@ namespace
 		const auto sub_6E4AA0 = (bool(__cdecl *)(int a1, wchar_t *DstBuf, int bufflen, char a4))(0x6E4AA0);
 		if (sub_6E4AA0(hudIndex, buff, len, a4))
 			return true;
-		auto playerIndex = Bungie::Players::GetLocalPlayer(0);
-		if (playerIndex == Bungie::DatumHandle::Null)
+		auto playerIndex = Blam::Players::GetLocalPlayer(0);
+		if (playerIndex == Blam::DatumHandle::Null)
 			return false;
-		auto player = Bungie::Players::GetPlayers().Get(playerIndex);
+		auto player = Blam::Players::GetPlayers().Get(playerIndex);
 		if (!player)
 			return false;
 
@@ -2523,7 +2523,7 @@ namespace
 		//mp_respawn_timer 
 		auto secondsUntilSpawn = Pointer(player)(0x2CBC).Read<int>();
 		auto firstTimeSpawning = Pointer(player)(0x4).Read<uint32_t>() & 8;
-		if (player->SlaveUnit == Bungie::DatumHandle::Null && secondsUntilSpawn > 0)
+		if (player->SlaveUnit == Blam::DatumHandle::Null && secondsUntilSpawn > 0)
 		{
 			if (!game_engine_round_in_progress())
 			{
@@ -2547,7 +2547,7 @@ namespace
 		if (!firstTimeSpawning && !gameHasStarted)
 		{
 			welcome = true;
-			welcomeDisplayed = Bungie::Time::GetGameTicks();
+			welcomeDisplayed = Blam::Time::GetGameTicks();
 			gameHasStarted = true;
 			swprintf(buff, L"Welcome!");
 			return true;
@@ -2556,7 +2556,7 @@ namespace
 		{
 			swprintf(buff, L"Welcome!");
 
-			if (Bungie::Time::TicksToSeconds(Bungie::Time::GetGameTicks() - welcomeDisplayed) > welcomeDisplayTime)
+			if (Blam::Time::TicksToSeconds(Blam::Time::GetGameTicks() - welcomeDisplayed) > welcomeDisplayTime)
 				welcome = false;
 
 			return true;
@@ -2567,7 +2567,7 @@ namespace
 		{
 			swprintf(buff, winnerString.c_str());
 
-			if (Bungie::Time::TicksToSeconds(Bungie::Time::GetGameTicks() - winnerDisplayed) > winnereDisplayTime)
+			if (Blam::Time::TicksToSeconds(Blam::Time::GetGameTicks() - winnerDisplayed) > winnereDisplayTime)
 				winnerString = L"";
 
 			return true;

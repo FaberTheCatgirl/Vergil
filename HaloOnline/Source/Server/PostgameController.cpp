@@ -6,7 +6,7 @@
 
 namespace
 {
-	void OnLifeCycleStateChanged(Bungie::LifeCycleState newState);
+	void OnLifeCycleStateChanged(Blam::LifeCycleState newState);
 
 	time_t writeStatsStartTime;
 	bool returningToLobby = false;
@@ -21,7 +21,7 @@ namespace Server::PostgameController
 
 	void Tick()
 	{
-		auto session = Bungie::Network::GetActiveSession();
+		auto session = Blam::Network::GetActiveSession();
 		if (session->IsEstablished() && session->IsHost())
 		{
 			auto returnToLobbyTimeout = Modules::ModuleServer::Instance().VarReturnToLobbyTimeoutSeconds->ValueInt;
@@ -49,11 +49,11 @@ namespace Server::PostgameController
 
 namespace
 {
-	void OnLifeCycleStateChanged(Bungie::LifeCycleState newState)
+	void OnLifeCycleStateChanged(Blam::LifeCycleState newState)
 	{
 		switch (newState)
 		{
-		case Bungie::LifeCycleState::eLifeCycleStateEndGameWriteStats:
+		case Blam::LifeCycleState::eLifeCycleStateEndGameWriteStats:
 			time(&writeStatsStartTime);
 			returningToLobby = true;
 			break;

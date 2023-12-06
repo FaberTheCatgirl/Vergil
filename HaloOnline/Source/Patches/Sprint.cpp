@@ -1,8 +1,8 @@
 #include "Patches\Sprint.hpp"
 #include "Patch.hpp"
 #include "HaloOnline.hpp"
-#include "Bungie\BungieTypes.hpp"
-#include "Bungie\Memory\TlsData.hpp"
+#include "Blam\BlamTypes.hpp"
+#include "Blam\Memory\TlsData.hpp"
 
 namespace
 {
@@ -33,7 +33,7 @@ namespace Patches::Sprint
 	void Tick()
 	{
 		// Show/hide the sprint meter
-		Bungie::Memory::chud_player_hud_elements *persistentUserDataChud = HaloOnline::GetMainTls(GameGlobals::PersistentUserDataChud::TLSOffset)[0](GameGlobals::PersistentUserDataChud::HUDElementsOffset);
+		Blam::Memory::chud_player_hud_elements *persistentUserDataChud = HaloOnline::GetMainTls(GameGlobals::PersistentUserDataChud::TLSOffset)[0](GameGlobals::PersistentUserDataChud::HUDElementsOffset);
 		if (persistentUserDataChud)
 			persistentUserDataChud->stamina = sprintEnabled;
 	}

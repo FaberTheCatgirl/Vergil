@@ -23,23 +23,23 @@ namespace ChatCommands
 	EndGameCommand endGameCommand;
 	ShuffleTeamsCommand shuffleTeamsCommand;
 
-	void LifeCycleStateChanged(Bungie::LifeCycleState newState)
+	void LifeCycleStateChanged(Blam::LifeCycleState newState)
 	{
 
-		auto* session = Bungie::Network::GetActiveSession();
+		auto* session = Blam::Network::GetActiveSession();
 		if (!(session && session->IsEstablished() && session->IsHost()))
 			return;
 
 		switch (newState)
 		{
 
-			case Bungie::eLifeCycleStateStartGame:
+			case Blam::eLifeCycleStateStartGame:
 			{
 				chatCommandsActive = true;
 				break;
 			}
 
-			case Bungie::eLifeCycleStateEndGameWriteStats: //This is fired if you also hit game.stop
+			case Blam::eLifeCycleStateEndGameWriteStats: //This is fired if you also hit game.stop
 			{
 
 				Server::TempBanList::Instance().decrementDuration();
@@ -73,7 +73,7 @@ namespace ChatCommands
 	}
 	int FindPlayerByName(const std::string &name, bool findPeer = false)
 	{
-		auto* session = Bungie::Network::GetActiveSession();
+		auto* session = Blam::Network::GetActiveSession();
 		if (!session || !session->IsEstablished() || !session->IsHost())
 			return -1;
 		auto membership = &session->MembershipInfo;
@@ -112,7 +112,7 @@ namespace ChatCommands
 	}
 	void Tick()
 	{
-		auto* session = Bungie::Network::GetActiveSession();
+		auto* session = Blam::Network::GetActiveSession();
 		if (!session || !session->IsEstablished() || !session->IsHost())
 			return;
 
@@ -143,7 +143,7 @@ namespace ChatCommands
 	bool handleChatMessage(const Server::Chat::ChatMessage &message, int peer)
 	{
 		std::string line = Utils::String::Trim(std::string(message.Body));
-		auto* session = Bungie::Network::GetActiveSession();
+		auto* session = Blam::Network::GetActiveSession();
 
 		if (line[0] != '!')
 			return false;

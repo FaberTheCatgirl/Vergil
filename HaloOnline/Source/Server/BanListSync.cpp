@@ -11,7 +11,7 @@
 #include "ThirdParty\rapidjson\document.h"
 #include "ThirdParty\HttpRequest.hpp"
 #include "Utils\Logger.hpp"
-#include "Bungie\BungieNetwork.hpp"
+#include "Blam\BlamNetwork.hpp"
 #include "Patches\Core.hpp"
 #include "Modules\ModuleServer.hpp"
 
@@ -48,7 +48,7 @@ namespace Server::BanListSync
 
 	void Tick()
 	{
-		auto* session = Bungie::Network::GetActiveSession();
+		auto* session = Blam::Network::GetActiveSession();
 		if (!session || !session->IsEstablished() || !session->IsHost())
 			return;
 
@@ -132,7 +132,7 @@ namespace
 
 	void CheckToBootPlayers()
 	{
-		auto* session = Bungie::Network::GetActiveSession();
+		auto* session = Blam::Network::GetActiveSession();
 		if (!session || !session->IsEstablished() || !session->IsHost())
 			return;
 
@@ -155,7 +155,7 @@ namespace
 
 				if (Server::HalostatsBanList::Instance().ContainsIp(ipString))
 				{
-					if (!Bungie::Network::BootPlayer(playerIdx, 4))
+					if (!Blam::Network::BootPlayer(playerIdx, 4))
 						Utils::Logger::Instance().Log(Utils::LogTypes::Network, Utils::LogLevel::Info, "Failed to Kick Banned IP: " + ipString);
 					else
 						Utils::Logger::Instance().Log(Utils::LogTypes::Network, Utils::LogLevel::Info, "Successfully Kicked Banned IP: " + ipString);
@@ -163,7 +163,7 @@ namespace
 
 				if (Server::HalostatsBanList::Instance().ContainsUID(hexUID))
 				{
-					if (!Bungie::Network::BootPlayer(playerIdx, 4))
+					if (!Blam::Network::BootPlayer(playerIdx, 4))
 						Utils::Logger::Instance().Log(Utils::LogTypes::Network, Utils::LogLevel::Info, "Failed to Kick Banned UID: " + hexUID);
 					else
 						Utils::Logger::Instance().Log(Utils::LogTypes::Network, Utils::LogLevel::Info, "Successfully Kicked Banned UID: " + hexUID);
@@ -171,7 +171,7 @@ namespace
 
 				if (Server::HalostatsBanList::Instance().ContainsName(name))
 				{
-					if (!Bungie::Network::BootPlayer(playerIdx, 4))
+					if (!Blam::Network::BootPlayer(playerIdx, 4))
 						Utils::Logger::Instance().Log(Utils::LogTypes::Network, Utils::LogLevel::Info, "Failed to Kick Banned Name: " + name);
 					else
 						Utils::Logger::Instance().Log(Utils::LogTypes::Network, Utils::LogLevel::Info, "Successfully Kicked Banned Name: " + name);

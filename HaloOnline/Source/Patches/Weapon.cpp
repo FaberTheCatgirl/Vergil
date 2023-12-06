@@ -13,21 +13,21 @@
 #include "Modules\ModuleWeapon.hpp"
 #include "Modules\ModuleServer.hpp"
 
-#include "Bungie\BungieNetwork.hpp"
-#include "Bungie\BungieObjects.hpp"
-#include "Bungie\BungiePlayers.hpp"
-#include "Bungie\BungieTime.hpp"
+#include "Blam\BlamNetwork.hpp"
+#include "Blam\BlamObjects.hpp"
+#include "Blam\BlamPlayers.hpp"
+#include "Blam\BlamTime.hpp"
 
-#include "Bungie\Cache\StringIdCache.hpp"
+#include "Blam\Cache\StringIdCache.hpp"
 
-#include "Bungie\Math\RealVector3D.hpp"
+#include "Blam\Math\RealVector3D.hpp"
 
-#include "Bungie\Tags\Tags.hpp"
-#include "Bungie\Tags\TagInstance.hpp"
-#include "Bungie\Tags\Game\Globals.hpp"
-#include "Bungie\Tags\Game\MultiplayerGlobals.hpp"
-#include "Bungie\Tags\Globals\CacheFileGlobalTags.hpp"
-#include "Bungie\Tags\Items\DefinitionWeapon.hpp"
+#include "Blam\Tags\Tags.hpp"
+#include "Blam\Tags\TagInstance.hpp"
+#include "Blam\Tags\Game\Globals.hpp"
+#include "Blam\Tags\Game\MultiplayerGlobals.hpp"
+#include "Blam\Tags\Globals\CacheFileGlobalTags.hpp"
+#include "Blam\Tags\Items\DefinitionWeapon.hpp"
 
 #include "Patches\Core.hpp"
 #include "Patches\Weapon.hpp"
@@ -80,8 +80,8 @@ namespace
 
 namespace Patches::Weapon
 {
-	using Bungie::Math::RealVector3D;
-	using Bungie::Tags::TagInstance;
+	using Blam::Math::RealVector3D;
+	using Blam::Tags::TagInstance;
 
 	bool AddSupportedWeapons();
 	std::vector<WeaponInfo> weapon_infos;
@@ -95,7 +95,7 @@ namespace Patches::Weapon
 		auto separatorIndex = currentMap.find_first_of("\\/");
 		auto mapName = currentMap.substr(separatorIndex + 1);
 
-		if (!Bungie::game_is_mainmenu())
+		if (!Blam::game_is_mainmenu())
 		{
 			AddSupportedWeapons();
 			SetOffsetDefaultAll();
@@ -232,20 +232,20 @@ namespace Patches::Weapon
 	WeaponInfo GetEquippedWeapon()
 	{
 		WeaponInfo weapon;
-		auto session = Bungie::Network::GetActiveSession();
+		auto session = Blam::Network::GetActiveSession();
 		if (!session || !session->IsEstablished())
 			return weapon;
 
 		int playerIdx = session->MembershipInfo.FindFirstPlayer();
-		auto playerDatum = &Bungie::Players::GetPlayers()[playerIdx];
-		auto playerObject = Pointer(Bungie::Objects::GetObjects()[playerDatum->SlaveUnit].Data);
+		auto playerDatum = &Blam::Players::GetPlayers()[playerIdx];
+		auto playerObject = Pointer(Blam::Objects::GetObjects()[playerDatum->SlaveUnit].Data);
 		if (playerObject)
 		{
 			auto equippedWeaponIndex = playerObject(0x2CA).Read<uint8_t>();
 			if (equippedWeaponIndex != -1)
 			{
 				auto equippedWeaponObjectIndex = playerObject(0x2D0 + 4 * equippedWeaponIndex).Read<uint32_t>();
-				auto equippedWeaponObjectPtr = Pointer(Bungie::Objects::GetObjects()[equippedWeaponObjectIndex].Data);
+				auto equippedWeaponObjectPtr = Pointer(Blam::Objects::GetObjects()[equippedWeaponObjectIndex].Data);
 				if (equippedWeaponObjectPtr)
 				{
 					weapon.Index = Pointer(equippedWeaponObjectPtr).Read<uint32_t>();
@@ -311,7 +311,7 @@ namespace Patches::Weapon
 		{
 			if (weapon.Index != 0xFFFF)
 			{
-				auto *weaponDefinition = TagInstance(weapon.Index).GetDefinition<Bungie::Tags::Items::Weapon>();
+				auto *weaponDefinition = TagInstance(weapon.Index).GetDefinition<Blam::Tags::Items::Weapon>();
 				if (weaponDefinition)
 					weapon.Offset.Default = weaponDefinition->FirstPersonWeaponOffset;
 			}
@@ -320,7 +320,7 @@ namespace Patches::Weapon
 
 	bool SetOffsetDefaultAll()
 	{
-		if (Bungie::game_is_mainmenu())
+		if (Blam::game_is_mainmenu())
 			return false;
 
 		for (auto &weapon : weapon_infos)
@@ -331,7 +331,7 @@ namespace Patches::Weapon
 
 	bool SetOffsetDefault(std::string &weaponName)
 	{
-		if (Bungie::game_is_mainmenu())
+		if (Blam::game_is_mainmenu())
 			return false;
 
 		for (auto &weapon : weapon_infos)
@@ -343,14 +343,14 @@ namespace Patches::Weapon
 
 	bool SetOffsetModified(std::string &weaponName, RealVector3D &weaponOffset)
 	{
-		if (Bungie::game_is_mainmenu())
+		if (Blam::game_is_mainmenu())
 			return false;
 
 		for (auto &weapon : weapon_infos)
 		{
 			if (weapon.Name == weaponName)
 			{
-				auto *weaponDefinition = TagInstance(weapon.Index).GetDefinition<Bungie::Tags::Items::Weapon>();
+				auto *weaponDefinition = TagInstance(weapon.Index).GetDefinition<Blam::Tags::Items::Weapon>();
 				if (weaponDefinition)
 					weaponDefinition->FirstPersonWeaponOffset = weapon.Offset.Modified = weaponOffset;
 			}
@@ -634,7 +634,7 @@ namespace
 	const auto weapon_is_being_dual_wielded = (bool(*)(uint32_t weaponObjectIndex))(0xB64050);
 	const auto unit_calculate_fire_time_penalty = (float(*)(uint32_t unitObjectIndex, uint32_t weaponObjectIndex))(0x00B44680);
 
-	bool UnitIsDualWielding(Bungie::DatumHandle unitHandle)
+	bool UnitIsDualWielding(Blam::DatumHandle unitHandle)
 	{
 		if (!unitHandle)
 			return false;
@@ -655,16 +655,16 @@ namespace
 		return UnitGetWeapon(unitHandle, dualWieldWeaponIndex) != 0xFFFFFFFF;
 	}
 
-	bool PlayerIsDualWielding(Bungie::DatumHandle playerIndex)
+	bool PlayerIsDualWielding(Blam::DatumHandle playerIndex)
 	{
-		auto &players = Bungie::Players::GetPlayers();
+		auto &players = Blam::Players::GetPlayers();
 		return UnitIsDualWielding(players[playerIndex].SlaveUnit);
 	}
 
 	bool LocalPlayerIsDualWielding()
 	{
-		auto localPlayer = Bungie::Players::GetLocalPlayer(0);
-		if (localPlayer == Bungie::DatumHandle::Null)
+		auto localPlayer = Blam::Players::GetLocalPlayer(0);
+		if (localPlayer == Blam::DatumHandle::Null)
 			return false;
 		return PlayerIsDualWielding(localPlayer);
 	}
@@ -679,8 +679,8 @@ namespace
 
 	int __cdecl DualWieldHook(unsigned short objectIndex)
 	{
-		using Bungie::Tags::TagInstance;
-		using Bungie::Tags::Items::Weapon;
+		using Blam::Tags::TagInstance;
+		using Blam::Tags::Items::Weapon;
 
 		if (!Modules::ModuleServer::Instance().VarServerDualWieldEnabledClient->ValueInt)
 			return 0;
@@ -749,23 +749,23 @@ namespace
 		const auto weapon_is_being_dual_wielded = (bool(*)(uint32_t weaponObjectIndex))(0xB64050);
 		const auto weapon_get_parent_unit = (uint32_t(*)(uint32_t weaponObjectIndex))(0x00B63030);
 
-		using Bungie::Tags::Items::Weapon;
+		using Blam::Tags::Items::Weapon;
 
 		if (!weapon_is_held(weaponObjectIndex))
 			return false;
 
-		auto weaponObject = Bungie::Objects::Get(weaponObjectIndex);
+		auto weaponObject = Blam::Objects::Get(weaponObjectIndex);
 		if (!weaponObject)
 			return false;
 
-		auto unitObject = Bungie::Objects::Get(weapon_get_parent_unit(weaponObjectIndex));
+		auto unitObject = Blam::Objects::Get(weapon_get_parent_unit(weaponObjectIndex));
 		if (!unitObject)
 			return false;
 
 		auto isCrouching = *(float*)((uint8_t*)unitObject + 0x418) > 0;
 		// auto isDualWielding = weapon_is_being_dual_wielded(weaponObjectIndex);
 
-		auto weaponDefinition = Bungie::Tags::TagInstance(weaponObject->TagIndex).GetDefinition<Weapon>();
+		auto weaponDefinition = Blam::Tags::TagInstance(weaponObject->TagIndex).GetDefinition<Weapon>();
 
 		auto functionIndex = 0;
 		switch (type)
@@ -820,11 +820,11 @@ namespace
 	{
 		auto weapon_caclulate_magnification = (float(*)(uint32_t weaponObjectIndex, uint16_t magnificationLevel))(0x00B636E0);
 
-		auto weaponObject = Bungie::Objects::Get(weaponObjectIndex);
+		auto weaponObject = Blam::Objects::Get(weaponObjectIndex);
 		if (!weaponObject)
 			return 0.0f;
 
-		auto weaponDefinition = Bungie::Tags::TagInstance(weaponObject->TagIndex).GetDefinition<Bungie::Tags::Items::Weapon>();
+		auto weaponDefinition = Blam::Tags::TagInstance(weaponObject->TagIndex).GetDefinition<Blam::Tags::Items::Weapon>();
 
 		if (barrelIndex >= weaponDefinition->Barrels.Count)
 			return 0.0f;
@@ -836,7 +836,7 @@ namespace
 		auto unitObjectIndex = *(uint32_t*)((uint8_t*)weaponObject + 0x184);
 		if (*((uint8_t*)weaponObject + 0x179) && unitObjectIndex != -1 && !(uint16_t(barrelDefinition.Flags) & 1))
 		{
-			auto unitObject = Bungie::Objects::Get(unitObjectIndex);
+			auto unitObject = Blam::Objects::Get(unitObjectIndex);
 			auto magnificationLevel = *((uint8_t*)unitObject + 0x324);
 			if (forcedScope)
 				magnificationLevel = scopeLevel;
@@ -872,14 +872,14 @@ namespace
 
 	uint32_t weapon_barrel_update_hook(uint32_t weaponObjectIndex, int barrelIndex)
 	{
-		using WeaponDefinition = Bungie::Tags::Items::Weapon;
+		using WeaponDefinition = Blam::Tags::Items::Weapon;
 
 		const auto weapon_update_barrel = (bool(*)(uint32_t weaponObjectIndex, int barrelIndex))(0x00B60BD0);
 
 		auto result = weapon_update_barrel(weaponObjectIndex, barrelIndex);
 
-		auto weaponObject = Bungie::Objects::Get(weaponObjectIndex);
-		auto weaponDefinition = Bungie::Tags::TagInstance(weaponObject->TagIndex).GetDefinition<WeaponDefinition>();
+		auto weaponObject = Blam::Objects::Get(weaponObjectIndex);
+		auto weaponDefinition = Blam::Tags::TagInstance(weaponObject->TagIndex).GetDefinition<WeaponDefinition>();
 
 		if (weaponObject && barrelIndex < weaponDefinition->Barrels.Count)
 		{
@@ -887,7 +887,7 @@ namespace
 			auto &barrel = barrels[barrelIndex];
 			auto &barrelDefinition = weaponDefinition->Barrels[barrelIndex];
 
-			auto secondsPerTick = Bungie::Time::GetSecondsPerTick();
+			auto secondsPerTick = Blam::Time::GetSecondsPerTick();
 
 			if (barrel.state == _weapon_barrel_state_firing)
 			{
@@ -898,11 +898,11 @@ namespace
 					unitObjectIndex = *(uint32_t*)((uint8_t*)weaponObject + 0x184);
 
 				// TODO: zero values in tag
-				auto unitObject = Bungie::Objects::Get(unitObjectIndex);
+				auto unitObject = Blam::Objects::Get(unitObjectIndex);
 				auto isCrouching = unitObject && *(float*)((uint8_t*)unitObject + 0x418) > 0;
 				auto hasBloomFunction = (&barrelDefinition.FiringPenaltyFunction)[unitObject && isCrouching ? 0 : 1].Count > 0;
 
-				auto t = Bungie::Time::GetSecondsPerTick();
+				auto t = Blam::Time::GetSecondsPerTick();
 
 				if (!hasBloomFunction)
 				{

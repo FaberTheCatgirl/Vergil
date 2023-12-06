@@ -2,7 +2,7 @@
 
 #include <functional>
 
-namespace Bungie::Input
+namespace Blam::Input
 {
 	class VirtualKeyboard;
 }
@@ -11,7 +11,7 @@ namespace Patches::VirtualKeyboard
 {
 	void ApplyAll();
 
-	typedef std::function<void(Bungie::Input::VirtualKeyboard* keyboard)> KeyboardHandlerCallback;
+	typedef std::function<void(Blam::Input::VirtualKeyboard* keyboard)> KeyboardHandlerCallback;
 	void SetKeyboardHandler(KeyboardHandlerCallback callback);
 }
 

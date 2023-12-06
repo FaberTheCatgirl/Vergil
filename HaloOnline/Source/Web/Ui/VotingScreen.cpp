@@ -171,13 +171,13 @@ public:
 
 namespace
 {
-	void LifeCycleStateChanged(Bungie::LifeCycleState newState)
+	void LifeCycleStateChanged(Blam::LifeCycleState newState)
 	{
 		switch (newState)
 		{
-		case Bungie::eLifeCycleStateStartGame:
-		case Bungie::eLifeCycleStateNone:
-		case Bungie::eLifeCycleStateLeaving:
+		case Blam::eLifeCycleStateStartGame:
+		case Blam::eLifeCycleStateNone:
+		case Blam::eLifeCycleStateLeaving:
 			OnVotingEnded();
 			break;
 		}
@@ -208,13 +208,13 @@ namespace
 {
 	void OnUiInputUpdate()
 	{
-		using namespace Bungie::Input;
+		using namespace Blam::Input;
 
 		const auto c_gui_screen_manager__get_first = (uint8_t*(__thiscall *)(void *thisptr, uint32_t, int))(0x00AAB320);
 
 		if (currentlyVoting)
 		{
-			auto action = GetActionState(Bungie::Input::eGameActionUiY);
+			auto action = GetActionState(Blam::Input::eGameActionUiY);
 			if (!(action->Flags & eActionStateFlagsHandled) && action->Ticks == 1)
 			{
 				action->Ticks |= eActionStateFlagsHandled;

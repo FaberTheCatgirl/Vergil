@@ -21,7 +21,7 @@ namespace Patches:: Network
 		}
 	}
 
-	void PlayerPropertiesExtender::ApplyData(int playerIndex, Bungie::Players::PlayerProperties *properties, const void *data)
+	void PlayerPropertiesExtender::ApplyData(int playerIndex, Blam::Players::PlayerProperties *properties, const void *data)
 	{
 		// Apply all of the data structures in order
 		const uint8_t *ptr = static_cast<const uint8_t*>(data);
@@ -32,7 +32,7 @@ namespace Patches:: Network
 		}
 	}
 
-	void PlayerPropertiesExtender::SerializeData(Bungie::BitStream *stream, const void *data)
+	void PlayerPropertiesExtender::SerializeData(Blam::BitStream *stream, const void *data)
 	{
 		// Serialize all of the structures in order
 		const uint8_t *ptr = static_cast<const uint8_t*>(data);
@@ -43,7 +43,7 @@ namespace Patches:: Network
 		}
 	}
 
-	void PlayerPropertiesExtender::DeserializeData(Bungie::BitStream *stream, void *out)
+	void PlayerPropertiesExtender::DeserializeData(Blam::BitStream *stream, void *out)
 	{
 		// Deserialize all of the structures in order
 		uint8_t *ptr = static_cast<uint8_t*>(out);

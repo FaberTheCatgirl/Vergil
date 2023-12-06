@@ -1,16 +1,16 @@
 #include "Forge\Prefab.hpp"
-#include "Bungie\Math\RealVector3D.hpp"
-#include "Bungie\BungieTypes.hpp"
-#include "Bungie\BungieObjects.hpp"
-#include "Bungie\BungiePlayers.hpp"
+#include "Blam\Math\RealVector3D.hpp"
+#include "Blam\BlamTypes.hpp"
+#include "Blam\BlamObjects.hpp"
+#include "Blam\BlamPlayers.hpp"
 #include "Forge\ForgeUtil.hpp"
 #include "Forge\ObjectSet.hpp"
 #include "Forge\Selection.hpp"
 #include <fstream>
 #include <chrono>
 
-using namespace Bungie;
-using namespace Bungie::Math;
+using namespace Blam;
+using namespace Blam::Math;
 
 namespace
 {
@@ -21,7 +21,7 @@ namespace
 		RealVector3D Position;
 		RealVector3D RightVector;
 		RealVector3D UpVector;
-		Bungie::MapVariant::VariantProperties Properties;
+		Blam::MapVariant::VariantProperties Properties;
 	};
 	
 	bool ReadHeader(std::ifstream &stream, Forge::Prefabs::PrefabHeader &header);
@@ -48,7 +48,7 @@ namespace Forge::Prefabs
 
 		auto mapv = Forge::GetMapVariant();
 
-		auto playerHandle = Bungie::Players::GetLocalPlayer(0);
+		auto playerHandle = Blam::Players::GetLocalPlayer(0);
 		const auto& crosshairPoint = GetSandboxGlobals().CrosshairPoints[playerHandle.Index];
 
 		for (auto i = 0; i < 640; i++)
@@ -91,7 +91,7 @@ namespace Forge::Prefabs
 
 		auto quota = Forge::CalculateObjectQuota();
 
-		auto playerHandle = Bungie::Players::GetLocalPlayer(0);
+		auto playerHandle = Blam::Players::GetLocalPlayer(0);
 		const auto& crosshairPoint = GetSandboxGlobals().CrosshairPoints[playerHandle.Index];
 
 

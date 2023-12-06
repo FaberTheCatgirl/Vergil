@@ -5,10 +5,10 @@
 #include "Forge\Selection.hpp"
 #include "Forge\ForgeUtil.hpp"
 #include "Forge\Prefab.hpp"
-#include "Bungie\Tags\TagReference.hpp"
-#include "Bungie\Tags\TagBlock.hpp"
-#include "Bungie\Tags\TagInstance.hpp"
-#include "Bungie\Tags\Objects\Object.hpp"
+#include "Blam\Tags\TagReference.hpp"
+#include "Blam\Tags\TagBlock.hpp"
+#include "Blam\Tags\TagInstance.hpp"
+#include "Blam\Tags\Objects\Object.hpp"
 
 namespace
 {
@@ -190,7 +190,7 @@ namespace
 
 	bool CommandDumpPalette(const std::vector<std::string>& Arguments, std::string& returnInfo)
 	{
-		using namespace Bungie::Tags;
+		using namespace Blam::Tags;
 
 		struct SandboxPaletteBlockDefinition
 		{
@@ -221,7 +221,7 @@ namespace
 		if (!mapv)
 			return false;
 
-		std::unordered_map<uint32_t, Bungie::MapVariant::BudgetEntry*> budgetLookup;
+		std::unordered_map<uint32_t, Blam::MapVariant::BudgetEntry*> budgetLookup;
 		for (auto i = 0; i < mapv->BudgetEntryCount; i++)
 		{
 			const auto budget = &mapv->Budget[i];

@@ -4,12 +4,12 @@
 #include "HaloOnline.hpp"
 #include "Patches\Input.hpp"
 #include "Console.hpp"
-#include "Bungie\BungieInput.hpp"
+#include "Blam\BlamInput.hpp"
 #include "Utils\NameValueTable.hpp"
 
 #include "ThirdParty\rapidjson\writer.h"
 #include "ThirdParty\rapidjson\stringbuffer.h"
-using namespace Bungie::Input;
+using namespace Blam::Input;
 
 namespace
 {
@@ -351,7 +351,7 @@ namespace
 		uint32_t keyPressData[4];
 		keyPressData[0] = 0xD;
 		keyPressData[1] = 0; // controller idx
-		keyPressData[2] = std::stoul(Arguments[0], 0, 0); // button idx, corresponds with Bungie::UiButtonCode
+		keyPressData[2] = std::stoul(Arguments[0], 0, 0); // button idx, corresponds with Blam::UiButtonCode
 		keyPressData[3] = 0xFF;
 
 		typedef void*(__cdecl *sub_AAD930Ptr)();
@@ -602,7 +602,7 @@ namespace
 				if (command_part.compare(search_for) == 0)
 				{
 					std::string key;
-					keyCodes.FindName((Bungie::Input::KeyCode)i, &key);
+					keyCodes.FindName((Blam::Input::KeyCode)i, &key);
 					writer.String(key.c_str());
 				}
 			}

@@ -1,7 +1,7 @@
 #include "HaloOnlinePatches.hpp"
 
 #include "HaloOnline.hpp"
-#include "Bungie\Tags\TagInstance.hpp"
+#include "Blam\Tags\TagInstance.hpp"
 #include "Patches\Core.hpp"
 #include "Patches\CharacterHud.hpp"
 #include "Patches\Audio.hpp"
@@ -103,7 +103,7 @@ namespace Patches
 
 	void ApplyAfterTagsLoaded()
 	{
-		Bungie::Tags::TagInstance::LoadTagNames();
+		Blam::Tags::TagInstance::LoadTagNames();
 		Game::Armor::LoadArmorPermutations();
 		Game::Armor::RefreshUiPlayer();
 		Ui::ApplyAfterTagsLoaded(); //No UI calls interacting with tags before this!

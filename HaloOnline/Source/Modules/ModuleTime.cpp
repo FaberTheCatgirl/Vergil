@@ -1,7 +1,7 @@
 #include "Modules\ModuleTime.hpp"
 #include <sstream>
 #include "HaloOnline.hpp"
-#include "Bungie\BungieTypes.hpp"
+#include "Blam\BlamTypes.hpp"
 #include "Server\VariableSynchronization.hpp"
 
 namespace

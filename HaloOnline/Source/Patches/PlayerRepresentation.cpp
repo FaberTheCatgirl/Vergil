@@ -1,12 +1,12 @@
 #include <cstdint>
-#include "Bungie\BungieData.hpp"
-#include "Bungie\BungiePlayers.hpp"
-#include "Bungie\Tags\Game\Globals.hpp"
+#include "Blam\BlamData.hpp"
+#include "Blam\BlamPlayers.hpp"
+#include "Blam\Tags\Game\Globals.hpp"
 #include "PlayerRepresentation.hpp"
 #include "Patches\PlayerPropertiesExtension.hpp"
-#include "Bungie\BungieNetwork.hpp"
+#include "Blam\BlamNetwork.hpp"
 #include "Modules\ModulePlayer.hpp"
-#include "Bungie\Cache\StringIdCache.hpp"
+#include "Blam\Cache\StringIdCache.hpp"
 #include "Patch.hpp"
 #include "Utils\String.hpp"
 
@@ -39,7 +39,7 @@ namespace
 			out->Gender = !modulePlayer.VarPlayerGender->ValueString.compare("female") ? 1 : 0;
 		}
 
-		void ApplyData(int playerIndex, Bungie::Players::PlayerProperties *properties, const RepresentationData &data) override
+		void ApplyData(int playerIndex, Blam::Players::PlayerProperties *properties, const RepresentationData &data) override
 		{
 			switch (data.RepresentationNameId)
 			{
@@ -61,21 +61,21 @@ namespace
 
 			properties->Gender = data.Gender;
 
-			auto activeSession = Bungie::Network::GetActiveSession();
+			auto activeSession = Blam::Network::GetActiveSession();
 			if (activeSession && activeSession->IsEstablished() && activeSession->IsHost())
 			{
 				activeSession->MembershipInfo.Update();
 			}
 		}
 
-		void Serialize(Bungie::BitStream *stream, const RepresentationData &data) override
+		void Serialize(Blam::BitStream *stream, const RepresentationData &data) override
 		{
 			stream->WriteUnsigned<uint32_t>(data.RepresentationNameId, 0, 0xFFFFFFFF);
 			stream->WriteString(data.ServiceTag);
 			stream->WriteBool(data.Gender);
 		}
 
-		void Deserialize(Bungie::BitStream *stream, RepresentationData *out) override
+		void Deserialize(Blam::BitStream *stream, RepresentationData *out) override
 		{
 			memset(out, 0, sizeof(RepresentationData));
 			out->RepresentationNameId = stream->ReadUnsigned<uint32_t>(0, 0xFFFFFFFF);
@@ -95,11 +95,11 @@ namespace Patches::PlayerRepresentation
 
 	void UpdateLocalRepresentation()
 	{
-		auto activeSession = Bungie::Network::GetActiveSession();
+		auto activeSession = Blam::Network::GetActiveSession();
 		if (activeSession && activeSession->IsEstablished())
 		{
 			// this will allow the player to change in-game, which is fine for testing, but it'll need to be locked down before release.
-			auto Network_session_update_user_properties = (signed __int32(__cdecl*)(Bungie::Network::Session* session, int a2))(0x00437B30);
+			auto Network_session_update_user_properties = (signed __int32(__cdecl*)(Blam::Network::Session* session, int a2))(0x00437B30);
 			Network_session_update_user_properties(activeSession, 0);
 		}
 	}

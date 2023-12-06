@@ -2,7 +2,7 @@
 
 #include "HaloOnline.hpp"
 #include "Patch.hpp"
-#include "Bungie\BungieData.hpp"
+#include "Blam\BlamData.hpp"
 
 #include "ThirdParty\dirent.h"
 
@@ -12,7 +12,7 @@ namespace
 {
 	const auto kMaxPath = 256;
 	struct c_content_catalog;
-	struct c_content_item : Bungie::DatumBase
+	struct c_content_item : Blam::DatumBase
 	{
 		uint16_t Unknown02;
 		uint32_t Unknown04;
@@ -29,7 +29,7 @@ namespace
 	struct c_content_catalog
 	{
 		int LocalProfileIndex;
-		Bungie::DataArray<c_content_item> *Items;
+		Blam::DataArray<c_content_item> *Items;
 		uint8_t Unknown08[0x2A8];
 	};
 	static_assert(sizeof(c_content_catalog) == 0x2B0, "invalid c_content_catalog size");

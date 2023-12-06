@@ -1,9 +1,9 @@
 #include "Patches\Spectate.hpp"
-#include "Bungie\BungiePlayers.hpp"
-#include "Bungie\BungieInput.hpp"
-#include "Bungie\BungieTime.hpp"
-#include "Bungie\BungieObjects.hpp"
-#include "Bungie\BungieNetwork.hpp"
+#include "Blam\BlamPlayers.hpp"
+#include "Blam\BlamInput.hpp"
+#include "Blam\BlamTime.hpp"
+#include "Blam\BlamObjects.hpp"
+#include "Blam\BlamNetwork.hpp"
 #include "HaloOnline.hpp"
 #include "Patch.hpp"
 #include "Utils\String.hpp"
@@ -41,7 +41,7 @@ namespace
 	{
 		const auto player_globals_get_network_address = (uint8_t*(*)(uint16_t playerIndex))(0x541EB0);
 
-		auto player = Bungie::Players::GetPlayers().Get(playerDatumIndex);
+		auto player = Blam::Players::GetPlayers().Get(playerDatumIndex);
 		if (!player)
 			return -1;
 		
@@ -50,7 +50,7 @@ namespace
 		if (playerGlobalsIndex == -1)
 			return -1;
 		auto xnkaddr = *(uint8_t**)HaloOnline::GetMainTls(0x44) + 0x10 * (playerGlobalsIndex + 1);
-		auto session = Bungie::Network::GetActiveSession();
+		auto session = Blam::Network::GetActiveSession();
 		for (auto i = session->MembershipInfo.FindFirstPeer(); i != -1; i = session->MembershipInfo.FindNextPeer(i))
 		{
 			auto peerAddress = (uint8_t*)&session->MembershipInfo.Peers[i];
@@ -61,9 +61,9 @@ namespace
 		return -1;
 	}
 
-	void NotifyPlayerChanged(Bungie::DatumHandle playerDatumIndex)
+	void NotifyPlayerChanged(Blam::DatumHandle playerDatumIndex)
 	{
-		auto player = Bungie::Players::GetPlayers().Get(playerDatumIndex);
+		auto player = Blam::Players::GetPlayers().Get(playerDatumIndex);
 		if (!player)
 			return;
 
@@ -105,17 +105,17 @@ namespace
 		if (!game_engine_round_in_progress() || game_engine_in_state(4))
 			return false;
 
-		auto playerIndex = Bungie::Players::GetLocalPlayer(localPlayerIndex);
-		if (playerIndex == Bungie::DatumHandle::Null)
+		auto playerIndex = Blam::Players::GetLocalPlayer(localPlayerIndex);
+		if (playerIndex == Blam::DatumHandle::Null)
 			return false;
 
-		auto player = Bungie::Players::GetPlayers().Get(playerIndex);
-		if (player->SlaveUnit != Bungie::DatumHandle::Null)
+		auto player = Blam::Players::GetPlayers().Get(playerIndex);
+		if (player->SlaveUnit != Blam::DatumHandle::Null)
 			return false;
 
 		auto secondsUntilSpawn = Pointer(player)(0x2CBC).Read<int>();
 
-		return player->SlaveUnit == Bungie::DatumHandle::Null && secondsUntilSpawn > 1 
+		return player->SlaveUnit == Blam::DatumHandle::Null && secondsUntilSpawn > 1 
 			&& !(Pointer(player)(0x4).Read<uint32_t>() & 8u);
 	}
 
@@ -132,11 +132,11 @@ namespace
 				state.PlayerIndex = -1;
 
 				// prevent switching players instantly
-				for (int i = Bungie::Input::eGameActionNextPlayer; i <= Bungie::Input::eGameActionPrevPlayer; i++)
+				for (int i = Blam::Input::eGameActionNextPlayer; i <= Blam::Input::eGameActionPrevPlayer; i++)
 				{
-					auto action = Bungie::Input::GetActionState(Bungie::Input::GameAction(i));
+					auto action = Blam::Input::GetActionState(Blam::Input::GameAction(i));
 					action->Ticks = 0;
-					action->Flags |= Bungie::Input::eActionStateFlagsHandled;
+					action->Flags |= Blam::Input::eActionStateFlagsHandled;
 				}
 			}
 

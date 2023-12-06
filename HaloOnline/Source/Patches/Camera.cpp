@@ -1,6 +1,6 @@
 #include "Patches\Camera.hpp"
 
-#include "Bungie\BungieObjects.hpp"
+#include "Blam\BlamObjects.hpp"
 #include "Modules\ModuleCamera.hpp"
 
 #include "new\game\game.hpp"
@@ -56,7 +56,7 @@ namespace
 	{
 		auto fov = 0.0f;
 
-		if (Bungie::game_is_mainmenu())
+		if (Blam::game_is_mainmenu())
 		{
 			fov = 70.0f;
 		}
@@ -99,13 +99,13 @@ namespace
 	{
 		struct s_camera_definition
 		{
-			Bungie::Math::RealVector3D Position;
-			Bungie::Math::RealVector3D PositionShift;
+			Blam::Math::RealVector3D Position;
+			Blam::Math::RealVector3D PositionShift;
 			float LookShift[2];
 			float Depth;
 			float FieldOfView;
-			Bungie::Math::RealVector3D Forward;
-			Bungie::Math::RealVector3D Up;
+			Blam::Math::RealVector3D Forward;
+			Blam::Math::RealVector3D Up;
 			// ...
 		};
 
@@ -123,7 +123,7 @@ namespace
 		auto targetObjectIndex = *(uint32_t*)((uint8_t*)thisptr + 0x4);
 		if (targetObjectIndex == -1)
 			return;
-		auto targetObject = Bungie::Objects::Get(targetObjectIndex);
+		auto targetObject = Blam::Objects::Get(targetObjectIndex);
 		if (!targetObject)
 			return;	
 		auto s = (float)std::pow(targetObject->Scale, 0.5);

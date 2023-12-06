@@ -16,7 +16,7 @@
 #include "ThirdParty\rapidjson\writer.h"
 #include "Utils\WebSocket.hpp"
 #include "Utils\Cryptography.hpp"
-#include "Bungie\BungieEvents.hpp"
+#include "Blam\BlamEvents.hpp"
 #include "Patches\Events.hpp"
 #include "Utils\Utils.hpp"
 #include "Patches\Core.hpp"
@@ -62,9 +62,9 @@ namespace
 	void ResetPassword(int playerIndex);
 	void ForceStopServer();
 
-	void LifeCycleChanged(Bungie::LifeCycleState state);
+	void LifeCycleChanged(Blam::LifeCycleState state);
 
-	std::string authStrings[Bungie::Network::MaxPeers];
+	std::string authStrings[Blam::Network::MaxPeers];
 	std::map<websocketpp::connection_hdl, coninfo, std::owner_less<websocketpp::connection_hdl>> connectedSockets; //std::owner_less doesn't work with std::unordered_map
 
 	static std::string currentPassword = "not-connected";
@@ -81,9 +81,9 @@ namespace
 
 	class WebSocketPacketHandler : public PacketHandler<WebSocketPacketData>
 	{
-		void Serialize(Bungie::BitStream *stream, const WebSocketPacketData *data) override;
-		bool Deserialize(Bungie::BitStream *stream, WebSocketPacketData *data) override;
-		void HandlePacket(Bungie::Network::ObserverChannel *sender, const WebSocketPacket *packet) override;
+		void Serialize(Blam::BitStream *stream, const WebSocketPacketData *data) override;
+		bool Deserialize(Blam::BitStream *stream, WebSocketPacketData *data) override;
+		void HandlePacket(Blam::Network::ObserverChannel *sender, const WebSocketPacket *packet) override;
 	};
 
 	std::shared_ptr<WebSocketPacketSender> wspsender;
@@ -107,7 +107,7 @@ namespace Server::Signaling
 
 	void StartServer()
 	{
-		auto session = Bungie::Network::GetActiveSession();
+		auto session = Blam::Network::GetActiveSession();
 		CreatePasswords();
 		currentPassword = authStrings[session->MembershipInfo.HostPeerIndex];
 		port = (uint16_t)Modules::ModuleServer::Instance().VarSignalServerPort->ValueInt;
@@ -136,7 +136,7 @@ namespace Server::Signaling
 	void SendPeerPassword(int playerIndex)
 	{
 		auto packet = wspsender->New();
-		auto *session = Bungie::Network::GetActiveSession();
+		auto *session = Blam::Network::GetActiveSession();
 		auto peerIdx = session->MembershipInfo.GetPlayerPeer(playerIndex);
 		ResetPassword(peerIdx);
 		strncpy_s(packet.Data.echoString, authStrings[peerIdx].c_str(), PASSWORD_LENGTH + 1);
@@ -190,22 +190,22 @@ namespace Server::Signaling
 
 namespace
 {
-	void LifeCycleChanged(Bungie::LifeCycleState state)
+	void LifeCycleChanged(Blam::LifeCycleState state)
 	{
-		if (state == Bungie::eLifeCycleStateNone || state == Bungie::eLifeCycleStateLeaving)
+		if (state == Blam::eLifeCycleStateNone || state == Blam::eLifeCycleStateLeaving)
 		{
 			currentPassword = "not-connected";
 		}
 	}
 
 	//packets
-	void WebSocketPacketHandler::Serialize(Bungie::BitStream *stream, const WebSocketPacketData *data)
+	void WebSocketPacketHandler::Serialize(Blam::BitStream *stream, const WebSocketPacketData *data)
 	{
 		stream->WriteString(data->echoString);
 		stream->WriteUnsigned<uint16_t>(port, 0, 65535);
 	}
 
-	bool WebSocketPacketHandler::Deserialize(Bungie::BitStream *stream, WebSocketPacketData *data)
+	bool WebSocketPacketHandler::Deserialize(Blam::BitStream *stream, WebSocketPacketData *data)
 	{
 		if(!stream->ReadString(data->echoString))
 			return false;
@@ -213,9 +213,9 @@ namespace
 		return true;
 	}
 
-	void WebSocketPacketHandler::HandlePacket(Bungie::Network::ObserverChannel *sender, const WebSocketPacket *packet)
+	void WebSocketPacketHandler::HandlePacket(Blam::Network::ObserverChannel *sender, const WebSocketPacket *packet)
 	{
-		auto *session = Bungie::Network::GetActiveSession();
+		auto *session = Blam::Network::GetActiveSession();
 		auto sendingPeer = session->GetChannelPeer(sender);
 		if (sendingPeer < 0)
 			return;
@@ -231,7 +231,7 @@ namespace
 
 	std::string ServerPortJson()
 	{
-		auto session = Bungie::Network::GetActiveSession();
+		auto session = Blam::Network::GetActiveSession();
 		rapidjson::StringBuffer buffer;
 		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
 		buffer.Clear();
@@ -407,7 +407,7 @@ namespace
 
 	RejectionReason ProcessPassword(const char* echo, coninfo &info)
 	{
-		auto *session = Bungie::Network::GetActiveSession();
+		auto *session = Blam::Network::GetActiveSession();
 		int peerIdx = session->MembershipInfo.FindFirstPeer();
 		while(peerIdx > -1)
 		{
@@ -419,7 +419,7 @@ namespace
 					return RejectionReason::eSessionHasBadInfo;
 
 				char uid[17];
-				Bungie::Players::FormatUid(uid, session->MembershipInfo.PlayerSessions[session->MembershipInfo.GetPeerPlayer(peerIdx)].Properties.Uid);
+				Blam::Players::FormatUid(uid, session->MembershipInfo.PlayerSessions[session->MembershipInfo.GetPeerPlayer(peerIdx)].Properties.Uid);
 
 				std::stringstream ss;
 				ss << name << "|" << uid; //unique
@@ -435,7 +435,7 @@ namespace
 
 	void CreatePasswords()
 	{
-		for (int i = 0; i < Bungie::Network::MaxPeers; i++)
+		for (int i = 0; i < Blam::Network::MaxPeers; i++)
 		{
 			authStrings[i] = "";
 			Utils::Cryptography::RandomPassword(PASSWORD_LENGTH, authStrings[i]);

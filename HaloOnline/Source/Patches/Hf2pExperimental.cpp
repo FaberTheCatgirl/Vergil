@@ -1,9 +1,9 @@
 #pragma once
 #include "Patches\Hf2pExperimental.hpp"
-#include "Bungie\Math\RealVector3D.hpp"
-#include "Bungie\Math\RealMatrix4x3.hpp"
-#include "Bungie\Preferences\Preferences.hpp"
-#include "Bungie\BungieInput.hpp"
+#include "Blam\Math\RealVector3D.hpp"
+#include "Blam\Math\RealMatrix4x3.hpp"
+#include "Blam\Preferences\Preferences.hpp"
+#include "Blam\BlamInput.hpp"
 #include "Modules\ModuleSettings.hpp"
 #include "Modules\ModuleServer.hpp"
 #include "Modules\ModuleCamera.hpp"
@@ -14,10 +14,10 @@
 #include "Web\Ui\ScreenLayer.hpp"
 #include "Web\Ui\WebTimer.hpp"
 #include "HaloOnline.hpp"
-#include "Bungie\BungiePlayers.hpp"
-#include "Bungie\BungieTime.hpp"
+#include "Blam\BlamPlayers.hpp"
+#include "Blam\BlamTime.hpp"
 #include "Web\Ui\WebScoreboard.hpp"
-#include "Bungie\Tags\Scenario\Scenario.hpp"
+#include "Blam\Tags\Scenario\Scenario.hpp"
 #include "Game\Armor.hpp"
 #include "Forge\PrematchCamera.hpp"
 #include "Forge\ForgeUtil.hpp"
@@ -78,7 +78,7 @@ namespace Patches::Hf2pExperimental
 
 namespace
 {
-	using namespace Bungie::Input;
+	using namespace Blam::Input;
 
 	const auto UI_ScreenWidget_Close = (void(__thiscall *)(void *thisptr, int a2))(0x00AB2830);
 	const auto UI_ScreenManager_GetScreenWidget = (void* (__thiscall *)(void *thisptr, int a2, uint32_t nameId))(0x00AAB550);
@@ -104,10 +104,10 @@ namespace
 
 	void SystemMenu()
 	{
-		if (Bungie::game_is_mainmenu())
+		if (Blam::game_is_mainmenu())
 			return;
 
-		auto uiStartAction = Bungie::Input::GetActionState(eGameActionUiStart);
+		auto uiStartAction = Blam::Input::GetActionState(eGameActionUiStart);
 		if (!(uiStartAction->Flags & eActionStateFlagsHandled) && uiStartAction->Ticks == 1)
 		{
 			auto isUsingController = *(bool*)0x0244DE98;
@@ -134,16 +134,16 @@ namespace
 
 	int GetSecondsRemainingUntilPlayerSpawn()
 	{
-		auto playerIndex = Bungie::Players::GetLocalPlayer(0);
-		const auto player = Bungie::Players::GetPlayers().Get(Bungie::Players::GetLocalPlayer(0));
+		auto playerIndex = Blam::Players::GetLocalPlayer(0);
+		const auto player = Blam::Players::GetPlayers().Get(Blam::Players::GetLocalPlayer(0));
 		return player ? Pointer(player)(0x2CBC).Read<int32_t>() : 0;
 	}
 
 	void Hf2pTickHook()
 	{
-		const auto camera_update_scripted = (void(*)(int type, Bungie::Math::RealVector3D *position,
-			Bungie::Math::RealVector3D *orientation, float a4, __int16 a5, uint32_t objectIndex))(0x0072DD70);
-		const auto MatrixScale4x3_GetEulerAngles = (void(*)(Bungie::Math::RealMatrix4x3 *matrix, Bungie::Math::RealVector3D *outOrientation))(0x005B3670);
+		const auto camera_update_scripted = (void(*)(int type, Blam::Math::RealVector3D *position,
+			Blam::Math::RealVector3D *orientation, float a4, __int16 a5, uint32_t objectIndex))(0x0072DD70);
+		const auto MatrixScale4x3_GetEulerAngles = (void(*)(Blam::Math::RealMatrix4x3 *matrix, Blam::Math::RealVector3D *outOrientation))(0x005B3670);
 		const auto sub_592320 = (void(*)(int a1))(0x592320);
 
 		static auto UpdatePreMatchCamera = (bool(*)())(0x72D580);
@@ -169,9 +169,9 @@ namespace
 
 		SpawnTimerUpdate();
 
-		if (!Bungie::game_is_map_loading())
+		if (!Blam::game_is_map_loading())
 		{
-			if (Bungie::game_is_mainmenu())
+			if (Blam::game_is_mainmenu())
 			{
 				// armour customizations on mainmenu
 				Game::Armor::UpdateUiPlayerModelArmor();
@@ -297,15 +297,15 @@ namespace
 
 		static auto lastBeep = 0;
 
-		Bungie::Players::PlayerDatum *player{ nullptr };
-		auto playerIndex = Bungie::Players::GetLocalPlayer(0);
-		if (playerIndex == Bungie::DatumHandle::Null || !(player = Bungie::Players::GetPlayers().Get(playerIndex)))
+		Blam::Players::PlayerDatum *player{ nullptr };
+		auto playerIndex = Blam::Players::GetLocalPlayer(0);
+		if (playerIndex == Blam::DatumHandle::Null || !(player = Blam::Players::GetPlayers().Get(playerIndex)))
 			return;
 
 		auto secondsUntilSpawn = Pointer(player)(0x2CBC).Read<int>();
 		auto firstTimeSpawning = Pointer(player)(0x4).Read<uint32_t>() & 8;
 
-		if(game_engine_round_in_progress() || player->SlaveUnit == Bungie::DatumHandle::Null)
+		if(game_engine_round_in_progress() || player->SlaveUnit == Blam::DatumHandle::Null)
 		{
 			if (secondsUntilSpawn != lastBeep && secondsUntilSpawn < 3)
 			{
@@ -317,7 +317,7 @@ namespace
 
 	void game_engine_tick_hook()
 	{
-		auto engine = Bungie::game_get_current_engine();
+		auto engine = Blam::game_get_current_engine();
 		if (!engine)
 			return;
 
@@ -333,7 +333,7 @@ namespace
 
 		const auto &moduleServer = Modules::ModuleServer::Instance();
 
-		auto delta = (Bungie::Time::GetGameTicks() - engineGobals(0xE10c).Read<uint32_t>()) - Bungie::Time::SecondsToTicks(moduleServer.VarServerCountdown->ValueInt + 5.0f);
+		auto delta = (Blam::Time::GetGameTicks() - engineGobals(0xE10c).Read<uint32_t>()) - Blam::Time::SecondsToTicks(moduleServer.VarServerCountdown->ValueInt + 5.0f);
 		if (delta < 0)
 			delta = 0;
 

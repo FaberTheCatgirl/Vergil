@@ -2,7 +2,7 @@
 
 #include "HaloOnline.hpp"
 #include "Patch.hpp"
-#include "Bungie\BungiePlayers.hpp"
+#include "Blam\BlamPlayers.hpp"
 #include "Modules\ModuleSettings.hpp"
 
 namespace
@@ -66,7 +66,7 @@ namespace
 		return length;
 	}
 
-	PlayerNameString* GetPlayerName(Bungie::Players::PlayerDatum *playerData, int index)
+	PlayerNameString* GetPlayerName(Blam::Players::PlayerDatum *playerData, int index)
 	{
 		if (index == -1)
 			return nullptr;

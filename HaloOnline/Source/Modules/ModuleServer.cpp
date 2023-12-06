@@ -16,7 +16,7 @@
 #include "ThirdParty\rapidjson\document.h"
 #include "ThirdParty\rapidjson\writer.h"
 #include "ThirdParty\rapidjson\stringbuffer.h"
-#include "Bungie\BungieNetwork.hpp"
+#include "Blam\BlamNetwork.hpp"
 #include "Console.hpp"
 #include "Server\Signaling.hpp"
 #include "Server\VariableSynchronization.hpp"
@@ -452,7 +452,7 @@ namespace
 
 	int FindPlayerByName(const std::string &name, bool findPeer = false)
 	{
-		auto* session = Bungie::Network::GetActiveSession();
+		auto* session = Blam::Network::GetActiveSession();
 		if (!session || !session->IsEstablished() || !session->IsHost())
 			return -1;
 		auto membership = &session->MembershipInfo;
@@ -476,7 +476,7 @@ namespace
 	std::vector<int> FindPlayersByUid(uint64_t uid)
 	{
 		std::vector<int> indices;
-		auto* session = Bungie::Network::GetActiveSession();
+		auto* session = Blam::Network::GetActiveSession();
 		if (!session || !session->IsEstablished() || !session->IsHost())
 			return indices;
 		auto membership = &session->MembershipInfo;
@@ -527,7 +527,7 @@ namespace
 			return false;
 		}
 		auto kickPlayerName = Utils::String::Join(Arguments);
-		auto* session = Bungie::Network::GetActiveSession();
+		auto* session = Blam::Network::GetActiveSession();
 		if (!session || !session->IsEstablished() || !session->IsHost())
 		{
 			returnInfo = "You must be hosting a game to use this command";
@@ -563,7 +563,7 @@ namespace
 
 		Server::Chat::SendServerMessage(ss.str().c_str(), peer);
 		auto ip = session->GetPeerAddress(peer).ToString();
-		if (!Bungie::Network::BootPlayer(playerIdx, 4))
+		if (!Blam::Network::BootPlayer(playerIdx, 4))
 		{
 			returnInfo = "Failed to kick player " + kickPlayerName;
 			return false;
@@ -595,7 +595,7 @@ namespace
 			returnInfo = "Invalid UID";
 			return false;
 		}
-		auto* session = Bungie::Network::GetActiveSession();
+		auto* session = Blam::Network::GetActiveSession();
 		if (!session || !session->IsEstablished() || !session->IsHost())
 		{
 			returnInfo = "You must be hosting a game to use this command";
@@ -612,7 +612,7 @@ namespace
 		{
 			auto ip = session->GetPeerAddress(session->MembershipInfo.GetPlayerPeer(playerIdx)).ToString();
 			auto kickPlayerName = Utils::String::ThinString(session->MembershipInfo.PlayerSessions[playerIdx].Properties.DisplayName);
-			if (!Bungie::Network::BootPlayer(playerIdx, 4))
+			if (!Blam::Network::BootPlayer(playerIdx, 4))
 			{
 				returnInfo += "Failed to kick player " + kickPlayerName + "\n";
 				continue;
@@ -654,7 +654,7 @@ namespace
 			returnInfo = "Invalid player index";
 			return false;
 		}
-		auto* session = Bungie::Network::GetActiveSession();
+		auto* session = Blam::Network::GetActiveSession();
 		if (!session || !session->IsEstablished() || !session->IsHost())
 		{
 			returnInfo = "You must be hosting a game to use this command";
@@ -663,7 +663,7 @@ namespace
 		auto player = &session->MembershipInfo.PlayerSessions[index];
 		auto kickPlayerName = Utils::String::ThinString(player->Properties.DisplayName);
 		auto ip = session->GetPeerAddress(player->PeerIndex).ToString();
-		if (!Bungie::Network::BootPlayer(index, 4))
+		if (!Blam::Network::BootPlayer(index, 4))
 		{
 			returnInfo = "Failed to kick player " + kickPlayerName;
 			return false;
@@ -771,7 +771,7 @@ namespace
 		// TODO: find an addr where we can find this data in clients memory
 		// so people could use it to find peoples UIDs and report them for cheating etc
 
-		auto* session = Bungie::Network::GetActiveSession();
+		auto* session = Blam::Network::GetActiveSession();
 		if (!session || !session->IsEstablished())
 		{
 			returnInfo = "No session found, are you in a game?";
@@ -784,7 +784,7 @@ namespace
 			auto player = session->MembershipInfo.PlayerSessions[playerIdx];
 			auto name = Utils::String::ThinString(player.Properties.DisplayName);
 			char uid[17];
-			Bungie::Players::FormatUid(uid, player.Properties.Uid);
+			Blam::Players::FormatUid(uid, player.Properties.Uid);
 			ss << std::dec << "[" << playerIdx << "] \"" << name << "\" (uid: " << uid;
 			if (session->IsHost())
 			{
@@ -805,7 +805,7 @@ namespace
 		rapidjson::StringBuffer buffer;
 		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
 
-		auto* session = Bungie::Network::GetActiveSession();
+		auto* session = Blam::Network::GetActiveSession();
 		if (!session || !session->IsEstablished())
 		{
 			returnInfo = "No session found, are you in a game?";
@@ -826,13 +826,13 @@ namespace
 			writer.Int(player.Properties.TeamIndex);
 
 			char uid[17];
-			Bungie::Players::FormatUid(uid, player.Properties.Uid);
+			Blam::Players::FormatUid(uid, player.Properties.Uid);
 
 			writer.Key("UID");
 			writer.String(uid);
 
 			std::stringstream color;
-			color << "#" << std::setw(6) << std::setfill('0') << std::hex << player.Properties.Customization.Colors[Bungie::Players::ColorIndices::Primary];
+			color << "#" << std::setw(6) << std::setfill('0') << std::hex << player.Properties.Customization.Colors[Blam::Players::ColorIndices::Primary];
 			writer.Key("color");
 			writer.String(color.str().c_str());
 
@@ -852,30 +852,30 @@ namespace
 	{
 		
 		if (Arguments.size() < 1 || Arguments.size() > 1) {
-			returnInfo = std::to_string(Bungie::Network::GetNetworkMode());
+			returnInfo = std::to_string(Blam::Network::GetNetworkMode());
 			return true;
 		}
 
-		auto previous = std::to_string(Bungie::Network::GetNetworkMode());
-		auto serverMode = (Bungie::NetworkMode)-1;
+		auto previous = std::to_string(Blam::Network::GetNetworkMode());
+		auto serverMode = (Blam::NetworkMode)-1;
 		try
 		{
-			serverMode = (Bungie::NetworkMode)std::atoi(Arguments[0].c_str());
+			serverMode = (Blam::NetworkMode)std::atoi(Arguments[0].c_str());
 		}
 		catch (std::logic_error&)
 		{
 		}
 
-		if (serverMode < Bungie::eNetworkModeOpenToPublic || serverMode > Bungie::eNetworkModeCount) {
+		if (serverMode < Blam::eNetworkModeOpenToPublic || serverMode > Blam::eNetworkModeCount) {
 			std::stringstream ss;
-			for (size_t i = 0; i < Bungie::eNetworkModeCount; i++)
-				ss << i << " = " << Bungie::NetworkModeNames[i] << "; ";
+			for (size_t i = 0; i < Blam::eNetworkModeCount; i++)
+				ss << i << " = " << Blam::NetworkModeNames[i] << "; ";
 			returnInfo = ss.str();
 			return false;
 		}
 
 		
-		bool retVal = Bungie::Network::SetNetworkMode(serverMode);
+		bool retVal = Blam::Network::SetNetworkMode(serverMode);
 		if (retVal)
 		{
 			returnInfo = "Changed network mode " + previous + " -> " + std::to_string(serverMode);
@@ -890,30 +890,30 @@ namespace
 		
 		
 		if (Arguments.size() < 1 || Arguments.size() > 1) {
-			returnInfo = std::to_string(Bungie::Network::GetLobbyType());
+			returnInfo = std::to_string(Blam::Network::GetLobbyType());
 			return true;
 		}
 
-		auto previous = std::to_string(Bungie::Network::GetLobbyType());
-		auto lobbyType = (Bungie::LobbyType)-1;
+		auto previous = std::to_string(Blam::Network::GetLobbyType());
+		auto lobbyType = (Blam::LobbyType)-1;
 		try
 		{
-			lobbyType = (Bungie::LobbyType)std::atoi(Arguments[0].c_str());
+			lobbyType = (Blam::LobbyType)std::atoi(Arguments[0].c_str());
 		}
 		catch (std::logic_error&)
 		{
 		}
 
-		if (lobbyType < Bungie::eLobbyTypeCampaign || lobbyType > Bungie::eLobbyTypeCount) {
+		if (lobbyType < Blam::eLobbyTypeCampaign || lobbyType > Blam::eLobbyTypeCount) {
 			std::stringstream ss;
-			for (size_t i = 0; i < Bungie::eLobbyTypeCount; i++)
-				ss << i << " = " << Bungie::LobbyTypeNames[i] << "; ";
+			for (size_t i = 0; i < Blam::eLobbyTypeCount; i++)
+				ss << i << " = " << Blam::LobbyTypeNames[i] << "; ";
 
 			returnInfo = ss.str();
 			return false;
 		}
 
-		bool retVal = Bungie::Network::SetLobbyType(lobbyType);
+		bool retVal = Blam::Network::SetLobbyType(lobbyType);
 		if (retVal)
 		{
 			returnInfo = "Changed lobby type " + previous + " -> " + std::to_string(lobbyType);
@@ -931,7 +931,7 @@ namespace
 			return false;
 		}
 
-		auto session = Bungie::Network::GetActiveSession();
+		auto session = Blam::Network::GetActiveSession();
 		if (!session)
 		{
 			returnInfo = "No session available";
@@ -941,7 +941,7 @@ namespace
 		// If an IP address was passed, send to that address
 		if (Arguments.size() > 0)
 		{
-			Bungie::Network::NetworkAddress blamAddress;
+			Blam::Network::NetworkAddress blamAddress;
 		    uint16_t port = 11774;
 
 			if (Arguments.size() == 2)
@@ -957,7 +957,7 @@ namespace
 				}
 			}
 
-			if (!Bungie::Network::NetworkAddress::Parse(Arguments[0], port, &blamAddress))
+			if (!Blam::Network::NetworkAddress::Parse(Arguments[0], port, &blamAddress))
 			{
 				returnInfo = "Invalid IPv4 address";
 				return false;
@@ -994,7 +994,7 @@ namespace
 
 	bool CommandServerShuffleTeams(const std::vector<std::string>& Arguments, std::string& returnInfo)
 	{
-		auto session = Bungie::Network::GetActiveSession();
+		auto session = Blam::Network::GetActiveSession();
 		if (!session || !session->IsEstablished())
 		{
 			returnInfo = "No session available";
@@ -1007,7 +1007,7 @@ namespace
 		}
 
 		// Build an array of active player indices
-		int players[Bungie::Network::MaxPlayers];
+		int players[Blam::Network::MaxPlayers];
 		auto numPlayers = 0;
 		auto membership = &session->MembershipInfo;
 		for (auto player = membership->FindFirstPlayer(); player >= 0; player = membership->FindNextPlayer(player))
@@ -1059,7 +1059,7 @@ namespace
 		return true;
 	}
 
-	void PongReceived(const Bungie::Network::NetworkAddress &from, uint32_t timestamp, uint16_t id, uint32_t latency)
+	void PongReceived(const Blam::Network::NetworkAddress &from, uint32_t timestamp, uint16_t id, uint32_t latency)
 	{
 		if (id != PingId)
 			return; // Only show pings sent by the ping command
@@ -1145,7 +1145,7 @@ namespace
 	}
 	bool CommandServerSay(const std::vector<std::string>& Arguments, std::string& returnInfo)
 	{
-		auto session = Bungie::Network::GetActiveSession();
+		auto session = Blam::Network::GetActiveSession();
 		if (!session || !session->IsEstablished())
 		{
 			returnInfo = "No session available";
@@ -1176,7 +1176,7 @@ namespace
 		auto playerName = Arguments[0];
 		std::string message = Arguments[1];
 
-		auto* session = Bungie::Network::GetActiveSession();
+		auto* session = Blam::Network::GetActiveSession();
 		if (!session || !session->IsEstablished() || !session->IsHost())
 		{
 			returnInfo = "You must be hosting a game to use this command";
@@ -1216,7 +1216,7 @@ namespace
 	}
 	bool CommandWebsocketInfo(const std::vector<std::string>& Arguments, std::string& returnInfo)
 	{
-		auto *session = Bungie::Network::GetActiveSession();
+		auto *session = Blam::Network::GetActiveSession();
 		if (!session || !session->IsEstablished())
 		{
 			returnInfo = "No session available";

@@ -3,7 +3,7 @@
 #include <vector>
 
 #include "Modules\ModuleWeapon.hpp"
-#include "Bungie\Math\RealVector3D.hpp"
+#include "Blam\Math\RealVector3D.hpp"
 
 namespace Patches::Weapon
 {
@@ -14,8 +14,8 @@ namespace Patches::Weapon
 	{
 		struct Offsets
 		{
-			Bungie::Math::RealVector3D Default;
-			Bungie::Math::RealVector3D Modified;
+			Blam::Math::RealVector3D Default;
+			Blam::Math::RealVector3D Modified;
 		};
 
 		std::string Name;
@@ -42,14 +42,14 @@ namespace Patches::Weapon
 	std::string GetEquippedWeaponTagName();
 	WeaponInfo::Offsets GetEquippedWeaponOffsets();
 
-	Bungie::Math::RealVector3D GetOffsetByName(bool isDefault, std::string &weaponName);
-	Bungie::Math::RealVector3D GetOffsetByIndex(bool isDefault, uint16_t &weaponIndex);
-	Bungie::Math::RealVector3D GetOffsetByTagName(bool isDefault, std::string &weaponName);
+	Blam::Math::RealVector3D GetOffsetByName(bool isDefault, std::string &weaponName);
+	Blam::Math::RealVector3D GetOffsetByIndex(bool isDefault, uint16_t &weaponIndex);
+	Blam::Math::RealVector3D GetOffsetByTagName(bool isDefault, std::string &weaponName);
 
 	void SetDefaultOffsets();
 	bool SetOffsetDefaultAll();
 	bool SetOffsetDefault(std::string &weaponName);
-	bool SetOffsetModified(std::string &weaponName, Bungie::Math::RealVector3D &weaponOffset);
+	bool SetOffsetModified(std::string &weaponName, Blam::Math::RealVector3D &weaponOffset);
 
 	namespace Config
 	{

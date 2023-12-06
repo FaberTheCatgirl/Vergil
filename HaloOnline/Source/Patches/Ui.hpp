@@ -6,7 +6,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
-#include "Bungie\Text\StringID.hpp"
+#include "Blam\Text\StringID.hpp"
 #include "Patch.hpp"
 
 namespace Patches::Ui
@@ -22,7 +22,7 @@ namespace Patches::Ui
 	// Registers a function to be called when the game window is created.
 	void OnCreateWindow(CreateWindowCallback callback);
 
-	void *ShowDialog(const Bungie::Text::StringID p_DialogID, const int32_t p_Arg1 = 0, const int32_t p_Flags = 4, const Bungie::Text::StringID p_ParentID = 0);
+	void *ShowDialog(const Blam::Text::StringID p_DialogID, const int32_t p_Arg1 = 0, const int32_t p_Flags = 4, const Blam::Text::StringID p_ParentID = 0);
 
 	void FindUiTagData();
 

@@ -1,12 +1,12 @@
 #include "Forge\Magnets.hpp"
-#include "Bungie\Math\RealVector3D.hpp"
-#include "Bungie\Math\RealQuaternion.hpp"
-#include "Bungie\BungiePlayers.hpp"
-#include "Bungie\BungieObjects.hpp"
-#include "Bungie\Tags\TagInstance.hpp"
-#include "Bungie\Tags\Objects\Object.hpp"
-#include "Bungie\BungieTime.hpp"
-#include "Bungie\Cache\StringIdCache.hpp"
+#include "Blam\Math\RealVector3D.hpp"
+#include "Blam\Math\RealQuaternion.hpp"
+#include "Blam\BlamPlayers.hpp"
+#include "Blam\BlamObjects.hpp"
+#include "Blam\Tags\TagInstance.hpp"
+#include "Blam\Tags\Objects\Object.hpp"
+#include "Blam\BlamTime.hpp"
+#include "Blam\Cache\StringIdCache.hpp"
 #include "Utils\Logger.hpp"
 #include "Modules\ModuleForge.hpp"
 #include "ThirdParty\rapidjson\document.h"
@@ -22,8 +22,8 @@
 #include <unordered_map>
 
 using namespace Forge;
-using namespace Bungie;
-using namespace Bungie::Math;
+using namespace Blam;
+using namespace Blam::Math;
 using namespace Magnets;
 
 namespace
@@ -36,10 +36,10 @@ namespace
 	{
 	public:
 		void Load(const std::string& path);
-		int GetMarkers(uint32_t name, std::vector<Bungie::Math::RealVector3D> &markers);
+		int GetMarkers(uint32_t name, std::vector<Blam::Math::RealVector3D> &markers);
 
 	private:
-		std::unordered_map<uint32_t, std::vector<Bungie::Math::RealVector3D>> m_Markers;
+		std::unordered_map<uint32_t, std::vector<Blam::Math::RealVector3D>> m_Markers;
 	};
 
 	class MagnetManager
@@ -142,7 +142,7 @@ namespace
 		static auto Objects_GetObjectsInCluster = (uint16_t(*)(int a1, uint32_t objectTypeMask, int16_t* pClusterIndex,
 			RealVector3D *center, float radius, uint32_t* result, uint16_t maxObjects))(0x00B35B60);
 
-		auto playerIndex = Bungie::Players::GetLocalPlayer(0);
+		auto playerIndex = Blam::Players::GetLocalPlayer(0);
 		if (playerIndex == DatumHandle::Null)
 			return;
 
@@ -162,11 +162,11 @@ namespace
 
 		if (selection.Contains(heldObjectIndex))
 		{
-			const auto& heldObject = Bungie::Objects::Get(heldObjectIndex);
+			const auto& heldObject = Blam::Objects::Get(heldObjectIndex);
 			for (auto objectIndex = heldObject->FirstChild; objectIndex != DatumHandle::Null
 				&& m_NumSourceMagnets < MAX_SOURCE_MAGNETS;)
 			{
-				auto object = Bungie::Objects::Get(objectIndex);
+				auto object = Blam::Objects::Get(objectIndex);
 				if (!object)
 					continue;
 
@@ -175,11 +175,11 @@ namespace
 			}
 		}
 
-		if (Bungie::Time::TicksToSeconds(Bungie::Time::GetGameTicks() - m_LastCheck) > 0.3f)
+		if (Blam::Time::TicksToSeconds(Blam::Time::GetGameTicks() - m_LastCheck) > 0.3f)
 		{
-			m_LastCheck = Bungie::Time::GetGameTicks();
+			m_LastCheck = Blam::Time::GetGameTicks();
 
-			auto heldObject = Bungie::Objects::Get(heldObjectIndex);
+			auto heldObject = Blam::Objects::Get(heldObjectIndex);
 
 			uint32_t proximityObjects[256];
 			auto numProximityObjects = Objects_GetObjectsInCluster(0, 0, &heldObject->ClusterIndex,
@@ -203,8 +203,8 @@ namespace
 	{
 		m_MagnetPairing.IsValid = false;
 
-		auto playerIndex = Bungie::Players::GetLocalPlayer(0);
-		auto player = Bungie::Players::GetPlayers().Get(playerIndex);
+		auto playerIndex = Blam::Players::GetLocalPlayer(0);
+		auto player = Blam::Players::GetPlayers().Get(playerIndex);
 		if (!player)
 			return;
 
@@ -295,7 +295,7 @@ namespace
 		if (tagLookup && (tagIndex == 0xFFFF))
 		{
 			// lookup the multiplayer_object_plasma tag instance
-			tagIndex = Bungie::Tags::TagInstance::Find('rmsh', "objects\\multi\\shaders\\multiplayer_object_plasma").Index;
+			tagIndex = Blam::Tags::TagInstance::Find('rmsh', "objects\\multi\\shaders\\multiplayer_object_plasma").Index;
 
 			// tag instance was not found, don't attempt to look it up again
 			if (tagIndex == 0xFFFF)
@@ -314,7 +314,7 @@ namespace
 		if (!UseDefaultShader(64, 0x14, 0, 0))
 			return;
 
-		auto shaderDef = Bungie::Tags::TagInstance(SHADER_TAGINDEX).GetDefinition<void>();
+		auto shaderDef = Blam::Tags::TagInstance(SHADER_TAGINDEX).GetDefinition<void>();
 		sub_A3CA60(SHADER_TAGINDEX, shaderDef, 20, 0, Geoemetry::PT_TRIANGLESTRIP, 1);
 
 		for (auto i = 0; i < m_NumDestMagnets; i++)
@@ -325,14 +325,14 @@ namespace
 
 	int MagnetManager::GetObjectMarkers(uint32_t tagIndex, std::vector<RealVector3D> &markers)
 	{
-		using ObjectDefinition = Bungie::Tags::Objects::Object;
-		auto objeDefinition = Bungie::Tags::TagInstance(tagIndex).GetDefinition<ObjectDefinition>();
+		using ObjectDefinition = Blam::Tags::Objects::Object;
+		auto objeDefinition = Blam::Tags::TagInstance(tagIndex).GetDefinition<ObjectDefinition>();
 		if (!objeDefinition)
 			return 0;
-		auto hlmtDefinition = Bungie::Tags::TagInstance(objeDefinition->Model.TagIndex).GetDefinition<uint8_t>();
+		auto hlmtDefinition = Blam::Tags::TagInstance(objeDefinition->Model.TagIndex).GetDefinition<uint8_t>();
 		if (!hlmtDefinition)
 			return 0;
-		auto modeDefinition = Bungie::Tags::TagInstance(*(uint32_t*)&hlmtDefinition[0xC]).GetDefinition<uint8_t>();
+		auto modeDefinition = Blam::Tags::TagInstance(*(uint32_t*)&hlmtDefinition[0xC]).GetDefinition<uint8_t>();
 		if (!modeDefinition)
 			return 0;
 
@@ -341,7 +341,7 @@ namespace
 
 	void MagnetManager::AddSourceObject(uint32_t objectIndex)
 	{
-		const auto object = Bungie::Objects::Get(objectIndex);
+		const auto object = Blam::Objects::Get(objectIndex);
 		if (!object)
 			return;
 
@@ -364,7 +364,7 @@ namespace
 
 	void MagnetManager::AddDestObject(uint32_t objectIndex)
 	{
-		const auto& object = Bungie::Objects::Get(objectIndex);
+		const auto& object = Blam::Objects::Get(objectIndex);
 		if (!object || object->PlacementIndex == -1)
 			return;
 
@@ -423,7 +423,7 @@ namespace
 	void JsonMarkerStore::Load(const std::string& path)
 	{
 		std::unordered_map<std::string, uint32_t> stringIdLookup;
-		Bungie::Cache::StringIDCache stringIdCache;
+		Blam::Cache::StringIDCache stringIdCache;
 		if (!stringIdCache.Load(HaloOnline::Instance().GetMapsFolder() + "string_ids.dat"))
 			return;
 

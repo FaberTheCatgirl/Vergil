@@ -15,7 +15,7 @@
 #include "HaloOnline.hpp"
 #include "ThirdParty\rapidjson\writer.h"
 #include "ThirdParty\rapidjson\stringbuffer.h"
-#include "Bungie\BungieNetwork.hpp"
+#include "Blam\BlamNetwork.hpp"
 #include "Server\BanList.hpp"
 #include "Modules\ModulePlayer.hpp"
 #include "Modules\ModuleServer.hpp"
@@ -36,25 +36,25 @@ namespace
 	char Network_InAddrToXnAddrHook(void* ina, void * pxna, void * pxnkid);
 	char __cdecl Network_transport_secure_key_createHook(void* xnetInfo);
 	DWORD __cdecl Network_managed_session_create_session_internalHook(int a1, int a2);
-	bool __fastcall Network_leader_request_boot_machineHook(void* thisPtr, void* unused, Bungie::Network::PeerInfo* peer, int reason);
-	bool __fastcall Network_session_handle_join_requestHook(Bungie::Network::Session *thisPtr, void *unused, const Bungie::Network::NetworkAddress &address, void *request);
+	bool __fastcall Network_leader_request_boot_machineHook(void* thisPtr, void* unused, Blam::Network::PeerInfo* peer, int reason);
+	bool __fastcall Network_session_handle_join_requestHook(Blam::Network::Session *thisPtr, void *unused, const Blam::Network::NetworkAddress &address, void *request);
 	int Network_GetMaxPlayersHook();
 	bool __fastcall Network_GetEndpointHook(char *thisPtr, void *unused);
 
-	bool __fastcall PeerRequestPlayerDesiredPropertiesUpdateHook(Bungie::Network::Session *thisPtr, void *unused, uint32_t arg0, uint32_t arg4, Bungie::Players::ClientPlayerProperties *properties, uint32_t argC);
-	void __fastcall ApplyPlayerPropertiesExtended(Bungie::Network::SessionMembership *thisPtr, void *unused, int playerIndex, uint32_t arg4, uint32_t arg8, uint8_t *data, uint32_t arg10);
+	bool __fastcall PeerRequestPlayerDesiredPropertiesUpdateHook(Blam::Network::Session *thisPtr, void *unused, uint32_t arg0, uint32_t arg4, Blam::Players::ClientPlayerProperties *properties, uint32_t argC);
+	void __fastcall ApplyPlayerPropertiesExtended(Blam::Network::SessionMembership *thisPtr, void *unused, int playerIndex, uint32_t arg4, uint32_t arg8, uint8_t *data, uint32_t arg10);
 	void __fastcall RegisterPlayerPropertiesPacketHook(void *thisPtr, void *unused, int packetId, const char *packetName, int arg8, int size1, int size2, void *serializeFunc, void *deserializeFunc, int arg1C, int arg20);
-	void SerializePlayerPropertiesHook(Bungie::BitStream *stream, uint8_t *buffer, bool flag);
-	bool DeserializePlayerPropertiesHook(Bungie::BitStream *stream, uint8_t *buffer, bool flag);
+	void SerializePlayerPropertiesHook(Blam::BitStream *stream, uint8_t *buffer, bool flag);
+	bool DeserializePlayerPropertiesHook(Blam::BitStream *stream, uint8_t *buffer, bool flag);
 
 	char __fastcall Network_state_end_game_write_stats_enterHook(void* thisPtr, int unused, int a2, int a3, int a4);
 	char __fastcall Network_state_leaving_enterHook(void* thisPtr, int unused, int a2, int a3, int a4);
 	char __fastcall Network_session_join_remote_sessionHook(void* thisPtr, int unused, char a2, int a3, int a4, int a5, int a6, int a7, int a8, int a9, int a10, int a11, void *a12, int a13, int a14);
 	int __fastcall Network_session_initiate_leave_protocolHook(void* thisPtr, int unused, char forceClose);
 	int __fastcall Network_session_parameters_clearHook(void* thisPtr, int unused);
-	int __fastcall Network_session_remove_peerHook(Bungie::Network::SessionMembership *membership, void *unused, int peerIndex);
+	int __fastcall Network_session_remove_peerHook(Blam::Network::SessionMembership *membership, void *unused, int peerIndex);
 	bool __fastcall Network_session_parameter_countdown_timer_request_change_hook(void* thisPtr, void* unused, int state, int value);
-	bool __fastcall c_network_session_parameter_map_variant__request_change_hook(void *thisptr, void *unused, Bungie::MapVariant *mapVariant);
+	bool __fastcall c_network_session_parameter_map_variant__request_change_hook(void *thisptr, void *unused, Blam::MapVariant *mapVariant);
 	char __fastcall c_network_session__handle_session_boot_hook(void *thisPtr, void *unused, int a2, int a3);
 	uint64_t local_user_get_identifier_hook();
 	bool network_build_local_game_status_hook(uint8_t *data);
@@ -170,7 +170,7 @@ namespace Patches::Network
 					Utils::String::BytesToHexString((char*)Pointer(0x2247b90), 0x10, xnaddr);
 
 					int32_t variantType = Pointer(0x023DAF18).Read<int32_t>();
-					if (Bungie::game_globals().current_game_mode == Bungie::game_mode::mainmenu)
+					if (Blam::game_globals().current_game_mode == Blam::game_mode::mainmenu)
 					{
 						if (mapName == "mainmenu")
 						{
@@ -204,7 +204,7 @@ namespace Patches::Network
 					writer.Key("votingEnabled");
 					writer.Bool(Modules::ModuleServer::Instance().VarServerVotingEnabled->ValueInt == 1 || Modules::ModuleServer::Instance().VarVetoSystemEnabled->ValueInt == 1);
 
-					auto session = Bungie::Network::GetActiveSession();
+					auto session = Blam::Network::GetActiveSession();
 					if (session && session->IsEstablished()) {
 						writer.Key("teams");
 						writer.Bool(session->HasTeams());
@@ -215,10 +215,10 @@ namespace Patches::Network
 					writer.String(mapName.c_str());
 					writer.Key("variant");
 					writer.String(Utils::String::ThinString(variantName).c_str());
-					if (variantType >= 0 && variantType < Bungie::eGameTypeCount)
+					if (variantType >= 0 && variantType < Blam::eGameTypeCount)
 					{
 						writer.Key("variantType");
-						writer.String(Bungie::GameTypeNames[variantType].c_str());
+						writer.String(Blam::GameTypeNames[variantType].c_str());
 					}
 					writer.Key("status");
 					writer.String(status.c_str());
@@ -277,7 +277,7 @@ namespace Patches::Network
 							int playerIdx = session->MembershipInfo.GetPeerPlayer(peerIdx);
 							if (playerIdx != -1)
 							{
-								auto playerStats = Bungie::Players::GetStats(playerIdx);
+								auto playerStats = Blam::Players::GetStats(playerIdx);
 								auto* player = &session->MembershipInfo.PlayerSessions[playerIdx];
 								std::string name = Utils::String::ThinString(player->Properties.DisplayName);
 								uint16_t team = Pointer(playerInfoBase + (5696 * playerIdx) + 32).Read<uint16_t>();
@@ -292,11 +292,11 @@ namespace Patches::Network
 								writer.Key("team");
 								writer.Int(team);
 								char uid[17];
-								Bungie::Players::FormatUid(uid, player->Properties.Uid);
+								Blam::Players::FormatUid(uid, player->Properties.Uid);
 								writer.Key("uid");
 								writer.String(uid);
 								std::stringstream color;
-								color << "#" << std::setw(6) << std::setfill('0') << std::hex << player->Properties.Customization.Colors[Bungie::Players::ColorIndices::Primary];
+								color << "#" << std::setw(6) << std::setfill('0') << std::hex << player->Properties.Customization.Colors[Blam::Players::ColorIndices::Primary];
 								writer.Key("primaryColor");
 								writer.String(color.str().c_str());
 								writer.Key("isAlive");
@@ -796,11 +796,11 @@ namespace
 	}
 
 	// Applies player properties data including extended properties
-	void __fastcall ApplyPlayerPropertiesExtended(Bungie::Network::SessionMembership *thisPtr, void *unused, int playerIndex, uint32_t arg4, uint32_t arg8, uint8_t *data, uint32_t arg10)
+	void __fastcall ApplyPlayerPropertiesExtended(Blam::Network::SessionMembership *thisPtr, void *unused, int playerIndex, uint32_t arg4, uint32_t arg8, uint8_t *data, uint32_t arg10)
 	{
 		auto properties = &thisPtr->PlayerSessions[playerIndex].Properties;
 		bool isNewMember = false;
-		auto session = Bungie::Network::GetActiveSession();
+		auto session = Blam::Network::GetActiveSession();
 
 		// If the player already has a name, then use that instead of the one in the packet
 		// This prevents people from changing their name mid-game by forcing a player properties update
@@ -817,7 +817,7 @@ namespace
 		}
 
 
-		auto packetProperties = reinterpret_cast<Bungie::Players::ClientPlayerProperties*>(data);
+		auto packetProperties = reinterpret_cast<Blam::Players::ClientPlayerProperties*>(data);
 
 
 		if (session->HasTeams() && session->MembershipInfo.PlayerSessions[playerIndex].Properties.TeamIndex != packetProperties->TeamIndex)
@@ -869,7 +869,7 @@ namespace
 				auto numTeams = std::min<int>(minTeams, moduleServer.VarNumTeams->ValueInt);
 
 				//check joining teams size
-				int smallest = Bungie::Network::MaxPlayers + 1;
+				int smallest = Blam::Network::MaxPlayers + 1;
 				int smallIndex = 0;
 				for (int i = 0; i < numTeams; i++)
 				{
@@ -898,14 +898,14 @@ namespace
 
 
 			char uidst[17];
-			Bungie::Players::FormatUid(uidst, uid);
+			Blam::Players::FormatUid(uidst, uid);
 			std::string uidStr(uidst);
 
 			auto name = Utils::String::ThinString(packetProperties->DisplayName);
 
 			if (banList.ContainsUid(uidStr) || Server::HalostatsBanList::Instance().ContainsUID(uidStr))
 			{
-				if (!Bungie::Network::BootPlayer(playerIndex, 4))
+				if (!Blam::Network::BootPlayer(playerIndex, 4))
 					Utils::Logger::Instance().Log(Utils::LogTypes::Network, Utils::LogLevel::Error, "Failed to Kick Banned UID: " + uidStr);
 				else
 					Utils::Logger::Instance().Log(Utils::LogTypes::Network, Utils::LogLevel::Error, "Successfully Kicked Banned UID: " + uidStr);
@@ -913,7 +913,7 @@ namespace
 			}
 
 			if (banList.ContainsName(name) || Server::HalostatsBanList::Instance().ContainsName(name)) {
-				if (!Bungie::Network::BootPlayer(playerIndex, 4))
+				if (!Blam::Network::BootPlayer(playerIndex, 4))
 					Utils::Logger::Instance().Log(Utils::LogTypes::Network, Utils::LogLevel::Error, "Failed to Kick Banned Name: " + name);
 				else
 					Utils::Logger::Instance().Log(Utils::LogTypes::Network, Utils::LogLevel::Error, "Successfully Kicked Banned Name: " + name);
@@ -922,9 +922,9 @@ namespace
 		}
 	}
 
-	bool __fastcall Network_leader_request_boot_machineHook(void* thisPtr, void* unused, Bungie::Network::PeerInfo* peer, int reason)
+	bool __fastcall Network_leader_request_boot_machineHook(void* thisPtr, void* unused, Blam::Network::PeerInfo* peer, int reason)
 	{
-		auto session = Bungie::Network::GetActiveSession();
+		auto session = Blam::Network::GetActiveSession();
 		auto membership = &session->MembershipInfo;
 		auto peerIndex = peer - membership->Peers;
 		auto playerIndex = membership->GetPeerPlayer(peerIndex);
@@ -940,7 +940,7 @@ namespace
 		return true;
 	}
 
-	bool __fastcall Network_session_handle_join_requestHook(Bungie::Network::Session *thisPtr, void *unused, const Bungie::Network::NetworkAddress &address, void *request)
+	bool __fastcall Network_session_handle_join_requestHook(Blam::Network::Session *thisPtr, void *unused, const Blam::Network::NetworkAddress &address, void *request)
 	{
 		// Convert the IP to a string
 		struct in_addr inAddr;
@@ -953,7 +953,7 @@ namespace
 			if (banList.ContainsIp(ipStr) || Server::TempBanList::Instance().ContainsIp(ipStr) || Server::HalostatsBanList::Instance().ContainsIp(ipStr))
 			{
 				// Send a join refusal
-				typedef void(__thiscall *Network_session_acknowledge_join_requestFunc)(Bungie::Network::Session *thisPtr, const Bungie::Network::NetworkAddress &address, int reason);
+				typedef void(__thiscall *Network_session_acknowledge_join_requestFunc)(Blam::Network::Session *thisPtr, const Blam::Network::NetworkAddress &address, int reason);
 				auto Network_session_acknowledge_join_request = reinterpret_cast<Network_session_acknowledge_join_requestFunc>(0x45A230);
 				Network_session_acknowledge_join_request(thisPtr, address, 0); // TODO: Use a special code for bans and hook the join refusal handler so we can display a message to the player
 
@@ -963,7 +963,7 @@ namespace
 		}
 
 		// Continue the join process
-		typedef bool(__thiscall *Network_session_handle_join_requestFunc)(Bungie::Network::Session *thisPtr, const Bungie::Network::NetworkAddress &address, void *request);
+		typedef bool(__thiscall *Network_session_handle_join_requestFunc)(Blam::Network::Session *thisPtr, const Blam::Network::NetworkAddress &address, void *request);
 		auto Network_session_handle_join_request = reinterpret_cast<Network_session_handle_join_requestFunc>(0x4DA410);
 		return Network_session_handle_join_request(thisPtr, address, request);
 	}
@@ -976,7 +976,7 @@ namespace
 
 	// This completely replaces c_network_session::peer_request_player_desired_properties_update
 	// Editing the existing function doesn't allow for a lot of flexibility
-	bool __fastcall PeerRequestPlayerDesiredPropertiesUpdateHook(Bungie::Network::Session *thisPtr, void *unused, uint32_t arg0, uint32_t arg4, Bungie::Players::ClientPlayerProperties *properties, uint32_t argC)
+	bool __fastcall PeerRequestPlayerDesiredPropertiesUpdateHook(Blam::Network::Session *thisPtr, void *unused, uint32_t arg0, uint32_t arg4, Blam::Players::ClientPlayerProperties *properties, uint32_t argC)
 	{
 		if (thisPtr->Type == 3)
 			return false;
@@ -1033,10 +1033,10 @@ namespace
 	}
 
 	// Serializes extended player-properties data
-	void SerializePlayerPropertiesHook(Bungie::BitStream *stream, uint8_t *buffer, bool flag)
+	void SerializePlayerPropertiesHook(Blam::BitStream *stream, uint8_t *buffer, bool flag)
 	{
 		// Serialize base data
-		typedef void(*SerializePlayerPropertiesPtr)(Bungie::BitStream *stream, uint8_t *buffer, bool flag);
+		typedef void(*SerializePlayerPropertiesPtr)(Blam::BitStream *stream, uint8_t *buffer, bool flag);
 		SerializePlayerPropertiesPtr SerializePlayerProperties = reinterpret_cast<SerializePlayerPropertiesPtr>(0x4433C0);
 		SerializePlayerProperties(stream, buffer, flag);
 
@@ -1045,10 +1045,10 @@ namespace
 	}
 
 	// Deserializes extended player-properties data
-	bool DeserializePlayerPropertiesHook(Bungie::BitStream *stream, uint8_t *buffer, bool flag)
+	bool DeserializePlayerPropertiesHook(Blam::BitStream *stream, uint8_t *buffer, bool flag)
 	{
 		// Deserialize base data
-		typedef bool (*DeserializePlayerPropertiesPtr)(Bungie::BitStream *stream, uint8_t *buffer, bool flag);
+		typedef bool (*DeserializePlayerPropertiesPtr)(Blam::BitStream *stream, uint8_t *buffer, bool flag);
 		DeserializePlayerPropertiesPtr DeserializePlayerProperties = reinterpret_cast<DeserializePlayerPropertiesPtr>(0x4432E0);
 		bool succeeded = DeserializePlayerProperties(stream, buffer, flag);
 
@@ -1077,7 +1077,7 @@ namespace
 		return Network_state_leaving_enter(thisPtr, a2, a3, a4);
 	}
 
-	void PongReceivedHookImpl(const Bungie::Network::NetworkAddress &from, const Bungie::Network::PongPacket &pong, uint32_t latency)
+	void PongReceivedHookImpl(const Blam::Network::NetworkAddress &from, const Blam::Network::PongPacket &pong, uint32_t latency)
 	{
 		for (auto &&callback : pongCallbacks)
 			callback(from, pong.Timestamp, pong.ID, latency);
@@ -1097,12 +1097,12 @@ namespace
 		}
 	}
 
-	void LifeCycleStateChangedHookImpl(Bungie::LifeCycleState newState)
+	void LifeCycleStateChangedHookImpl(Blam::LifeCycleState newState)
 	{
 		switch (newState)
 		{
-		case Bungie::LifeCycleState::eLifeCycleStateEndGameWriteStats:
-		case Bungie::LifeCycleState::eLifeCycleStateLeaving:
+		case Blam::LifeCycleState::eLifeCycleStateEndGameWriteStats:
+		case Blam::LifeCycleState::eLifeCycleStateLeaving:
 			std::string previousValue;
 			Modules::CommandMap::Instance().SetVariable2(Modules::ModuleServer::Instance().VarChatVoteStarted, std::string("0"), previousValue);
 			Modules::CommandMap::Instance().SetVariable2(Modules::ModuleServer::Instance().VarChatVoteStartedByUid, std::string(""), previousValue);
@@ -1253,14 +1253,14 @@ namespace
 		return Network_session_parameters_clear(thisPtr, unused);
 	}
 
-	int __fastcall Network_session_remove_peerHook(Bungie::Network::SessionMembership *membership, void *unused, int peerIndex)
+	int __fastcall Network_session_remove_peerHook(Blam::Network::SessionMembership *membership, void *unused, int peerIndex)
 	{
 		if (membership->HostPeerIndex == membership->LocalPeerIndex)
 		{
 			Server::Signaling::RemovePeer(peerIndex);
 		}
 
-		typedef int(__thiscall *Network_session_remove_peerFunc)(Bungie::Network::SessionMembership *membership, int peerIndex);
+		typedef int(__thiscall *Network_session_remove_peerFunc)(Blam::Network::SessionMembership *membership, int peerIndex);
 		Network_session_remove_peerFunc Network_session_remove_peer = reinterpret_cast<Network_session_remove_peerFunc>(0x4500D0);
 		return Network_session_remove_peer(membership, peerIndex);
 	}
@@ -1274,9 +1274,9 @@ namespace
 		return Network_session_parameter_countdown_timer_request_change(thisPtr, state, value);
 	}
 
-	bool __fastcall c_network_session_parameter_map_variant__request_change_hook(void *thisptr, void *unused, Bungie::MapVariant *mapVariant)
+	bool __fastcall c_network_session_parameter_map_variant__request_change_hook(void *thisptr, void *unused, Blam::MapVariant *mapVariant)
 	{
-		const auto c_network_session_parameter_map_variant__request_change = (bool(__thiscall *)(void *thisptr, Bungie::MapVariant *mapVariant))(0x00456480);
+		const auto c_network_session_parameter_map_variant__request_change = (bool(__thiscall *)(void *thisptr, Blam::MapVariant *mapVariant))(0x00456480);
 		
 		auto ret = c_network_session_parameter_map_variant__request_change(thisptr, mapVariant);
 		if (ret)
@@ -1289,7 +1289,7 @@ namespace
 
 	char __fastcall c_network_session__handle_session_boot_hook(void *thisPtr, void *unused, int a2, int a3)
 	{
-		Bungie::Network::LeaveGame();
+		Blam::Network::LeaveGame();
 		Web::Ui::ScreenLayer::ShowAlert("Booted", "You were booted from the game", Web::Ui::ScreenLayer::AlertIcon::None);
 		return 0;
 	}

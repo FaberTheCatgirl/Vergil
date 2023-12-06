@@ -1,15 +1,15 @@
 #include "Forge\RotationSnap.hpp"
-#include "Bungie\BungieData.hpp"
-#include "Bungie\Math\RealQuaternion.hpp"
-#include "Bungie\Math\RealMatrix4x3.hpp"
-#include "Bungie\Math\MathUtil.hpp"
-#include "Bungie\BungieInput.hpp"
-#include "Bungie\BungieTime.hpp"
+#include "Blam\BlamData.hpp"
+#include "Blam\Math\RealQuaternion.hpp"
+#include "Blam\Math\RealMatrix4x3.hpp"
+#include "Blam\Math\MathUtil.hpp"
+#include "Blam\BlamInput.hpp"
+#include "Blam\BlamTime.hpp"
 #include "Modules\ModuleForge.hpp"
 #include "Forge\ForgeUtil.hpp"
 
-using namespace Bungie;
-using namespace Bungie::Math;
+using namespace Blam;
+using namespace Blam::Math;
 
 namespace
 {
@@ -51,14 +51,14 @@ namespace Forge::RotationSnap
 
 		if (heldObjectIndex == -1)
 		{
-			s_RotationSnapState.StartTime = Bungie::Time::GetGameTicks();
+			s_RotationSnapState.StartTime = Blam::Time::GetGameTicks();
 			s_RotationSnapState.StartRotation = RealQuaternion();
 			s_RotationSnapState.EndRotation = s_RotationSnapState.StartRotation;
 			s_RotationSnapState.Current = 1.0f;
 			s_RotationSnapState.ObjectIndex = DatumHandle::Null;
 		}
 
-		s_RotationSnapState.Current += Bungie::Time::GetSecondsPerTick() / DURATION_SECONDS;
+		s_RotationSnapState.Current += Blam::Time::GetSecondsPerTick() / DURATION_SECONDS;
 		if (s_RotationSnapState.Current >= 1)
 		{
 			s_RotationSnapState.IsScripted = false;
@@ -89,12 +89,12 @@ namespace Forge::RotationSnap
 		s_RotationSnapState.ObjectIndex = heldObjectIndex;
 	}
 
-	void RotateSnapped(const Bungie::Math::RealVector3D& axis)
+	void RotateSnapped(const Blam::Math::RealVector3D& axis)
 	{
 		static auto& moduleForge = Modules::ModuleForge::Instance();
 		auto currentSnap = moduleForge.VarRotationSnap->ValueInt;
 		const auto snapAngleDegrees = SNAP_ANGLES[currentSnap];
-		const auto snapAngleRadians = snapAngleDegrees / 180.0f * Bungie::Math::PI;
+		const auto snapAngleRadians = snapAngleDegrees / 180.0f * Blam::Math::PI;
 
 		if (s_RotationSnapState.Current < 1)
 			return;
@@ -103,20 +103,20 @@ namespace Forge::RotationSnap
 		GetObjectTransformationMatrix(s_RotationSnapState.ObjectIndex, &objectTransform);
 
 		auto rotation = RealQuaternion::CreateFromAxisAngle(axis, snapAngleRadians);
-		s_RotationSnapState.StartTime = Bungie::Time::GetGameTicks();
+		s_RotationSnapState.StartTime = Blam::Time::GetGameTicks();
 		s_RotationSnapState.StartRotation = RealQuaternion::Normalize(RealQuaternion::CreateFromRotationMatrix(objectTransform));
 		s_RotationSnapState.EndRotation = RealQuaternion::Normalize(rotation * s_RotationSnapState.StartRotation);
 		s_RotationSnapState.Current = 0;
 	}
 
-	void RotateToScripted(uint32_t objectIndex, const Bungie::Math::RealQuaternion& rotation)
+	void RotateToScripted(uint32_t objectIndex, const Blam::Math::RealQuaternion& rotation)
 	{
 		RealMatrix4x3 objectTransform;
 		GetObjectTransformationMatrix(s_RotationSnapState.ObjectIndex, &objectTransform);
 
 		s_RotationSnapState.ObjectIndex = objectIndex;
 		s_RotationSnapState.IsScripted = true;
-		s_RotationSnapState.StartTime = Bungie::Time::GetGameTicks();
+		s_RotationSnapState.StartTime = Blam::Time::GetGameTicks();
 		s_RotationSnapState.StartRotation = RealQuaternion::Normalize(RealQuaternion::CreateFromRotationMatrix(objectTransform));
 		s_RotationSnapState.EndRotation = rotation;
 		s_RotationSnapState.Current = 0;
@@ -147,7 +147,7 @@ namespace
 
 	void HandleInput()
 	{
-		using namespace Bungie::Input;
+		using namespace Blam::Input;
 
 		static auto& moduleForge = Modules::ModuleForge::Instance();
 

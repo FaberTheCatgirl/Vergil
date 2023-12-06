@@ -1,11 +1,11 @@
 #include "Patch.hpp"
 #include "Patches\Audio.hpp"
 #include "Modules\ModuleSettings.hpp"
-#include "Bungie\FMOD\FMODFunctions.hpp"
-#include "Bungie\FMOD\FMODEnum.hpp"
-#include "Bungie\Sounds\SoundDatum.hpp"
-#include "Bungie\Sounds\Functions.hpp"
-#include "Bungie\Sounds\SoundGlobals.hpp"
+#include "Blam\FMOD\FMODFunctions.hpp"
+#include "Blam\FMOD\FMODEnum.hpp"
+#include "Blam\Sounds\SoundDatum.hpp"
+#include "Blam\Sounds\Functions.hpp"
+#include "Blam\Sounds\SoundGlobals.hpp"
 #include <iostream>
 
 
@@ -14,7 +14,7 @@ namespace
 	int __fastcall FMOD_Sound_GetFormat_Hook(void* sound1, void* unused, void* sound2, FMOD_SOUND_TYPE* type, FMOD_SOUND_FORMAT* format, int* channels, int* bits);
 	int __fastcall FMOD_System_PlaySound_Wrapper_Hook(void* system1, void* unused, void* system2, void* channelGroup, void* sound, int paused, void* channel);
 	int __fastcall FMOD_System_CreateSound_Hook(void* system1, void* unused, void* system2, char* nameOrData, FMOD_MODE mode, FMOD_CREATESOUNDEXINFO* exInfo, void* sound);
-	int __cdecl CreateSoundFMOD(Bungie::SoundTagDataStruct* data, void* sound, char* a3);
+	int __cdecl CreateSoundFMOD(Blam::SoundTagDataStruct* data, void* sound, char* a3);
 
 	int __stdcall FMOD_Studio_Init_Hook(void* system, int maxChannels, int flags, void* extraDriverData, int studioFlags);
 	bool __fastcall snd_SYSTEM_FMOD_Init_Hook(uint8_t* thisptr, void* unused, int a2, int a3);
@@ -118,20 +118,20 @@ namespace Patches::Audio
 
 namespace
 {
-	using namespace Bungie;
+	using namespace Blam;
 	using namespace std;
 
-	int __cdecl CreateSoundFMOD(Bungie::SoundTagDataStruct* data, void* sound, char* a3) {
-		//static auto sub_64BD10 = (int(__cdecl*)(Bungie::SoundTagDataStruct* data, void* sound, char* a3))(0x64BD10);
+	int __cdecl CreateSoundFMOD(Blam::SoundTagDataStruct* data, void* sound, char* a3) {
+		//static auto sub_64BD10 = (int(__cdecl*)(Blam::SoundTagDataStruct* data, void* sound, char* a3))(0x64BD10);
 
 		auto tagIndex = data->SoundTagIndex;
-		auto name = Bungie::Tags::TagInstance::GetTagName(tagIndex);
+		auto name = Blam::Tags::TagInstance::GetTagName(tagIndex);
 
 		auto soundSource = (*soundSources)->Get(data->SoundSourcesHandle);
 
 		cout << "Creating sound: " << name << endl;
 		cout << "Pitch range: " << (int)soundSource->PitchRangeBlockIndex << " Permutation: " << (int)soundSource->PitchRangePermutationBlockIndex << endl;
-		auto result = Bungie::Sounds::SoundCreateFMODSound(data, sound, a3);
+		auto result = Blam::Sounds::SoundCreateFMODSound(data, sound, a3);
 
 		if (soundSource->LoopingSoundDatumHandle.Index) {
 			auto loopingSoundData = (*loopingSounds)->Get(soundSource->LoopingSoundDatumHandle);
