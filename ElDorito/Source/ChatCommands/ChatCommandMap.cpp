@@ -21,6 +21,7 @@ namespace ChatCommands
 	KickIndexCommand kickIndexCommand;
 	EndGameCommand endGameCommand;
 	ShuffleTeamsCommand shuffleTeamsCommand;
+	SkipRoundCommand skipRoundCommand;
 
 	void LifeCycleStateChanged(Blam::Network::LifeCycleState newState)
 	{
@@ -68,6 +69,7 @@ namespace ChatCommands
 		Commands.push_back((AbstractChatCommand*) &kickIndexCommand);
 		Commands.push_back((AbstractChatCommand*) &endGameCommand);
 		Commands.push_back((AbstractChatCommand*) &shuffleTeamsCommand);
+		Commands.push_back((AbstractChatCommand*) &skipRoundCommand);
 
 	}
 

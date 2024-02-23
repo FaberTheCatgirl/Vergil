@@ -758,6 +758,13 @@ namespace
 		return true;
 	}
 
+	bool CommandRoundEnd(const std::vector<std::string>& Arguments, std::string& returnInfo)
+	{
+		Pointer(0x14133D28).Write(2);
+		returnInfo = "Skipping round...";
+		return true;
+	}
+
 	bool CommandGameVersion(const std::vector<std::string>& arguments, std::string& returnInfo) {
 		returnInfo = Utils::Version::GetVersionString();
 		return true;
@@ -1168,6 +1175,8 @@ namespace Modules
 		AddCommand("Start", "start", "Starts or restarts the game", eCommandFlagsNone, CommandGameStart);
 
 		AddCommand("End", "end", "Ends the game", eCommandFlagsNone, CommandGameEnd);
+
+		AddCommand("RoundEnd", "roundend", "Ends the round", eCommandFlagsNone, CommandRoundEnd);
 
 		AddCommand("Stop", "stop", "Stops the game, goes back to lobby", eCommandFlagsNone, CommandGameStop);
 

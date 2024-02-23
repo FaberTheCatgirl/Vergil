@@ -1305,6 +1305,7 @@ namespace Modules
 		VarNumTeams = AddVariableInt("NumberOfTeams", "num_teams", "Set the desired number of teams", static_cast<CommandFlags>(eCommandFlagsArchived | eCommandFlagsHostOnly), 2);
 		VarNumTeams->ValueIntMin = 1;
 		VarNumTeams->ValueIntMax = 8;
+
 		VarMinTeamSize = AddVariableInt("TeamSize", "min_team_size", "Set the minimum number of players each team must have before a new team is assigned", static_cast<CommandFlags>(eCommandFlagsArchived | eCommandFlagsHostOnly), 1);
 		VarMinTeamSize->ValueIntMin = 1;
 		VarMinTeamSize->ValueIntMax = 8;
@@ -1389,6 +1390,10 @@ namespace Modules
 		VarChatCommandEndGameEnabled = AddVariableInt("ChatCommandEndGameEnabled", "chat_command_end_game_enabled", "Controls whether or not players can vote to end the game. ", eCommandFlagsArchived, 1);
 		VarChatCommandEndGameEnabled->ValueIntMin = 0;
 		VarChatCommandEndGameEnabled->ValueIntMax = 1;
+
+		VarChatCommandSkipRoundEnabled = AddVariableInt("ChatCommandSkipRoundEnabled", "chat_command_skip_round_enabled", "Controls whether or not players can vote to end the round. ", eCommandFlagsArchived, 1);
+		VarChatCommandSkipRoundEnabled->ValueIntMin = 0;
+		VarChatCommandSkipRoundEnabled->ValueIntMax = 1;
 
 		VarSendChatToRconClients = AddVariableInt("SendChatToRconClients", "send_chat_to_rcon", "Controls whether or not chat should be sent through rcon", eCommandFlagsArchived, 0);
 		VarSendChatToRconClients->ValueIntMin = 0;

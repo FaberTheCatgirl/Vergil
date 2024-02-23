@@ -8,7 +8,8 @@
 
 
 namespace ChatCommands
-{
+{	
+	// Not sure why this is here?
 	int findNumberOfPlayersInGame()
 	{
 		auto* session = Blam::Network::GetActiveSession();
@@ -28,6 +29,7 @@ namespace ChatCommands
 		return numberOfPlayers;
 	}
 
+	// Command to vote shuffle teams
 	ShuffleTeamsCommand::ShuffleTeamsCommand() : AbstractChatCommand("shuffleTeams", "Starts a vote to shuffle the teams. Type !yes to vote."){}
 
 	void ShuffleTeamsCommand::doOnVotePass(std::string name)
@@ -58,6 +60,7 @@ namespace ChatCommands
 		}
 	}
 
+	// Command to vote end current game
 	EndGameCommand::EndGameCommand() : AbstractChatCommand("endGame", "Starts a vote to end the current game. Type !yes to vote."){}
 
 	void EndGameCommand::doOnVotePass(std::string name)
@@ -80,6 +83,30 @@ namespace ChatCommands
 
 	bool EndGameCommand::isValidArgument(std::string s, std::string& returnInfo){ return true; }
 
+	// Command to vote end current round
+	SkipRoundCommand::SkipRoundCommand() : AbstractChatCommand("skipRound", "Starts a vote to end the current round. Type !yes to vote.") {}
+
+	void SkipRoundCommand::doOnVotePass(std::string name)
+	{
+		Server::Chat::SendServerMessage("Final vote cast by " + name + ". Vote has passed.");
+		Modules::CommandMap::Instance().ExecuteCommand("game.roundend");
+	}
+	bool SkipRoundCommand::isEnabled()
+	{
+		return (Modules::ModuleServer::Instance().VarChatCommandSkipRoundEnabled->ValueInt == 1);
+	}
+	void SkipRoundCommand::doOnVoteFail()
+	{
+		Server::Chat::SendServerMessage("Vote has not passed.");
+	}
+	void SkipRoundCommand::doOnVoteStart(std::string starterName)
+	{
+		Server::Chat::SendServerMessage(starterName + " has started a vote to end the round. " + std::to_string(votesNeeded) + " vote" + ((votesNeeded > 1) ? "s" : "") + " needed to pass. Type !yes to vote.");
+	}
+
+	bool SkipRoundCommand::isValidArgument(std::string s, std::string& returnInfo) { return true; }
+
+	// Command to vote kick player index
 	KickIndexCommand::KickIndexCommand() : AbstractChatCommand("kickIndex", "Starts a vote to kick a player by index.") {}
 
 	void KickIndexCommand::doOnVotePass(std::string name)
@@ -148,6 +175,7 @@ namespace ChatCommands
 		return true;
 	}
 
+	// Command to vote kick player
 	KickPlayerCommand::KickPlayerCommand() : AbstractChatCommand("kick", "Starts a vote to kick a player."){}
 
 	void KickPlayerCommand::doOnVotePass(std::string name)
@@ -218,6 +246,7 @@ namespace ChatCommands
 		return true;
 	}
 
+	// Command to show command list
 	AbstractChatCommand::AbstractChatCommand(std::string n, std::string d)
 	{
 		name = n;
