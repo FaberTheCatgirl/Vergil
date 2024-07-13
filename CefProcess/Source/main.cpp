@@ -25,6 +25,6 @@ int CALLBACK WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 		return exitCode;
 	}
 
-	MessageBox(nullptr, "Must be run by mtndew.dll!", "ElDewrito CEF Process", MB_OK | MB_ICONERROR);
+	MessageBox(nullptr, "Must be run by mtndew.dll!", "Halo Online CEF Process", MB_OK | MB_ICONERROR);
 	return 0;
 }
