@@ -1,24 +1,24 @@
-#include "WebForge.hpp"
-#include "../../Blam/Tags/TagInstance.hpp"
-#include "../../Blam/Tags/TagBlock.hpp"
-#include "../../Blam/Tags/Objects/Object.hpp"
-#include "../../Blam/Tags/TagReference.hpp"
-#include "../../Blam/Tags/Globals/ForgeGlobalsDefinition.hpp"
-#include "../../Blam/Math/RealVector3D.hpp"
-#include "../../Blam/BlamPlayers.hpp"
-#include "../../Blam/BlamObjects.hpp"
-#include "../../Blam/BlamTypes.hpp"
-#include "../../Patches/Input.hpp"
-#include "../../ThirdParty/rapidjson/writer.h"
-#include "../../ThirdParty/rapidjson/document.h"
-#include "../../ThirdParty/rapidjson/stringbuffer.h"
-#include "../../Forge/ForgeUtil.hpp"
-#include "ScreenLayer.hpp"
-#include "../../ElDorito.hpp"
-#include "../Bridge/WebRendererQuery.hpp"
-#include "../../Pointer.hpp"
-#include "../../Forge/Selection.hpp"
-#include "../../Forge/ObjectSet.hpp"
+#include "Web\Ui\WebForge.hpp"
+#include "Blam\Tags\TagInstance.hpp"
+#include "Blam\Tags\TagBlock.hpp"
+#include "Blam\Tags\Objects\Object.hpp"
+#include "Blam\Tags\TagReference.hpp"
+#include "Blam\Tags\Globals\ForgeGlobalsDefinition.hpp"
+#include "Blam\Math\RealVector3D.hpp"
+#include "Blam\BlamPlayers.hpp"
+#include "Blam\BlamObjects.hpp"
+#include "Blam\BlamTypes.hpp"
+#include "Patches\Input.hpp"
+#include "ThirdParty\rapidjson\writer.h"
+#include "ThirdParty\rapidjson\document.h"
+#include "ThirdParty\rapidjson\stringbuffer.h"
+#include "Forge\ForgeUtil.hpp"
+#include "Web\Ui\ScreenLayer.hpp"
+#include "ElDorito.hpp"
+#include "Web\Bridge\WebRendererQuery.hpp"
+#include "Pointer.hpp"
+#include "Forge\Selection.hpp"
+#include "Forge\ObjectSet.hpp"
 #include <unordered_map>
 
 using namespace Blam::Math;
@@ -810,8 +810,8 @@ namespace
 		auto screenFxProperties = reinterpret_cast<const Forge::ForgeScreenFxProperties*>(&properties.RadiusWidth);
 		auto reforgeProperties = reinterpret_cast<const Forge::ReforgeObjectProperties*>(&properties.RadiusWidth);
 		auto mapModifierProperties = reinterpret_cast<const Forge::ForgeMapModifierProperties*>(&properties.RadiusWidth);
-		auto garbageVolumeProperties = reinterpret_cast<const Forge::ForgeGarbageVolumeProperties*>(&properties.RadiusWidth);
-		auto killVolumeProperties = reinterpret_cast<const Forge::ForgeKillVolumeProperties*>(&properties.RadiusWidth);
+		auto garbageVolumeProperties = reinterpret_cast<const Forge::ForgeGarbageVolumeProperties*>(&properties.TeleporterChannel);
+		auto killVolumeProperties = reinterpret_cast<const Forge::ForgeKillVolumeProperties*>(&properties.TeleporterChannel);
 
 		writer.StartObject();
 		SerializeProperty(writer, "tag_index", int(budget.TagIndex));

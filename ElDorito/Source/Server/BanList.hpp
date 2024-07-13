@@ -5,7 +5,7 @@
 #include <cstdint>
 #include <istream>
 #include <map>
-#include "../Utils/Utils.hpp"
+#include "Utils\Utils.hpp"
 
 namespace Server
 {
@@ -42,6 +42,70 @@ namespace Server
 		std::map<std::string, int> ipAddresses = std::map<std::string, int>{};
 	};
 
+
+	class HalostatsBanList : public Utils::Singleton<HalostatsBanList>
+	{
+	public:
+		HalostatsBanList() { }
+		// Adds an IP address to the ban list.
+		inline void AddIp(const std::string ip)
+		{
+			ipAddresses.insert(ip);
+		}
+		inline void AddSubnet(const std::string ip)
+		{
+			subnets.insert(ip);
+		}
+		inline void AddName(const std::string name)
+		{
+			names.insert(name);
+		}
+		inline void AddUID(const std::string uid)
+		{
+			uids.insert(uid);
+		}
+		// Returns whether an IP address is in the ban list.
+		inline bool ContainsIp(std::string ip)
+		{
+			return ipAddresses.find(ip) != ipAddresses.end();
+		}
+		inline bool ContainsSubnet(std::string ip)
+		{
+			for (std::string subnet : subnets) {
+				if (ip.find(subnet) != std::string::npos)
+					return true;
+			}
+			return false;
+		}
+		inline bool ContainsName(std::string name)
+		{
+			return names.find(name) != names.end();
+		}
+		inline bool ContainsUID(std::string uid)
+		{
+			return uids.find(uid) != uids.end();
+		}
+		inline bool RemoveIp(const std::string &ip)
+		{
+			return ipAddresses.erase(ip) == 1;
+		}
+		// Clears ban list. Returns true if successful.
+		inline void ClearList()
+		{
+			subnets.clear();
+			ipAddresses.clear();
+			uids.clear();
+			names.clear();
+		}
+	private:
+		std::unordered_set<std::string> subnets = std::unordered_set<std::string>{};
+		std::unordered_set<std::string> ipAddresses = std::unordered_set<std::string>{};
+		std::unordered_set<std::string> uids = std::unordered_set<std::string>{};
+		std::unordered_set<std::string> names = std::unordered_set<std::string>{};
+
+	};
+
+
 	class BanList
 	{
 	public:
@@ -61,7 +125,11 @@ namespace Server
 		{
 			ipAddresses.insert(ip);
 		}
-
+		// Adds an IP address to the ban list.
+		inline void AddName(const std::string &name)
+		{
+			names.insert(name);
+		}
 		// Returns whether an IP address is in the ban list.
 		inline bool ContainsIp(const std::string &ip) const
 		{
@@ -75,19 +143,24 @@ namespace Server
 		}
 
 		// Adds a UID to the ban list.
-		inline void AddUid(uint64_t uid)
+		inline void AddUid(std::string uid)
 		{
 			uids.insert(uid);
 		}
 
 		// Returns whether a UID is in the ban list.
-		inline bool ContainsUid(uint64_t uid)
+		inline bool ContainsName(std::string name)
+		{
+			return names.find(name) != names.end();
+		}
+		// Returns whether a UID is in the ban list.
+		inline bool ContainsUid(std::string uid)
 		{
 			return uids.find(uid) != uids.end();
 		}
 
 		// Removes a UID from the ban list. Returns true if successful.
-		inline bool RemoveUid(uint64_t uid)
+		inline bool RemoveUid(std::string uid)
 		{
 			return uids.erase(uid) == 1;
 		}
@@ -100,9 +173,9 @@ namespace Server
 
 	private:
 		void Read(std::istream &stream);
-
+		std::unordered_set<std::string> names;
 		std::unordered_set<std::string> ipAddresses;
-		std::unordered_set<uint64_t> uids;
+		std::unordered_set<std::string> uids;
 	};
 
 	const std::string DefaultBanListPath = "mods/server/banlist.txt";

@@ -1,10 +1,10 @@
 #pragma once
 #define WIN32_LEAN_AND_MEAN
 
-#include <boost/thread.hpp>
-#include <boost/thread/lockable_adapter.hpp>
-#include <boost/filesystem.hpp>
-#include <include/cef_scheme.h>
+#include <boost\thread.hpp>
+#include <boost\thread\lockable_adapter.hpp>
+#include <boost\filesystem.hpp>
+#include <include\cef_scheme.h>
 #include <unordered_map>
 #include <mutex>
 

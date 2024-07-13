@@ -1,9 +1,9 @@
 #include <WS2tcpip.h>
 #define WIN32_LEAN_AND_MEAN
 
-#include "BlamNetwork.hpp"
-#include "../Pointer.hpp"
-#include "../Discord/DiscordRPC.h"
+#include "Blam\BlamNetwork.hpp"
+#include "Pointer.hpp"
+//#include "Discord\DiscordRPC.h"
 
 namespace
 {
@@ -141,6 +141,20 @@ namespace Blam::Network
 		return (gameVariant->TeamGame & 1) != 0;
 	}
 
+	bool Session::GetPeerAddress(int peerIndex, NetworkAddress &address) const
+	{
+		if (peerIndex >= 0 && peerIndex < 17)
+		{
+			auto channelIndex = MembershipInfo.PeerChannels[peerIndex].ChannelIndex;
+			if (channelIndex >= 0)
+			{
+				address = Observer->Channels[channelIndex].Address;
+				return true;
+			}
+		}
+		return false;
+	}
+
 	NetworkAddress Session::GetPeerAddress(int peerIndex) const
 	{
 		if (peerIndex != MembershipInfo.LocalPeerIndex)
@@ -217,7 +231,7 @@ namespace Blam::Network
 		return SendDirectedMessage(this, address, id, packetSize, packet);
 	}
 
-	bool MessageGateway::Ping(NetworkAddress &address, uint16_t id)
+	bool MessageGateway::Ping(const NetworkAddress &address, uint16_t id)
 	{
 		auto packet = MakePingPacket(id);
 		return SendDirectedMessage(address, ePacketIDPing, sizeof(packet), &packet);
@@ -237,30 +251,30 @@ namespace Blam::Network
 		return Network_squad_session_end_game();
 	}
 
-	int GetLobbyType() {
-		auto Get_Type = (int(__cdecl*)())(0x00435640);
+	LobbyType GetLobbyType() {
+		auto Get_Type = (LobbyType(__cdecl*)())(0x00435640);
 		return Get_Type();
 	}
 
 	// Gets the network mode
-	int GetNetworkMode() {
-		auto Get_Mode = (int(__cdecl*)())(0x00A7F160);
+	NetworkMode GetNetworkMode() {
+		auto Get_Mode = (NetworkMode(__cdecl*)())(0x00A7F160);
 		return Get_Mode();
 	}
 
-	bool SetLobbyType(int type)
+	bool SetLobbyType(LobbyType type)
 	{
-		auto set_server_lobby_type = (bool(__cdecl*)(int))(0x00A7EE70);
+		auto set_server_lobby_type = (bool(__cdecl*)(LobbyType))(0x00A7EE70);
 		return set_server_lobby_type(type);
 	}
 	
-	bool SetNetworkMode(int mode)
+	bool SetNetworkMode(NetworkMode mode)
 	{
-		auto Set_Network_Mode = (bool(__cdecl*)(int))(0x00A7F950);
+		auto Set_Network_Mode = (bool(__cdecl*)(NetworkMode))(0x00A7F950);
 		bool success = Set_Network_Mode(mode);
 
 		//Let Discord Know
-		Discord::DiscordRPC::Instance().UpdatePresence(mode);
+		//Discord::DiscordRPC::Instance().UpdatePresence(mode);
 
 		return success;
 	}

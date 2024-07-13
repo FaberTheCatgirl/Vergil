@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ModuleBase.hpp"
+#include "Modules\ModuleBase.hpp"
 #include <cstdint>
 #include <unordered_set>
 
@@ -57,6 +57,14 @@ namespace Modules
 		Command* VarChatCommandSkipRoundEnabled;
 		Command* VarChatCommandVoteTime;
 		Command* VarChatCommandShuffleTeamsEnabled;
+		Command* VarChatVoteAction;
+		Command* VarChatVoteActionClient;
+		Command* VarChatVoteStarted;
+		Command* VarChatVoteStartedClient;
+		Command* VarChatVotesNeeded;
+		Command* VarChatVotesNeededClient;
+		Command* VarChatVoteStartedByUid;
+		Command* VarChatVoteStartedByUidClient;
 		Command* VarPlayersInfo;
 		Command* VarPlayersInfoClient;
 		Command* VarNumTeams;
@@ -77,6 +85,8 @@ namespace Modules
 
 		std::unordered_set<std::string> NonAllowedNames = std::unordered_set<std::string>{};
 		void refreshNonAllowedNames();
+		Command* VarBanListSyncIntervalSeconds;
+		Command* VarReturnToLobbyTimeoutSeconds;
 
 		uint8_t SyslinkData[0x176];
 

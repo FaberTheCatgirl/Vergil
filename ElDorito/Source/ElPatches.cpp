@@ -3,6 +3,7 @@
 #include "ElDorito.hpp"
 #include "Blam\Tags\TagInstance.hpp"
 #include "Patches\Core.hpp"
+#include "Patches\CharacterHud.hpp"
 #include "Patches\Audio.hpp"
 #include "Patches\Mouse.hpp"
 #include "Patches\Network.hpp"
@@ -36,6 +37,7 @@
 #include "Patches\DamageSystem.hpp"
 #include "Patches\PlayerScale.hpp"
 #include "Game\Armor.hpp"
+#include "Patches\Experimental.hpp"
 
 #include <fstream>
 
@@ -51,6 +53,7 @@ namespace Patches
 		UnprotectMemory();
 		Hf2pExperimental::ApplyAll();
 		Core::ApplyAll();
+		CharacterHud::ApplyAll();
 		Audio::ApplyAll();
 		Memory::ApplyAll();
 		Mouse::ApplyAll();
@@ -78,10 +81,10 @@ namespace Patches
 		Maps::ApplyAll();
 		GameEngineSettings::ApplyAll();
 		DamageSystem::ApplyAll();
-
 		Network::PlayerPropertiesExtender::Instance().Add(std::make_shared<Game::Armor::ArmorExtension>());
 
 		PlayerRepresentation::ApplyAll();
+		Experimental::ApplyAll();
 
 		//Since these patches are happening before ED gets initalized, we dont know if we are in dedi mode or not.
 		bool isdedicated = false;
@@ -96,10 +99,6 @@ namespace Patches
 
 		if (!isdedicated)
 			DirectXHook::ApplyAll();
-	}
-
-	void ApplyOnFirstTick()
-	{
 	}
 
 	void ApplyAfterTagsLoaded()
@@ -122,7 +121,6 @@ namespace Patches
 		if (appliedFirstTickPatches)
 			return;
 
-		ApplyOnFirstTick();
 		appliedFirstTickPatches = true;
 	}
 }

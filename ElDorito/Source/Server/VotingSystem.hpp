@@ -2,8 +2,8 @@
 #include <string>
 #include <vector>
 #include <map>
-#include "../Server/VotingPackets.hpp"
-#include "../Modules/ModuleServer.hpp"
+#include "Server\VotingPackets.hpp"
+#include "Modules\ModuleServer.hpp"
 
 namespace Server::Voting
 {

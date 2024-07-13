@@ -1,32 +1,32 @@
-#include "ModuleGame.hpp"
+#include "Modules\ModuleGame.hpp"
 #include <sstream>
 #include <fstream>
 #include <type_traits>
 #include <algorithm>
-#include "../ElDorito.hpp"
-#include "../Patches/Ui.hpp"
-#include "../Patches/Logging.hpp"
-#include "../Blam/BlamTypes.hpp"
-#include "../Blam/BlamNetwork.hpp"
-#include "../Blam/BlamGraphics.hpp"
-#include "../Blam/Tags/Game/GameEngineSettings.hpp"
-#include "../Blam/Tags/Scenario/Scenario.hpp"
-#include "../Patches/Core.hpp"
-#include "../Patches/Forge.hpp"
-#include "../Patches/Maps.hpp"
-#include "../Web/WebRenderer.hpp"
-#include "../Web/Ui/ScreenLayer.hpp"
-#include "ModuleServer.hpp"
-#include "../Patch.hpp"
-#include "boost/filesystem.hpp"
-#include "../Utils/Logger.hpp"
-#include "../ThirdParty/rapidjson/rapidjson.h"
-#include "../ThirdParty/rapidjson/document.h"
-#include "../ThirdParty/rapidjson/stringbuffer.h"
-#include "../ThirdParty/rapidjson/writer.h"
+#include "ElDorito.hpp"
+#include "Patches\Ui.hpp"
+#include "Patches\Logging.hpp"
+#include "Blam\BlamTypes.hpp"
+#include "Blam\BlamNetwork.hpp"
+#include "Blam\BlamGraphics.hpp"
+#include "Blam\Tags\Game\GameEngineSettings.hpp"
+#include "Blam\Tags\Scenario\Scenario.hpp"
+#include "Patches\Core.hpp"
+#include "Patches\Forge.hpp"
+#include "Patches\Maps.hpp"
+#include "Web\WebRenderer.hpp"
+#include "Web\Ui\ScreenLayer.hpp"
+#include "Modules\ModuleServer.hpp"
+#include "Patch.hpp"
+#include <boost\filesystem.hpp>
+#include "Utils\Logger.hpp"
+#include "ThirdParty\rapidjson\rapidjson.h"
+#include "ThirdParty\rapidjson\document.h"
+#include "ThirdParty\rapidjson\stringbuffer.h"
+#include "ThirdParty\rapidjson\writer.h"
 #include <unordered_map>
 #include <codecvt>
-#include "../Blam/Tags/Camera/AreaScreenEffect.hpp"
+#include "Blam\Tags\Camera\AreaScreenEffect.hpp"
 
 namespace
 {
@@ -237,13 +237,14 @@ namespace
 		std::exit(0);
 		return true;
 	}
-
+	
+	auto GlobalGameOptions = (Blam::GameOptions *)0x2391800;
 	bool CommandGameForceLoad(const std::vector<std::string>& Arguments, std::string& returnInfo)
 	{
 		std::stringstream ss;
 		if (Arguments.size() <= 0)
 		{
-			ss << "Current map: " << std::string((char*)(0x2391824)) << std::endl;
+			ss << "Current map: " << std::string(GlobalGameOptions->ScenarioPath) << std::endl;
 			ss << "Usage: Game.ForceLoad <mapname> [gametype] [maptype]" << std::endl;
 			ss << "Available maps:";
 
@@ -251,12 +252,12 @@ namespace
 				ss << std::endl << "\t" << map;
 
 			ss << std::endl << std::endl << "Valid gametypes:";
-			for (size_t i = 0; i < Blam::GameTypeCount; i++)
+			for (size_t i = 0; i < Blam::eGameTypeCount; i++)
 				ss << std::endl << "\t" << "[" << i << "] " << Blam::GameTypeNames[i];
 
-			ss << std::endl << std::endl << "Valid gamemodes:";
-			for (size_t i = 0; i < Blam::GameModeCount; i++)
-				ss << std::endl << "\t" << "[" << i << "] " << Blam::GameModeNames[i];
+			ss << std::endl << std::endl << "Valid maptypes:";
+			for (size_t i = 0; i < Blam::eMapTypeCount; i++)
+				ss << std::endl << "\t" << "[" << i << "] " << Blam::MapTypeNames[i];
 
 			returnInfo = ss.str();
 			return false;
@@ -264,9 +265,8 @@ namespace
 
 		auto mapName = Arguments[0];
 
-		auto gameTypeStr = "none";
-		Blam::GameType gameType = Blam::GameType::None;
-		Blam::GameMode gameMode = Blam::GameMode::Multiplayer;
+		Blam::GameType gameType = Blam::GameType::eGameTypeBase;
+		Blam::MapType mapType = Blam::MapType::eMapTypeMultiplayer;
 
 		if (std::find(Modules::ModuleGame::Instance().MapList.begin(), Modules::ModuleGame::Instance().MapList.end(), mapName) == Modules::ModuleGame::Instance().MapList.end())
 		{
@@ -280,57 +280,55 @@ namespace
 		{
 			//Look up gametype string.
 			size_t i;
-			for (i = 0; i < Blam::GameTypeCount; i++)
+			for (i = 0; i < Blam::eGameTypeCount; i++)
 			{
-				// Todo: case insensiive
-				if (!Blam::GameTypeNames[i].compare(Arguments[1]))
+				if (!Utils::String::ToLower(Blam::GameTypeNames[i]).compare(Utils::String::ToLower(Arguments[1])))
 				{
 					gameType = Blam::GameType(i);
 					break;
 				}
 			}
 
-			if (i == Blam::GameTypeCount)
+			if (i == Blam::eGameTypeCount)
 				gameType = (Blam::GameType)std::atoi(Arguments[1].c_str());
 
-			if (gameType > Blam::GameTypeCount) // only valid gametypes are 1 to 10
-				gameType = Blam::GameType::Slayer;
+			if (gameType > Blam::eGameTypeCount) // only valid gametypes are 1 to 10
+				gameType = Blam::GameType::eGameTypeSlayer;
 		}
 
 		if (Arguments.size() >= 3)
 		{
-			//Look up gamemode string.
+			//Look up maptype string.
 			size_t i;
-			for (i = 0; i < Blam::GameModeCount; i++)
+			for (i = 0; i < Blam::eMapTypeCount; i++)
 			{
-				// Todo: case insensiive
-				if (!Blam::GameModeNames[i].compare(Arguments[2]))
+				if (!Utils::String::ToLower(Blam::MapTypeNames[i]).compare(Utils::String::ToLower(Arguments[2])))
 				{
-					gameMode = Blam::GameMode(i);
+					mapType = Blam::MapType(i);
 					break;
 				}
 			}
 
-			if (i == Blam::GameModeCount)
-				gameMode = (Blam::GameMode)std::atoi(Arguments[2].c_str());
+			if (i == Blam::eMapTypeCount)
+				mapType = (Blam::MapType)std::atoi(Arguments[2].c_str());
 
-			if (gameMode > Blam::GameModeCount) // only valid gametypes are 1 to 10
-				gameMode = Blam::GameMode::Multiplayer;
+			if (mapType > Blam::eMapTypeCount) // only valid gametypes are 1 to 5
+				mapType = Blam::MapType::eMapTypeMultiplayer;
 		}
 
-		ss << "Loading " << mapName << " gametype: " << Blam::GameTypeNames[gameType] << " gamemode: " << Blam::GameModeNames[gameMode];
+		ss << "Loading " << mapName << " gametype: " << Blam::GameTypeNames[gameType] << " maptype: " << Blam::MapTypeNames[mapType];
 
 		// Game Type
-		Pointer(0x2391B2C).Write<uint32_t>(gameType);
+		GlobalGameOptions->GameVariant.GameType = gameType;
 
 		// Infinite play time
-		Pointer(0x2391C51).Write<uint8_t>(0);
+		GlobalGameOptions->GameVariant.RoundTimeLimit = 0;
 
 		// Game Mode
-		Pointer(0x2391800).Write<uint32_t>(gameMode);
+		GlobalGameOptions->MapType = mapType;
 
 		// Map Name
-		Pointer(0x2391824).Write(mapName.c_str(), mapName.length() + 1);
+		GlobalGameOptions->SetMapPath(mapName.c_str());
 
 		// Map Reset
 		Pointer(0x23917F0).Write<uint8_t>(0x1);
@@ -449,25 +447,16 @@ namespace
 		return (firstMapId == mapId && secondMapId == mapId);
 	}
 
-	// TODO: Might be useful to map out this enum
-	// 2 = customs, 3 = forge
-	int GetUiGameMode()
-	{
-		typedef int(__thiscall *GetUiGameModePtr)();
-		auto GetUiGameModeImpl = reinterpret_cast<GetUiGameModePtr>(0x435640);
-		return GetUiGameModeImpl();
-	}
-
 	void SaveMapVariantToPreferences(const uint8_t *data)
 	{
 		// Check the lobby type so we know where to save the variant
 		size_t variantOffset;
-		switch (GetUiGameMode())
+		switch (Blam::Network::GetLobbyType())
 		{
-		case 2: // Customs
+		case Blam::eLobbyTypeMultiplayer: // Customs
 			variantOffset = 0x7F0;
 			break;
-		case 3: // Forge
+		case Blam::eLobbyTypeForge: // Forge
 			variantOffset = 0xEA98;
 			break;
 		default:
@@ -484,7 +473,7 @@ namespace
 
 	void SaveGameVariantToPreferences(const uint8_t *data)
 	{
-		if (GetUiGameMode() != 2)
+		if (Blam::Network::GetLobbyType() != Blam::eLobbyTypeMultiplayer)
 			return; // Only allow doing this from a customs lobby
 
 		// Copy the data in
@@ -502,8 +491,8 @@ namespace
 			returnInfo = "You must specify an internal map or Forge map name!";
 			return false;
 		}
-		auto lobbyType = GetUiGameMode();
-		if (lobbyType != 2 && lobbyType != 3)
+		auto lobbyType = Blam::Network::GetLobbyType();
+		if (lobbyType != Blam::eLobbyTypeMultiplayer && lobbyType != Blam::eLobbyTypeForge)
 		{
 			returnInfo = "You can only change maps from a Custom Games or Forge lobby.";
 			return false;
@@ -580,23 +569,23 @@ namespace
 	{
 		switch (type)
 		{
-		case Blam::GameType::CTF:
+		case Blam::eGameTypeCTF:
 			return FindDefaultGameVariant(wezr->CTFVariants, name);
-		case Blam::GameType::Slayer:
+		case Blam::eGameTypeSlayer:
 			return FindDefaultGameVariant(wezr->SlayerVariants, name);
-		case Blam::GameType::Oddball:
+		case Blam::eGameTypeOddball:
 			return FindDefaultGameVariant(wezr->OddballVariants, name);
-		case Blam::GameType::KOTH:
+		case Blam::eGameTypeKOTH:
 			return FindDefaultGameVariant(wezr->KOTHVariants, name);
-		case Blam::GameType::VIP:
+		case Blam::eGameTypeVIP:
 			return FindDefaultGameVariant(wezr->VIPVariants, name);
-		case Blam::GameType::Juggernaut:
+		case Blam::eGameTypeJuggernaut:
 			return FindDefaultGameVariant(wezr->JuggernautVariants, name);
-		case Blam::GameType::Territories:
+		case Blam::eGameTypeTerritories:
 			return FindDefaultGameVariant(wezr->TerritoriesVariants, name);
-		case Blam::GameType::Assault:
+		case Blam::eGameTypeAssault:
 			return FindDefaultGameVariant(wezr->AssaultVariants, name);
-		case Blam::GameType::Infection:
+		case Blam::eGameTypeInfection:
 			return FindDefaultGameVariant(wezr->InfectionVariants, name);
 		default: // None, Forge
 			return -1;
@@ -615,13 +604,13 @@ namespace
 		// Search through each variant type until something is found
 		auto index = -1;
 		int type;
-		for (type = 1; type < Blam::GameType::GameTypeCount; type++)
+		for (type = 1; type < Blam::eGameTypeCount; type++)
 		{
 			index = FindDefaultGameVariant(wezr, static_cast<Blam::GameType>(type), name);
 			if (index != -1)
 				break;
 		}
-		if (type == Blam::GameType::GameTypeCount)
+		if (type == Blam::eGameTypeCount)
 			return false;
 
 		const auto VariantDataSize = 0x264;
@@ -633,19 +622,6 @@ namespace
 		return LoadBuiltInGameVariant(static_cast<Blam::GameType>(type), index, out);
 	}
 
-	const std::string GameTypeExtensions[] =
-	{
-		"ctf",
-		"slayer",
-		"oddball",
-		"koth",
-		"jugg",
-		"terries",
-		"assault",
-		"zombiez",
-		"vip",
-	};
-
 	bool CommandGameType(const std::vector<std::string>& Arguments, std::string& returnInfo)
 	{
 		if (Arguments.size() != 1)
@@ -653,7 +629,7 @@ namespace
 			returnInfo = "You must specify a built-in gametype or custom gametype name!";
 			return false;
 		}
-		if (GetUiGameMode() != 2)
+		if (Blam::Network::GetLobbyType() != Blam::eLobbyTypeMultiplayer)
 		{
 			returnInfo = "You can only change gametypes from a Custom Games lobby.";
 			return false;
@@ -665,7 +641,7 @@ namespace
 		// corresponding to each supported game mode
 		std::ifstream gameVariant;
 		std::string variantFileName;
-		for (auto &&extension : GameTypeExtensions)
+		for (auto &&extension : Blam::GameTypeExtensions)
 		{
 			variantFileName = "mods/variants/" + name + "/variant." + extension;
 			gameVariant.open(variantFileName, std::ios::binary);
@@ -755,13 +731,6 @@ namespace
 		Blam::Network::EndGame();
 
 		returnInfo = "Ending game...";
-		return true;
-	}
-
-	bool CommandRoundEnd(const std::vector<std::string>& Arguments, std::string& returnInfo)
-	{
-		Pointer(0x14133D28).Write(2);
-		returnInfo = "Skipping round...";
 		return true;
 	}
 
@@ -861,6 +830,19 @@ namespace
 	{
 		if (str.length() == 0)
 			return false;
+		
+		if ((str.rfind("0x", 0) == std::string::npos) &&
+			(str.find(".") != std::string::npos))
+		{
+			auto tokens = Utils::String::SplitString(str, '.');
+			
+			std::reverse(tokens[1].begin(), tokens[1].end());
+			const char *tag = tokens[1].c_str();
+
+			*value = Blam::Tags::TagInstance::Find(*(Blam::Tags::Tag *)tag, tokens[0]).Index;
+
+			return *value != 0xFFFF;
+		}
 
 		auto c_str = str.c_str();
 		char* endp;
@@ -1176,8 +1158,6 @@ namespace Modules
 
 		AddCommand("End", "end", "Ends the game", eCommandFlagsNone, CommandGameEnd);
 
-		AddCommand("RoundEnd", "roundend", "Ends the round", eCommandFlagsNone, CommandRoundEnd);
-
 		AddCommand("Stop", "stop", "Stops the game, goes back to lobby", eCommandFlagsNone, CommandGameStop);
 
 		AddCommand("Leave", "leave", "Leaves the game, goes back to menu", eCommandFlagsNone, CommandGameLeave);
@@ -1210,11 +1190,34 @@ namespace Modules
 
 		AddCommand("Update", "update", "Update the game to the latest version", eCommandFlagsNone, CommandGameUpdate);
 
-		VarMenuURL = AddVariableString("MenuURL", "menu_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "http://scooterpsu.github.io/");
+		VarMenuURL = AddVariableString("MenuURL", "menu_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "http://rabidsquabbit.github.io/");
 
+		VarLoadingURL = AddVariableString("LoadingURL", "loading_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/loading/");
+
+		VarScoreboardURL = AddVariableString("ScoreboardURL", "scoreboard_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "http://rabidsquabbit.github.io/screens/scoreboard/");
+		VarKeyboardURL = AddVariableString("KeyboardURL", "keyboard_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/keyboard/");
+		VarConsoleURL = AddVariableString("ConsoleURL", "console_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/console/");
+		VarChatURL = AddVariableString("ChatURL", "chat_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/chat/");
+		VarMedalsURL = AddVariableString("MedalsURL", "madals_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/medals/");
+		VarVotingURL = AddVariableString("VotingURL", "voting_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/voting/");
+		VarTitleURL = AddVariableString("TitleURL", "title_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/title/");
+		VarAlertURL = AddVariableString("AlertURL", "alert_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/alert/");
+		VarSettingsURL = AddVariableString("SettingsURL", "settings_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/settings/");
+		VarServerSettingsURL = AddVariableString("ServerSettingsURL", "server_settings_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/server_settings/");
+		ProfileSettingsURL = AddVariableString("ProfileSettingsURL", "profile_settings_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/profile_settings/");
+		ForgeObjectPropertiesURL = AddVariableString("ForgeObjectPropertiesURL", "forge_properties_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/object_properties/");
+		VarForgeObjectCreationURL = AddVariableString("ForgeObjectCreationURL", "forge_object_creation_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/object_creation/");
+		VarSpectateURL = AddVariableString("SpectateURL", "spectate_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/spectate/");
+		VarVoipURL = AddVariableString("VoipURL", "voip_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/voip/");
+		VarWeaponOffsetURL = AddVariableString("WeaponOffsetURL", "weapon_offset_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/weapon_offset/");
+		VarScreenshotNoticeURL = AddVariableString("ScreenshotNoticeURL", "weapon_offset_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/screenshot_notice/");
+		VarExitURL = AddVariableString("ExitURL", "exit_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/exit/");
+		VarDiscordURL = AddVariableString("DiscordURL", "discord_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/discord/");
+		VarReportURL = AddVariableString("ReportURL", "report_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "http://rabidsquabbit.github.io/screens/report/");
+		VarInGameVotingURL = AddVariableString("InGameVotingURL", "ingame_voting", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/ingame_voting/");
 		VarLanguage = AddVariableString("Language", "language", "The language to use", eCommandFlagsArchived, "english", VariableLanguageUpdated);
 
-		VarSkipTitleSplash = AddVariableInt("SkipTitleSplash", "titlesplash", "Skip the ElDewrito splash screen and go straight to the main menu", eCommandFlagsArchived, 0);
+		VarSkipTitleSplash = AddVariableInt("SkipTitleSplash", "titlesplash", "Skip the ElDewrito splash screen and go straight to the main menu", eCommandFlagsArchived, 1);
 		VarSkipTitleSplash->ValueIntMin = 0;
 		VarSkipTitleSplash->ValueIntMax = 1;
 
@@ -1254,6 +1257,8 @@ namespace Modules
 		VarScreenshotNoticeDisabled = AddVariableInt("ScreenshotNoticeDisabled", "screenshot_notice_disabled", "Disables the screenshot notifications", eCommandFlagsArchived, 0);
 
 		VarCefMedals = AddVariableInt("CefMedals", "cef_medals", "Enable/disable cef medals. When disabled fallback to the H3 medal system.", eCommandFlagsArchived, 0);
+
+		VarFpsLimiter = AddVariableInt("FPSLimiter", "fps_limiter", "Enable/disable framerate limiter (improves frame timing at the cost of cpu usage)", eCommandFlagsArchived, 0);
 
 		VarDiscordEnable = AddVariableInt("Discord.Enable", "discord.enable", "Enable/disable discord integration", eCommandFlagsArchived, 1);
 		VarDiscordAutoAccept = AddVariableInt("Discord.AutoAccept", "discord.auto_accept", "Allow auto accepting join requests", eCommandFlagsArchived, 0);

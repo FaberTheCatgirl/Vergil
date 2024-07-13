@@ -1,13 +1,14 @@
-#include "ChatCommandMap.hpp"
+#include "ChatCommands\ChatCommandMap.hpp"
 #include <sstream>
 #include <iostream>
 
-#include "ChatCommand.hpp"
-#include "../Server/BanList.hpp"
-#include "../Utils/Utils.hpp"
-#include "../Utils/Logger.hpp"
-#include "../CommandMap.hpp"
-#include "../Patches/Network.hpp"
+#include "ChatCommands\ChatCommand.hpp"
+#include "Server\BanList.hpp"
+#include "Utils\Utils.hpp"
+#include "Utils\Logger.hpp"
+#include "CommandMap.hpp"
+#include "Patches\Network.hpp"
+#include "Server\ReportHandler.hpp"
 
 
 
@@ -23,7 +24,7 @@ namespace ChatCommands
 	ShuffleTeamsCommand shuffleTeamsCommand;
 	SkipRoundCommand skipRoundCommand;
 
-	void LifeCycleStateChanged(Blam::Network::LifeCycleState newState)
+	void LifeCycleStateChanged(Blam::LifeCycleState newState)
 	{
 
 		auto* session = Blam::Network::GetActiveSession();
@@ -33,13 +34,13 @@ namespace ChatCommands
 		switch (newState)
 		{
 
-			case Blam::Network::eLifeCycleStateStartGame:
+			case Blam::eLifeCycleStateStartGame:
 			{
 				chatCommandsActive = true;
 				break;
 			}
 
-			case Blam::Network::eLifeCycleStateEndGameWriteStats: //This is fired if you also hit game.stop
+			case Blam::eLifeCycleStateEndGameWriteStats: //This is fired if you also hit game.stop
 			{
 
 				Server::TempBanList::Instance().decrementDuration();
@@ -72,7 +73,28 @@ namespace ChatCommands
 		Commands.push_back((AbstractChatCommand*) &skipRoundCommand);
 
 	}
+	int FindPlayerByName(const std::string &name, bool findPeer = false)
+	{
+		auto* session = Blam::Network::GetActiveSession();
+		if (!session || !session->IsEstablished() || !session->IsHost())
+			return -1;
+		auto membership = &session->MembershipInfo;
+		for (auto peerIdx = membership->FindFirstPeer(); peerIdx >= 0; peerIdx = membership->FindNextPeer(peerIdx))
+		{
+			auto playerIdx = session->MembershipInfo.GetPeerPlayer(peerIdx);
+			if (playerIdx == -1)
+				continue;
+			auto* player = &membership->PlayerSessions[playerIdx];
+			if (Utils::String::ThinString(player->Properties.DisplayName) == name) {
+				if (findPeer)
+					return peerIdx;
+				else
+					return playerIdx;
+			}
 
+		}
+		return -1;
+	}
 	bool addToVoteTimes(uint64_t sender)
 	{
 		time_t curTime;
@@ -132,6 +154,12 @@ namespace ChatCommands
 
 		if (line.empty())
 			return true;
+
+		int numArgs = 0;
+		auto args = Modules::CommandLineToArgvA((PCHAR)line.c_str(), &numArgs);
+		std::string cmd = args[0];
+		std::transform(cmd.begin(), cmd.end(), cmd.begin(), ::tolower);
+
 		//TODO move the logic for !help and !listPlayers into a new non-voting chat command type
 		std::string lowercaseline = Utils::String::ToLower(line);
 		if (lowercaseline == "help")
@@ -158,11 +186,20 @@ namespace ChatCommands
 			}
 			return true;
 		}
-
-		//If the voting commands are not active at the moment, don't do anything.
+		else if (numArgs > 1 && !stricmp(args[0], "report"))
+		{
+			auto numArgs = 0;
+			auto args = Modules::CommandLineToArgvA((PCHAR)line.c_str(), &numArgs);
+			if (numArgs < 1 || strnlen(args[1], 256) <= 128)
+			{
+				Server::Chat::SendServerMessage("Invalid or missing token", peer);
+				return true;
+			}
+			Server::Chat::SendServerMessage("Player report received", peer);
+			Server::ReportHandler::Handle(std::string{ args[1] });
+			return true;
+		}
 		
-
-
 		for (auto elem : Commands)
 		{
 			if (elem->isCurrentlyVoting())
@@ -171,11 +208,6 @@ namespace ChatCommands
 				return true;
 			}
 		}
-
-		int numArgs = 0;
-		auto args = Modules::CommandLineToArgvA((PCHAR)line.c_str(), &numArgs);
-		std::string cmd = args[0];
-		std::transform(cmd.begin(), cmd.end(), cmd.begin(), ::tolower);
 
 		//If we are not already voting, check if the command is initiating one
 		for (auto elem : Commands)

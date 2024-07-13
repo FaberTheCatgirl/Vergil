@@ -1,5 +1,5 @@
 namespace Patches::Camera
 {
 	void ApplyAll();
-	void IncreaseLOD();
+	const char *IncreaseLOD();
 }

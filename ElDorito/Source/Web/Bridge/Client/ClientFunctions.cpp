@@ -1,23 +1,25 @@
 #pragma once
-#include "ClientFunctions.hpp"
-#include "../../Ui/ScreenLayer.hpp"
-#include "../../Ui/WebVirtualKeyboard.hpp"
-#include "../../Ui/WebForge.hpp"
-#include "../../Ui/WebScoreboard.hpp"
-#include "../../../CommandMap.hpp"
-#include "../../../Blam/BlamNetwork.hpp"
-#include "../../../Discord/DiscordRPC.h"
-#include "../../../Patches/Network.hpp"
-#include "../../../Patches/Input.hpp"
-#include "../../../Patches/Ui.hpp"
-#include "../../../Modules/ModuleVoIP.hpp"
-#include "../../../Modules/ModulePlayer.hpp"
-#include "../../../Pointer.hpp"
-#include "../../../Server/ServerChat.hpp"
-#include "../../../Utils/VersionInfo.hpp"
-#include "../../../Utils/String.hpp"
-#include "../../../ThirdParty/rapidjson/writer.h"
-#include "../../../ThirdParty/rapidjson/stringbuffer.h"
+#include "Web\Bridge\Client\ClientFunctions.hpp"
+#include "Web\Ui\ScreenLayer.hpp"
+#include "Web\Ui\WebVirtualKeyboard.hpp"
+#include "Web\Ui\WebForge.hpp"
+#include "Web\Ui\WebScoreboard.hpp"
+#include "CommandMap.hpp"
+#include "Blam\BlamNetwork.hpp"
+//#include "Discord\DiscordRPC.h"
+#include "Patches\Network.hpp"
+#include "Patches\Input.hpp"
+#include "Patches\Ui.hpp"
+#include "Modules\ModuleVoIP.hpp"
+#include "Modules\ModulePlayer.hpp"
+#include "Pointer.hpp"
+#include "Server\ServerChat.hpp"
+#include "Utils\VersionInfo.hpp"
+#include "Utils\String.hpp"
+#include "ThirdParty\rapidjson\writer.h"
+#include "ThirdParty\rapidjson\stringbuffer.h"
+
+#include "new\game\game.hpp"
 
 namespace
 {
@@ -214,13 +216,13 @@ namespace Anvil::Client::Rendering::Bridge::ClientFunctions
 		auto rawGameVariant = reinterpret_cast<uint8_t*>(gameVariant);
 		switch (gameVariant->GameType)
 		{
-		case Blam::GameType::Slayer: scoreToWin = *reinterpret_cast<int16_t*>(rawGameVariant + 0x1D4); break;
-		case Blam::GameType::Oddball: scoreToWin = *reinterpret_cast<int16_t*>(rawGameVariant + 0x1D8); break;
-		case Blam::GameType::KOTH: scoreToWin = *reinterpret_cast<int16_t*>(rawGameVariant + 0x1D8); break;
-		case Blam::GameType::CTF: scoreToWin = *reinterpret_cast<int16_t*>(rawGameVariant + 0x1DC); break;
-		case Blam::GameType::Assault: scoreToWin = *reinterpret_cast<int16_t*>(rawGameVariant + 0x1DC); break;
-		case Blam::GameType::Juggernaut: scoreToWin = *reinterpret_cast<int16_t*>(rawGameVariant + 0x1D4); break;
-		case Blam::GameType::VIP: scoreToWin = *reinterpret_cast<int16_t*>(rawGameVariant + 0x1D4); break;
+		case Blam::eGameTypeSlayer: scoreToWin = *reinterpret_cast<int16_t*>(rawGameVariant + 0x1D4); break;
+		case Blam::eGameTypeOddball: scoreToWin = *reinterpret_cast<int16_t*>(rawGameVariant + 0x1D8); break;
+		case Blam::eGameTypeKOTH: scoreToWin = *reinterpret_cast<int16_t*>(rawGameVariant + 0x1D8); break;
+		case Blam::eGameTypeCTF: scoreToWin = *reinterpret_cast<int16_t*>(rawGameVariant + 0x1DC); break;
+		case Blam::eGameTypeAssault: scoreToWin = *reinterpret_cast<int16_t*>(rawGameVariant + 0x1DC); break;
+		case Blam::eGameTypeJuggernaut: scoreToWin = *reinterpret_cast<int16_t*>(rawGameVariant + 0x1D4); break;
+		case Blam::eGameTypeVIP: scoreToWin = *reinterpret_cast<int16_t*>(rawGameVariant + 0x1D4); break;
 		}
 
 		// Build a JSON response
@@ -580,10 +582,7 @@ namespace Anvil::Client::Rendering::Bridge::ClientFunctions
 
 		Modules::ModuleVoIP::Instance().voiceDetected = value->value.GetBool();
 
-		if (Modules::ModuleVoIP::Instance().VarSpeakingPlayerOnHUD->ValueInt == 1)
-		{
-			Patches::Ui::ToggleSpeakingPlayerName(Modules::ModulePlayer::Instance().VarPlayerName->ValueString , value->value.GetBool());
-		}
+		Patches::Ui::ToggleSpeakingPlayerName(Modules::ModulePlayer::Instance().VarPlayerName->ValueString , value->value.GetBool());
 
 		return QueryError_Ok;
 	}
@@ -617,46 +616,38 @@ namespace Anvil::Client::Rendering::Bridge::ClientFunctions
 			return QueryError_BadQuery;
 		}
 
-		if (Modules::ModuleVoIP::Instance().VarSpeakingPlayerOnHUD->ValueInt == 1)
-			Patches::Ui::ToggleSpeakingPlayerName(name->value.GetString(), value->value.GetBool());
-		else
-		{
-			if(!value->value.GetBool()) //If we only want to render web, allow us to remove names still
-				Patches::Ui::ToggleSpeakingPlayerName(name->value.GetString(), value->value.GetBool());
-		}
+		Patches::Ui::ToggleSpeakingPlayerName(name->value.GetString(), value->value.GetBool());
 
 		return QueryError_Ok;
 	}
 
 	QueryError OnIsMapLoading(const rapidjson::Value &p_Args, std::string *p_Result)
 	{
-		static auto IsMapLoading = (bool(*)())(0x005670E0);
-
 		rapidjson::StringBuffer buffer;
 		rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
 		writer.StartObject();
 
 		writer.Key("loading");
-		writer.Bool(IsMapLoading());
+		writer.Bool(blam::game_is_map_loading());
 		writer.EndObject();
 
 		*p_Result = buffer.GetString();
 		return QueryError_Ok;
 	}
 
-	QueryError OnForgeAction(const rapidjson::Value &p_Args, std::string *p_Result)
+	QueryError OnForgeAction(const rapidjson::Value& p_Args, std::string* p_Result)
 	{
 		Web::Ui::WebForge::ProcessAction(p_Args, p_Result);
 		return QueryError_Ok;
 	}
-	
+
 	QueryError OnShowLan(const rapidjson::Value &p_Args, std::string *p_Result)
 	{
 		Patches::Ui::ShowLanBrowser();
 		return QueryError_Ok;
 	}
 
-	QueryError OnDiscordReply(const rapidjson::Value &p_Args, std::string *p_Result)
+	QueryError OnDiscordReply(const rapidjson::Value& p_Args, std::string* p_Result)
 	{
 		auto userId = p_Args.FindMember("userId");
 		auto replyValue = p_Args.FindMember("reply");
@@ -671,7 +662,7 @@ namespace Anvil::Client::Rendering::Bridge::ClientFunctions
 			return QueryError_BadQuery;
 		}
 
-		Discord::DiscordRPC::Instance().ReplyToJoinRequest(userId->value.GetString(), replyValue->value.GetInt());
+		//Discord::DiscordRPC::Instance().ReplyToJoinRequest(userId->value.GetString(), replyValue->value.GetInt());
 		return QueryError_Ok;
 	}
 }

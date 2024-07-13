@@ -2,14 +2,14 @@
 #include <io.h>
 #include <iostream>
 
-#include "../Utils/Utils.hpp"
+#include "Utils\Utils.hpp"
 #include "Voting.hpp"
 #include "VotingSystem.hpp"
-#include "boost/filesystem.hpp"
-#include "../Modules/ModuleGame.hpp"
-#include "../Patches/Network.hpp"
-#include "../Patches/Core.hpp"
-#include "../ElDorito.hpp"
+#include <boost\filesystem.hpp>
+#include "Modules\ModuleGame.hpp"
+#include "Patches\Network.hpp"
+#include "Patches\Core.hpp"
+#include "ElDorito.hpp"
 
 namespace Server::Voting
 {
@@ -20,17 +20,16 @@ namespace Server::Voting
 	//Callback for when the loading screen back to the main menu finishes. We use this to determine when to start a new vote.
 	void MapLoadedCallback(const char *mapPath)
 	{
-		if(Blam::Network::GetActiveSession()->Parameters.GetSessionMode() == 1 && Blam::Network::GetNetworkMode() == 3){
+		if(Blam::Network::GetActiveSession()->Parameters.GetSessionMode() == 1 && Blam::Network::GetNetworkMode() == Blam::eNetworkModeSystemLink)
 			StartNewVote();
-		}
 	}
 
 	//Reset the state of voting in case people start a game manually. 
-	void LifeCycleStateChanged(Blam::Network::LifeCycleState newState)
+	void LifeCycleStateChanged(Blam::LifeCycleState newState)
 	{
 		switch (newState)
 		{
-		case Blam::Network::eLifeCycleStateStartGame:
+		case Blam::eLifeCycleStateStartGame:
 		{
 
 			if (Modules::ModuleServer::Instance().VarServerTeamShuffleEnabled->ValueInt == 1)
@@ -45,7 +44,7 @@ namespace Server::Voting
 			break;
 		}
 
-		case Blam::Network::eLifeCycleStateNone:
+		case Blam::eLifeCycleStateNone:
 		{
 			for (auto elem : VotingSystems)
 			{

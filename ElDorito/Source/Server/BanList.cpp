@@ -1,11 +1,10 @@
-#include "BanList.hpp"
+#include "Server\BanList.hpp"
 
 #include <fstream>
 #include <iomanip>
-#include "../Utils/String.hpp"
-#include "../Patches/PlayerUid.hpp"
-#include "../Modules/ModuleServer.hpp"
-
+#include "Utils\String.hpp"
+#include "Patches\PlayerUid.hpp"
+#include "Modules\ModuleServer.hpp"
 namespace Server
 {
 	//Adds an ip to the list if it's not already in it. If it is already in it, then it extends the ban duration. 
@@ -20,9 +19,9 @@ namespace Server
 		else
 			ipAddresses.insert(std::make_pair(ip, Modules::ModuleServer::Instance().VarTempBanDuration->ValueInt));
 	}
-	
+
 	//Decrements the ban duration of everyone in the list by 1 game
-	void TempBanList::decrementDuration(){
+	void TempBanList::decrementDuration() {
 		auto it = ipAddresses.begin();
 		while (it != ipAddresses.end())
 		{
@@ -59,11 +58,10 @@ namespace Server
 			auto commentStart = line.find('#');
 			if (commentStart != std::string::npos)
 				line = line.substr(0, commentStart);
-
 			// Trim whitespace and split the line
-			// TODO: Make a trim function for trimming from both ends...
 			line = Utils::String::Trim(Utils::String::Trim(line, false), true);
 			auto components = Utils::String::SplitString(line);
+
 			if (components.size() < 2)
 				continue;
 
@@ -71,12 +69,15 @@ namespace Server
 			{
 				AddIp(components[1]);
 			}
+			else if (components[0] == "name" && components.size() > 1)
+			{
+				components.erase(components.begin());
+				auto name = Utils::String::Join(components);
+				AddName(name);
+			}
 			else if (components[0] == "uid")
 			{
-				// NOTE: UID banning is NOT implemented yet
-				uint64_t uid;
-				if (Patches::PlayerUid::ParseUid(components[1], &uid))
-					AddUid(uid);
+				AddUid(components[1]);
 			}
 		}
 	}
@@ -85,16 +86,21 @@ namespace Server
 	{
 		stream << "# ElDewrito server ban list\n";
 		stream << "# Players matching the filters in this file will not be allowed to connect to your server.\n\n";
-		
+
 		stream << "# IPv4 address bans\n";
 		stream << "# Format: ip XXX.XXX.XXX.XXX\n";
 		for (auto ip : ipAddresses)
 			stream << "ip " << ip << '\n';
-		
-		/*stream << "\n# UID bans\n";
+
+		stream << "# Name bans\n";
+		stream << "# Format: name NameHerePlease\n";
+		for (auto name : names)
+			stream << "name " << name << '\n';
+
+		stream << "\n# UID bans\n";
 		stream << "# Format: uid XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n";
 		for (auto uid : uids)
-			stream << "uid " << std::hex << std::setw(16) << std::setfill('0') << uid << std::dec << '\n';*/
+			stream << "uid " << uid << '\n';
 	}
 
 	void BanList::Save(const std::string &path) const

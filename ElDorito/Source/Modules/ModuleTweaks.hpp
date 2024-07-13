@@ -1,5 +1,5 @@
 #pragma once
-#include "ModuleBase.hpp"
+#include "Modules\ModuleBase.hpp"
 
 namespace Modules
 {
@@ -13,7 +13,10 @@ namespace Modules
 		Command *VarDisableHitMarkers;
 		Command *VarReachStyleFrags;
 		Command *VarFlatHUD;
-
+		Command *VarChudGlobalsIndex;
+		Command *VarSinglethreaded;
+		Command *VarDisableMetagame;
+        
 		ModuleTweaks();
 	};
 }

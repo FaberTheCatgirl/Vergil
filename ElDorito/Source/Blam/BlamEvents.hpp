@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
-#include "BlamData.hpp"
-#include "Tags/Tags.hpp"
+#include "Blam\BlamData.hpp"
+#include "Blam\Tags\Tags.hpp"
 
 namespace Blam::Events
 {

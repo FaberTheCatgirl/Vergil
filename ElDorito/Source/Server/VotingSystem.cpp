@@ -10,18 +10,18 @@
 #include <algorithm>
 #include <unordered_map>
 
-#include "../Utils/Logger.hpp"
-#include "../Utils/Utils.hpp"
+#include "Utils\Logger.hpp"
+#include "Utils\Utils.hpp"
 #include "VotingSystem.hpp"
-#include "boost/filesystem.hpp"
-#include "../patch.hpp"
-#include "../Modules/ModuleServer.hpp"
-#include "../Modules/ModuleGame.hpp"
-#include "../Patches/Network.hpp"
-#include "../Blam/BlamNetwork.hpp"
-#include "../ElDorito.hpp"
-#include "../ThirdParty/rapidjson/writer.h"
-#include "../ThirdParty/rapidjson/document.h"
+#include <boost\filesystem.hpp>
+#include "Patch.hpp"
+#include "Modules\ModuleServer.hpp"
+#include "Modules\ModuleGame.hpp"
+#include "Patches\Network.hpp"
+#include "Blam\BlamNetwork.hpp"
+#include "ElDorito.hpp"
+#include "ThirdParty\rapidjson\writer.h"
+#include "ThirdParty\rapidjson\document.h"
 
 namespace Server::Voting
 {

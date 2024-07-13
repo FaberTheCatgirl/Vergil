@@ -1,14 +1,14 @@
-#include "ModuleInput.hpp"
+#include "Modules\ModuleInput.hpp"
 #include <sstream>
 #include <algorithm>
-#include "../ElDorito.hpp"
-#include "../Patches/Input.hpp"
-#include "../Console.hpp"
-#include "../Blam/BlamInput.hpp"
-#include "../Utils/NameValueTable.hpp"
+#include "ElDorito.hpp"
+#include "Patches\Input.hpp"
+#include "Console.hpp"
+#include "Blam\BlamInput.hpp"
+#include "Utils\NameValueTable.hpp"
 
-#include "../ThirdParty/rapidjson/writer.h"
-#include "../ThirdParty/rapidjson/stringbuffer.h"
+#include "ThirdParty\rapidjson\writer.h"
+#include "ThirdParty\rapidjson\stringbuffer.h"
 using namespace Blam::Input;
 
 namespace
@@ -515,8 +515,8 @@ namespace
 
 	bool VariableControllerStickLayoutUpdated(const std::vector<std::string>& Arguments, std::string& returnInfo)
 	{
-		auto layout = Modules::ModuleInput::Instance().VarControllerStickLayout->ValueInt;
-		bindings.JoystickLayout = layout;
+		auto layout = (uint16_t)Modules::ModuleInput::Instance().VarControllerStickLayout->ValueInt;
+		bindings.JoystickLayout = (uint16_t)layout;
 		Modules::ModuleInput::UpdateBindings();
 		return true;
 	}
@@ -650,7 +650,7 @@ namespace
 	bool TryParseFloat(const char* str, float* value)
 	{
 		char* endp;
-		*value = std::strtod(str, &endp);
+		*value = (float)std::strtod(str, &endp);
 		return endp != str;
 	}
 

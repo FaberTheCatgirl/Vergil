@@ -1,9 +1,9 @@
-#include "MpEventDispatcher.hpp"
-#include "../../Blam/BlamEvents.hpp"
-#include "../../Patches/Events.hpp"
-#include "ScreenLayer.hpp"
-#include "../../ThirdParty/rapidjson/writer.h"
-#include "../../ThirdParty/rapidjson/stringbuffer.h"
+#include "Web\Ui\MpEventDispatcher.hpp"
+#include "Blam\BlamEvents.hpp"
+#include "Patches\Events.hpp"
+#include "Web\Ui\ScreenLayer.hpp"
+#include "ThirdParty\rapidjson\writer.h"
+#include "ThirdParty\rapidjson\stringbuffer.h"
 #include <unordered_map>
 #include <sstream>
 

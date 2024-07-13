@@ -1,8 +1,8 @@
-#include "VotingPackets.hpp"
-#include "../Patches/CustomPackets.hpp"
-#include "../Server/Voting.hpp"
-#include "../Modules/ModuleServer.hpp"
-#include "../Utils/Utils.hpp"
+#include "Server\VotingPackets.hpp"
+#include "Patches\CustomPackets.hpp"
+#include "Server\Voting.hpp"
+#include "Modules\ModuleServer.hpp"
+#include "Utils\Utils.hpp"
 
 
 using namespace Server::Voting;

@@ -1,10 +1,10 @@
 #pragma once
 #include <cstdint>
-#include "../Tags.hpp"
-#include "../../Text/StringID.hpp"
-#include "../../../Pointer.hpp"
-#include "../../Math/RealEulerAngles2D.hpp"
-#include "../../Math/RealPoint3D.hpp"
+#include "Blam\Tags\Tags.hpp"
+#include "Blam\Text\StringID.hpp"
+#include "Pointer.hpp"
+#include "Blam\Math\RealEulerAngles2D.hpp"
+#include "Blam\Math\RealPoint3D.hpp"
 
 namespace Blam::Tags::Scenario
 {
@@ -18,8 +18,7 @@ namespace Blam::Tags::Scenario
 
 	inline Scenario *GetCurrentScenario()
 	{
-		auto scenario = Pointer::Base(0x1EAAEB4);
-		return scenario.Read<Scenario *>();
+		return *(Scenario **)0x022AAEB4;
 	}
 
 	struct Scenario : TagGroup<'scnr'>

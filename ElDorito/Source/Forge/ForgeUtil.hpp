@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../Blam/BlamTypes.hpp"
-#include "../Blam/Math/RealMatrix4x3.hpp"
-#include "../Blam/Math/RealVector3D.hpp"
+#include "Blam\BlamTypes.hpp"
+#include "Blam\Math\RealMatrix4x3.hpp"
+#include "Blam\Math\RealVector3D.hpp"
 
 namespace Forge
 {

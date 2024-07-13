@@ -1,13 +1,13 @@
-#include "ForgeVolumes.hpp"
-#include "../Blam/BlamTime.hpp"
-#include "../Blam/Math/RealVector3D.hpp"
-#include "../Blam/BlamObjects.hpp"
-#include "../Blam/BlamPlayers.hpp"
-#include "../Blam/Tags/TagInstance.hpp"
-#include "../Blam/Tags/Game/Globals.hpp"
-#include "../Modules/ModuleForge.hpp"
-#include "../Patches/Core.hpp"
-#include "ForgeUtil.hpp"
+#include "Forge\ForgeVolumes.hpp"
+#include "Blam\BlamTime.hpp"
+#include "Blam\Math\RealVector3D.hpp"
+#include "Blam\BlamObjects.hpp"
+#include "Blam\BlamPlayers.hpp"
+#include "Blam\Tags\TagInstance.hpp"
+#include "Blam\Tags\Game\Globals.hpp"
+#include "Modules\ModuleForge.hpp"
+#include "Patches\Core.hpp"
+#include "Forge\ForgeUtil.hpp"
 
 namespace
 {

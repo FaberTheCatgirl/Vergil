@@ -1,10 +1,10 @@
 #pragma once
-#include "Tag.hpp"
-#include "TagBlock.hpp"
-#include "TagData.hpp"
-#include "TagGroup.hpp"
-#include "TagInstance.hpp"
-#include "TagReference.hpp"
+#include "Blam\Tags\Tag.hpp"
+#include "Blam\Tags\TagBlock.hpp"
+#include "Blam\Tags\TagData.hpp"
+#include "Blam\Tags\TagGroup.hpp"
+#include "Blam\Tags\TagInstance.hpp"
+#include "Blam\Tags\TagReference.hpp"
 
 // Asserts that a tag structure is the correct size.
 #define TAG_STRUCT_SIZE_ASSERT(type, size)           \

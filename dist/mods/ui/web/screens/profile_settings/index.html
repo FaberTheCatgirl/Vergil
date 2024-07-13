@@ -32,14 +32,18 @@
                 </ul>
                 <div class="tabpage-container window-side-padding">
                   <div id="page1" class="tabpage grid-customization hide">
-                      <div id="buttonConatiner">
+                      <div id="buttonConatiner" class="side-list has-vertical-scrollbar vertical-gradient-scroll">
                             <span><div class="setting baseNav button-list" onclick="inputBox('playerName');"><label>Player Name</label></div></span>
                           <span><div class="setting baseNav button-list" onclick="inputBox('serviceTag');"><label>Service Tag</label></div></span>
                           <span><div class="setting baseNav button-list" onclick="armorShow('armorHelmet',$(this));"><label>Helmet</label></div></span>
                           <span><div class="setting baseNav button-list" onclick="armorShow('armorRightShoulder',$(this));"><label>Right Shoulder</label></div></span>
                           <span><div class="setting baseNav button-list" onclick="armorShow('armorLeftShoulder',$(this));"><label>Left Shoulder</label></div></span>
                           <span><div class="setting baseNav button-list" onclick="armorShow('armorChest',$(this));"><label>Chest</label></div></span>
+						  <span><div class="setting baseNav button-list" onclick="armorShow('armorArms',$(this));"><label>Arms</label></div></span>
+						  <span><div class="setting baseNav button-list" onclick="armorShow('armorLegs',$(this));"><label>Legs</label></div></span>
+						  <span><div class="setting baseNav button-list" onclick="armorShow('armorPelvis',$(this));"><label>Pelvis</label></div></span>
                             <span><div class="setting baseNav button-list" onclick="armorShow('gender',$(this));"><label>Gender</label></div></span>
+							<span><div class="setting baseNav button-list" onclick="armorShow('playerRep',$(this));"><label>Player Unit</label></div></span>
                       </div>
                       <div id="infoBox">
                         <div class="infobox-header" id="infoHeader"></div>
@@ -49,8 +53,12 @@
                         <form class="armorForm hide tile-button tile-large" id="armorHelmet"></form>
                         <form class="armorForm hide tile-button tile-large" id="armorRightShoulder"></form>
                         <form class="armorForm hide tile-button tile-large" id="armorLeftShoulder"></form>
-                        <form class="armorForm hide tile-button tile-large" id="armorChest"></form>
+						<form class="armorForm hide tile-button tile-large" id="armorChest"></form>
+                        <form class="armorForm hide tile-button tile-large" id="armorArms"></form>
+						<form class="armorForm hide tile-button tile-large" id="armorLegs"></form>
+						<form class="armorForm hide tile-button tile-large" id="armorPelvis"></form>
                         <form class="armorForm hide tile-button tile-large" id="gender"></form>
+						<form class="armorForm hide tile-button tile-large" id="playerRep"></form>
                       </div>
 
                   </div>
@@ -60,6 +68,7 @@
                          <span><div class="setting baseNav button-list" onclick="colorShow('colorsSecondary',$(this));"><label>Armor Secondary</label></div></span>
                          <span><div class="setting baseNav button-list" onclick="colorShow('colorsVisor',$(this));"><label>Armor Visor</label></div></span>
                          <span><div class="setting baseNav button-list" onclick="colorShow('colorsLights',$(this));"><label>Armor Lights</label></div></span>
+						 <span><div class="setting baseNav button-list" onclick="colorShow('colorsHolo',$(this));"><label>Armor Holo</label></div></span>
                       </div>
                       <div class="side-list">
                         <form class="colorForm hide tile-button" id="colorsPrimary">
@@ -73,6 +82,9 @@
                         </form>
                         <form class="colorForm hide tile-button" id="colorsLights">
                             <span id="customColor"><label><input type="radio" name="colorsLights" value="" onclick="document.getElementById('colorsLightsText').click()">Custom Color<input type="text" name="colorsLights" id="colorsLightsText" class="setting" value="#FFFFFF" pattern="^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$">​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​</label></span>
+                        </form>
+						<form class="colorForm hide tile-button" id="colorsHolo">
+                            <span id="customColor"><label><input type="radio" name="colorsHolo" value="" onclick="document.getElementById('colorsHoloText').click()">Custom Color<input type="text" name="colorsHolo" id="colorsHoloText" class="setting" value="#FFFFFF" pattern="^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$">​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​</label></span>
                         </form>
                         <form id="colorPicker" class="colorForm"></form>
                       </div>

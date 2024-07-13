@@ -47,8 +47,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include <malloc.h>
-#include <sys/types.h>
-#include <sys/stat.h>
+#include <sys\types.h>
+#include <sys\stat.h>
 #include <errno.h>
 
 /* Indicates that d_type field is available in dirent structure */

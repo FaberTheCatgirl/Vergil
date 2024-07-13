@@ -1,9 +1,11 @@
 #include <ctime>
-#include "ModulePlayer.hpp"
-#include "../ElDorito.hpp"
-#include "../Game/Armor.hpp"
-#include "../Patches/PlayerRepresentation.hpp"
-#include "../Patches/PlayerUid.hpp"
+#include "Modules\ModulePlayer.hpp"
+#include "ElDorito.hpp"
+#include "Game\Armor.hpp"
+#include "Patches\PlayerRepresentation.hpp"
+#include "Patches\PlayerUid.hpp"
+#include "Patches\Tweaks.hpp"
+#include "Patches\Ui.hpp"
 #include <iomanip>
 #include <algorithm>
 #include <unordered_set>
@@ -43,7 +45,6 @@ namespace
 		auto &modulePlayer = Modules::ModulePlayer::Instance();
 		modulePlayer.VarPlayerServiceTag->ValueString = value;
 
-
 		Patches::PlayerRepresentation::UpdateLocalRepresentation();
 		return true;
 	}
@@ -54,7 +55,6 @@ namespace
 			return false;
 
 		Patches::PlayerRepresentation::UpdateLocalRepresentation();
-
 		return true;
 	}
 
@@ -150,17 +150,24 @@ namespace Modules
 		VarArmorChest = AddVariableString("Armor.Chest", "armor_chest", "Armor ID for player chest", eCommandFlagsArchived, "", VariablePlayerArmorUpdate);
 		VarArmorRightShoulder = AddVariableString("Armor.RightShoulder", "armor_right_shoulder", "Armor ID for player right shoulder", eCommandFlagsArchived, "", VariablePlayerArmorUpdate);
 		VarArmorLeftShoulder = AddVariableString("Armor.LeftShoulder", "armor_left_shoulder", "Armor ID for player left shoulder", eCommandFlagsArchived, "", VariablePlayerArmorUpdate);
+		VarArmorArms = AddVariableString("Armor.Arms", "armor_arms", "Armor ID for player arms", eCommandFlagsArchived, "", VariablePlayerArmorUpdate);
+		VarArmorLegs = AddVariableString("Armor.Legs", "armor_legs", "Armor ID for player legs", eCommandFlagsArchived, "", VariablePlayerArmorUpdate);
+		VarArmorPelvis = AddVariableString("Armor.Pelvis", "armor_pelvis", "Armor ID for player pelvis", eCommandFlagsArchived, "", VariablePlayerArmorUpdate);
+		VarArmorUpperBody = AddVariableString("Armor.UpperBody", "armor_upperbody", "Armor ID for player upper_body", eCommandFlagsArchived, "", VariablePlayerArmorUpdate);
 		AddCommand("Armor.Update", "armor_update", "Update the player's armor.", eCommandFlagsHidden, VariablePlayerArmorUpdate);
 		AddCommand("Armor.SetUiModelPosition", "armor_ui_player_model_position", "Set the position of the ui player model", (CommandFlags)(eCommandFlagsOmitValueInList | eCommandFlagsHidden), CommandSetUiPlayerModelPosition);
 		AddCommand("Armor.SetUiModelRotation", "armor_ui_player_model_rotation", "Set the rotation of the ui player model", (CommandFlags)(eCommandFlagsOmitValueInList | eCommandFlagsHidden), CommandSetUiPlayerModelRotation);
 
 		AddCommand("AlertCarry", "alert_carry", "Toggle the alert carry pose", eCommandFlagsNone, CommandSetCarryType);
 
-		VarColorsPrimary = AddVariableString("Colors.Primary", "colors_primary", "The primary colors hex value", eCommandFlagsArchived, "#171F0E", VariablePlayerArmorUpdate);
-		VarColorsSecondary = AddVariableString("Colors.Secondary", "colors_secondary", "The secondary colors hex value", eCommandFlagsArchived, "#171F0E", VariablePlayerArmorUpdate);
+		VarColorsPrimary = AddVariableString("Colors.Primary", "colors_primary", "The primary colors hex value", eCommandFlagsArchived, "#546E26", VariablePlayerArmorUpdate);
+		VarColorsSecondary = AddVariableString("Colors.Secondary", "colors_secondary", "The secondary colors hex value", eCommandFlagsArchived, "#546E26", VariablePlayerArmorUpdate);
 		VarColorsVisor = AddVariableString("Colors.Visor", "colors_visor", "The visor colors hex value", eCommandFlagsArchived, "#FF7F00", VariablePlayerArmorUpdate);
 		VarColorsLights = AddVariableString("Colors.Lights", "colors_lights", "The lights colors hex value", eCommandFlagsArchived, "#9685FF", VariablePlayerArmorUpdate);
-		VarRepresentation = AddVariableString("Representation", "player_race", "The representation to display for the player's render mannequin", eCommandFlagsInternal, "spartan", VariablePlayerRepresentationUpdate);
+		VarColorsHolo = AddVariableString("Colors.Holo", "colors_holo", "The holo colors hex value", eCommandFlagsArchived, "#9685FF", VariablePlayerArmorUpdate);
+
+		VarRepresentation = AddVariableString("Representation", "player_race", "The representation to display for the player's render mannequin", eCommandFlagsArchived, "spartan", VariablePlayerRepresentationUpdate);
+
 		VarPlayerName = AddVariableString("Name", "name", "The players ingame name", CommandFlags(eCommandFlagsArchived|eCommandFlagsNoReset), "Jasper", VariablePlayerNameUpdate);
 		VarPlayerServiceTag = AddVariableString("ServiceTag", "service_tag", "The players service tag", eCommandFlagsArchived, "117", VariablePlayerServiceTagUpdate);
 		VarPlayerGender = AddVariableString("Gender", "gender", "The players gender", eCommandFlagsArchived, "male", VariablePlayerGenderUpdate);

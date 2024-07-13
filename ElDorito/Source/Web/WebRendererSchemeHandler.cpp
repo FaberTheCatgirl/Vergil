@@ -8,29 +8,29 @@ Code was used from NoFaTe (http://nofate.me)
 // Disable warnings from boost
 #pragma warning (disable : 4348)
 
-#include "WebRendererSchemeHandler.hpp"
-#include "Logger.hpp"
+#include "Web\WebRendererSchemeHandler.hpp"
+#include "Web\Logger.hpp"
 
 #define _WIN32_LEAN_AND_MEAN
 #define WIN32_LEAN_AND_MEAN
 
 #pragma warning (push)
 
-#include <boost/network/uri.hpp>
-#include <boost/format.hpp>
-#include <boost/lexical_cast.hpp>
-#include <boost/algorithm/string.hpp>
+#include <boost\network\uri.hpp>
+#include <boost\format.hpp>
+#include <boost\lexical_cast.hpp>
+#include <boost\algorithm\string.hpp>
 
-#include <boost/thread.hpp>
+#include <boost\thread.hpp>
 
-#include <boost/interprocess/file_mapping.hpp>
-#include <boost/interprocess/mapped_region.hpp>
-#include <boost/filesystem.hpp>
+#include <boost\interprocess\file_mapping.hpp>
+#include <boost\interprocess\mapped_region.hpp>
+#include <boost\filesystem.hpp>
 
 #pragma warning (pop)
 
 #pragma comment(lib, "cppnetlib-uri")
-#include "WebRenderer.hpp"
+#include "Web\WebRenderer.hpp"
 using namespace Anvil::Client::Rendering;
 
 std::unordered_map<int64_t, std::unordered_map<std::string, std::string>> WebRendererSchemeHandler::m_CachedData;

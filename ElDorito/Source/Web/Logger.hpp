@@ -3,7 +3,7 @@
 // This is just a proxy header which forwards WriteLog to ElDewrito's existing log implementation
 // Makes porting the code from Anvil much easier
 
-#include "../Utils/Logger.hpp"
+#include "Utils\Logger.hpp"
 
 #ifdef _DEBUG
 #define STRINGIFY2(x) #x

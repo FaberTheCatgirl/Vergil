@@ -1,7 +1,7 @@
 #pragma once
 
-#include "BlamData.hpp"
-#include "../Blam/Math/RealVector3D.hpp"
+#include "Blam\BlamData.hpp"
+#include "Blam\Math\RealVector3D.hpp"
 
 namespace Blam::Objects
 {
@@ -91,7 +91,9 @@ namespace Blam::Objects
 		Blam::Math::RealVector3D Velocity2;
 		float Scale;
 		uint32_t Unknown94;
-		uint32_t Unknown98;
+		uint16_t Unknown98;
+		ObjectType Type;
+		uint8_t Unknown9B;
 		uint16_t ObjectNameIndex;
 		uint16_t Unknown9E;
 		uint32_t HavokComponent;
@@ -107,6 +109,23 @@ namespace Blam::Objects
 		uint32_t UnknownC8;
 		uint32_t UnknownCC;
 		DatumHandle SimulationEntity;
+		char unknownD4[39];
+		float UnitCurrentHealth;
+		float UnitCurrentShield;
+		char unknown115[133];
+		uint32_t ActorIndex;
+		uint32_t unknown18C;
+		uint32_t PositionFlags;
+		uint32_t TeamIndex;
+		DatumHandle PlayerHandle;
+		uint32_t unknown19C;
+		uint32_t unknown1A0;
+		uint32_t unknown1A4;
+		char unknown1A8[196];
+		DatumHandle unknown_handle;
+		char unknown270[212];
+		float UnitCurrentFlashlight;
+		float FlashlightFadeTime;
 		// ...
 
 		MultiplayerProperties* GetMultiplayerProperties() const

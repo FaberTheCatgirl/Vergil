@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
-#include "../../Text/StringID.hpp"
-#include "GameVariant.hpp"
+#include "Blam\Text\StringID.hpp"
+#include "Blam\Tags\Game\GameVariant.hpp"
 
 namespace Blam::Tags::Game
 {

@@ -1,9 +1,9 @@
 #pragma once
-#include "../../Math/Bounds.hpp"
-#include "../../Math/RealColorRGB.hpp"
-#include "../../Math/RealPoint3D.hpp"
-#include "../Tags.hpp"
-#include "../../Text/StringID.hpp"
+#include "Blam\Math\Bounds.hpp"
+#include "Blam\Math\RealColorRGB.hpp"
+#include "Blam\Math\RealPoint3D.hpp"
+#include "Blam\Tags\Tags.hpp"
+#include "Blam\Text\StringID.hpp"
 
 namespace Blam::Tags::Objects
 {
@@ -32,6 +32,7 @@ namespace Blam::Tags::Objects
 		struct ChangeColor;
 		struct NodeMap;
 		struct MultiplayerProperty;
+		struct ReviveEquipment;
 		struct ModelObjectDatum;
 
 		Object::TypeValue ObjectType : 16;
@@ -63,9 +64,7 @@ namespace Blam::Tags::Objects
 		TagBlock<Object::ChangeColor> ChangeColors;
 		TagBlock<Object::NodeMap> NodeMaps;
 		TagBlock<Object::MultiplayerProperty> MultiplayerProperties;
-		uint32_t Unknown3;
-		uint32_t Unknown4;
-		uint32_t Unknown5;
+		TagBlock<Object::ReviveEquipment> RevivingEquipment;
 		TagBlock<Object::ModelObjectDatum> ModelObjectData;
 
 		enum class Object::TypeValue : int16_t
@@ -403,6 +402,12 @@ namespace Blam::Tags::Objects
 			};
 		};
 		TAG_STRUCT_SIZE_ASSERT(Object::MultiplayerProperty, 0xC4);
+
+		struct Object::ReviveEquipment
+		{
+			TagReference HealthPack;
+		};
+		TAG_STRUCT_SIZE_ASSERT(Object::ReviveEquipment, 0x10);
 
 		struct Object::ModelObjectDatum
 		{

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ModuleBase.hpp"
+#include "Modules\ModuleBase.hpp"
 
 namespace Modules
 {
@@ -11,14 +11,17 @@ namespace Modules
 		Command* VarArmorChest;
 		Command* VarArmorRightShoulder;
 		Command* VarArmorLeftShoulder;
+		Command* VarArmorArms;
+		Command* VarArmorLegs;
+		Command* VarArmorPelvis;
+		Command* VarArmorUpperBody;
+
 		Command* VarColorsPrimary;
 		Command* VarColorsSecondary;
 		Command* VarColorsVisor;
 		Command* VarColorsLights;
-		Command* VarRepresentation;
 		Command* VarPlayerName;
 		Command* VarPlayerGender;
-		Command* VarPlayerServiceTag;
 		Command* VarPlayerPrivKey;
 		Command* VarPlayerPubKey;
 

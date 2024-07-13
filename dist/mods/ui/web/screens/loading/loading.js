@@ -1,5 +1,6 @@
 var mapName = "";
-var gameModes = ["slayer","ctf","slayer","oddball","koth","forge","vip","juggernaut","territories","assault","infection"];
+var mapImage = "";
+var gameModes = ["slayer","ctf","slayer","oddball","koth","forge","vip","juggernaut","territories","assault","infection","survival"];
 var safeDomains = ["discord.gg"];
 
 $("html").on("keydown", function(e) {
@@ -13,6 +14,8 @@ $("html").on("keydown", function(e) {
     }
 });
 
+//#region Functions
+
 function textWithNewLines(text) {
     var htmls = [];
     var lines = text.split("\\n");
@@ -24,13 +27,15 @@ function textWithNewLines(text) {
 }
 
 function aWrap(link) {
-    var parser = document.createElement('a');
-    parser.href = link;
-    if(safeDomains.indexOf(parser.hostname) > -1){
-        return '<a href="' + link + '" target="_blank">' + link + '<\/a>';
-    } else {
+    link = unescapeHtml(link);
+   if(/\b[^-A-Za-z0-9+&@#/%?=~_|!:,.;\(\)]+/ig.test(link))
         return '';
-    }
+    var e = document.createElement('a');
+    e.setAttribute('href', link);
+    e.setAttribute('target', '_blank');
+    e.setAttribute('style', 'color:dodgerblue');
+    e.textContent = link;
+    return e.outerHTML;
 };
 
 function updateProgress(progress) {
@@ -40,7 +45,7 @@ function updateProgress(progress) {
 
 function loadMap(mapName) {
     $(".mapLoader").show();
-    $(".mapLoader").css({backgroundImage: "url('dew://assets/maps/large/" + mapName + ".jpg'), url('dew://assets/maps/large/unknown.jpg')"});
+    $(".mapLoader").css({backgroundImage: "url('dew://assets/maps/large/" + ((mapImage && mapImage != '') ? mapImage : mapName)  + ".jpg'), url('dew://assets/maps/large/unknown.jpg')"});
     $(".genericLoader").hide();
     dew.getMapVariantInfo().then(function (info) {
         $("#title").text(info.name);
@@ -71,12 +76,12 @@ function loadMap(mapName) {
     dew.command("Server.MessageClient", { internal: true }).then(function (message) {
         if(message.length > 0){
             message = message.substr(0, 512);
-            $(".serverMessage").show();
-            $(".serverMessage").html(textWithNewLines(message).replace(/\bhttp[^ ]+/ig, aWrap));
+            $(".serverMessage").html(textWithNewLines(escapeHtml(message)).replace(/\bhttps?:\/\/[^ ]+/ig, aWrap)).show();
         } else {
             $(".serverMessage").hide();
         }
     });
+    mapImage = null;
 }
 
 function loadGeneric() {
@@ -90,6 +95,21 @@ function resetLoader() {
     $(".mapLoader").css({backgroundImage: ""});
     $("#gametypeicon").attr("src", "");
 }
+
+function escapeHtml(str) {
+    var div = document.createElement('div');
+    div.appendChild(document.createTextNode(str));
+    return div.innerHTML;
+}
+
+function unescapeHtml(str) {
+    var e = document.createElement('div');
+    e.innerHTML = str;
+    return e.childNodes.str === 0 ? "" : e.childNodes[0].nodeValue;
+}
+
+//#endregion
+//#region Dew
 
 dew.on("show", function (event) {
     mapName = event.data.map || "";
@@ -111,3 +131,9 @@ dew.on("loadprogress", function (event) {
     var progress = event.data.currentBytes / event.data.totalBytes * 100;
     updateProgress(progress);
 });
+
+dew.on('custommap', (map) => {
+    mapImage = map.data || null;
+});
+
+//#endregion

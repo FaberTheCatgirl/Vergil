@@ -1,9 +1,9 @@
-#include "Selection.hpp"
-#include "ObjectSet.hpp"
-#include "../Blam/BlamPlayers.hpp"
-#include "../Blam/BlamObjects.hpp"
-#include "../Blam/BlamInput.hpp"
-#include "../Forge/ForgeUtil.hpp"
+#include "Forge\Selection.hpp"
+#include "Forge\ObjectSet.hpp"
+#include "Blam\BlamPlayers.hpp"
+#include "Blam\BlamObjects.hpp"
+#include "Blam\BlamInput.hpp"
+#include "Forge\ForgeUtil.hpp"
 #include <stack>
 
 using namespace Blam;

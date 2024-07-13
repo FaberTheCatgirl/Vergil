@@ -1,4 +1,4 @@
-#include "RealMatrix3x3.hpp"
+#include "Blam\Math\RealMatrix3x3.hpp"
 
 namespace Blam::Math
 {

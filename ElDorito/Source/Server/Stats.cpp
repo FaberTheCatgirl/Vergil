@@ -1,19 +1,21 @@
 #include <WS2tcpip.h>
 #include <fstream>
-#include "Stats.hpp"
-#include "../Blam/BlamEvents.hpp"
-#include "../Blam/BlamNetwork.hpp"
-#include "../Patches/Events.hpp"
-#include "../Patches/Core.hpp"
-#include "../Modules/ModuleServer.hpp"
-#include "../Modules/ModulePlayer.hpp"
-#include "../Utils/Logger.hpp"
-#include "../ElDorito.hpp"
-#include "../ThirdParty/rapidjson/writer.h"
-#include "../ThirdParty/HttpRequest.hpp"
-#include "../ThirdParty/rapidjson/document.h"
-#include "../Patches/Network.hpp"
+#include "Server\Stats.hpp"
+#include "Blam\BlamEvents.hpp"
+#include "Blam\BlamNetwork.hpp"
+#include "Patches\Events.hpp"
+#include "Patches\Core.hpp"
+#include "Modules\ModuleServer.hpp"
+#include "Modules\ModulePlayer.hpp"
+#include "Utils\Logger.hpp"
+#include "ElDorito.hpp"
+#include "ThirdParty\rapidjson\writer.h"
+#include "ThirdParty\HttpRequest.hpp"
+#include "ThirdParty\rapidjson\document.h"
+#include "Patches\Network.hpp"
 #include <iomanip>
+
+#include "new\game\game_globals.hpp"
 
 namespace Server::Stats
 {
@@ -184,7 +186,7 @@ namespace Server::Stats
 	DWORD WINAPI CommandServerAnnounceStats_Thread(LPVOID lpParam)
 	{
 		auto* session = Blam::Network::GetActiveSession();
-		if (Blam::Network::GetLobbyType() != 2 || Blam::Network::GetNetworkMode() != 3)
+		if (Blam::Network::GetLobbyType() != Blam::eLobbyTypeMultiplayer || Blam::Network::GetNetworkMode() != Blam::eNetworkModeSystemLink)
 			return false;
 
 		std::vector<std::string> statsEndpoints;
@@ -221,11 +223,9 @@ namespace Server::Stats
 		std::wstring mapVariantName((wchar_t*)Pointer(0x1863ACA));
 		std::wstring variantName((wchar_t*)Pointer(0x23DAF4C));
 
-		Pointer &gameModePtr = ElDorito::GetMainTls(GameGlobals::GameInfo::TLSOffset)[0](GameGlobals::GameInfo::GameMode);
-		uint32_t gameMode = gameModePtr.Read<uint32_t>();
 		int32_t variantType = Pointer(0x023DAF18).Read<int32_t>();
 		
-		if ((gameMode == 3) && (mapName == "mainmenu"))
+		if ((blam::game_globals_get()->current_game_mode == blam::game_mode::mainmenu) && (mapName == "mainmenu"))
 		{
 			mapName = std::string((char*)Pointer(0x19A5E49));
 			variantName = std::wstring((wchar_t*)Pointer(0x179254));
@@ -239,7 +239,7 @@ namespace Server::Stats
 		writer.Key("variant");
 		writer.String(Utils::String::ThinString(variantName).c_str());
 
-		if (variantType >= 0 && variantType < Blam::GameTypeCount)
+		if (variantType >= 0 && variantType < Blam::eGameTypeCount)
 		{
 			writer.Key("variantType");
 			writer.String(Blam::GameTypeNames[variantType].c_str());
@@ -464,7 +464,7 @@ namespace Server::Stats
 		return true;
 	}
 
-	void LifeCycleStateChanged(Blam::Network::LifeCycleState newState)
+	void LifeCycleStateChanged(Blam::LifeCycleState newState)
 	{
 		auto* session = Blam::Network::GetActiveSession();
 		
@@ -473,7 +473,7 @@ namespace Server::Stats
 
 		switch (newState)
 		{
-			case Blam::Network::eLifeCycleStateStartGame:
+			case Blam::eLifeCycleStateStartGame:
 			{
 				auto thread = CreateThread(NULL, 0, GetPlayersInfo_Thread, (LPVOID)"", 0, NULL);
 				break;

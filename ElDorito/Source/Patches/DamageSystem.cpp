@@ -1,7 +1,7 @@
-#include "DamageSystem.hpp"
-#include "../Blam/BlamObjects.hpp"
-#include "../Blam/BlamPlayers.hpp"
-#include "../Patch.hpp"
+#include "Patches\DamageSystem.hpp"
+#include "Blam\BlamObjects.hpp"
+#include "Blam\BlamPlayers.hpp"
+#include "Patch.hpp"
 
 namespace
 {

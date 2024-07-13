@@ -1,8 +1,10 @@
-#include "BottomlessClip.hpp"
-#include "../Patch.hpp"
-#include "../ElDorito.hpp"
-#include "../Blam/BlamObjects.hpp"
-#include "../Blam/BlamPlayers.hpp"
+#include "Patches\BottomlessClip.hpp"
+#include "Patch.hpp"
+#include "ElDorito.hpp"
+#include "Blam\BlamObjects.hpp"
+#include "Blam\BlamPlayers.hpp"
+
+#include "new\game\game.hpp"
 
 namespace
 {
@@ -39,8 +41,7 @@ namespace
 		if (forced)
 			return true;
 
-		const auto game_engine_get = (void*(*)())(0x005CE150);
-		if (playerIndex == -1 || !game_engine_get())
+		if (playerIndex == -1 || !blam::game_get_current_engine())
 			return false;
 
 		const auto player = Blam::Players::GetPlayers().Get(playerIndex);
@@ -49,8 +50,7 @@ namespace
 
 	inline bool unit_has_bottomless_clip(uint32_t unitObjectIndex)
 	{
-		const auto game_engine_get_current = (void*(*)())(0x005CE150);
-		if (!game_engine_get_current())
+		if (!blam::game_get_current_engine())
 			return false;
 
 		auto unitObject = (uint8_t*)Blam::Objects::Get(unitObjectIndex);

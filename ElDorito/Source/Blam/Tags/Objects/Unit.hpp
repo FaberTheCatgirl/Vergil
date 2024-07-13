@@ -1,11 +1,11 @@
 #pragma once
-#include "../../Math/Angle.hpp"
-#include "../../Math/Bounds.hpp"
-#include "../../Math/RealColorRGB.hpp"
-#include "../../Math/RealVector3D.hpp"
-#include "../Tags.hpp"
-#include "../../Text/StringID.hpp"
-#include "Object.hpp"
+#include "Blam\Math\Angle.hpp"
+#include "Blam\Math\Bounds.hpp"
+#include "Blam\Math\RealColorRGB.hpp"
+#include "Blam\Math\RealVector3D.hpp"
+#include "Blam\Tags\Tags.hpp"
+#include "Blam\Text\StringID.hpp"
+#include "Blam\Tags\Objects\Object.hpp"
 
 namespace Blam::Tags::Objects
 {

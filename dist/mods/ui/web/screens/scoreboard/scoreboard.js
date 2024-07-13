@@ -27,6 +27,7 @@ var lastSortTime = 0;
 var lastAlivePlayerSet = 0;
 var cachedPlayersInfo = null;
 var medalSelection = 0;
+var ingameVoteWidget = null;
 
 var teamArray = [
     {name: 'red', color: '#620B0B'},
@@ -199,51 +200,79 @@ $(document).ready(function(){
             dew.show("console");
         }
     });
-    $.contextMenu({
-        selector: '.clickable', 
-        callback: function(key, options){
-            switch(key){
-                case "kick":
-                    dew.command("Server.KickUid " + $(this).attr('data-uid'));
-                    break;
-                case "ban":
-                    dew.command("Server.KickBanUid " + $(this).attr('data-uid'));
-                    break;
-                case "mute":
-                    setPlayerVolume($(this).attr('id'),$(this).attr('data-uid'),0);
-                    break;
-                case "unmute":
-                    setPlayerVolume($(this).attr('id'),$(this).attr('data-uid'),100);
-                    break;
-                default:
-                    console.log(key + " " + $(this).attr('data-name') + " " + $(this).attr('data-uid'));
-            }
-        },
-        items: {
-            "kick": {
-                name: "Kick",                
-                disabled: function(key, options){ 
-                    return !isHost; 
+    
+
+   
+        $.contextMenu({
+            selector: '.clickable', 
+            
+            build: function($trigger, e) {
+
+                return  {
+                    items: Object.assign(
+                        isHost ? { "ban": { name: "Ban", } } : {}, 
+                        {   
+                            "kick": {
+                                name: isHost ? "Kick" : 'Vote to Kick'
+                            },
+                            "report": {
+                                name: 'Report'
+                            },
+                            "mute": {
+                                name: "Mute"
+                            },
+                            "unmute": {
+                                name: "Unmute"
+                            },
+                        }),
+                        callback: function (key, options) {
+                            switch (key) {
+                                case 'report':
+                                    dew.getSessionInfo().then(((result) => {
+                                        var playerIndex = parseInt($(this).attr('data-playerindex'));
+                                        var playerUid = $(this).attr('data-uid');
+                                        var playerName = $(this).attr('data-name');
+
+                                        if(result.playerInfo.Uid === playerUid) {
+                                            dew.command('Game.PlaySound sound\\game_sfx\\ui\\error.snd!');
+                                            return;
+                                        }
+
+                                        doReportPlayer(playerIndex, playerName);
+                                    }));
+                                    
+                                break;
+                                case "kick":
+                                    if(isHost) {
+                                      dew.command("Server.KickUid " + $(this).attr('data-uid'));
+                                    } else {
+                                        dew.sendChat('!kickindex ' + $(this).attr('data-playerindex'), false);
+                                    }
+                                    break;
+                                case "ban":
+                                    dew.command("Server.KickBanUid " + $(this).attr('data-uid'));
+                                    break;
+                                case "mute":
+                                setPlayerVolume($(this).attr('data-name'),$(this).attr('data-uid'),0);
+                                break;
+                            case "unmute":
+                                setPlayerVolume($(this).attr('data-name'),$(this).attr('data-uid'),100);
+                                break;
+                            default:
+                                console.log(key + " " + $(this).attr('data-name') + " " + $(this).attr('data-uid'));
+                        }
+                    },
                 }
-            },
-            "ban": {
-                name: "Ban",                
-                disabled: function(key, options){
-                    return !isHost; 
-                }
-            },
-            "mute": {
-                name: "Mute"
-            },
-            "unmute": {
-                name: "Unmute"
-            }
-        }
-    });
-    $('#closeButton').on('click', function(e){
-        hideScoreboard();
-    });
+            }   
+        });
+        $('#closeButton').off('click').on('click', function(e){
+			dew.command('Game.PlaySound 0xb01');
+            hideScoreboard();
+        });
     loadSettings(0);
+
+    ingameVoteWidget = dew.ingameVoting.makeWidget(document.getElementById('chatVoteWidget'));
+
 });
 
 function loadSettings(i){
@@ -268,7 +297,7 @@ dew.on('controllerinput', function(e){
     if(hasGP){
         if(e.data.A == 1){
             if(!$('#playerBreakdown').is(":visible")){
-                var playerName = $('.clickable').eq(itemNumber).attr('id');
+                var playerName = $('.clickable').eq(itemNumber).attr('data-name');
                 playerBreakdown(playerName);
             }
         }
@@ -281,13 +310,16 @@ dew.on('controllerinput', function(e){
         }
         if (e.data.X == 1) {
             if (!$('#playerBreakdown').is(":visible")) {
-                var volume = playerVolumes[$('.clickable').eq(itemNumber).attr('id')];
+                var volume = playerVolumes[$('.clickable').eq(itemNumber).attr('data-name')];
                 if (volume == 0) {
-                    setPlayerVolume($('.clickable').eq(itemNumber).attr('id'), $('.clickable').eq(itemNumber).attr('data-uid'), 100);
+                    setPlayerVolume($('.clickable').eq(itemNumber).attr('data-name'), $('.clickable').eq(itemNumber).attr('data-uid'), 100);
                 } else {
-                    setPlayerVolume($('.clickable').eq(itemNumber).attr('id'), $('.clickable').eq(itemNumber).attr('data-uid'), 0);
+                    setPlayerVolume($('.clickable').eq(itemNumber).attr('data-name'), $('.clickable').eq(itemNumber).attr('data-uid'), 0);
                 };
             }
+        }
+        if(e.data.Y == 1 && locked) {
+            ingameVoteWidget.vote();
         }
         if(e.data.Up == 1) {
             upNav();
@@ -353,7 +385,8 @@ function updateScoreboardPlayer(rowElement, player, playersInfo, gameType) {
         timeControllingHill: player.timeControllingHill
     };
 
-    var aliveStatusChanged = ((lastAlivePlayerSet >> player.playerIndex) & 1) != player.isAlive;
+    var aliveStatusChanged = ((lastAlivePlayerSet >> player.playerIndex) & 1) != 0;
+
    
     var cells = rowElement[0].children;
     for(cell of cells){
@@ -382,7 +415,7 @@ function updateScoreboardPlayer(rowElement, player, playersInfo, gameType) {
 }
     
 dew.on("scoreboard", function(e){
-    if(e.data.scoreboardData && e.data.scoreboardData.players){
+    if(e.data && e.data.players){
         scoreboardData = e.data;
     }
     mapName = e.data.mapName
@@ -397,13 +430,14 @@ dew.on("scoreboard", function(e){
          var rebuildScoreboard = false;
          var teamsVisitedSet = 0;
 
-         if(!scoreboardData || !scoreboardData.players)
+         if(!scoreboardData || !scoreboardData.players) {
             return;
+         }
 
-         for(var i = 0; i < scoreboardData.players.length; i++) {         
+         for(var i = 0; i < scoreboardData.players.length; i++) {
              var player = scoreboardData.players[i];
+
              activePlayerSet |= (1 << player.playerIndex);
-            
              var row = $(`[data-playerIndex=${player.playerIndex}]`);
              if(row.length === 0 || row[0].dataset.uid !== player.UID || player.team != parseInt(row[0].dataset.team)) {
                  rebuildScoreboard = true;
@@ -420,28 +454,23 @@ dew.on("scoreboard", function(e){
                 playerHasObjectiveSet |= (1 << player.playerIndex);
 
             if(scoreboardData.hasTeams) {
+               
                 if(!(teamsVisitedSet & (1 << player.team))) {
                     teamsVisitedSet |= (1 << player.team);
-
-                    var tbody = $(`#${teamArray[player.team].name}`);
+                   
+                    var tbody = $(`.team[data-name="${teamArray[player.team].name}"]`);
                     var row = tbody.find('.teamHeader');
                     if(row.length === 0)
                         continue;
-
+                   
                     tbody[0].dataset.score = scoreboardData.teamScores[player.team];
-
-                    var patchSet = {
-                        score: scoreboardData.teamScores[player.team],
-                        totalScore: scoreboardData.totalScores[player.team]
-                    };
-
-                    var cells = row[0].children;
-                    for(cell of cells){
-                        var cellName = cell.dataset.name;
-                        if(cellName in patchSet) {
-                            $(cell).text(patchSet[cellName].toString());
-                        }
+                    if(multiRound){
+                        $(row).children('[data-name="totalScore"]').text(scoreboardData.totalScores[player.team]);
                     }
+                    else {
+                        $(row).children('[data-name="score"]').text(scoreboardData.teamScores[player.team]);
+                    }
+                   
                 }
             }
          }
@@ -464,15 +493,15 @@ dew.on("scoreboard", function(e){
          }
          
          var now = Date.now();
-         if(now - lastSortTime > 250) {
+         if(now - lastSortTime > 250 && !postgame) {
             lastSortTime = now;
 
             if(scoreboardData.hasTeams){
-                sortMe('scoreboard','tbody',multiRound);
+                sortMe('#scoreboard','tbody',multiRound);
                 for(var i = 0; i < 8; i++)
-                    sortMe(teamArray[i].name, 'tr',multiRound);
+                    sortMe(`.team[data-name="${teamArray[i].name}"]`, 'tr',multiRound);
             } else {
-                sortMe('singlePlayers','tr',multiRound);
+                sortMe('#singlePlayers','tr',multiRound);
             }
 
             rankMe(scoreboardData.hasTeams,multiRound);
@@ -536,6 +565,13 @@ dew.on("voip-user-leave", function(e){
 	delete playerVolumes[e.data.user];
 });
 
+dew.on('hide', function() {
+    dew.show('ingame_voting');
+});
+dew.on("show", function(e){
+    dew.hide('ingame_voting');
+});
+
 dew.on("show", function(e){
 	postgame = e.data.postgame;
     isVisible = true;
@@ -582,7 +618,7 @@ dew.on("show", function(e){
         $('#winnerText').hide();
     }
    
-    dew.getSessionInfo().then(function(i){          
+    dew.getSessionInfo().then(function(i){        
         isHost = i.isHost;
     });
     
@@ -598,6 +634,13 @@ dew.on("show", function(e){
     }else{
         hideScoreboard();
     }
+
+
+    if(e.data.locked)
+        ingameVoteWidget.focus();
+    else
+        ingameVoteWidget.blur();
+    ingameVoteWidget.render();
 });
 
 dew.on("hide", function(e){
@@ -661,12 +704,13 @@ function buildScoreboard(lobby, teamGame, scoreArray, gameType, playersInfo,expa
         $('#singlePlayers').empty();
         $('.team').remove();
         for(var i=0; i < lobby.length; i++){
+           
             var bgColor = lobby[i].color;
             if(teamGame){
                 bgColor = teamArray[lobby[i].team].color;
-                where = '#'+teamArray[lobby[i].team].name;
+                where = `.team[data-name="${teamArray[lobby[i].team].name}"]`;
                 if($(where).length == 0){
-                    var teamHeader = '<tbody id="'+teamArray[lobby[i].team].name+'" data-score="'+scoreArray[lobby[i].team]+'" data-totalscore="'+totalArray[lobby[i].team]+'" data-teamIndex="'+lobby[i].team+'" class="team"><tr class="player teamHeader" style="background-color:'+hexToRgb(teamArray[lobby[i].team].color, cardOpacity)+';"><td class="rank"></td><td class="name">'+teamArray[lobby[i].team].name.toUpperCase()+' TEAM</td>';
+                    var teamHeader = '<tbody data-name="'+teamArray[lobby[i].team].name+'" data-score="'+scoreArray[lobby[i].team]+'" data-totalscore="'+totalArray[lobby[i].team]+'" data-teamIndex="'+lobby[i].team+'" class="team"><tr class="player teamHeader" style="background-color:'+hexToRgb(teamArray[lobby[i].team].color, cardOpacity)+';"><td class="rank"></td><td class="name">'+teamArray[lobby[i].team].name.toUpperCase()+' TEAM</td>';
                     if(multiRound){
                         teamHeader+='<td class="score" data-name="totalScore">'+totalArray[lobby[i].team]+'</td>';
                     }
@@ -682,8 +726,8 @@ function buildScoreboard(lobby, teamGame, scoreArray, gameType, playersInfo,expa
                     css: {
                         backgroundColor: hexToRgb(bgColor,cardOpacity)
                     },
-                    id: lobby[i].name,
                     class: 'player clickable',
+                    'data-name': lobby[i].name,
                     'data-uid': lobby[i].UID,
                     'data-color': bgColor,
                     'data-score':lobby[i].score,
@@ -700,7 +744,7 @@ function buildScoreboard(lobby, teamGame, scoreArray, gameType, playersInfo,expa
                 }).mouseup(function(e){
                     if(e.button !== 0)
                         return;
-                    var playerName = $(this).attr('id');
+                    var playerName = $(this).attr('data-name');
                     playerBreakdown(playerName);
                 }).append($('<td class="rank" data-name="rank">'))
                 .append($('<td class="name" data-name="name">').text(lobby[i].name)) //name
@@ -794,24 +838,27 @@ function buildScoreboard(lobby, teamGame, scoreArray, gameType, playersInfo,expa
                     $("[data-playerIndex='" + lobby[i].playerIndex + "']").append($('<img class="emblem objective" src="dew://assets/emblems/'+gameType+'.png">')) //objective (flag/oddball) indicator
                 }
             }
-            if(teamGame){
-                sortMe('scoreboard','tbody',multiRound);
-                sortMe(teamArray[lobby[i].team].name,'tr',multiRound);
-            } else {
-                sortMe('singlePlayers','tr',multiRound);
-            }
-            rankMe(teamGame,multiRound);
-        }      
+        }
+        
+        if(teamGame){
+            sortMe('#scoreboard','tbody',multiRound);
+            for(var i = 0; i < 8; i++)
+                sortMe(`.team[data-name="${teamArray[i].name}"]`, 'tr',multiRound);
+        } else {
+            sortMe('#singlePlayers','tr',multiRound);
+        }
+        rankMe(teamGame,multiRound);
+
         $('.volSlider').on('change click', function(e){
             e.stopPropagation();
-            setPlayerVolume($(this).parent().parent().attr('id'),$(this).parent().parent().attr('data-uid'),$(this).val());
+            setPlayerVolume($(this).parent().parent().attr('data-name'),$(this).parent().parent().attr('data-uid'),$(this).val());
             displayScoreboard();
         });
-        $('.speaker').on('click', function(e){
+        $('.speaker').off('click').on('click', function(e){
             e.stopPropagation();
             $(this).parent().find('.volSlider').show();
 
-            var playerVoip = playerVolumes[$(this).parent().parent().attr('id')];
+            var playerVoip = playerVolumes[$(this).parent().parent().attr('data-name')];
             if (playerVoip) {
                 $(this).value(playerVoip.volume);
             }
@@ -827,7 +874,7 @@ function hexToRgb(hex, opacity){
 }
 
 function sortMe(sortWhat, sortWhich, multiRound){
-    var $wrapper = $('#'+sortWhat);
+    var $wrapper = $(sortWhat);
     $wrapper.find(sortWhich).sort(function(b, a) {
         if(multiRound && postgame && lastRound){
             var d = parseInt(a.dataset.totalScore) - parseInt(b.dataset.totalScore);
@@ -835,10 +882,10 @@ function sortMe(sortWhat, sortWhich, multiRound){
             var d = parseInt(a.dataset.score) - parseInt(b.dataset.score);
         }
         if(d === 0) {
-            if(sortWhat == "singlePlayers"){
-                d = parseInt(a.dataset.playerindex) - parseInt(b.dataset.playerindex);
+            if(sortWhat === "#singlePlayers"){
+                d = parseInt(b.dataset.playerindex) - parseInt(a.dataset.playerindex);
             }else{
-                d = parseInt(a.dataset.team) - parseInt(b.dataset.team);              
+                d = parseInt(b.dataset.team) - parseInt(a.dataset.team)            
             }
         }
         return d;
@@ -854,12 +901,13 @@ function rankMe(teamGame,multiRound){
     var x = 1;
     var winnerText;
     if(teamGame){
-        winnerText = $(outer+':eq(0)').attr('id').substr(0,1).toUpperCase() + $(outer+':eq(0)').attr('id').substr(1)+' Team wins!';
+        var teamName = $(outer+':eq(0)').attr('data-name');
+        winnerText = teamName.substr(0,1).toUpperCase() + teamName.substr(1) + ' Team wins!';
     } else {
-        winnerText = $(outer+':eq(0)').attr('id')+' wins!';
+        winnerText = $(outer+':eq(0)').attr('data-name') + ' wins!';
     }
     if(multiRound && postgame && lastRound){
-        if($(outer).length > 1 && ($(outer+':eq(0)').attr('data-totalscore') == $(outer+':eq(1)').attr('data-totalscore'))){
+        if($(outer).length > 1 && ($(outer+':eq(0)').attr('data-totalScore') == $(outer+':eq(1)').attr('data-totalScore'))){
             winnerText = 'Tie!';
         }
     }else{
@@ -900,8 +948,7 @@ function playerBreakdown(name){
         $('#previousPlayer').prop("disabled",true);
     }else{
         $('#previousPlayer').prop("disabled",false);      
-        $('#previousPlayer').on('click', function(){
-            $('#previousPlayer').off('click');
+        $('#previousPlayer').off('click').on('click', function(){
             playerBreakdown(lobbyJSON[playerIndex-1].name); 
         });            
     }
@@ -909,8 +956,8 @@ function playerBreakdown(name){
         $('#nextPlayer').prop("disabled",true);
     }else{
         $('#nextPlayer').prop("disabled",false);   
-        $('#nextPlayer').on('click', function(){ 
-            $('#nextPlayer').off('click');
+        $('#nextPlayer').off('click').on('click', function(){ 
+
             playerBreakdown(lobbyJSON[playerIndex+1].name); 
         });            
     }
@@ -1202,4 +1249,8 @@ function isSpeaking(name,visible){
 
 function hideScoreboard() {
     dew.callMethod('scoreboardHide', {});
+}
+
+function doReportPlayer(playerIndex, playerName) {
+    dew.show('report', { playerIndex: playerIndex, playerName: playerName });
 }

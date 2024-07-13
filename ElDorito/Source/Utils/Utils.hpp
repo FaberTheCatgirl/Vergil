@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Macros.hpp"
-#include "String.hpp"
-#include "VersionInfo.hpp"
-#include "Singleton.hpp"
-#include "Bits.hpp"
-#include "Cryptography.hpp"
-#include "AntiCheat.hpp"
-#include "Debug.hpp"
+#include "Utils\Macros.hpp"
+#include "Utils\String.hpp"
+#include "Utils\VersionInfo.hpp"
+#include "Utils\Singleton.hpp"
+#include "Utils\Bits.hpp"
+#include "Utils\Cryptography.hpp"
+#include "Utils\AntiCheat.hpp"
+#include "Utils\Debug.hpp"

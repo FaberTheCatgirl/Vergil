@@ -2,27 +2,27 @@
 // Disable warnings about using "safe" C functions
 #pragma warning (disable : 4996)
 
-#include "Signaling.hpp"
+#include "Server\Signaling.hpp"
 
 #include <algorithm>
 #include <map>
-#include <websocketpp/server.hpp>
+#include <websocketpp\server.hpp>
 #include <Windows.h>
 
-#include "../Patches/CustomPackets.hpp"
-#include "../Patches/Network.hpp"
-#include "../ThirdParty/rapidjson/document.h"
-#include "../ThirdParty/rapidjson/stringbuffer.h"
-#include "../ThirdParty/rapidjson/writer.h"
-#include "../Utils/WebSocket.hpp"
-#include "../Utils/Cryptography.hpp"
-#include "../Blam/BlamEvents.hpp"
-#include "../Patches/Events.hpp"
-#include "../Utils/Utils.hpp"
-#include "../Patches/Core.hpp"
-#include "../Modules/ModuleServer.hpp"
-#include "../Modules/ModuleUPnP.hpp"
-#include "../Web/Ui/ScreenLayer.hpp"
+#include "Patches\CustomPackets.hpp"
+#include "Patches\Network.hpp"
+#include "ThirdParty\rapidjson\document.h"
+#include "ThirdParty\rapidjson\stringbuffer.h"
+#include "ThirdParty\rapidjson\writer.h"
+#include "Utils\WebSocket.hpp"
+#include "Utils\Cryptography.hpp"
+#include "Blam\BlamEvents.hpp"
+#include "Patches\Events.hpp"
+#include "Utils\Utils.hpp"
+#include "Patches\Core.hpp"
+#include "Modules\ModuleServer.hpp"
+#include "Modules\ModuleUPnP.hpp"
+#include "Web\Ui\ScreenLayer.hpp"
 
 #define PASSWORD_LENGTH (8)
 
@@ -62,7 +62,7 @@ namespace
 	void ResetPassword(int playerIndex);
 	void ForceStopServer();
 
-	void LifeCycleChanged(Blam::Network::LifeCycleState state);
+	void LifeCycleChanged(Blam::LifeCycleState state);
 
 	std::string authStrings[Blam::Network::MaxPeers];
 	std::map<websocketpp::connection_hdl, coninfo, std::owner_less<websocketpp::connection_hdl>> connectedSockets; //std::owner_less doesn't work with std::unordered_map
@@ -110,7 +110,7 @@ namespace Server::Signaling
 		auto session = Blam::Network::GetActiveSession();
 		CreatePasswords();
 		currentPassword = authStrings[session->MembershipInfo.HostPeerIndex];
-		port = Modules::ModuleServer::Instance().VarSignalServerPort->ValueInt;
+		port = (uint16_t)Modules::ModuleServer::Instance().VarSignalServerPort->ValueInt;
 		Web::Ui::ScreenLayer::Notify("signal-ready", ServerPortJson(), true);
 		if (Modules::ModuleUPnP::Instance().VarUPnPEnabled->ValueInt)
 		{
@@ -190,9 +190,9 @@ namespace Server::Signaling
 
 namespace
 {
-	void LifeCycleChanged(Blam::Network::LifeCycleState state)
+	void LifeCycleChanged(Blam::LifeCycleState state)
 	{
-		if (state == Blam::Network::eLifeCycleStateNone || state == Blam::Network::eLifeCycleStateLeaving)
+		if (state == Blam::eLifeCycleStateNone || state == Blam::eLifeCycleStateLeaving)
 		{
 			currentPassword = "not-connected";
 		}

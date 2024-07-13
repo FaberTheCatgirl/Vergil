@@ -1,6 +1,6 @@
 #pragma once
 #include <cstdint>
-#include "../Padding.hpp"
+#include "Blam\Padding.hpp"
 
 namespace Blam::Math
 {

@@ -1,4 +1,4 @@
-#include "ColorRGB.hpp"
+#include "Blam\Math\ColorRGB.hpp"
 
 namespace Blam::Math
 {

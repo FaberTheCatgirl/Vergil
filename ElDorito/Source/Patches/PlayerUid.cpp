@@ -1,14 +1,14 @@
-#include "PlayerUid.hpp"
+#include "Patches\PlayerUid.hpp"
 
-#include "../Console.hpp"
-#include "../Modules/ModulePlayer.hpp"
-#include "../Patch.hpp"
-#include "PlayerPropertiesExtension.hpp"
-#include "../Utils/Cryptography.hpp"
-#include "../Blam/BlamPlayers.hpp"
-#include "../Utils/String.hpp"
+#include "Console.hpp"
+#include "Modules\ModulePlayer.hpp"
+#include "Patch.hpp"
+#include "Patches\PlayerPropertiesExtension.hpp"
+#include "Utils\Cryptography.hpp"
+#include "Blam\BlamPlayers.hpp"
+#include "Utils\String.hpp"
 
-#include <openssl/sha.h>
+#include <openssl\sha.h>
 
 namespace
 {

@@ -1,5 +1,5 @@
 #pragma once
-#include "RealVector2D.hpp"
+#include "Blam\Math\RealVector2D.hpp"
 
 namespace Blam::Math
 {

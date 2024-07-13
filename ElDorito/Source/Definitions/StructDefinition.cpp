@@ -1,4 +1,4 @@
-#include "StructDefinition.hpp"
+#include "Definitions\StructDefinition.hpp"
 
 namespace Definitions
 {

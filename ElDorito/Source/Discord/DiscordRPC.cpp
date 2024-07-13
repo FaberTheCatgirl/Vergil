@@ -1,23 +1,23 @@
-#include "DiscordRPC.h"
+#include "Discord\DiscordRPC.h"
 
 #include <time.h>
 
-#include "../Blam/BlamNetwork.hpp"
-#include "../Patches/Network.hpp"
-#include "../Patches/Core.hpp"
-#include "../Modules/ModuleServer.hpp"
-#include "../Modules/ModuleGame.hpp"
-#include "../Web/Ui/ScreenLayer.hpp"
-#include "../ThirdParty/rapidjson/stringbuffer.h"
-#include "../ThirdParty/rapidjson/writer.h"
-#include "../ThirdParty/HttpRequest.hpp"
-#include "../Pointer.hpp"
-#include "../Utils/String.hpp"
-#include "../Utils/Cryptography.hpp"
-#include "../Utils/VersionInfo.hpp"
+#include "Blam\BlamNetwork.hpp"
+#include "Patches\Network.hpp"
+#include "Patches\Core.hpp"
+#include "Modules\ModuleServer.hpp"
+#include "Modules\ModuleGame.hpp"
+#include "Web\Ui\ScreenLayer.hpp"
+#include "ThirdParty\rapidjson\stringbuffer.h"
+#include "ThirdParty\rapidjson\writer.h"
+#include "ThirdParty\HttpRequest.hpp"
+#include "Pointer.hpp"
+#include "Utils\String.hpp"
+#include "Utils\Cryptography.hpp"
+#include "Utils\VersionInfo.hpp"
 #include <discord_register.h>
 
-#include "../Utils/Logger.hpp"
+#include "Utils\Logger.hpp"
 
 static const char* APPLICATION_ID = "378984448022020112";
 
@@ -33,27 +33,27 @@ static const std::pair<std::wstring, bool> ipGetter[SITE_NUMBER] =
 
 namespace
 {
-	void handleDiscordDisconnected(int errorCode, const char *message)
+	void handleDiscordDisconnected(int errorCode, const char* message)
 	{
 		Utils::Logger::Instance().Log(Utils::LogTypes::Game, Utils::LogLevel::Error, "Discord-RPC: %s", std::string(message));
 	}
 
-	void handleDiscordError(int errorCode, const char *message)
+	void handleDiscordError(int errorCode, const char* message)
 	{
 		Utils::Logger::Instance().Log(Utils::LogTypes::Game, Utils::LogLevel::Error, "Discord-RPC: %s", std::string(message));
 	}
 
-	void handleDiscordJoin(const char *joinSecret)
+	void handleDiscordJoin(const char* joinSecret)
 	{
 		Modules::CommandMap::Instance().ExecuteCommand("connect " + std::string(joinSecret));
 	}
 
-	void handleDiscordSpectate(const char *spectateSecret)
+	void handleDiscordSpectate(const char* spectateSecret)
 	{
 		//rip
 	}
 
-	void handleDiscordJoinRequest(const DiscordJoinRequest *joinRequest)
+	void handleDiscordJoinRequest(const DiscordJoinRequest* joinRequest)
 	{
 		if (Modules::ModuleGame::Instance().VarDiscordAutoAccept->ValueInt == 1)
 		{
@@ -80,7 +80,7 @@ namespace
 
 	void UpdateRichPresence()
 	{
-		auto get_multiplayer_scoreboard = (Blam::MutiplayerScoreboard*(*)())(0x00550B80);
+		auto get_multiplayer_scoreboard = (Blam::MutiplayerScoreboard * (*)())(0x00550B80);
 		Discord::DiscordRPC::Instance().detailString.clear();
 		memset(&Discord::DiscordRPC::Instance().discordPresence, 0, sizeof(Discord::DiscordRPC::discordPresence));
 
@@ -105,7 +105,7 @@ namespace
 				Discord::DiscordRPC::Instance().mapString[0] = toupper(Discord::DiscordRPC::Instance().mapString[0]);
 				Discord::DiscordRPC::Instance().discordPresence.largeImageText = Discord::DiscordRPC::Instance().mapString.c_str();
 				Discord::DiscordRPC::Instance().discordPresence.largeImageKey = (char*)Pointer(0x22AB018)(0x1A4);
-				
+
 				if (game && map)
 				{
 					std::stringstream ss;
@@ -162,7 +162,7 @@ namespace
 	DWORD WINAPI DiscordRetrieveExternalIP_Thread(LPVOID lpParam)
 	{
 		HttpRequest req(L"ElDewrito/" + Utils::String::WidenString(Utils::Version::GetVersionString()), L"", L"");
-		
+
 		for (int i = 0; i < SITE_NUMBER; i++)
 		{
 			if (!req.SendRequest(ipGetter[i].first, L"GET", L"", L"", L"", NULL, 0))

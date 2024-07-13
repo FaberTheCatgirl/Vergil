@@ -1,46 +1,49 @@
 #include "ElDorito.hpp"
 
-#include "Utils/Utils.hpp"
+#include "Utils\Utils.hpp"
 #include "ElPatches.hpp"
-#include "Patches/Network.hpp"
-#include "Server/DedicatedServer.hpp"
-#include "Server/Stats.hpp"
-#include "Server/ServerChat.hpp"
-#include "Server/VariableSynchronization.hpp"
-#include "Server/BanList.hpp"
-#include "Server/Rcon.hpp"
-#include "Server/Signaling.hpp"
-#include "Patches/Core.hpp"
+#include "Patches\Network.hpp"
+#include "Server\DedicatedServer.hpp"
+#include "Server\Stats.hpp"
+#include "Server\ServerChat.hpp"
+#include "Server\VariableSynchronization.hpp"
+#include "Server\BanList.hpp"
+#include "Server\Rcon.hpp"
+#include "Server\Signaling.hpp"
+#include "Server\BanListSync.hpp"
+#include "Server\ReportHandler.hpp"
+#include "Server\PostgameController.hpp"
+#include "Patches\Core.hpp"
 #include "Console.hpp"
-#include "Web/Ui/WebScoreboard.hpp"
-#include "Web/Ui/ScreenLayer.hpp"
-#include "Web/Ui/WebChat.hpp"
-#include "Web/Ui/WebConsole.hpp"
-#include "Web/Ui/WebLoadingScreen.hpp"
-#include "Web/Ui/VotingScreen.hpp"
-#include "Web/Ui/MpEventDispatcher.hpp"
-#include "Web/Ui/WebVirtualKeyboard.hpp"
+#include "Web\Ui\WebScoreboard.hpp"
+#include "Web\Ui\ScreenLayer.hpp"
+#include "Web\Ui\WebChat.hpp"
+#include "Web\Ui\WebConsole.hpp"
+#include "Web\Ui\WebLoadingScreen.hpp"
+#include "Web\Ui\VotingScreen.hpp"
+#include "Web\Ui\MpEventDispatcher.hpp"
+#include "Web\Ui\WebVirtualKeyboard.hpp"
 #include "ElModules.hpp"
-#include "Modules/ModuleGame.hpp"
+#include "Modules\ModuleGame.hpp"
 #include "Patch.hpp"
-#include "Modules/ModuleCamera.hpp"
-#include "Modules/ModuleInput.hpp"
-#include "Server/Voting.hpp"
-#include "ChatCommands/ChatCommandMap.hpp"
-#include "Patches/Weapon.hpp"
-#include "Patches/Memory.hpp"
-#include "Patches/Camera.hpp"
-#include "Discord/DiscordRPC.h"
-#include "ThirdParty/SOP.hpp"
-
-#include "Blam/Cache/StringIdCache.hpp"
+#include "Modules\ModuleCamera.hpp"
+#include "Modules\ModuleInput.hpp"
+#include "Server\Voting.hpp"
+#include "ChatCommands\ChatCommandMap.hpp"
+#include "Patches\Maps.hpp"
+#include "Patches\Weapon.hpp"
+#include "Patches\Memory.hpp"
+#include "Patches\Camera.hpp"
+//#include "Discord\DiscordRPC.h"
+#include "ThirdParty\SOP.hpp"
+#include "Blam\Cache\StringIdCache.hpp"
 
 #include <Windows.h>
 #include <TlHelp32.h>
 #include <ShlObj.h>
 #include <codecvt>
 #include <detours.h>
-#include "Web/Ui/WebSettings.hpp"
+#include "Web\Ui\WebSettings.hpp"
 
 size_t ElDorito::MainThreadID = 0;
 
@@ -197,6 +200,9 @@ void ElDorito::Initialize()
 			if (arg.compare(L"-lod-increase") == 0)
 				Patches::Camera::IncreaseLOD();
 
+			if (arg.compare(L"-startup-forceload") == 0 && i < numArgs - 2)
+				Patches::Maps::StartupForceLoad(std::stoul(szArgList[i + 1]), Utils::String::ThinString(szArgList[i + 2]));
+
 			size_t pos = arg.find(L'=');
 			if( pos == std::wstring::npos || arg.length() <= pos + 1 ) // if it doesn't contain an =, or there's nothing after the =
 				continue;
@@ -251,7 +257,7 @@ void ElDorito::Initialize()
 		}
 	}
 
-	setWatermarkText("ElDewrito | Version: " + Utils::Version::GetVersionString() + " | Build Date: " __DATE__);
+	setWatermarkText("Unofficial ElDewrito | Version: " + Utils::Version::GetVersionString() + " | Build Date: " __DATE__);
 
 	// Ensure a ban list file exists
 	Server::SaveDefaultBanList(Server::LoadDefaultBanList());
@@ -264,6 +270,9 @@ void ElDorito::Initialize()
 	Server::VariableSynchronization::Initialize();
 	Server::Rcon::Initialize();
 	Server::Signaling::Initialize();
+	Server::BanListSync::Init();
+	Server::ReportHandler::Init();
+	Server::PostgameController::Init();
 
 	if (!Blam::Cache::StringIDCache::Instance.Load(mapsFolder + "string_ids.dat"))
 	{
@@ -286,8 +295,12 @@ void ElDorito::Tick()
 
 	Server::Stats::Tick();
 	Server::Voting::Tick();
+	Server::BanListSync::Tick();
+	Server::ReportHandler::Tick();
+	Server::PostgameController::Tick();
+
 	ChatCommands::Tick();
-	Discord::DiscordRPC::Instance().Update();
+	//Discord::DiscordRPC::Instance().Update();
 
 	// TODO: refactor this elsewhere
 	Modules::ModuleCamera::Instance().UpdatePosition();
@@ -333,7 +346,7 @@ void ElDorito::OnMainMenuShown()
 	executeCommandQueue = true;
 	if (isDedicated)
 		Server::DedicatedServer::Init();
-	else
+	else if (!Modules::ModuleGame::Instance().VarSkipTitleSplash->ValueInt)
 		Web::Ui::ScreenLayer::Show("title", "{}");
 }
 

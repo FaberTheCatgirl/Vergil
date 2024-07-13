@@ -15,7 +15,7 @@
 #ifndef RAPIDJSON_FILEREADSTREAM_H_
 #define RAPIDJSON_FILEREADSTREAM_H_
 
-#include "stream.h"
+#include "ThirdParty\rapidjson\stream.h"
 #include <cstdio>
 
 #ifdef __clang__

@@ -16,49 +16,55 @@ var emblemToggle = 1;
 var needApply = false;
 
 var h3ColorArray = [
-    ['Steel','#626262'],
-    ['Silver','#B0B0B0'],
-    ['White','#DEDEDE'],
-    ['Red','#9B3332'],
-    ['Mauve','#DB6766'],
-    ['Salmon','#EE807F'],
-    ['Orange','#DB8B00'],
-    ['Coral','#F8AE58'],
-    ['Peach','#FECB9C'],
-    ['Gold','#CCAE2C'],
-    ['Yellow','#F3BC2B'],
-    ['Pale','#FDD879'],
-    ['Sage','#57741A'],
-    ['Green','#90A560'],
-    ['Olive','#D8EFA7'],
-    ['Teal','#31787E'],
-    ['Aqua','#4ABBC1'],
-    ['Cyan','#91EDEC'],
-    ['Blue','#325992'],
-    ['Cobalt','#5588DB'],
-    ['Sapphire','#97B5F5'],
-    ['Violet','#553E8F'],
-    ['Orchid','#9175E3'],
-    ['Lavender','#C4B4FD'],
-    ['Crimson','#830147'],
-    ['Ruby Wine','#D23C83'],
-    ['Pink','#FC8BB9'],
-    ['Brown','#513714'],
-    ['Tan','#AC8A6E'],
-    ['Khaki','#E0BEA2']
+    ['Steel','#282828'],
+    ['Silver','#7C7C7C'],
+    ['White','#C3C3C3'],
+    ['Red','#620B0B'],
+    ['Mauve','#BD2B2B'],
+    ['Salmon','#E24444'],
+    ['Orange','#BC4D00'],
+    ['Coral','#F4791F'],
+    ['Peach','#FFA362'],
+    ['Gold','#A77708'],
+    ['Yellow','#DD9A08'],
+    ['Pale','#FFBC3B'],
+    ['Sage','#1F3602'],
+    ['Green','#546E26'],
+    ['Olive','#B3E164'],
+    ['Teal','#0A3B3F'],
+    ['Aqua','#178C95'],
+    ['Cyan','#54DDDB'],
+    ['Blue','#0B2156'],
+    ['Cobalt','#1D4BBC'],
+    ['Sapphire','#5D85EB'],
+    ['Violet','#1D1052'],
+    ['Orchid','#5438CF'],
+    ['Lavender','#A18CFF'],
+    ['Crimson','#460014'],
+    ['Rubine','#AF0E46'],
+    ['Pink','#FF4D8A'],
+    ['Brown','#1C0D02'],
+    ['Tan','#774D31'],
+    ['Khaki','#C69069']
 ];
 var settingsToLoad = [
     ['playerName', 'Player.Name','Name','', 2],
     ['serviceTag', 'Player.ServiceTag','Service Tag','', 3],
-    ['armorHelmet', 'Player.Armor.Helmet','Helmet','The thing that goes on your head.', 2],
-    ['armorChest', 'Player.Armor.Chest','Body','From arm to arm.', 3],
-    ['armorRightShoulder', 'Player.Armor.RightShoulder','Right Shoulder','Right there on that shoulder.', 4],
-    ['armorLeftShoulder', 'Player.Armor.LeftShoulder','Left Shoulder','The only shoulder that\'s left.', 5],
-    ['gender', 'Player.Gender','Gender','', 6],
-    ['colorsPrimary', 'Player.Colors.Primary','Primary Color','The primary armor color will serve you in individual combat but will be overwritten in team scenarios.',0],
-    ['colorsSecondary', 'Player.Colors.Secondary','Secondary Color','The secondary armor color accents your primary color and will be overwritten in team scenarios.',1],
-    ['colorsVisor', 'Player.Colors.Visor','Visor Color','Adjust the tint of your Spartan\'s visor.',2],
-    ['colorsLights', 'Player.Colors.Lights','Light Color','Like Christmas, but more subtle.',3]
+    ['armorHelmet', 'Player.Armor.Helmet','Helmet','The thing that goes on your head.', 0],
+    ['armorChest', 'Player.Armor.Chest','Body','From arm to arm.', 1],
+    ['armorRightShoulder', 'Player.Armor.RightShoulder','Right Shoulder','Right there on that shoulder.', 2],
+    ['armorLeftShoulder', 'Player.Armor.LeftShoulder','Left Shoulder','The only shoulder that\'s left.', 3],
+	['armorArms', 'Player.Armor.Arms','Arms','Arms.', 4],
+	['armorPelvis', 'Player.Armor.Pelvis','Pelvis','Pelvis.', 5],
+	['armorLegs', 'Player.Armor.Legs','Legs','Legs.', 6],
+	['armorUpperBody', 'Player.Armor.UpperBody','Upper Body','Upper Body.', 7],
+    ['gender', 'Player.Gender','Gender','', 8],
+    ['playerRep', 'Player.Representation', 'Player Representation','', 9],
+    ['colorsPrimary', 'Player.Colors.Primary','Armor Primary','The primary armor color will serve you in individual combat but will be overwritten in team scenarios.',0],
+    ['colorsSecondary', 'Player.Colors.Secondary','Armor Secondary','The secondary armor color accents your primary color and will be overwritten in team scenarios.',1],
+    ['colorsVisor', 'Player.Colors.Visor','Armor Detail','The armor detail color preserves your individual identity in all multiplayer scenarios.',2],
+	['colorsLights', 'Player.Colors.Lights','Light Color','Like Christmas, but more subtle.',3],
+    ['colorsHolo', 'Player.Colors.Holo','Armor Holo','Armor Holo.',4]
 ];
 var armorShoulderList = [
     ['Mark VI','base','Supplemental Armor, Pauldron, Mjolnir: This standard-issue shoulder armor for the Mjolnir Mark VI Powered Assault Armor has been in use since October 2552. It is compatible with all Mjolnir variants.'],
@@ -69,6 +75,33 @@ var armorShoulderList = [
     ['Scout','mp_scout','The SCOUT and RECON projects were run as independent parallel projects intended to develop a single variant of the Mjolnir Powered Assault Armor with stealth capabilities.'],
     ['Security','mp_marathon','The Mjolnir Mark V(m) Powered Assault Armor was originally manufactured in 2528 and recently upgraded to be compatible with all current-issue armor variants.'],
     ['Hayabusa','mp_ryu','The critical innovation brought about by RKD\'s involvement in the development of power armor is in the use of advanced materials-reducing the weight of current generation armor by nearly a third.']
+    ['Air Assault','air_assault','Based on a proven Ushuaia Armory design, Naphtali hopes to leverage the AIR ASSAULT\'s all-around excellent performance and combat endurance to compete for the UNSC\'s lucrative Spartan recruit armor contract. AIR ASSAULT armor is a front-runner for the standard armor that future Spartans will be clad in.'],
+    ['Renegade','renegade',' Obstentially a strategic reconnaissance variant, users have noticed the RENEGADE\'s sensor suite is calibrated specifically to track other Mjolnir suits; particularly those featuring emissions cloaking.'],
+    ['Juggernaut','juggernaut','The JUGGERNAUT\'s design was thought lost during the fall of Reach. Recovered by a corporate scout team in 2553, the prototype helmets were paired with a GEN2 prototype harness and shipped to Anvil Station for integration testing. 2553 Each JUGGERNAUT helmet is dabbed with vitrified dirt from Reach as a reminder of what is at stake.'],
+    ['Scanner','scanner','Scanner'],
+    ['Chameleon','chameleon','Chameleon'],
+    ['Stealth','stealth','Stealth'],
+    ['Omni','omni','A surprisingly effective composite of other Acheron Security designs, the OMNI is currently the companys cutting-edge Mjolnir suit, and one of the few able to effectively use Material Groups GEN2 prototype sensor suite. Petabytes of Mjolnir combat data have been carefully sifted and analzed by Acheron researchers to inform the OMNI\'s design.'],
+    ['Orbital','orbital','Orbital'],
+    ['Shark','shark','Shark'],
+    ['Halberd','halberd','Cloaked in secrecy, all users of the HALBERD-class armor must sign binding non-disclosure agreements about its performance and the particulars of its new weapon mag-lock arrangement. Emerson guards the HALBERD prototype suits with their own - heavily armed - private security.'],
+    ['Hoplite','hoplite','Initially designed as an alternative to the SPI armor used by SPARTAN-III operatives, the notoriously secretive Watershed group has unexpectedly revealed the HOPLITE as a low-cost Mjolnir variant optimized for pairing with UNSC pistols.-III. HOPLITE armor lacks the bells and whistles of most Mjolnir variants, but is easy to build and repair.'],
+	['Ballista','ballista','Ballista'],
+	['Cyclops','cyclops','Cyclops'],
+	['Demo','demo','Demo'],
+	['Dutch','dutch','Dutch'],
+	['Gladiator','gladiator','Gladiator'],
+	['Gungnir','gungnir','Gungnir'],
+	['Hammerhead','hammerhead','Hammerhead'],
+	['Mac','mac','Mac'],
+	['Mercenary','mercenary','Mercenary'],
+	['Nihard','nihard','Nihard'],
+	['Oracle','oracle','Oracle'],
+	['Silverback','silverback','Silverback'],
+	['Spectrum','spectrum','Spectrum'],
+	['Strider','strider','Strider'],
+	['Tankmode','tankmode_human','The divine creation of Tankmode.'],
+	['Widow Maker','widow_maker','Widow Maker']
 ];
 var armorHelmetList = [
     ['Mark VI','base','Integrated Communications Helmet, Mjolnir: This standard-issue helmet for the Mjolnir Mark VI Powered Assault Armor has been in use since October 2552. It is compatible with all Mjolnir variants.'],
@@ -82,6 +115,32 @@ var armorHelmetList = [
     ['Security','mp_marathon','The Mjolnir V(m) variant was manufactured at the Misrah Armories Facility on Mars in 2528. It has been upgraded and modified to be compatible with all current-issue armor variants.'],
     ['Hayabusa','mp_ryu','The critical innovation brought about by RKD\'s involvement in the development of power armor is in the use of advanced materials-reducing the weight of current generation armor by nearly a third.'],
     ['ODST','mp_odst','Many technologies initially developed for Project: MJOLNIR have gained widespread adoption; the use of CTCs for body armor and helmet-integrated neural interfaces being the most visible.']
+    ['Air Assault','air_assault','Based on a proven Ushuaia Armory design, Naphtali hopes to leverage the AIR ASSAULT\'s all-around excellent performance and combat endurance to compete for the UNSC\'s lucrative Spartan recruit armor contract. AIR ASSAULT armor is a front-runner for the standard armor that future Spartans will be clad in.'],
+    ['Renegade','renegade',' Obstentially a strategic reconnaissance variant, users have noticed the RENEGADE\'s sensor suite is calibrated specifically to track other Mjolnir suits; particularly those featuring emissions cloaking.'],
+    ['Juggernaut','juggernaut','The JUGGERNAUT\'s design was thought lost during the fall of Reach. Recovered by a corporate scout team in 2553, the prototype helmets were paired with a GEN2 prototype harness and shipped to Anvil Station for integration testing. 2553 Each JUGGERNAUT helmet is dabbed with vitrified dirt from Reach as a reminder of what is at stake.'],
+    ['Scanner','scanner','Scanner'],
+    ['Chameleon','chameleon','Chameleon'],
+    ['Stealth','stealth','Stealth'],
+    ['Omni','omni','A surprisingly effective composite of other Acheron Security designs, the OMNI is currently the companys cutting-edge Mjolnir suit, and one of the few able to effectively use Material Groups GEN2 prototype sensor suite. Petabytes of Mjolnir combat data have been carefully sifted and analzed by Acheron researchers to inform the OMNI\'s design.'],
+    ['Orbital','orbital','Orbital'],
+    ['Shark','shark','Shark'],
+    ['Halberd','halberd','Cloaked in secrecy, all users of the HALBERD-class armor must sign binding non-disclosure agreements about its performance and the particulars of its new weapon mag-lock arrangement. Emerson guards the HALBERD prototype suits with their own - heavily armed - private security.'],
+    ['Hoplite','hoplite','Initially designed as an alternative to the SPI armor used by SPARTAN-III operatives, the notoriously secretive Watershed group has unexpectedly revealed the HOPLITE as a low-cost Mjolnir variant optimized for pairing with UNSC pistols.-III. HOPLITE armor lacks the bells and whistles of most Mjolnir variants, but is easy to build and repair.'],
+	['Ballista','ballista','Ballista'],
+	['Cyclops','cyclops','Cyclops'],
+	['Demo','demo','Demo'],
+	['Dutch','dutch','Dutch'],
+	['Gladiator','gladiator','Gladiator'],
+	['Gungnir','gungnir','Gungnir'],
+	['Hammerhead','hammerhead','Hammerhead'],
+	['Mac','mac','Mac'],
+	['Mercenary','mercenary','Mercenary'],
+	['Nihard','nihard','Nihard'],
+	['Oracle','oracle','Oracle'],
+	['Silverback','silverback','Silverback'],
+	['Spectrum','spectrum','Spectrum'],
+	['Strider','strider','Strider'],
+	['Widow Maker','widow_maker','Widow Maker']
 ];
 var armorChestList = [
     ['Mark VI','base','Mjolnir Mark VI Powered Assault Armor: This is the standard issue Powered Assault Armor for Spartans as of October 2552. It is compatible with all certified helmet and pauldron variants.'],
@@ -93,14 +152,88 @@ var armorChestList = [
     ['Scout','mp_scout','The Mjolnir VI/S variant was developed and tested alongside the RECON variant at the ONI\'s Ordnance Testing Facility (B5D) at Swanbourne, Perth, Western Australia.'],
     ['Hayabusa','mp_ryu','In late 2536, RKD-an Earth-based think tank-presented the UNSC Ordnance Committee with its answer to the self-contained powered armor problem: Project: HAYABUSA.'],
     ['Katana','mp_katana','To correctly use the sword, one must make it an extension of one\'s body. This is for the understanding of those intending to be warriors.']
+    ['Air Assault','air_assault','Based on a proven Ushuaia Armory design, Naphtali hopes to leverage the AIR ASSAULT\'s all-around excellent performance and combat endurance to compete for the UNSC\'s lucrative Spartan recruit armor contract. AIR ASSAULT armor is a front-runner for the standard armor that future Spartans will be clad in.'],
+    ['Renegade','renegade',' Obstentially a strategic reconnaissance variant, users have noticed the RENEGADE\'s sensor suite is calibrated specifically to track other Mjolnir suits; particularly those featuring emissions cloaking.'],
+    ['Juggernaut','juggernaut','The JUGGERNAUT\'s design was thought lost during the fall of Reach. Recovered by a corporate scout team in 2553, the prototype helmets were paired with a GEN2 prototype harness and shipped to Anvil Station for integration testing. 2553 Each JUGGERNAUT helmet is dabbed with vitrified dirt from Reach as a reminder of what is at stake.'],
+    ['Scanner','scanner','Scanner'],
+    ['Chameleon','chameleon','Chameleon'],
+    ['Stealth','stealth','Stealth'],
+    ['Omni','omni','A surprisingly effective composite of other Acheron Security designs, the OMNI is currently the companys cutting-edge Mjolnir suit, and one of the few able to effectively use Material Groups GEN2 prototype sensor suite. Petabytes of Mjolnir combat data have been carefully sifted and analzed by Acheron researchers to inform the OMNI\'s design.'],
+    ['Orbital','orbital','Orbital'],
+    ['Shark','shark','Shark'],
+    ['Halberd','halberd','Cloaked in secrecy, all users of the HALBERD-class armor must sign binding non-disclosure agreements about its performance and the particulars of its new weapon mag-lock arrangement. Emerson guards the HALBERD prototype suits with their own - heavily armed - private security.'],
+    ['Hoplite','hoplite','Initially designed as an alternative to the SPI armor used by SPARTAN-III operatives, the notoriously secretive Watershed group has unexpectedly revealed the HOPLITE as a low-cost Mjolnir variant optimized for pairing with UNSC pistols.-III. HOPLITE armor lacks the bells and whistles of most Mjolnir variants, but is easy to build and repair.'],
+	['Ballista','ballista','Ballista'],
+	['Cyclops','cyclops','Cyclops'],
+	['Demo','demo','Demo'],
+	['Dutch','dutch','Dutch'],
+	['Gladiator','gladiator','Gladiator'],
+	['Gungnir','gungnir','Gungnir'],
+	['Hammerhead','hammerhead','Hammerhead'],
+	['Mac','mac','Mac'],
+	['Mercenary','mercenary','Mercenary'],
+	['Nihard','nihard','Nihard'],
+	['Oracle','oracle','Oracle'],
+	['Silverback','silverback','Silverback'],
+	['Spectrum','spectrum','Spectrum'],
+	['Strider','strider','Strider'],
+	['Tankmode','tankmode_human','The divine creation of Tankmode.'],
+	['Widow Maker','widow_maker','Widow Maker']
 ];
+
+var armorArmList = [
+	['Mark VI','base','Integrated Communications Helmet, Mjolnir: This standard-issue helmet for the Mjolnir Mark VI Powered Assault Armor has been in use since October 2552. It is compatible with all Mjolnir variants.'],
+	['Air Assault','air_assault','Based on a proven Ushuaia Armory design, Naphtali hopes to leverage the AIR ASSAULT\'s all-around excellent performance and combat endurance to compete for the UNSC\'s lucrative Spartan recruit armor contract. AIR ASSAULT armor is a front-runner for the standard armor that future Spartans will be clad in.'],
+    ['Renegade','renegade',' Obstentially a strategic reconnaissance variant, users have noticed the RENEGADE\'s sensor suite is calibrated specifically to track other Mjolnir suits; particularly those featuring emissions cloaking.'],
+    ['Juggernaut','juggernaut','The JUGGERNAUT\'s design was thought lost during the fall of Reach. Recovered by a corporate scout team in 2553, the prototype helmets were paired with a GEN2 prototype harness and shipped to Anvil Station for integration testing. 2553 Each JUGGERNAUT helmet is dabbed with vitrified dirt from Reach as a reminder of what is at stake.'],
+    ['Scanner','scanner','Scanner'],
+    ['Chameleon','chameleon','Chameleon'],
+    ['Stealth','stealth','Stealth'],
+    ['Omni','omni','A surprisingly effective composite of other Acheron Security designs, the OMNI is currently the companys cutting-edge Mjolnir suit, and one of the few able to effectively use Material Groups GEN2 prototype sensor suite. Petabytes of Mjolnir combat data have been carefully sifted and analzed by Acheron researchers to inform the OMNI\'s design.'],
+    ['Orbital','orbital','Orbital'],
+    ['Shark','shark','Shark'],
+    ['Halberd','halberd','Cloaked in secrecy, all users of the HALBERD-class armor must sign binding non-disclosure agreements about its performance and the particulars of its new weapon mag-lock arrangement. Emerson guards the HALBERD prototype suits with their own - heavily armed - private security.'],
+    ['Hoplite','hoplite','Initially designed as an alternative to the SPI armor used by SPARTAN-III operatives, the notoriously secretive Watershed group has unexpectedly revealed the HOPLITE as a low-cost Mjolnir variant optimized for pairing with UNSC pistols.-III. HOPLITE armor lacks the bells and whistles of most Mjolnir variants, but is easy to build and repair.'],
+	['Ballista','ballista','Ballista'],
+	['Cyclops','cyclops','Cyclops'],
+	['Demo','demo','Demo'],
+	['Dutch','dutch','Dutch'],
+	['Gladiator','gladiator','Gladiator'],
+	['Gungnir','gungnir','Gungnir'],
+	['Hammerhead','hammerhead','Hammerhead'],
+	['Mac','mac','Mac'],
+	['Mercenary','mercenary','Mercenary'],
+	['Nihard','nihard','Nihard'],
+	['Oracle','oracle','Oracle'],
+	['Silverback','silverback','Silverback'],
+	['Spectrum','spectrum','Spectrum'],
+	['Strider','strider','Strider'],
+	['Widow Maker','widow_maker','Widow Maker']
+];
+var armorPelvisList = [
+	['Mark VI','base','Mjolnir Mark VI Powered Assault Armor: This is the standard issue Powered Assault Armor for Spartans as of October 2552. It is compatible with all certified helmet and pauldron variants.'],
+	['Air Assault','air_assault','Based on a proven Ushuaia Armory design, Naphtali hopes to leverage the AIR ASSAULT\'s all-around excellent performance and combat endurance to compete for the UNSC\'s lucrative Spartan recruit armor contract. AIR ASSAULT armor is a front-runner for the standard armor that future Spartans will be clad in.'],
+	['Tankmode','tankmode_human','The divine creation of Tankmode.']
+];
+
+var armorUpperBodyList = [
+];
+
 var colorPicker;
 var genderList = [
     ['Male','male','State your gender. This will not be displayed to other players, but combat effects will be tailored to your gender.'],
     ['Female','female','State your gender. This will not be displayed to other players, but combat effects will be tailored to your gender.']    
 ];
 
+var playerRepList = [
+    ['Spartan','spartan','Spartans are members of a series of United Nations Space Command projects designed to create physically, genetically, technologically, and mentally superior supersoldiers as special fighting units.'],
+    ['Elite','elite','The Sangheili, known to humans as Elites, are a saurian species of strong, proud, and intelligent warriors, as well as skilled combat tacticians.']
+];
+
 $(document).ready(function(){
+	
+	page1();
+	
     $(document).keyup(function (e) {
         if (e.keyCode === 27) {
             if(activePage.endsWith('inputBox')){
@@ -121,16 +254,16 @@ $(document).ready(function(){
         if(e.keyCode == 192 || e.keyCode == 223){
             dew.show('console');
         }
-        if(e.keyCode == 37 && !(activePage.startsWith('#page2 #color') || activePage.startsWith('#page3 #color'))){ //Left
+        if(e.keyCode == 37 && !(activePage.startsWith('#page2 #color'))){ //Left
             leftNav();
         }
-        if(e.keyCode == 38 && !(activePage.startsWith('#page2 #color') || activePage.startsWith('#page3 #color'))){ //Up
+        if(e.keyCode == 38 && !(activePage.startsWith('#page2 #color'))){ //Up
             upNav();
         }
-        if(e.keyCode == 39 && !(activePage.startsWith('#page2 #color') || activePage.startsWith('#page3 #color'))){ //Right
+        if(e.keyCode == 39 && !(activePage.startsWith('#page2 #color'))){ //Right
             rightNav();
         }
-        if(e.keyCode == 40 && !(activePage.startsWith('#page2 #color') || activePage.startsWith('#page3 #color'))){ //Down
+        if(e.keyCode == 40 && !(activePage.startsWith('#page2 #color'))){ //Down
             downNav();
         }
         if(!activePage.endsWith('inputBox')){
@@ -152,15 +285,22 @@ $(document).ready(function(){
 	$("#randomColors").hide();
 	SetupEmblems(false, true, true);
 		
-    setRadioList('armorHelmet', armorHelmetList, true);
-    setRadioList('armorChest', armorChestList, true);
-    setRadioList('armorRightShoulder', armorShoulderList, true);
-    setRadioList('armorLeftShoulder', armorShoulderList, true);
-    setRadioList('gender', genderList, true);
+    setRadioList('armorHelmet', armorHelmetList);
+    setRadioList('armorChest', armorChestList);
+    setRadioList('armorRightShoulder', armorShoulderList);
+    setRadioList('armorLeftShoulder', armorShoulderList);
+	setRadioList('armorChest', armorChestList, true);
+	setRadioList('armorArms', armorArmList, true);
+	setRadioList('armorPelvis', armorPelvisList, true);
+    setRadioList('armorLegs', armorArmList, true);
+	setRadioList('armorUpperBody', armorUpperBodyList, true);
+    setRadioList('gender', genderList);
+    setRadioList('playerRep', playerRepList);
     setRadioList('colorsPrimary', h3ColorArray);
     setRadioList('colorsSecondary', h3ColorArray);
     setRadioList('colorsVisor', h3ColorArray);
     setRadioList('colorsLights', h3ColorArray);
+	setRadioList('colorsHolo', h3ColorArray);
     $('.tabs li a').off('click').on('click', function(e){
         $('.tabs li').removeClass('selected');
         $(this).parent().addClass('selected');
@@ -183,9 +323,10 @@ $(document).ready(function(){
             });
         }
 		
-        dew.command('Game.PlaySound 0x0B00');
+        dew.command('Game.PlaySound sound\\game_sfx\\ui\\button_based_ui_sounds\\a_button.snd!');
     });
     $('.colorForm input, .armorForm input').off('click').on('change click', function(e){
+		$(this).parent().parent().parent().find('.selectedElement').removeClass('selectedElement');
         $(this).parent().parent().parent().find('.chosenElement').removeClass('chosenElement');
         $(this).parent().parent().addClass('chosenElement');
         $.grep(settingsToLoad, function(result){
@@ -198,7 +339,7 @@ $(document).ready(function(){
         $(location.hash+' #infoBox #infoText').text($(this).attr('desc'));
 		setUrl(false);
     });
-    $('#colorsPrimaryText, #colorsSecondaryText,#colorsVisorText,#colorsLightsText').off('click').on('click', function(e){
+    $('#colorsPrimaryText, #colorsSecondaryText,#colorsVisorText,#colorsLightsText,#colorsHoloText').off('click').on('click', function(e){
         $('.colorForm').hide();
         colorPicker = dew.makeColorPicker(document.querySelector('#colorPicker'));
         var whichColor = $(this);
@@ -223,6 +364,9 @@ $(document).ready(function(){
     });
     $('#cancelButton').off('click').on('click', function(e){
         cancelButton();
+    });
+	$('#backButton').off('click').on('click', function(e){
+        backButton();
     });
     setControlValues();
 	var hasPressed = false;
@@ -253,12 +397,15 @@ $(document).ready(function(){
             }
 			if(e.data.Y == 1){
 				if(activePage.startsWith('#page1')){
-                    randomArmor();
+                    return;
                 }else if(activePage.startsWith('#page2')){
                     randomColors();
                 }else if(activePage.startsWith('#page3')){
 					randomEmblem();
-				}
+				}else if(activePage.startsWith('#page4')){
+					randomArmor();
+					}
+				
 			}
             if(e.data.Y == 1){
                 inputBox();
@@ -355,6 +502,24 @@ $(document).ready(function(){
     });
     var clicking = false;
     var currentPos = {x: null, y: null};
+	$('.wheelable').on('mousewheel', function(e) {
+        if(e.originalEvent.wheelDelta > 0) {
+            var elementIndex = $('#'+this.id+' option:selected').index();
+            if(elementIndex > 0){
+                var newElement = elementIndex - 1;
+                $('#'+this.id+' option').eq(newElement).prop('selected', true);
+                $('#'+this.id).trigger('change');
+            }
+        }else{
+            var elementIndex = $('#'+this.id+' option:selected').index();
+            var elementLength = $('#'+this.id).children('option').length;
+            if(elementIndex < elementLength){
+                var newElement = elementIndex + 1;
+                $('#'+this.id+' option').eq(newElement).prop('selected', true);
+                $('#'+this.id).trigger('change');
+            }
+        }
+    });
     $('#playerWindow').mousedown(function(){
         clicking = true;
     });
@@ -387,15 +552,19 @@ $(document).ready(function(){
     $('#inputBox #okButton').off('click').on('click', function(){
         if($('#inputBox #pName').is(':visible')){
             dew.command('Player.Name "'+$('#inputBox #pName').val()+'"');
-            dew.notify("settings-update", [['Player.Name',$('#inputBox #pName').val()]]);
+            dew.notify("settings-update", ['Player.Name',$('#inputBox #pName').val()]);
 			if(hasValidConnection){
 				SetupEmblems(false, false, false, function(){
 					ApplyEmblem(false);
 				},true);
 			}
+			updatePlayerCEF();
         }else if($('#inputBox #sTag').is(':visible')){
             dew.command('Player.ServiceTag "'+$('#inputBox #sTag').val().toUpperCase()+'"');
-        }
+			updatePlayerCEF();
+        }else if($('#inputBox #aGender').is(':visible')){
+			updatePlayerCEF();
+		}
         hideInputBox(true);
     });
     $('#inputBox #dismissButton').off('click').on('click', function(){
@@ -430,6 +599,7 @@ function setButtons(){
         $('#randomColors img').attr('src','dew://assets/buttons/' + response + '_Y.png');
         $('#applyButton img').attr('src','dew://assets/buttons/' + response + '_Start.png');
         $('#cancelButton img').attr('src','dew://assets/buttons/' + response + '_B.png');
+		$('#backButton img').attr('src','dew://assets/buttons/' + response + '_B.png');
 		$('#toggleIconButton img').attr('src','dew://assets/buttons/'+ response + '_X.png');
 		$('#randomEmblem img').attr('src','dew://assets/buttons/'+ response + '_Y.png');
         $('#dismissButton img').attr('src','dew://assets/buttons/' + response + '_B.png');
@@ -442,33 +612,43 @@ function setButtons(){
 
 var bipedRotate = 270;
 dew.on('show', function(e){
-    $('#settingsWindow').hide();
-    $('#blueHeader, #blueFooter,#blackLayer').hide();
+    $('#appearanceWindow').hide();
     $('.armorForm, .colorForm, .emblemForm, .emblemColorForm').hide();
     $('#infoHeader, #infoText').text('');
     $('#infoBox').hide();
     bipedRotate = 270;
     dew.getSessionInfo().then(function(i){
         if(i.mapName == "mainmenu"){
-            $('#blackLayer').fadeIn(200, function() {
                 dew.command('Player.Armor.Update');
-                dew.command('Player.Armor.SetUiModelRotation 270');
-                dew.command('game.hideh3ui 1');
-                dew.command('Game.ScenarioScript settings_cam');
-                dew.command('Game.ScreenEffectRange 0 0');
-                $('#settingsWindow').show();
-                $('#blueHeader, #blueFooter, #blackLayer').show();
+                $('#appearanceWindow').show();
                 initActive();
                 initGamepad();
-            }).fadeOut(200);
         }else{
             dew.hide();
         }
     });
     setControlValues();
     updateSelection(0,false,true);
-    adjustBiped();
 });
+
+function updatePlayerCEF() {
+	dew.command('Player.ServiceTag').then(function (output) {
+		document.getElementById("serviceTag").innerHTML = "Service Tag: "+output;
+	});
+	dew.command('Player.Gender').then(function (output) {
+		document.getElementById("aGender").innerHTML = "Gender: "+output;
+	});
+	dew.command('Player.Name').then(function (output) {
+		document.getElementById("playerNameDisplay").innerHTML = output;
+	});
+	dew.command('Player.Colors.Primary').then(function (output) {
+		document.getElementById("emblemBG").style.backgroundColor = output;
+		document.getElementById("playerBorder0").style.backgroundColor = output;
+		document.getElementById("playerBorder1").style.backgroundColor = output;
+		document.getElementById("playerBorder2").style.backgroundColor = output;
+		document.getElementById("playerBorder3").style.backgroundColor = output;
+	});
+}
 
 function initGamepad(){
     dew.command('Settings.Gamepad', {}).then(function(result){
@@ -562,6 +742,21 @@ function cancelButton(){
 	}
 }
 
+function backButton(){
+    itemNumber = 0;
+    dew.command('writeconfig');
+	if(!activePage.startsWith('#page1')){
+		page1();
+		location.href='#page1';
+	} else if(activePage.startsWith('#page1')) {
+		effectReset();
+		page1();
+	}
+	if(needApply){
+		ApplyEmblem(false);
+	}
+}
+
 function dismissButton(){
     hideInputBox(false);
 }
@@ -573,25 +768,14 @@ function effectReset(){
         return;
     exiting = true;
 
-    dew.command('Game.PlaySound 0x0B04');
+    dew.command('Game.PlaySound sound\\game_sfx\\ui\\back1.snd!');
     dew.getSessionInfo().then(function(i){
         if(i.mapName == "mainmenu"){
-            $('#blackLayer').fadeIn(200, function(){
-                dew.command('Game.ScenarioScript leave_settings');
-                dew.command('Game.ScreenEffectRange 0 1E+19');
-                dew.command('Player.Armor.SetUiModelRotation 270');
-                dew.command('game.hideh3ui 0');
-                $('#settingsWindow').hide();
-                $('#blueHeader').hide();
-                $('#blueFooter').hide();
-                $('#blackLayer').fadeOut(200, function(){
+                $('#appearanceWindow').hide();
+				dew.command('show_ui 0x10083');
                     dew.hide();
-                    $('#settingsWindow').show();
-                    $('#blueHeader').show();
-                    $('#blueFooter').show();
+                    $('#appearanceWindow').show();
                     exiting = false;
-                });
-            });
         }else{
             dew.hide();
             exiting = false;
@@ -600,6 +784,7 @@ function effectReset(){
 }
 
 function setRadioList(ElementID, ArrayVar,hasImage){
+	updatePlayerCEF();
     var sel = document.getElementById(ElementID);
     for(var i = 0; i < ArrayVar.length; i++){
         var span = document.createElement("span");
@@ -624,18 +809,39 @@ function setRadioList(ElementID, ArrayVar,hasImage){
     }
 }
 
+function changeGender(gender) {
+	document.getElementById("aGender").innerHTML = gender;
+	dew.command('Player.Gender '+gender);
+	updatePlayerCEF();
+}
+
+function changeClassification(componentType) {
+	var selectBox = document.getElementById("armor"+componentType);
+	var selectedValue = selectBox.options[selectBox.selectedIndex].value;
+		dew.command('Player.Representation '+selectedValue);
+}
+
+function changeArmor(componentType) {
+	var selectBox = document.getElementById("armor"+componentType);
+	var selectedValue = selectBox.options[selectBox.selectedIndex].value;
+	dew.command('Player.Armor.'+componentType+' '+selectedValue);
+	}
+
 function randomArmor(){
-    var armorArray = ['armorHelmet','armorChest','armorRightShoulder','armorLeftShoulder'];
+    var armorArray = ['armorHelmet','armorChest','armorRightShoulder','armorLeftShoulder','armorArms','armorLegs','armorPelvis','armorUpperBody'];
     for(var i = 0; i < armorArray.length; i++) {
         var $options = $('#'+armorArray[i]).find('input'),
             random = ~~(Math.random() * $options.length);
+		var selectBox = document.getElementById(armorArray[i]);
+		var selectedValue = selectBox.options[selectBox.selectedIndex].value;
         $options.eq(random).prop('checked', true);
 		$options.eq(random).click();
 		itemNumber = random;
-		updateSelection(itemNumber,false,true, '#page1 #' + armorArray[i]);
+		updateSelection(itemNumber,false,true, '#page4 #' + armorArray[i]);
         $.grep(settingsToLoad, function(result){
             if(result[0] == armorArray[i]){
                 dew.command(result[1] + ' ' + $('#'+armorArray[i]+' input:checked').val());
+				selectedValue = $('#'+armorArray[i]+' input:checked').val();
             };
         });
     }
@@ -651,20 +857,12 @@ function randomEmblem(){
 		itemNumber = random;
 		updateSelection(itemNumber,false,true, '#page3 #' + emblemArray[i]);
     }
-	var colorArray = ['colorsEmblemPrimary','colorsEmblemSecondary','colorsEmblemImage'];
-    for(var i = 0; i < colorArray.length; i++) {
-        var random = ~~(Math.random() * 30);
-		$('#'+colorArray[i]+' input').eq(random).prop('checked', true);
-		$('#'+colorArray[i]+' input').eq(random).click();
-		itemNumber = random;
-		updateSelection(itemNumber,false,true, '#page3 #' + colorArray[i]);
-		
-    }
+	ApplyEmblem(false);
    	setUrl(false);
 }
 
 function randomColors(){
-    var colorArray = ['colorsPrimary','colorsSecondary','colorsLights','colorsVisor'];
+    var colorArray = ['colorsPrimary','colorsSecondary','colorsLights','colorsVisor','colorsHolo'];
     for(var i = 0; i < colorArray.length; i++) {
         var randomColor = '#'+Math.floor(Math.random()*16777215).toString(16).toUpperCase();
         $('#'+colorArray[i]+'Text').val(randomColor);
@@ -676,11 +874,22 @@ function randomColors(){
             };
         });
     }
+	
+	var emblemColorArray = ['colorsEmblemPrimary','colorsEmblemSecondary','colorsEmblemImage'];
+    for(var i = 0; i < emblemColorArray.length; i++) {
+        var random = ~~(Math.random() * 30);
+		$('#'+emblemColorArray[i]+' input').eq(random).prop('checked', true);
+		$('#'+emblemColorArray[i]+' input').eq(random).click();
+		itemNumber = random;
+		updateSelection(itemNumber,false,true, '#page2 #' + colorArray[i]);
+    }
+	ApplyEmblem(false);
+	updatePlayerCEF();
 }
 
 function updateSelection(item, sound, move, direct){
 	var elem = (direct ? direct : activePage);
-
+	
     if(item > -1){
         $(elem+' .selectedElement').eq(0).removeClass('selectedElement');
         $(elem + ' label:visible').eq(item).parent().addClass('selectedElement');
@@ -688,7 +897,7 @@ function updateSelection(item, sound, move, direct){
             $(elem+' .selectedElement')[0].scrollIntoView(false);
         }
         if(sound){
-            dew.command('Game.PlaySound 0xAFE');
+            dew.command('Game.PlaySound sound\\game_sfx\\ui\\button_based_ui_sounds\\cursor_horzontal.snd!');
         }
     }
 }
@@ -730,26 +939,9 @@ function upNav(){
 }
 
 function downNav(){
-	if(activePage.startsWith('#page3 #color')){
-		if(itemNumber < $(activePage + ' label:visible').length-3){
-			itemNumber+=3;
-            updateSelection(itemNumber, true, true);
-        }
-	}else
-    if(activePage.startsWith('#page2 #color') ){
-        if(itemNumber < $(activePage + ' label:visible').length-3){
-            if(itemNumber == 0){
-                itemNumber+=1;
-            }else{
-                itemNumber+=3;
-            }
-            updateSelection(itemNumber, true, true);
-        }
-    }else{
-        if((activePage.split(' ').length < 2 && itemNumber < 3 && activePage == '#page2') || ((activePage.split(' ').length < 2 && itemNumber < 5 && activePage == '#page3')) || (activePage.split(' ').length < 2 && itemNumber < 6 && activePage == '#page1') ||  (activePage.split(' ').length > 1 && itemNumber < $(activePage + ' label:visible').length-1)){
-            itemNumber++;
-            updateSelection(itemNumber, true, true);
-        }
+    if((activePage.split(' ').length < 2 && itemNumber < 5 && activePage == '#page2') || ((activePage.split(' ').length < 2 && itemNumber < 5 && activePage == '#page3')) || (activePage.split(' ').length < 2 && itemNumber < 5 && activePage == '#page1') || (activePage.split(' ').length < 2 && itemNumber < 4 && activePage == '#page4') ||  (activePage.split(' ').length > 1 && itemNumber < $(activePage + ' label:visible').length-1)){
+        itemNumber++;
+        updateSelection(itemNumber, true, true);
     }
 }
 
@@ -765,9 +957,11 @@ function onControllerDisconnect(){
 
 function inputBox(type){
     $('#inputBox .textInput').hide();
+	$('#inputBox .dropDown-gender').hide();
     if(type=='playerName'){
        $('#pName').show();
-       $('#inputBox .header').text('Player Name');
+       $('#inputBox .popup-window-header').text('Player Name');
+	   $('#inputBox .popup-content').text('Choose a name. Ideally not something racist.');
         dew.command('Player.Name', {}).then(function(response) {
             $('#inputBox #pName').val(response.substring(0, 15));
             $('#inputBox').fadeIn(100);
@@ -777,7 +971,8 @@ function inputBox(type){
         });
     }else if(type=='serviceTag'){
        $('#sTag').show();
-       $('#inputBox .header').text('Service Tag');
+       $('#inputBox .popup-window-header').text('Service Tag');
+	   $('#inputBox .popup-content').text('Select a UNSC service tag for quick visual identification in combat situations.');
         dew.command('Player.ServiceTag', {}).then(function(response) {
             $('#inputBox #sTag').val(response);
             $('#inputBox').fadeIn(100);
@@ -785,7 +980,15 @@ function inputBox(type){
             $('#dismissButton').show();
             $('#sTag').focus();
         });
-    }
+    }else if(type=='armorGender'){
+		$('#aGender').show();
+		$('#inputBox .dropDown-gender').show();
+		$('#inputBox .popup-window-header').text('Select Gender');
+		$('#inputBox .popup-content').text('The sound effects of multiplayer combat reflect your gender when possible.');
+        $('#inputBox').fadeIn(100);
+        activePage = activePage+'inputBox';
+        $('#dismissButton').show();
+	}
 }
 
 function hideInputBox(sound,condition){
@@ -793,15 +996,15 @@ function hideInputBox(sound,condition){
     activePage = activePage.replace('inputBox', '');
     if(sound){
         if(condition=='ok'){
-            dew.command('Game.PlaySound 0x0B00');
+            dew.command('Game.PlaySound sound\\game_sfx\\ui\\button_based_ui_sounds\\a_button.snd!');
         }else if(condition=='dismiss'){
-            dew.command('Game.PlaySound 0x0B04');
+            dew.command('Game.PlaySound sound\\game_sfx\\ui\\back1.snd!');
         }
     }
 }
 
 function armorShow(showMe, element){
-    activePage = '#page1 #'+showMe;
+    activePage = '#page4 #'+showMe;
     $('.baseNav').removeClass('selectedElement');
     $(activePage+' .selectedElement').removeClass('selectedElement');
     element.addClass('selectedElement');
@@ -820,14 +1023,24 @@ function colorShow(showMe, element){
     $(activePage+' .selectedElement').removeClass('selectedElement');
     element.addClass('selectedElement');
     $('.colorForm').hide();
+	$('.emblemColorForm').hide();
     $('#'+showMe).css('display', 'grid')
     $.grep(settingsToLoad, function(result, index){
         if(result){
             if(result[0] == showMe){
-                $(location.hash+' #infoBox #infoText').text(result[3]);
+				$(location.hash+' #infoBox #infoText').text(result[3]);
             }
         }
     });
+	
+	if (showMe == 'colorsEmblemPrimary') {
+		$(location.hash+' #infoBox #infoText').text('This color is applied to the primary icon area of your emblem.');
+	} else if (showMe == 'colorsEmblemSecondary') {
+		$(location.hash+' #infoBox #infoText').text('This color is applied to the secondary icon area of your emblem.');
+	} else if (showMe == 'colorsEmblemImage') {
+		$(location.hash+' #infoBox #infoText').text('The emblem background color defines the color of the field that your icon sits on.');
+	}
+	
     $(location.hash+' #infoBox #infoHeader').text($('#'+showMe+' input:checked').parent()[0].innerText);
     $(location.hash+' #infoBox').show();
     itemNumber = $('#'+showMe+' span').index($('#'+showMe+' input:checked').parent().parent());
@@ -869,7 +1082,7 @@ function selectElement(){
     }else if($(activePage + ' form:visible')){
         $(activePage+' .selectedElement').find('input').click();
     }
-    dew.command('Game.PlaySound 0x0B00');
+    dew.command('Game.PlaySound sound\\game_sfx\\ui\\button_based_ui_sounds\\a_button.snd!');
 }
 
 function exitSubform(){
@@ -878,7 +1091,7 @@ function exitSubform(){
         activePage = location.hash;
         itemNumber = $(activePage+' span').has('.setting').index($('span:has(.selectedElement)'));
         colorPicker = null;
-        dew.command('Game.PlaySound 0x0B04');
+        dew.command('Game.PlaySound sound\\game_sfx\\ui\\back1.snd!');
         $(activePage + ' form:visible').hide();
         $(activePage + ' #infoBox').hide();
     }
@@ -903,14 +1116,6 @@ function getAspectRatio(){
     var h = screen.height;
     var r = gcd (w, h);
     return w/r+":"+h/r;
-}
-
-function adjustBiped(){
-    if(getAspectRatio() == '4:3' || getAspectRatio() == '5:4' ){
-        dew.command('Player.Armor.SetUiModelPosition 74.058 -101.826 11.65'); //moved to the left
-    }else{
-        dew.command('Player.Armor.SetUiModelPosition 74.108 -101.926 11.65'); //default
-    }    
 }
 
 function SetupEmblems(resetEmblemList, setRadiosLists, setEmblem, onFinish, runFinish){
@@ -1102,25 +1307,13 @@ function setEmblemColorRadioList(ElementID, ArrayVar, shouldReset){
     }
 }
 
-function emblemColorShow(showMe, element){
+function emblemShow(element){
+	showMe = 'emblemIcon';
     activePage = '#page3 #'+showMe;
-    $('.baseNav').removeClass('selectedElement');
-    $(activePage+' .selectedElement').removeClass('selectedElement');
-    element.addClass('selectedElement');
-    $('.emblemColorForm').hide();
-	$('.emblemForm').hide();
-    $('#'+showMe).css('display', 'grid')
+    $('#'+showMe).show();
     itemNumber = $('#'+showMe+' span').index($('#'+showMe+' input:checked').parent().parent());
-    updateSelection(itemNumber, false, true);
-}
-
-function emblemShow(showMe, element){
+	showMe = 'emblemBackgroundImage';
     activePage = '#page3 #'+showMe;
-    $('.baseNav').removeClass('selectedElement');
-    $(activePage+' .selectedElement').removeClass('selectedElement');
-    element.addClass('selectedElement');
-    $('.emblemForm').hide();
-	$('.emblemColorForm').hide();
     $('#'+showMe).show();
     itemNumber = $('#'+showMe+' span').index($('#'+showMe+' input:checked').parent().parent());
     updateSelection(itemNumber, false, true);
@@ -1150,8 +1343,9 @@ function setUrl(isLastEmblem){
 	if(lastEmblem == emblemurl){
 		needApply = false;
 	}
-	
+	updatePlayerCEF();
 	document.getElementById("emblemBox").src = 'http://' + apiServer + emblemGeneratorAPI + emblemurl;
+	document.getElementById("emblemSmall").src = 'http://' + apiServer + emblemGeneratorAPI + emblemurl;
 }
 
 function ApplyEmblem(ShowAlert) {
@@ -1218,7 +1412,19 @@ function toggleIcon(){
 	setUrl(false);
 }
 
+function page4(){
+	activePage = '#page4';
+	$("#cancelButton").hide();
+	$("#backButton").show();
+	$("#toggleIconButton").hide();
+	$("#randomArmor").show();
+	$("#randomColors").hide();
+	$("#randomEmblem").hide();
+}
 function page3(){
+	activePage = '#page3';
+	$("#cancelButton").hide();
+	$("#backButton").show();
 	SetupEmblems(true, false, true);
 	$("#toggleIconButton").show();
 	$("#randomArmor").hide();
@@ -1226,7 +1432,10 @@ function page3(){
 	$("#randomEmblem").show();
 }
 function page2(){
-	$("#toggleIconButton").hide();
+	activePage = '#page2';
+	$("#cancelButton").hide();
+	$("#backButton").show();
+	$("#toggleIconButton").show();
 	$("#randomArmor").hide();
 	$("#randomColors").show();
 	$("#randomEmblem").hide();
@@ -1235,10 +1444,15 @@ function page2(){
 	}
 }
 function page1(){
+	updatePlayerCEF();
+	activePage = '#page1';
+	$("#cancelButton").hide();
+	$("#backButton").show();
 	$("#toggleIconButton").hide();
-	$("#randomArmor").show();
+	$("#randomArmor").hide();
 	$("#randomColors").hide();
 	$("#randomEmblem").hide();
+	SetupEmblems(true, false, true);
 	if(needApply){
 		ApplyEmblem(false);
 	}

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ModuleBase.hpp"
+#include "Modules\ModuleBase.hpp"
 
 namespace Modules
 {
@@ -9,6 +9,7 @@ namespace Modules
 	public:
 		//Command* VarAutoSaveOnMapLoad;
 		Command* VarWeaponJSON;
+		Command* VarFOVScaling;
 
 		std::vector<std::string> WeaponsJSONList;
 

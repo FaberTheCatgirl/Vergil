@@ -1,10 +1,10 @@
-#include "ChatCommand.hpp"
-#include "ChatCommandMap.hpp"
-#include "../Server/ServerChat.hpp"
-#include "../Modules/ModuleServer.hpp"
-#include "../Utils/Utils.hpp"
-#include "../Eldorito.hpp"
-#include "../Utils/Logger.hpp"
+#include "ChatCommands\ChatCommand.hpp"
+#include "ChatCommands\ChatCommandMap.hpp"
+#include "Server\ServerChat.hpp"
+#include "Modules\ModuleServer.hpp"
+#include "Utils\Utils.hpp"
+#include "Eldorito.hpp"
+#include "Utils\Logger.hpp"
 
 
 namespace ChatCommands
@@ -47,13 +47,15 @@ namespace ChatCommands
 	}
 	void ShuffleTeamsCommand::doOnVoteStart(std::string starterName)
 	{
+		std::string previousValue;
+		Modules::CommandMap::Instance().SetVariable2(Modules::ModuleServer::Instance().VarChatVoteAction, std::string("shuffle teams"), previousValue);
 		Server::Chat::SendServerMessage(starterName + " has started a vote to shuffle the teams. " + std::to_string(votesNeeded) + " vote" + ((votesNeeded > 1) ? "s" : "") + " needed to pass. Type !yes to vote");
 	}
 
 	bool ShuffleTeamsCommand::isValidArgument(std::string s, std::string& returnInfo)
-	{ 
+	{
 		if (Blam::Network::GetActiveSession()->HasTeams())
-			return true; 
+			return true;
 		else {
 			returnInfo = "Only team games can be shuffled.";
 			return false;
@@ -78,10 +80,12 @@ namespace ChatCommands
 	}
 	void EndGameCommand::doOnVoteStart(std::string starterName)
 	{
+		std::string previousValue;
+		Modules::CommandMap::Instance().SetVariable2(Modules::ModuleServer::Instance().VarChatVoteAction, std::string("end the game"), previousValue);
 		Server::Chat::SendServerMessage(starterName + " has started a vote to end the game. " + std::to_string(votesNeeded) + " vote" + ((votesNeeded > 1) ? "s" : "") + " needed to pass. Type !yes to vote.");
 	}
 
-	bool EndGameCommand::isValidArgument(std::string s, std::string& returnInfo){ return true; }
+	bool EndGameCommand::isValidArgument(std::string s, std::string& returnInfo) { return true; }
 
 	// Command to vote end current round
 	SkipRoundCommand::SkipRoundCommand() : AbstractChatCommand("skipRound", "Starts a vote to end the current round. Type !yes to vote.") {}
@@ -128,6 +132,8 @@ namespace ChatCommands
 	}
 	void KickIndexCommand::doOnVoteStart(std::string starterName)
 	{
+		std::string previousValue;
+		Modules::CommandMap::Instance().SetVariable2(Modules::ModuleServer::Instance().VarChatVoteAction, "kick " + playerName, previousValue);
 		Server::Chat::SendServerMessage(starterName + " has started a kick vote for: \"" + playerName + "\"; Type !yes to vote. " + std::to_string(votesNeeded) + " vote" + ((votesNeeded > 1) ? "s" : "") + " needed to kick.");
 	}
 
@@ -150,7 +156,7 @@ namespace ChatCommands
 		}
 
 		auto* session = Blam::Network::GetActiveSession();
-		if(indexToKick == starterIndex)
+		if (indexToKick == starterIndex)
 		{
 			returnInfo = "You cannot kick yourself.";
 			return false;
@@ -197,6 +203,8 @@ namespace ChatCommands
 
 	void KickPlayerCommand::doOnVoteStart(std::string starterName)
 	{
+		std::string previousValue;
+		Modules::CommandMap::Instance().SetVariable2(Modules::ModuleServer::Instance().VarChatVoteAction, "kick " + playerName, previousValue);
 		Server::Chat::SendServerMessage(starterName + " has started a kick vote for: \"" + playerName + "\"; Type !yes to vote. " + std::to_string(votesNeeded) + " vote" + ((votesNeeded > 1) ? "s" : "") + " needed to kick.");
 	}
 
@@ -220,7 +228,7 @@ namespace ChatCommands
 			if (playerIdx == -1)
 				continue;
 			auto* player = &membership->PlayerSessions[playerIdx];
-			if (Utils::String::ThinString(player->Properties.DisplayName) == s){
+			if (Utils::String::ThinString(player->Properties.DisplayName) == s) {
 				playerToKickIdx = playerIdx;
 			}
 
@@ -281,6 +289,11 @@ namespace ChatCommands
 		currentlyVoting = false;
 		voteTimeStarted = 0;
 		votesNeeded = 0;
+
+		std::string previousValue;
+		Modules::CommandMap::Instance().SetVariable2(Modules::ModuleServer::Instance().VarChatVoteStartedByUid, std::string(""), previousValue);
+		Modules::CommandMap::Instance().SetVariable2(Modules::ModuleServer::Instance().VarChatVotesNeeded, std::to_string(0), previousValue);
+		Modules::CommandMap::Instance().SetVariable2(Modules::ModuleServer::Instance().VarChatVoteStarted, std::to_string(0), previousValue);
 	}
 
 	void AbstractChatCommand::processMessage(uint8_t sender, std::string argument)
@@ -296,7 +309,7 @@ namespace ChatCommands
 			Server::Chat::SendServerMessage(returnInfo, sender);
 			return;
 		}
-		
+
 		//GET UID
 		uint64_t uid = membership.PlayerSessions[starterIndex].Properties.Uid;
 		std::string name = Utils::String::ThinString(membership.PlayerSessions[starterIndex].Properties.DisplayName);
@@ -311,6 +324,14 @@ namespace ChatCommands
 			time(&voteTimeStarted);
 
 			doOnVoteStart(name);
+
+			std::string previousValue;
+			char uidString[32] = { 0 };
+			Blam::Players::FormatUid(uidString, uid);
+			Modules::CommandMap::Instance().SetVariable2(Modules::ModuleServer::Instance().VarChatVoteStartedByUid, std::string(uidString), previousValue);
+			Modules::CommandMap::Instance().SetVariable2(Modules::ModuleServer::Instance().VarChatVotesNeeded, std::to_string(votesNeeded), previousValue);
+			Modules::CommandMap::Instance().SetVariable2(Modules::ModuleServer::Instance().VarChatVoteStarted, std::to_string(1), previousValue);
+
 			processVote(sender, "yes");
 		}
 		else
@@ -352,6 +373,9 @@ namespace ChatCommands
 			{
 				size_t votesRemaining = (votesNeeded - yesVoters.size());
 				Server::Chat::SendServerMessage("Vote cast by \"" + name + "\". Remaining votes needed: " + std::to_string(votesRemaining));
+
+				std::string previousValue;
+				Modules::CommandMap::Instance().SetVariable2(Modules::ModuleServer::Instance().VarChatVotesNeeded, std::to_string(votesRemaining), previousValue);
 			}
 		}
 	}

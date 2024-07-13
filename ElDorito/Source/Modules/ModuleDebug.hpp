@@ -1,5 +1,5 @@
 #pragma once
-#include "ModuleBase.hpp"
+#include "Modules\ModuleBase.hpp"
 
 namespace Modules
 {
@@ -9,6 +9,9 @@ namespace Modules
 		Command* VarMemcpySrc;
 		Command* VarMemcpyDst;
 		Command* VarMemsetDst;
+		Command *VarPrintHsEvaluations;
+
+		Command *VarDirtyDiskContinueType;
 
 		ModuleDebug();
 	};

@@ -2,58 +2,479 @@
 
 #include <cstdint>
 #include <string>
-#include "Math\RealVector3D.hpp"
+#include "Blam\Math\RealVector3D.hpp"
 
 namespace Blam
 {
-	enum GameType : uint32_t
+	struct e_primary_skull
 	{
-		None = 0,
-		CTF,
-		Slayer,
-		Oddball,
-		KOTH,
-		Forge,
-		VIP,
-		Juggernaut,
-		Territories,
-		Assault,
-		Infection,
-		GameTypeCount
+		enum : __int32
+		{
+			_iron = 0,
+			_black_eye,
+			_tough_luck,
+			_catch,
+			_fog,
+			_famine,
+			_thunderstorm,
+			_tilt,
+			_mythic,
+
+			k_number_of_primary_skulls
+		} value;
+
+		bool enabled = false;
+
+		const char *GetName()
+		{
+			const char *names[]{
+				"iron",
+				"black eye",
+				"tough luck",
+				"catch",
+				"fog",
+				"famine",
+				"thunderstorm",
+				"tilt",
+				"mythic"
+			};
+			return names[value];
+		}
 	};
 
-	const std::string GameTypeNames[GameTypeCount] =
+	struct e_secondary_skull
 	{
-		"none",
+		enum : __int32
+		{
+			_assassin = 0,
+			_blind,
+			_superman,
+			_birthday_party,
+			_daddy,
+			_third_person,
+			_directors_cut,
+
+			k_number_of_secondary_skulls
+		} value;
+
+		bool enabled = false;
+
+		const char *GetName()
+		{
+			const char *names[]{
+				"assassin",
+				"blind",
+				"superman",
+				"birthday party",
+				"daddy",
+				"third person",
+				"directors cut"
+			};
+			return names[value];
+		}
+	};
+
+	enum GameType : int32_t
+	{
+		eGameTypeBase = 0,
+		eGameTypeCTF,
+		eGameTypeSlayer,
+		eGameTypeOddball,
+		eGameTypeKOTH,
+		eGameTypeForge,
+		eGameTypeVIP,
+		eGameTypeJuggernaut,
+		eGameTypeTerritories,
+		eGameTypeAssault,
+		eGameTypeInfection,
+
+		eGameTypeCount
+	};
+	const std::string GameTypeNames[eGameTypeCount] =
+	{
+		"Base",
+		"CTF",
+		"Slayer",
+		"Oddball",
+		"Koth",
+		"Forge",
+		"VIP",
+		"Juggernaut",
+		"Territories",
+		"Assault",
+		"Infection"
+	};
+	const std::string GameTypeExtensions[eGameTypeCount] =
+	{
 		"ctf",
 		"slayer",
 		"oddball",
 		"koth",
-		"forge",
 		"vip",
-		"juggernaut",
-		"territories",
+		"jugg",
+		"terries",
 		"assault",
-		"infection"
+		"zombiez"
 	};
 
-	enum GameMode : uint32_t
+	enum MapType : int32_t
 	{
-		InvalidMode = 0,
-		Campaign,
-		Multiplayer,
-		Mainmenu,
-		Shared, // not sure
-		GameModeCount
+		eMapTypeNone = 0,
+
+		eMapTypeCampaign,
+		eMapTypeMultiplayer,
+		eMapTypeMainmenu,
+		eMapTypeShared, // not sure
+
+		eMapTypeCount
+	};
+	const std::string MapTypeNames[eMapTypeCount] =
+	{
+		"None",
+		"Campaign",
+		"Multiplayer",
+		"Mainmenu",
+		"Shared"
 	};
 
-	const std::string GameModeNames[GameModeCount] =
+	enum LobbyType : int16_t
 	{
-		"none",
-		"campaign",
-		"multiplayer",
-		"mainmenu",
-		"shared"
+		eLobbyTypeCampaign = 0,
+		eLobbyTypeMatchmaking,
+		eLobbyTypeMultiplayer,
+		eLobbyTypeForge,
+		eLobbyTypeTheater,
+		eLobbyTypeFireFight,
+
+		eLobbyTypeCount
+	};
+	const std::string LobbyTypeNames[eLobbyTypeCount] =
+	{
+		"Campaign",
+		"Matchmaking",
+		"Multiplayer",
+		"Forge",
+		"Theater",
+		"FireFight"
+	};
+
+	enum GameSimulation : int8_t
+	{
+		eGameSimulationNone = 0,
+		eGameSimulationLocal,
+		eGameSimulationSyncClient,
+		eGameSimulationSyncServer,
+		eGameSimulationDistClient,
+		eGameSimulationDistServer,
+
+		eGameSimulationCount
+	};
+	const std::string GameSimulationNames[eGameSimulationCount]
+	{
+		"None",
+		"Local",
+		"Sync-Client",
+		"Sync-Server",
+		"Dist-Client",
+		"Dist-Server"
+	};
+
+	enum GamePlayback : int16_t
+	{
+		eGamePlaybackNone = 0,
+		eGamePlaybackLocal,
+		eGamePlaybackNetworkServer,
+		eGamePlaybackNetworkClient,
+
+		eGamePlaybackCount
+	};
+	const std::string GamePlaybackNames[eGamePlaybackCount]
+	{
+		"None",
+		"Local",
+		"Network-Server",
+		"Network-Client"
+	};
+
+	enum CampaignDifficultyLevel : int16_t
+	{
+		eCampaignDifficultyLevelEasy = 0,
+		eCampaignDifficultyLevelNormal,
+		eCampaignDifficultyLevelHeroic,
+		eCampaignDifficultyLevelLegendary,
+
+		eCampaignDifficultyLevelCount
+	};
+	const std::string GameDifficultNames[eCampaignDifficultyLevelCount]
+	{
+		"Easy",
+		"Normal",
+		"Heroic",
+		"Legendary"
+	};
+
+	enum CampaignInsertionPoint : int16_t
+	{
+		eCampaignInsertionPointMissionStart = 0,
+		eCampaignInsertionPointRallyPointAlpha,
+		eCampaignInsertionPointRallyPointBravo,
+		eCampaignInsertionPointRallyPointCharlie,
+		eCampaignInsertionPointRallyPointDelta,
+		eCampaignInsertionPointRallyPointEcho,
+		eCampaignInsertionPointRallyPointFoxtrot,
+		eCampaignInsertionPointRallyPointGolf,
+		eCampaignInsertionPointRallyPointHotel,
+
+		eCampaignInsertionPointRallyPointCount
+	};
+	const std::string CampaignInsertionPointNames[eCampaignInsertionPointRallyPointCount]
+	{
+		"Mission Start",
+		"Rally Point Alpha",
+		"Rally Point Bravo",
+		"Rally Point Charlie",
+		"Rally Point Delta",
+		"Rally Point Echo",
+		"Rally Point Foxtrot",
+		"Rally Point Golf",
+		"Rally Point Hotel"
+	};
+
+	enum CampaignMetagameScoringOption : int16_t
+	{
+		eCampaignMetagameScoringOptionOff = 0,
+		eCampaignMetagameScoringOptionTeam,
+		eCampaignMetagameScoringOptionFreeForAll,
+
+		eCampaignMetagameScoringOptionCount
+	};
+	const std::string CampaignMetagameScoringOptionNames[eCampaignMetagameScoringOptionCount]
+	{
+		"Off",
+		"Team",
+		"Free For All"
+	};
+
+	enum NetworkMode : int32_t
+	{
+		eNetworkModeOpenToPublic = 0,
+		eNetworkModeOpenToFriends,
+		eNetworkModeInviteOnly,
+		eNetworkModeSystemLink,
+		eNetworkModeOffline,
+
+		eNetworkModeCount
+	};
+	const std::string NetworkModeNames[eNetworkModeCount]
+	{
+		"Open To Public (Xbox Live)",
+		"Open To Friends (Xbox Live)",
+		"Invite Only (Xbox Live)",
+		"System Link",
+		"Offline",
+	};
+
+	enum PeerConnectionState
+	{
+		ePeerConnectionStateNone = 0,
+		ePeerConnectionStateRejoining,
+		ePeerConnectionStateReserved,
+		ePeerConnectionStateDisconnected,
+		ePeerConnectionStateConnected,
+		ePeerConnectionStateJoining,
+		ePeerConnectionStateJoined,
+		ePeerConnectionStateWaiting,
+		ePeerConnectionStateEstablished,
+
+		ePeerConnectionStateCount
+	};
+
+	enum LifeCycleState
+	{
+		eLifeCycleStateNone = 0,
+		eLifeCycleStatePreGame,
+		eLifeCycleStateStartGame,
+		eLifeCycleStateInGame,
+		eLifeCycleStateEndGameWriteStats,
+		eLifeCycleStateLeaving,
+		eLifeCycleStateJoining,
+		eLifeCycleStateMatchmakingStart,
+		eLifeCycleStateMatchmakingFindMatchClient,
+		eLifeCycleStateMatchmakingFindMatch,
+		eLifeCycleStateMatchmakingFindAndAssembleMatch,
+		eLifeCycleStateMatchmakingAssembleMatch,
+		eLifeCycleStateMatchmakingArbitration,
+		eLifeCycleStateMatchmakingSelectHost,
+		eLifeCycleStateMatchmakingPrepareMap,
+		eLifeCycleStateInMatch,
+		eLifeCycleStateEndMatchWriteStats,
+		eLifeCycleStatePostMatch,
+
+		eLifeCycleStateCount
+	};
+
+	enum ePlayerStatType : int32_t
+	{
+		ePlayerStatTypeGamesPlayed = 0,
+		ePlayerStatTypeGamesCompleted,
+		ePlayerStatTypeGamesWon,
+		ePlayerStatTypeGamesTied,
+		ePlayerStatTypeRoundsCompleted,
+		ePlayerStatTypeRoundsWon,
+		ePlayerStatTypeInRoundScore,
+		ePlayerStatTypeInGameTotalScore,
+		ePlayerStatTypeBetrayals,
+		ePlayerStatTypeSuicides,
+		ePlayerStatTypeMostKillsInARow,
+		ePlayerStatTypeSecondsAlive,
+		ePlayerStatTypeCtfFlagScores,
+		ePlayerStatTypeCtfFlagGrabs,
+		ePlayerStatTypeCtfFlagCarrierKills,
+		ePlayerStatTypeCtfFlagReturns,
+		ePlayerStatTypeAssaultBombArms,
+		ePlayerStatTypeAssaultBombGrabs,
+		ePlayerStatTypeAssaultBombDisarms,
+		ePlayerStatTypeAssaultBombDetonations,
+		ePlayerStatTypeOddballTimeWithBall,
+		ePlayerStatTypeOddballUnused,
+		ePlayerStatTypeOddballKillsAsCarrier,
+		ePlayerStatTypeOddballBallCarrierKills,
+		ePlayerStatTypeKingTimeOnHill,
+		ePlayerStatTypeKingTotalControlTime,
+		ePlayerStatTypeKingUnused,
+		ePlayerStatTypeVipUnused,
+		ePlayerStatTypeVipTakedowns,
+		ePlayerStatTypeVipKillsAsVip,
+		ePlayerStatTypeVipGuardTime,
+		ePlayerStatTypeVipTimeAsVip,
+		ePlayerStatTypeVipLivesAsVip,
+		ePlayerStatTypeJuggernautKills,
+		ePlayerStatTypeJuggernautKillsAsJuggernaut,
+		ePlayerStatTypeJuggernautTotalControlTime,
+		ePlayerStatTypeTotalWp,
+		ePlayerStatTypeJuggernautUnused,
+		ePlayerStatTypeTerritoriesOwned,
+		ePlayerStatTypeTerritoriesCaptures,
+		ePlayerStatTypeTerritoriesOusts,
+		ePlayerStatTypeTerritoriesTimeInTerritory,
+		ePlayerStatTypeInfectionZombieKills,
+		ePlayerStatTypeInfectionInfections,
+		ePlayerStatTypeInfectionTimeAsHuman,
+		ePlayerStatTypeDamageKills,
+		ePlayerStatTypeDamageDeaths,
+		ePlayerStatTypeDamageBetrayals,
+		ePlayerStatTypeDamageSuicides,
+		ePlayerStatTypeDamageHeadshots,
+		ePlayerStatTypePlayerVsPlayerKills,
+		ePlayerStatTypePlayerVsPlayerDeaths,
+		ePlayerStatTypeMedalExtermination,
+		ePlayerStatTypeMedalPerfection,
+		ePlayerStatTypeCount
+	};
+
+	enum eUnitAction : int32_t
+	{
+		eUnitActionDeathPing = 0,
+		eUnitActionCustomAnimation,
+		eUnitActionStopCustomAnimation,
+		eUnitActionSyncContainer,
+		eUnitActionAssassinate,
+		eUnitActionGetInfected,
+		eUnitActionHostileMorph,
+		eUnitActionResurrect,
+		eUnitActionHardPing,
+		eUnitActionPing,
+		eUnitActionMorph,
+		eUnitActionMorphArrival,
+		eUnitActionInfect,
+		eUnitActionPosture,
+		eUnitActionPostureExit,
+		eUnitActionVehicleExit,
+		eUnitActionVehicleExitAndDetach,
+		eUnitActionVehicleEjection,
+		eUnitActionVehicleBoard,
+		eUnitActionVehicleEnter,
+		eUnitActionOpen,
+		eUnitActionClose,
+		eUnitActionVehicleExitImmediate,
+		eUnitActionVehicleFlip,
+		eUnitActionClimbAttach,
+		eUnitActionClimbDetach,
+		eUnitActionWallLean,
+		eUnitActionWallLeanOpen,
+		eUnitActionToken,
+		eUnitActionTakeoff,
+		eUnitActionPerch,
+		eUnitActionPerchJump,
+		eUnitActionLand,
+		eUnitActionJump,
+		eUnitActionLeapAnticipation,
+		eUnitActionLeap,
+		eUnitActionLeapRecovery,
+		eUnitActionEmitAi,
+		eUnitActionBerserk,
+		eUnitActionFlurry,
+		eUnitActionDeployTurret,
+		eUnitActionSmash,
+		eUnitActionVault,
+		eUnitActionHoist,
+		eUnitActionAiImpulse,
+		eUnitActionMeleeAi,
+		eUnitActionWeaponPickup,
+		eUnitActionWeaponTrade,
+		eUnitActionPrimaryWeaponDrop,
+		eUnitActionSecondaryWeaponDrop,
+		eUnitActionSurge,
+		eUnitActionPhase,
+		eUnitActionStow,
+		eUnitActionDraw,
+		eUnitActionInfectionSpew,
+		eUnitActionKamikaze,
+		eUnitActionPrimaryWeaponSwitch,
+		eUnitActionSecondaryWeaponSwitch,
+		eUnitActionGrenade,
+		eUnitActionEquipment,
+		eUnitActionEquipmentAnimation,
+		eUnitActionEquipmentPickup,
+		eUnitActionEquipmentDrop,
+		eUnitActionMeleePlayer,
+		eUnitActionPrimaryWeaponPrimaryReload,
+		eUnitActionPrimaryWeaponSecondaryReload,
+		eUnitActionSecondaryWeaponPrimaryReload,
+		eUnitActionSecondaryWeaponSecondaryReload,
+		eUnitActionSoftPing,
+		eUnitActionPrimaryWeaponPrimaryRecoil,
+		eUnitActionPrimaryWeaponSecondaryRecoil,
+		eUnitActionPrimaryWeaponPrimaryChamber,
+		eUnitActionPrimaryWeaponSecondaryChamber,
+		eUnitActionPrimaryWeaponPrimaryCharged,
+		eUnitActionPrimaryWeaponSecondaryCharged,
+		eUnitActionSecondaryWeaponPrimaryRecoil,
+		eUnitActionSecondaryWeaponSecondaryRecoil,
+		eUnitActionSecondaryWeaponPrimaryChamber,
+		eUnitActionSecondaryWeaponSecondaryChamber,
+		eUnitActionSecondaryWeaponPrimaryCharged,
+		eUnitActionSecondaryWeaponSecondaryCharged,
+		eUnitActionPrimaryWeaponOverheatEnter,
+		eUnitActionPrimaryWeaponOverheatLoop,
+		eUnitActionPrimaryWeaponOverheatExit,
+		eUnitActionSecondaryWeaponOverheatEnter,
+		eUnitActionSecondaryWeaponOverheatLoop,
+		eUnitActionSecondaryWeaponOverheatExit,
+		eUnitActionCount
+	};
+
+	struct UnitActionInfo
+	{
+		const char *Name;
+		uint16_t Unknown4;
+		uint16_t Unknown6;
+	};
+
+	struct UnitAction
+	{
+		Blam::eUnitAction Index;
+		uint8_t Unknown4[0x44];
 	};
 
 	typedef struct _BLAM_CONTENT_HEADER
@@ -66,7 +487,7 @@ namespace Blam
 		uint32_t Unknown1; // 0
 		uint32_t Unknown2; // 1
 		uint32_t Unknown3; // 0
-		uint32_t Size; // 0xE1F0 for maps, 0x3BC for variants
+		uint32_t Size; // 0xE1F0 for maps, 0x3BC for variants, 0x25B80 for saved films
 		uint32_t Unknown4; // 0
 		uint64_t Timestamp;
 		uint32_t Unknown6; // 0
@@ -129,7 +550,7 @@ namespace Blam
 	// todo: safely make this into a C++ struct without any padding/packing etc
 	typedef struct _BLAM_GAME_VARIANT
 	{
-		/* 0xB2C */ uint32_t GameType; // see Blam::GameType
+		/* 0xB2C */ GameType GameType; // see Blam::GameType
 		float Unknown1; // gravity maybe?
 		uint8_t Unknown2[0x2C];
 		wchar_t Name[0x10];
@@ -203,8 +624,10 @@ namespace Blam
 		uint8_t Unknown63; // 0
 		uint8_t Unknown64; // default 0xFE
 		uint8_t Unknown65; // default 0xFE
+		uint8_t Unknown66[0xFC];
 		// theres a lot more bytes too
-	} BLAM_GAME_VARIANT, *PBLAM_GAME_VARIANT;
+	} GameVariant, BLAM_GAME_VARIANT, *PBLAM_GAME_VARIANT;
+	static_assert(sizeof(GameVariant) == 0x264, "Invalid GameVariant size");
 
 
 	struct MapVariant
@@ -273,8 +696,103 @@ namespace Blam
 		BudgetEntry Budget[256];
 		char PaddingDF50[320];
 	};
-
 	static_assert(sizeof(MapVariant) == 0xE090, "Invalid MapVariant size");
+
+	struct GameOptions
+	{
+		MapType MapType;
+		GameSimulation GameSimulation;
+		int16_t FrameLimit;
+		int32_t GameInstance;
+		int16_t wordC[2];
+		int32_t RandomSeed;
+		int32_t Language;
+		int32_t DeterminismVersion;
+		int32_t CampaignId;
+		int32_t MapId;
+		char ScenarioPath[260];
+
+		int16_t ZonesetIndex;
+
+		uint8_t byte12A;
+		uint8_t byte12B;
+		uint8_t byte12C;
+		uint8_t byte14D;
+		uint8_t byte12E;
+		uint8_t byte12F;
+
+		GamePlayback GamePlayback;
+
+		uint8_t byte132;
+		uint8_t byte133;
+		uint32_t dword134;
+		uint32_t dword138;
+
+		CampaignDifficultyLevel CampaignDifficultyLevel;
+		CampaignInsertionPoint CampaignInsertionPoint;
+		CampaignMetagameScoringOption CampaignMetagameScoringOption;
+
+		uint8_t CampaignMetagameEnabled;
+		uint8_t SurvivalModeEnabled;
+
+		uint8_t byte144;
+		uint8_t byte145;
+		uint8_t byte146[0x78];
+		int16_t byte10A;
+		uint8_t byte10C[0x80];
+
+		// these might be bit flags
+		uint32_t CampaignSkullsPrimary;
+		uint32_t CampaignSkullsSecondary;
+
+		uint8_t byte248[0x80];
+		uint8_t byte2AC;
+		uint8_t byte2AD[7];
+		uint8_t byte2B4[0x5C];
+		GameVariant GameVariant; // Blam::GameVariant
+		MapVariant MapVariant; // Blam::MapVariant
+
+		uint8_t MachineArray[0x128];
+		struct
+		{
+			uint8_t IsValid;
+			uint8_t byte1;
+			uint16_t word2;
+			uint32_t dword4;
+			uint8_t unknown8[0x18];
+			char PlayerProperties[0x1620]; // Blam::Players::PlayerProperties
+		} InitialParticipantsArray[16];
+
+		int LoadIntoGlobalGameOptions()
+		{
+			auto v1 = this == 0;
+			if (this)
+			{
+				memmove((void *)0x2391800, this, 0x24B48u);
+				v1 = this == 0;
+			}
+
+			*(uint8_t *)0x23917F1 = v1;
+			*(uint8_t *)0x23917F0 = true;
+			if (!this)
+				return 0;
+			return 1;
+		}
+		GameOptions *SetMapType(int val)
+		{
+			MapType = (Blam::MapType)val;
+
+			return this;
+		}
+		GameOptions *SetMapPath(const char *val)
+		{
+			memset(ScenarioPath, 0, 260);
+			strncpy(ScenarioPath, val, 260);
+
+			return this;
+		}
+	};
+	static_assert(sizeof(GameOptions) == 0x24B48);
 }
 
 enum class CameraType : uint8_t
@@ -415,7 +933,7 @@ namespace GameGlobals
 	namespace PersistentUserDataChud
 	{
 		const size_t TLSOffset = 0x424;
-		const size_t SprintMeterOffset = 0x157;
+		const size_t HUDElementsOffset = 0x14D;
 	}
 
 	namespace ObjectHeader

@@ -1,11 +1,11 @@
-#include "ForgeUtil.hpp"
-#include "../Blam/Tags/TagInstance.hpp"
-#include "../Blam/BlamObjects.hpp"
-#include "../Blam/BlamPlayers.hpp"
-#include "../Blam/Math/RealVector3D.hpp"
-#include "../Blam/Math/RealMatrix4x3.hpp"
-#include "../Pointer.hpp"
-#include "../ElDorito.hpp"
+#include "Forge\ForgeUtil.hpp"
+#include "Blam\Tags\TagInstance.hpp"
+#include "Blam\BlamObjects.hpp"
+#include "Blam\BlamPlayers.hpp"
+#include "Blam\Math\RealVector3D.hpp"
+#include "Blam\Math\RealMatrix4x3.hpp"
+#include "Pointer.hpp"
+#include "ElDorito.hpp"
 
 using namespace Blam;
 using namespace Blam::Math;

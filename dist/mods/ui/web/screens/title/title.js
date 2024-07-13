@@ -45,7 +45,7 @@ dew.on("show", function(e){
         });
     }else{
         $("#blackLayer").hide();
-        $.getJSON( "https://raw.githubusercontent.com/ElDewrito/ElDorito/master/currentRelease.json", function(data) {
+        $.getJSON( "https://raw.githubusercontent.com/VaktorTV/ElDorito/master/currentRelease.json", function(data) {
             dew.getVersion().then(function (version) {
                 if(parseVersion(data.release[0].version) != parseVersion(version)) {
                     dew.show('alert',{"title":"Update Available!", "body":"There is a newer version of ElDewrito available.|r|n|r|nWould you like to launch the updater?", "type":"update"});
@@ -122,7 +122,7 @@ function hideScreen(){
     $( "body" ).fadeOut( 500, function() {
         dew.hide();
     });
-	dew.command('Game.PlaySound 0x0B00');
+	dew.command('Game.PlaySound sound\\game_sfx\\ui\\button_based_ui_sounds\\a_button.snd!');
 }
 
 function closeAnnounce(){
@@ -135,7 +135,7 @@ function closeAnnounce(){
             dew.command('writeconfig');
         });
     }
-	dew.command('Game.PlaySound 0x0B00');
+	dew.command('Game.PlaySound sound\\game_sfx\\ui\\button_based_ui_sounds\\a_button.snd!');
 }
 
 function parseVersion(str) { 

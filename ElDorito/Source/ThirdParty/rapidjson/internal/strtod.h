@@ -15,10 +15,10 @@
 #ifndef RAPIDJSON_STRTOD_
 #define RAPIDJSON_STRTOD_
 
-#include "ieee754.h"
-#include "biginteger.h"
-#include "diyfp.h"
-#include "pow10.h"
+#include "ThirdParty\rapidjson\internal\ieee754.h"
+#include "ThirdParty\rapidjson\internal\biginteger.h"
+#include "ThirdParty\rapidjson\internal\diyfp.h"
+#include "ThirdParty\rapidjson\internal\pow10.h"
 
 RAPIDJSON_NAMESPACE_BEGIN
 namespace internal {

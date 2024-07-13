@@ -11,6 +11,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Source\Blam\FMOD\FMODEnum.cpp" />
+    <ClCompile Include="Source\Blam\FMOD\FMODGlobals.cpp" />
+    <ClCompile Include="Source\Blam\Math\SoundRangeValues.cpp" />
+    <ClCompile Include="Source\Blam\Memory\Align.cpp" />
+    <ClCompile Include="Source\Blam\FMOD\FMODFunctions.cpp" />
+    <ClCompile Include="Source\Blam\Sounds\Functions.cpp" />
+    <ClCompile Include="Source\Blam\Math\Random.cpp" />
     <ClCompile Include="Source\Blam\BitStream.cpp" />
     <ClCompile Include="Source\Blam\BlamData.cpp" />
     <ClCompile Include="Source\Blam\BlamGraphics.cpp" />
@@ -42,6 +49,9 @@
     <ClCompile Include="Source\Blam\Math\RealVector3D.cpp" />
     <ClCompile Include="Source\Blam\Math\Rectangle2D.cpp" />
     <ClCompile Include="Source\Blam\Memory\DatumHandle.cpp" />
+    <ClCompile Include="Source\Blam\Sounds\SoundCache.cpp" />
+    <ClCompile Include="Source\Blam\Sounds\SoundGlobals.cpp" />
+    <ClCompile Include="Source\Blam\Tags\Bitmap\Bitmap.cpp" />
     <ClCompile Include="Source\Blam\Tags\Camera\AreaScreenEffect.cpp" />
     <ClCompile Include="Source\Blam\Tags\Globals\CacheFileGlobalTags.cpp" />
     <ClCompile Include="Source\Blam\Tags\Items\DefinitionEquipment.cpp" />
@@ -52,6 +62,8 @@
     <ClCompile Include="Source\Blam\Tags\Objects\Projectile.cpp" />
     <ClCompile Include="Source\Blam\Tags\Objects\Unit.cpp" />
     <ClCompile Include="Source\Blam\Tags\Objects\Vehicle.cpp" />
+    <ClCompile Include="Source\Blam\Tags\Sounds\SoundClasses\SoundClasses.cpp" />
+    <ClCompile Include="Source\Blam\Tags\Sounds\Sound\Sound.cpp" />
     <ClCompile Include="Source\Blam\Tags\Tag.cpp" />
     <ClCompile Include="Source\Blam\Tags\TagBlock.cpp" />
     <ClCompile Include="Source\Blam\Tags\TagData.cpp" />
@@ -66,9 +78,22 @@
     <ClCompile Include="Source\Definitions\EnumDefinition.cpp" />
     <ClCompile Include="Source\Definitions\FieldDefinition.cpp" />
     <ClCompile Include="Source\Definitions\StructDefinition.cpp" />
-    <ClCompile Include="Source\Discord\DiscordRPC.cpp" />
+    <ClCompile Include="Source\Forge\ForgeUtil.cpp" />
     <ClCompile Include="Source\Forge\ForgeVolumes.cpp" />
+    <ClCompile Include="Source\Forge\Magnets.cpp" />
+    <ClCompile Include="Source\Forge\Prefab.cpp" />
     <ClCompile Include="Source\Forge\PrematchCamera.cpp" />
+    <ClCompile Include="Source\Forge\RotationSnap.cpp" />
+    <ClCompile Include="Source\Forge\Selection.cpp" />
+    <ClCompile Include="Source\Forge\SelectionRenderer.cpp" />
+    <ClCompile Include="Source\Modules\ModuleCampaign.cpp" />
+    <ClCompile Include="Source\Modules\ModuleForge.cpp" />
+    <ClCompile Include="Source\new\cache\cache_files.cpp" />
+    <ClCompile Include="Source\new\game\game_globals.cpp" />
+    <ClCompile Include="Source\new\hs\hs.cpp" />
+    <ClCompile Include="Source\new\memory\data.cpp" />
+    <ClCompile Include="Source\new\tag_files\tag_definitions.cpp" />
+    <ClCompile Include="Source\new\tag_files\tag_groups.cpp" />
     <ClCompile Include="Source\Patches\BottomlessClip.cpp" />
     <ClCompile Include="Source\Patches\Camera.cpp" />
     <ClCompile Include="Source\Patches\DamageSystem.cpp" />
@@ -76,17 +101,10 @@
     <ClCompile Include="Source\ElDorito.cpp" />
     <ClCompile Include="Source\ElModules.cpp" />
     <ClCompile Include="Source\ElPatches.cpp" />
-    <ClCompile Include="Source\Forge\ForgeUtil.cpp" />
-    <ClCompile Include="Source\Forge\Magnets.cpp" />
-    <ClCompile Include="Source\Forge\Prefab.cpp" />
-    <ClCompile Include="Source\Forge\RotationSnap.cpp" />
-    <ClCompile Include="Source\Forge\Selection.cpp" />
-    <ClCompile Include="Source\Forge\SelectionRenderer.cpp" />
     <ClCompile Include="Source\main.cpp" />
     <ClCompile Include="Source\Modules\ModuleBase.cpp" />
     <ClCompile Include="Source\Modules\ModuleCamera.cpp" />
     <ClCompile Include="Source\Modules\ModuleDebug.cpp" />
-    <ClCompile Include="Source\Modules\ModuleForge.cpp" />
     <ClCompile Include="Source\Modules\ModuleGame.cpp" />
     <ClCompile Include="Source\Modules\ModuleGraphics.cpp" />
     <ClCompile Include="Source\Modules\ModuleInput.cpp" />
@@ -107,6 +125,7 @@
     <ClCompile Include="Source\Patches\CustomPackets.cpp" />
     <ClCompile Include="Source\Patches\Equipment.cpp" />
     <ClCompile Include="Source\Patches\Events.cpp" />
+    <ClCompile Include="Source\Patches\Experimental.cpp" />
     <ClCompile Include="Source\Patches\Forge.cpp" />
     <ClCompile Include="Source\Patches\Hf2pExperimental.cpp" />
     <ClCompile Include="Source\Patches\Input.cpp" />
@@ -125,6 +144,7 @@
     <ClCompile Include="Source\Patches\RawInput.cpp" />
     <ClCompile Include="Source\Patches\Scoreboard.cpp" />
     <ClCompile Include="Source\Patches\Simulation.cpp" />
+    <ClCompile Include="Source\Patches\CharacterHud.cpp" />
     <ClCompile Include="Source\Patches\Spectate.cpp" />
     <ClCompile Include="Source\Patches\Sprint.cpp" />
     <ClCompile Include="Source\Patches\Tweaks.cpp" />
@@ -133,7 +153,10 @@
     <ClCompile Include="Source\Patches\Weapon.cpp" />
     <ClCompile Include="Source\Pointer.cpp" />
     <ClCompile Include="Source\Server\BanList.cpp" />
+    <ClCompile Include="Source\Server\BanListSync.cpp" />
     <ClCompile Include="Source\Server\DedicatedServer.cpp" />
+    <ClCompile Include="Source\Server\PostgameController.cpp" />
+    <ClCompile Include="Source\Server\ReportHandler.cpp" />
     <ClCompile Include="Source\Server\Stats.cpp" />
     <ClCompile Include="Source\Server\Rcon.cpp" />
     <ClCompile Include="Source\Server\ServerChat.cpp" />
@@ -171,6 +194,48 @@
     <ClCompile Include="Source\Web\WebRendererSchemeHandlerFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Source\Blam\FMOD\FMODEnum.hpp" />
+    <ClInclude Include="Source\Blam\FMOD\FMODGlobals.hpp" />
+    <ClInclude Include="Source\Blam\Math\SoundRangeValues.hpp" />
+    <ClInclude Include="Source\Blam\Memory\Align.hpp" />
+    <ClInclude Include="Source\Blam\FMOD\FMODFunctions.hpp" />
+    <ClInclude Include="Source\Blam\Sounds\Functions.hpp" />
+    <ClInclude Include="Source\Blam\Math\Random.hpp" />
+    <ClInclude Include="Source\Blam\Sounds\SoundDatum.hpp" />
+    <ClInclude Include="Source\Blam\Sounds\SoundCache.hpp" />
+    <ClInclude Include="Source\Blam\Sounds\SoundGlobals.hpp" />
+    <ClInclude Include="Source\Blam\Tags\Bitmap\Bitmap.hpp" />
+    <ClInclude Include="Source\Blam\Tags\Bitmap\BitmapResource.hpp" />
+    <ClInclude Include="Source\Blam\Tags\Bitmap\Image.hpp" />
+    <ClInclude Include="Source\Blam\Tags\Bitmap\Sequence.hpp" />
+    <ClInclude Include="Source\Blam\Tags\Bitmap\Sprite.hpp" />
+    <ClInclude Include="Source\Blam\Tags\Bitmap\TightBinding.hpp" />
+    <ClInclude Include="Source\Blam\Tags\Bitmap\UsageOverride.hpp" />
+    <ClInclude Include="Source\Blam\Tags\Sounds\LoopingSound\DetailSound.hpp" />
+    <ClInclude Include="Source\Blam\Tags\Sounds\LoopingSound\Track.hpp" />
+    <ClInclude Include="Source\Blam\Tags\Sounds\Sound.hpp" />
+    <ClInclude Include="Source\Blam\Tags\Sounds\SoundClasses.hpp" />
+    <ClInclude Include="Source\Blam\Tags\Sounds\SoundClasses\CacheMissMode.hpp" />
+    <ClInclude Include="Source\Blam\Tags\Sounds\SoundClasses\ClassProperty.hpp" />
+    <ClInclude Include="Source\Blam\Tags\Sounds\Sound\CustomPlayback.hpp" />
+    <ClInclude Include="Source\Blam\Tags\Sounds\Sound\ExtraInfo.hpp" />
+    <ClInclude Include="Source\Blam\Tags\Sounds\Sound\ImportTypeEnum.hpp" />
+    <ClInclude Include="Source\Blam\Tags\Sounds\LoopingSound\LoopingSound.hpp" />
+    <ClInclude Include="Source\Blam\Tags\Sounds\LoopingSound\OutputEffectEnum.hpp" />
+    <ClInclude Include="Source\Blam\Tags\Sounds\Sound\Language.hpp" />
+    <ClInclude Include="Source\Blam\Tags\Sounds\Sound\Permutation.hpp" />
+    <ClInclude Include="Source\Blam\Tags\Sounds\Sound\PermutationChunk.hpp" />
+    <ClInclude Include="Source\Blam\Tags\Sounds\Sound\PitchRange.hpp" />
+    <ClInclude Include="Source\Blam\Tags\Sounds\Sound\PlatformCodec.hpp" />
+    <ClInclude Include="Source\Blam\Tags\Sounds\Sound\PlaybackParameters.hpp" />
+    <ClInclude Include="Source\Blam\Tags\Sounds\Sound\Promotion.hpp" />
+    <ClInclude Include="Source\Blam\Tags\Sounds\Sound\PromotionRule.hpp" />
+    <ClInclude Include="Source\Blam\Tags\Sounds\Sound\RuntimeTimer.hpp" />
+    <ClInclude Include="Source\Blam\Tags\Sounds\Sound\SampleRateEnum.hpp" />
+    <ClInclude Include="Source\Blam\Tags\Sounds\Sound\Scale.hpp" />
+    <ClInclude Include="Source\Blam\Tags\Sounds\Sound\Sound.hpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="Source\Blam\BitStream.hpp" />
     <ClInclude Include="Source\Blam\BlamData.hpp" />
     <ClInclude Include="Source\Blam\BlamEvents.hpp" />
@@ -183,7 +248,12 @@
     <ClInclude Include="Source\Blam\BlamTime.hpp" />
     <ClInclude Include="Source\Blam\BlamTypes.hpp" />
     <ClInclude Include="Source\Blam\Cache\StringIdCache.hpp" />
+    <ClInclude Include="Source\Blam\Sandbox\Sandbox.hpp" />
+    <ClInclude Include="Source\Blam\Geometry\RenderGeometry.hpp" />
     <ClInclude Include="Source\Blam\Memory\DatumHandle.hpp" />
+    <ClInclude Include="Source\Blam\Memory\TlsData.hpp" />
+    <ClInclude Include="Source\Blam\Preferences\Preferences.hpp" />
+    <ClInclude Include="Source\Blam\Tags\Effects\DecalSystem.hpp" />
     <ClInclude Include="Source\Blam\Tags\Enum.hpp" />
     <ClInclude Include="Source\Blam\Math\Angle.hpp" />
     <ClInclude Include="Source\Blam\Math\Bounds.hpp" />
@@ -240,14 +310,19 @@
     <ClInclude Include="Source\Blam\Tags\Objects\Unit.hpp" />
     <ClInclude Include="Source\Blam\Tags\Objects\Vehicle.hpp" />
     <ClInclude Include="Source\Blam\Tags\Scenario\Scenario.hpp" />
+    <ClInclude Include="Source\Blam\Tags\Shaders\RenderMethod.hpp" />
     <ClInclude Include="Source\Blam\Tags\Sounds\Noise.hpp" />
-    <ClInclude Include="Source\Blam\Tags\Sounds\SoundClasses.hpp" />
+    <ClInclude Include="Source\Blam\Tags\Sounds\SoundClasses\SoundClassEnum.hpp" />
+    <ClInclude Include="Source\Blam\Tags\Sounds\SoundClasses\SoundClasses.hpp" />
     <ClInclude Include="Source\Blam\Tags\Tag.hpp" />
     <ClInclude Include="Source\Blam\Tags\TagBlock.hpp" />
     <ClInclude Include="Source\Blam\Tags\TagData.hpp" />
+    <ClInclude Include="Source\Blam\Tags\TagFunction.hpp" />
     <ClInclude Include="Source\Blam\Tags\TagGroup.hpp" />
     <ClInclude Include="Source\Blam\Tags\TagInstance.hpp" />
+    <ClInclude Include="Source\Blam\Tags\TagMapping.hpp" />
     <ClInclude Include="Source\Blam\Tags\TagReference.hpp" />
+    <ClInclude Include="Source\Blam\Tags\TagStructureReference.hpp" />
     <ClInclude Include="Source\Blam\Tags\Tags.hpp" />
     <ClInclude Include="Source\Blam\Tags\UI\ChudDefinition.hpp" />
     <ClInclude Include="Source\Blam\Tags\UI\ChudGlobalsDefinition.hpp" />
@@ -262,28 +337,49 @@
     <ClInclude Include="Source\Definitions\EnumDefinition.hpp" />
     <ClInclude Include="Source\Definitions\FieldDefinition.hpp" />
     <ClInclude Include="Source\Definitions\StructDefinition.hpp" />
-    <ClInclude Include="Source\Discord\DiscordRPC.h" />
+    <ClInclude Include="Source\Forge\ForgeUtil.hpp" />
     <ClInclude Include="Source\Forge\ForgeVolumes.hpp" />
+    <ClInclude Include="Source\Forge\Geoemetry.hpp" />
+    <ClInclude Include="Source\Forge\Magnets.hpp" />
+    <ClInclude Include="Source\Forge\ObjectSet.hpp" />
+    <ClInclude Include="Source\Forge\Prefab.hpp" />
     <ClInclude Include="Source\Forge\PrematchCamera.hpp" />
+    <ClInclude Include="Source\Forge\RotationSnap.hpp" />
+    <ClInclude Include="Source\Forge\Selection.hpp" />
+    <ClInclude Include="Source\Forge\SelectionRenderer.hpp" />
+    <ClInclude Include="Source\Modules\ModuleCampaign.hpp" />
+    <ClInclude Include="Source\Modules\ModuleForge.hpp" />
+    <ClInclude Include="Source\new\cache\cache_files.hpp" />
+    <ClInclude Include="Source\new\cseries\cseries.hpp" />
+    <ClInclude Include="Source\new\cseries\integer_math.hpp" />
+    <ClInclude Include="Source\new\cseries\real_math.hpp" />
+    <ClInclude Include="Source\new\effects\particles.hpp" />
+    <ClInclude Include="Source\new\game\game.hpp" />
+    <ClInclude Include="Source\new\game\game_globals.hpp" />
+    <ClInclude Include="Source\new\game\game_mode.hpp" />
+    <ClInclude Include="Source\new\hs\hs.hpp" />
+    <ClInclude Include="Source\new\input\input.hpp" />
+    <ClInclude Include="Source\new\memory\data.hpp" />
+    <ClInclude Include="Source\new\memory\resources.hpp" />
+    <ClInclude Include="Source\new\objects\object_data.hpp" />
+    <ClInclude Include="Source\new\objects\object_types.hpp" />
+    <ClInclude Include="Source\new\players\player_data.hpp" />
+    <ClInclude Include="Source\new\shaders\render_method.hpp" />
+    <ClInclude Include="Source\new\structures\scenario_structure_bsp.hpp" />
+    <ClInclude Include="Source\new\tag_files\tag_definitions.hpp" />
+    <ClInclude Include="Source\new\tag_files\tag_groups.hpp" />
+    <ClInclude Include="Source\new\tag_files\tag_mapping.hpp" />
     <ClInclude Include="Source\Patches\BottomlessClip.hpp" />
     <ClInclude Include="Source\Patches\Camera.hpp" />
+    <ClInclude Include="Source\Patches\CharacterHud.hpp" />
     <ClInclude Include="Source\Patches\DamageSystem.hpp" />
     <ClInclude Include="Source\Patches\DirectXHook.hpp" />
     <ClInclude Include="Source\ElDorito.hpp" />
     <ClInclude Include="Source\ElModules.hpp" />
     <ClInclude Include="Source\ElPatches.hpp" />
-    <ClInclude Include="Source\Forge\ForgeUtil.hpp" />
-    <ClInclude Include="Source\Forge\Geoemetry.hpp" />
-    <ClInclude Include="Source\Forge\Magnets.hpp" />
-    <ClInclude Include="Source\Forge\ObjectSet.hpp" />
-    <ClInclude Include="Source\Forge\Prefab.hpp" />
-    <ClInclude Include="Source\Forge\RotationSnap.hpp" />
-    <ClInclude Include="Source\Forge\Selection.hpp" />
-    <ClInclude Include="Source\Forge\SelectionRenderer.hpp" />
     <ClInclude Include="Source\Modules\ModuleBase.hpp" />
     <ClInclude Include="Source\Modules\ModuleCamera.hpp" />
     <ClInclude Include="Source\Modules\ModuleDebug.hpp" />
-    <ClInclude Include="Source\Modules\ModuleForge.hpp" />
     <ClInclude Include="Source\Modules\ModuleGame.hpp" />
     <ClInclude Include="Source\Modules\ModuleGraphics.hpp" />
     <ClInclude Include="Source\Modules\ModuleInput.hpp" />
@@ -304,6 +400,7 @@
     <ClInclude Include="Source\Patches\CustomPackets.hpp" />
     <ClInclude Include="Source\Patches\Equipment.hpp" />
     <ClInclude Include="Source\Patches\Events.hpp" />
+    <ClInclude Include="Source\Patches\Experimental.hpp" />
     <ClInclude Include="Source\Patches\Forge.hpp" />
     <ClInclude Include="Source\Patches\Hf2pExperimental.hpp" />
     <ClInclude Include="Source\Patches\Input.hpp" />
@@ -331,7 +428,10 @@
     <ClInclude Include="Source\Pointer.hpp" />
     <ClInclude Include="Source\resource.h" />
     <ClInclude Include="Source\Server\BanList.hpp" />
+    <ClInclude Include="Source\Server\BanListSync.hpp" />
     <ClInclude Include="Source\Server\DedicatedServer.hpp" />
+    <ClInclude Include="Source\Server\PostgameController.hpp" />
+    <ClInclude Include="Source\Server\ReportHandler.hpp" />
     <ClInclude Include="Source\Server\Stats.hpp" />
     <ClInclude Include="Source\Server\Rcon.hpp" />
     <ClInclude Include="Source\Server\ServerChat.hpp" />
@@ -427,7 +527,7 @@
     <Platform>Win32</Platform>
     <ProjectName>ElDorito</ProjectName>
     <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -465,11 +565,11 @@
     <GenerateManifest Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</GenerateManifest>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir)Source;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)Source;$(ProjectDir)new;$(IncludePath)</IncludePath>
     <SourcePath>$(ProjectDir)Source;$(SourcePath)</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(ProjectDir)Source;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)Source;$(ProjectDir)new;$(IncludePath)</IncludePath>
     <SourcePath>$(ProjectDir)Source;$(SourcePath)</SourcePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -489,9 +589,10 @@
       <PreprocessorDefinitions>WIN32;_WINDOWS;_ENABLE_ATOMIC_ALIGNMENT_FIX;_DEBUG;NOMINMAX;PSAPI_VERSION=1;MINIUPNP_STATICLIB;ElDorito_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ObjectFileName>$(IntDir)</ObjectFileName>
       <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
+      <DisableSpecificWarnings>4348;4834;4996;</DisableSpecificWarnings>
     </ClCompile>
     <ResourceCompile>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;NOMINMAX;PSAPI_VERSION=1;MINIUPNP_STATICLIB;ElDorito_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;NOMINMAX;PSAPI_VERSION=1;MINIUPNP_STATICLIB;ElDorito_EXPORTS;ELDEWRITO_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(SolutionDir)libs\directx\Include;$(SolutionDir)libs\detours\include;$(SolutionDir)libs\openssl-1.0.2c\include;$(SolutionDir)libs\websocketpp\include;$(SolutionDir)libs\cef;$(SolutionDir)libs\cef\include;$(SolutionDir)libs\cppnetlib\include;$(SolutionDir)libs\boost-1.60\include;$(SolutionDir)libs\miniupnpc\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Midl>
@@ -504,7 +605,7 @@
     </Midl>
     <Link>
       <AdditionalOptions>%(AdditionalOptions)  /machine:X86 /ignore:4099</AdditionalOptions>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;d3d9.lib;d3dx9.lib;Version.lib;ws2_32.lib;detours.lib;libeay32MT.lib;psapi.lib;winmm.lib;libcef.lib;discord-rpc.lib;libcef_dll_wrapperd.lib;cppnetlib-uri-d.lib;iphlpapi.lib;miniupnpc.lib;Xinput9_1_0.lib</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;d3d9.lib;d3dx9.lib;Version.lib;ws2_32.lib;detours.lib;libeay32MT.lib;psapi.lib;winmm.lib;libcef.lib;libcef_dll_wrapperd.lib;cppnetlib-uri-d.lib;iphlpapi.lib;miniupnpc.lib;Xinput9_1_0.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)libs/directx/lib.X86;$(SolutionDir)libs/directx/lib.X86/$(Configuration);$(SolutionDir)libs/detours/lib.X86;$(SolutionDir)libs/detours/lib.X86/$(Configuration);$(SolutionDir)libs/openssl-1.1.0e/lib;$(SolutionDir)libs/openssl-1.1.0e/lib/$(Configuration);$(SolutionDir)libs/cef/lib;$(SolutionDir)libs/cef/lib/$(Configuration);$(SolutionDir)libs/cppnetlib/lib;$(SolutionDir)libs/cppnetlib/lib/$(Configuration);$(SolutionDir)libs/boost-1.60/lib;$(SolutionDir)libs/boost-1.60/lib/$(Configuration);$(SolutionDir)libs/miniupnpc/lib;$(SolutionDir)libs/miniupnpc/lib/$(Configuration);$(SolutionDir)libs/discord-rpc/lib;$(SolutionDir)libs/discord-rpc/lib/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
@@ -536,6 +637,7 @@
       <DebugInformationFormat>
       </DebugInformationFormat>
       <AdditionalOptions>/std:c++latest %(AdditionalOptions)</AdditionalOptions>
+      <DisableSpecificWarnings>4348;4834;4996;</DisableSpecificWarnings>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;NOMINMAX;PSAPI_VERSION=1;MINIUPNP_STATICLIB;ElDorito_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -551,7 +653,7 @@
     </Midl>
     <Link>
       <AdditionalOptions>%(AdditionalOptions)  /machine:X86 /NODEFAULTLIB:libcmtd.lib /ignore:4099</AdditionalOptions>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;d3d9.lib;d3dx9.lib;Version.lib;ws2_32.lib;detours.lib;libeay32MT.lib;psapi.lib;winmm.lib;libcef.lib;discord-rpc.lib;libcef_dll_wrapper.lib;cppnetlib-uri.lib;iphlpapi.lib;miniupnpc.lib;Xinput9_1_0.lib</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib;d3d9.lib;d3dx9.lib;Version.lib;ws2_32.lib;detours.lib;libeay32MT.lib;psapi.lib;winmm.lib;libcef.lib;libcef_dll_wrapper.lib;cppnetlib-uri.lib;iphlpapi.lib;miniupnpc.lib;Xinput9_1_0.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)libs/directx/lib.X86;$(SolutionDir)libs/directx/lib.X86/$(Configuration);$(SolutionDir)libs/detours/lib.X86;$(SolutionDir)libs/detours/lib.X86/$(Configuration);$(SolutionDir)libs/openssl-1.1.0e/lib;$(SolutionDir)libs/openssl-1.1.0e/lib/$(Configuration);$(SolutionDir)libs/cef/lib;$(SolutionDir)libs/cef/lib/$(Configuration);$(SolutionDir)libs/cppnetlib/lib;$(SolutionDir)libs/cppnetlib/lib/$(Configuration);$(SolutionDir)libs/boost-1.60/lib;$(SolutionDir)libs/boost-1.60/lib/$(Configuration);$(SolutionDir)libs/miniupnpc/lib;$(SolutionDir)libs/miniupnpc/lib/$(Configuration);$(SolutionDir)libs/discord-rpc/lib;$(SolutionDir)libs/discord-rpc/lib/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>

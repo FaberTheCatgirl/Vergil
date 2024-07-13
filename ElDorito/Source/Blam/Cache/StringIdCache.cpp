@@ -1,5 +1,5 @@
 #include <fstream>
-#include "StringIDCache.hpp"
+#include "Blam\Cache\StringIDCache.hpp"
 
 namespace Blam::Cache
 {
@@ -56,7 +56,7 @@ namespace Blam::Cache
 		return true;
 	}
 
-	char *StringIDCache::GetString(const uint32_t StringID)
+	std::string StringIDCache::GetString(const Text::StringID &StringID)
 	{
 		int32_t setMin = 0x1;
 		int32_t setMax = 0xF1E;
@@ -75,6 +75,12 @@ namespace Blam::Cache
 			index -= setMin;
 
 		return Strings[index + setOffsets[set]];
+	}
+
+	Text::StringID StringIDCache::GetStringID(const std::string &string)
+	{
+		// TODO: implement
+		return 0;
 	}
 }
 

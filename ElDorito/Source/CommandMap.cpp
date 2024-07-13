@@ -338,6 +338,65 @@ namespace Modules
 		return eVariableSetReturnValueSuccess;
 	}
 
+	VariableSetReturnValue CommandMap::SetVariable2(Command* command, std::string& value, std::string& previousValue)
+	{
+		// Disallow setting internal variables through the console
+		try {
+			switch (command->Type)
+			{
+			case eCommandTypeVariableString:
+				previousValue = command->ValueString;
+				command->ValueString = value;
+				break;
+			case eCommandTypeVariableInt:
+			{
+				previousValue = std::to_string(command->ValueInt);
+				auto newValue = std::stoul(value, 0, 0);
+				if ((command->ValueIntMin || command->ValueIntMax) && (newValue < command->ValueIntMin || newValue > command->ValueIntMax))
+					return eVariableSetReturnValueOutOfRange;
+
+				command->ValueInt = newValue;
+				command->ValueString = std::to_string(command->ValueInt); // set the ValueString too so we can print the value out easier
+				break;
+			}
+			case eCommandTypeVariableInt64:
+			{
+				previousValue = std::to_string(command->ValueInt);
+				auto newValue = std::stoull(value, 0, 0);
+				if ((command->ValueInt64Min || command->ValueInt64Max) && (newValue < command->ValueInt64Min || newValue > command->ValueInt64Max))
+					return eVariableSetReturnValueOutOfRange;
+
+				command->ValueInt64 = newValue;
+				command->ValueString = std::to_string(command->ValueInt64); // set the ValueString too so we can print the value out easier
+				break;
+			}
+			case eCommandTypeVariableFloat:
+			{
+				previousValue = std::to_string(command->ValueFloat);
+				auto newValue = std::stof(value, 0);
+				if ((command->ValueFloatMin || command->ValueFloatMax) && (newValue < command->ValueFloatMin || newValue > command->ValueFloatMax))
+					return eVariableSetReturnValueOutOfRange;
+
+				command->ValueFloat = newValue;
+				command->ValueString = std::to_string(command->ValueFloat); // set the ValueString too so we can print the value out easier
+				break;
+			}
+			}
+		}
+		catch (std::invalid_argument)
+		{
+			return eVariableSetReturnValueInvalidArgument;
+		}
+		catch (std::out_of_range)
+		{
+			return eVariableSetReturnValueInvalidArgument;
+		}
+
+		NotifyVariableUpdated(command);
+
+		return eVariableSetReturnValueSuccess;
+	}
+
 	bool compare_commands(const Command& lhs, const Command& rhs) {
 		return lhs.Name < rhs.Name;
 	}

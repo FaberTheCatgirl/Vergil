@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../CommandMap.hpp"
+#include "CommandMap.hpp"
 
 namespace Modules
 {

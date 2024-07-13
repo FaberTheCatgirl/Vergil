@@ -1,11 +1,11 @@
-#include "VotingScreen.hpp"
-#include "ScreenLayer.hpp"
-#include "../../Server/VotingPackets.hpp"
-#include "../../Patches/Network.hpp"
-#include "../../ThirdParty/rapidjson/writer.h"
-#include "../../ThirdParty/rapidjson/stringbuffer.h"
+#include "Web\Ui\VotingScreen.hpp"
+#include "Web\Ui\ScreenLayer.hpp"
+#include "Server\VotingPackets.hpp"
+#include "Patches\Network.hpp"
+#include "ThirdParty\rapidjson\writer.h"
+#include "ThirdParty\rapidjson\stringbuffer.h"
 #include <unordered_map>
-#include "../../Patches/Input.hpp"
+#include "Patches\Input.hpp"
 
 using namespace Server::Voting;
 
@@ -17,16 +17,28 @@ namespace
 	{
 		{ 320, "guardian" },
 		{ 340, "riverworld" },
-		{ 705, "s3d_avalanche" },
-		{ 703, "s3d_edge" },
-		{ 700, "s3d_reactor" },
-		{ 31, "s3d_turf" },
 		{ 390, "cyberdyne" },
 		{ 380, "chill" },
 		{ 310, "deadlock" },
 		{ 410, "bunkerworld" },
 		{ 400, "shrine" },
 		{ 30, "zanzibar" },
+		{ 730, "sandbox" },
+		{ 480, "warehouse" },
+		{ 470, "sidewinder" },
+		{ 360, "snowbound" },
+		{ 500, "spacecamp" },
+		{ 720, "midship" },
+		{ 330, "isolation" },
+		{ 590, "ghosttown" },
+		{ 440, "docks" },
+		{ 490, "descent" },
+		{ 300, "construct" },
+		{ 600, "chillout" },
+		{ 580, "armory" },
+		{ 350, "salvation" },
+		{ 740, "fortress" },
+		{ 520, "lockout" },
 	};
 
 	bool currentlyVoting = false;
@@ -159,13 +171,13 @@ public:
 
 namespace
 {
-	void LifeCycleStateChanged(Blam::Network::LifeCycleState newState)
+	void LifeCycleStateChanged(Blam::LifeCycleState newState)
 	{
 		switch (newState)
 		{
-		case Blam::Network::eLifeCycleStateStartGame:
-		case Blam::Network::eLifeCycleStateNone:
-		case Blam::Network::eLifeCycleStateLeaving:
+		case Blam::eLifeCycleStateStartGame:
+		case Blam::eLifeCycleStateNone:
+		case Blam::eLifeCycleStateLeaving:
 			OnVotingEnded();
 			break;
 		}

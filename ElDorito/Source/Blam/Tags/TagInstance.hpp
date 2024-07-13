@@ -4,8 +4,8 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
-#include "../../ElDorito.hpp"
-#include "Tags.hpp"
+#include "ElDorito.hpp"
+#include "Blam\Tags\Tags.hpp"
 
 namespace Blam::Tags
 {
@@ -135,6 +135,16 @@ namespace Blam::Tags
 			}
 
 			return TagInstance(0xFFFF);
+		}
+
+		inline static const std::string GetTagName(uint32_t index) {
+			for (auto &entry : TagNames)
+			{
+				if (index == entry.first)
+					return entry.second;
+			}
+			return std::string("None");
+
 		}
 	};
 }

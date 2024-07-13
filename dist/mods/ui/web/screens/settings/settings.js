@@ -43,18 +43,18 @@ var settingsToLoad = [
     ['sHudShake','Settings.HUDShake', 'HUD Shake', 'Enables/Disables HUD shake.'],
     ['sPlayerMarkerColors','Settings.PlayerMarkerColors', 'Player Marker Colors', 'Changes the colour scheme of over-head player markers.'],
     ['sCameraFOV','Camera.FOV', 'Camera FOV', 'Adjusts the first person field of view.'],
-    ['cCenteredCrosshairFirst', 'Camera.CenteredCrosshairFirst', 'Centered Crosshair (First Person)', 'Centers the crosshair in first person.'], 
-    ['cCenteredCrosshairThird', 'Camera.CenteredCrosshairThird', 'Centered Crosshair (Third Person)', 'Centers the crosshair in third person.'], 
-    ['cHideHUD', 'Camera.HideHUD', 'Hide HUD', 'Hides the HUD.'], 
-    ['inputRaw','Input.RawInput', 'Use Raw Input', 'Uses raw input, bypassing Windows mouse acceleration.'],  
-    ['lookSensitivity', 'Input.ControllerSensitivityY', 'Look Sensitivity', 'Adjusts the sensitivity of the look joystick.'], 
-    ['controllerPort','Input.ControllerPort', 'Controller Port Number', 'Specifies which controller port to receive input from.'], 
-    ['gExpandScoreboard','Game.ExpandedScoreboard', 'Always Expand Scoreboard', 'Always displays the expanded scoreboard.'], 
-    ['invertLook','Input.ControllerInvertY', 'Invert Look', 'Inverts the look joystick vertically.'], 
-    ['gHideChat','Game.HideChat', 'Hide Chat', 'Hides the in-game text chat.'], 
-    ['gSuppressJuggling','Game.SuppressJuggling', 'Suppress Juggling Announcer Spam', 'Supresses the audio spam from juggling.'], 
+    ['cCenteredCrosshairFirst', 'Camera.CenteredCrosshairFirst', 'Centered Crosshair (First Person)', 'Centers the crosshair in first person.'],
+    ['cCenteredCrosshairThird', 'Camera.CenteredCrosshairThird', 'Centered Crosshair (Third Person)', 'Centers the crosshair in third person.'],
+    ['cHideHUD', 'Camera.HideHUD', 'Hide HUD', 'Hides the HUD.'],
+    ['inputRaw','Input.RawInput', 'Use Raw Input', 'Uses raw input, bypassing Windows mouse acceleration.'],
+    ['lookSensitivity', 'Input.ControllerSensitivityY', 'Look Sensitivity', 'Adjusts the sensitivity of the look joystick.'],
+    ['controllerPort','Input.ControllerPort', 'Controller Port Number', 'Specifies which controller port to receive input from.'],
+    ['gExpandScoreboard','Game.ExpandedScoreboard', 'Always Expand Scoreboard', 'Always displays the expanded scoreboard.'],
+    ['invertLook','Input.ControllerInvertY', 'Invert Look', 'Inverts the look joystick vertically.'],
+    ['gHideChat','Game.HideChat', 'Hide Chat', 'Hides the in-game text chat.'],
+    ['gSuppressJuggling','Game.SuppressJuggling', 'Suppress Juggling Announcer Spam', 'Supresses the audio spam from juggling.'],
     ['wOffsetConfig','Weapon.JSON.File', 'Viewmodel Config', 'Specifies which viewmodel config file to use.'],
-    ['gMedalPack','Game.MedalPack', 'Medal Pack', 'Specifies which Medals Pack to use.'], 
+    ['gMedalPack','Game.MedalPack', 'Medal Pack', 'Specifies which Medals Pack to use.'],
     ['iSpectateSens','Input.SpectateSensitivity', 'Spectator Camera Senstivity', 'Adjusts the Camera Sensentivity for the Spectate Cam.'],
     ['iDisableSprint','Input.ToggleSprint', 'Toggle Sprint', 'Toggles sprint on press instead of disabling on release.'],
     ['gIconSet','Game.IconSet', 'Controller Button Icon Set', 'Sets the button icon set for the menus.'],
@@ -66,13 +66,12 @@ var settingsToLoad = [
     ['vEchoCancelation','VoIP.EchoCancelation', 'Echo Cancellation', 'Removes echo by subtracting it from the transmitted or received signal.'],
     ['vStereoVoice','VoIP.StereoVoice', 'Allow Stereo Voice', 'Enables Stereo audio from other players.'],
 	['vPTTSound','VoIP.PTTSoundEnabled', 'Enable PTT Noise', 'Play a noise when pressing the push to talk button'],
-    ['tAgressiveAudioDiscard', 'Tweaks.AggressiveAudioDiscarding', 'Aggressive Audio Discarding', 'Prioritizies gun sounds over others to make audio cutoff less noticeable.'], 
-    ['tDisableFog', 'Tweaks.DisableReactorFog', 'Reacthor', 'Removes some of the fog on Reactor which causes FPS drops indoors.'], 
-    ['tDisableWeapOutline', 'Tweaks.DisableWeaponOutline', 'Weapon Outline Removal', 'Removes outlines from weapons on the ground.'], 
-    ['tDisableHitmarkers', 'Tweaks.DisableHitMarkers', 'Disable weapon hitmarkers', 'Stops red indicators when any of your weapons cause damage.'], 
+    ['tAgressiveAudioDiscard', 'Tweaks.AggressiveAudioDiscarding', 'Aggressive Audio Discarding', 'Prioritizies gun sounds over others to make audio cutoff less noticeable.'],
+    ['tDisableFog', 'Tweaks.DisableReactorFog', 'Reacthor', 'Removes some of the fog on Reactor which causes FPS drops indoors.'],
     ['tGruntBirthdayParty', 'Tweaks.GruntBirthdayParty', 'Grunt Birthday Party', 'Confetti flies from headshots as the children cheer.'],
     ['tReachFrags','Tweaks.ReachStyleFrags', 'Reach Style Frags', 'Give tossed grenades a Halo: Reach styled orangey-yellow trail.'],
     ['tIntelBloomPatch','Tweaks.IntelBloomPatch', 'Bloom Patch', 'Fixes extreme brightness on sunny maps.'],
+    ['tEliteHUD','Tweaks.EliteHUD', 'Elite HUD', 'Enables the Elite HUD.'],
     ['sAudioDevice','Settings.AudioOutputDevice', 'Audio Device', 'Specifies which audio device the game should use.'],
     ['sContrast','Settings.Contrast', 'Contrast', 'Adjusts the game\'s contrast.'],
     ['controllerVibration', 'Input.ControllerVibrationIntensity', 'Controller Vibration', 'Adjusts the strength of controller vibration.'],
@@ -170,7 +169,7 @@ $(document).ready(function(){
             }
         }
         if (e.keyCode == 44) {
-            dew.command('Game.TakeScreenshot');  
+            dew.command('Game.TakeScreenshot');
         }
     });
     $(document).keydown(function(e){
@@ -221,8 +220,8 @@ $(document).ready(function(){
             }
             tabIndex = $('.tabs li:visible a').index($("a[href='"+activePage+"']"));
         });
-        dew.command('Game.PlaySound 0x0B00');
-    });
+        dew.command('Game.PlaySound sound\\game_sfx\\ui\\button_based_ui_sounds\\a_button.snd!');
+});
     $('.tinySetting').on('change', function(){
         var newID = $(this).attr('id');
         if(newID.endsWith('Text')){
@@ -257,7 +256,7 @@ $(document).ready(function(){
             var currentTime = Date.now();
             if((currentTime - lastSoundPlayedTime) > 100) {
                 lastSoundPlayedTime = currentTime;
-                dew.command('Game.PlaySound 0x0B00');
+                dew.command('Game.PlaySound sound\\game_sfx\\ui\\button_based_ui_sounds\\a_button.snd!');
             }
         }
     });
@@ -320,7 +319,7 @@ $(document).ready(function(){
     });
     $('#wOffsetConfig').on('change', function(){
         changeArray.push(['Weapon.JSON.Load', '']);
-    });    
+    });
     navigator.mediaDevices.enumerateDevices().then(function(devices){
         var deviceArray = [['Default','']];
         for (i = 0; i < devices.length; i++){
@@ -336,7 +335,7 @@ $(document).ready(function(){
         queueBindChange([this.id, this.value]);
         updateBindLabels();
     });
-    
+
     dew.command('Server.SprintEnabled', {}).then(function(a){
         dew.command('Server.UnlimitedSprint', {}).then(function(b){
             if(a == '1' && b == '1'){
@@ -346,7 +345,7 @@ $(document).ready(function(){
             }else{
                 $('#sSprint').val('0');
             }
-        });       
+        });
     });
     dew.command('Settings.AudioOutputDeviceList', {}).then(function(response) {
         var audioDevArray = [];
@@ -356,11 +355,18 @@ $(document).ready(function(){
         }
         setOptionList('sAudioDevice', audioDevArray);
     });
-    
-    dew.on('controllerinput', function(e){    
-        if(hasGP){    
+
+    dew.on('controllerinput', function(e){
+        if(hasGP){
             if(e.data.A == 1){
                 if(activePage.endsWith('alertBox')){
+					if($('#acceptButton:visible').length){
+						dew.command('Settings.Reset').then(function(){
+							setControlValues();
+							initGamepad();
+						});
+						hideAlert(true);
+					}else
                     if($('#dismissButton:visible').length){
                         dismissButton();
                     }else{
@@ -368,7 +374,7 @@ $(document).ready(function(){
                     }
                 }else if($('#'+selectedItem).prev()[0].computedRole == 'button'){
                     $('#'+selectedItem).prev().click();
-                }else{    
+                }else{
                     toggleSetting();
                 }
             }
@@ -429,7 +435,7 @@ $(document).ready(function(){
             if(e.data.AxisLeftX < -axisThreshold){
                 stickTicks.left++;
             }else{
-                stickTicks.left = 0; 
+                stickTicks.left = 0;
             }
             if(e.data.AxisLeftY > axisThreshold){
                 stickTicks.up++;
@@ -456,7 +462,7 @@ $(document).ready(function(){
         $(this).addClass('selectedElement');
         itemNumber = $(activePage+' span').has('.setting').index($(this));
         if(itemNumber > -1){
-            updateSelection(itemNumber, false, false, false); 
+            updateSelection(itemNumber, false, false, false);
             setInfoBox($(this).find('.setting').attr('id'));
         }
     });
@@ -511,6 +517,8 @@ function setButtons(){
         $('#cancelButton img').attr('src','dew://assets/buttons/' + response + '_B.png');
         $('#dismissButton img').attr('src','dew://assets/buttons/' + response + '_B.png');
         $('#okButton img').attr('src','dew://assets/buttons/' + response + '_A.png');
+		$('#denyButton img').attr('src','dew://assets/buttons/' + response + '_B.png');
+        $('#acceptButton img').attr('src','dew://assets/buttons/' + response + '_A.png');
         $('.tabs img').eq(0).attr('src','dew://assets/buttons/' + response + '_LB.png');
         $('.tabs img').eq(1).attr('src','dew://assets/buttons/' + response + '_RB.png');
     });
@@ -520,16 +528,16 @@ var mapName = "mainmenu";
 dew.on('show', function(e){
     if(!jQuery.isEmptyObject(e.data)){
         switch(e.data){
-            case "game": 
+            case "game":
                 tabIndex = 0;
             break;
-            case "controls": 
+            case "controls":
                 tabIndex = 1;
             break;
-            case "video": 
+            case "video":
                 tabIndex = 2;
             break;
-            case "sound": 
+            case "sound":
                 tabIndex = 3;
             break;
             default:
@@ -615,8 +623,8 @@ function setControlValues(){
                 if(result[1] == commands[i].name){
                     commandValues.push([result[0],commands[i].name,commands[i].value]);
                     if(result[1].startsWith('Player.Colors')){
-                        $('#'+result[0]).css('background-color',setValue);   
-                        $('#'+result[0]).val(setValue); 
+                        $('#'+result[0]).css('background-color',setValue);
+                        $('#'+result[0]).val(setValue);
                         if(getLuminance(setValue)> 0.22){
                             $('#'+result[0]).css('color','#222');
                         }else{
@@ -638,7 +646,7 @@ function setControlValues(){
                             if(setValue == '1'){
                                 $('#'+result[0]).prop('checked', true);
                             }else{
-                                $('#'+result[0]).prop('checked', false);                               
+                                $('#'+result[0]).prop('checked', false);
                             }
                         }else{
                             if($('#'+result[0]).hasClass('tinySetting')){
@@ -650,7 +658,7 @@ function setControlValues(){
                         if($('#'+result[0]).hasClass('hasTiny')){
                             if(setValue.isFloat){
                                 $('#'+result[0]+'Text').val(parseFloat(setValue.toFixed(2)));
-                            }else{                            
+                            }else{
                                 $('#'+result[0]+'Text').val(setValue);
                             }
                         }
@@ -664,7 +672,7 @@ function setControlValues(){
 function switchPage(pageHash){
     itemNumber = 0;
     location.href=pageHash;
-    activePage=pageHash;    
+    activePage=pageHash;
     if(hasGP){
         updateSelection(0, true, true, true);
     }
@@ -692,11 +700,11 @@ function applySettings(i){
     if(i != changeArray.length){
         dew.command(changeArray[i][0] + ' "' + changeArray[i][1] + '"', {}).then(function(){
 			i++;
-			applySettings(i);            
+			applySettings(i);
         }).catch(function (error){
             console.log(error);
             i++;
-			applySettings(i);  
+			applySettings(i);
         });
     }else{
         dew.notify("settings-update", changeArray);
@@ -714,16 +722,16 @@ function applySettings(i){
 }
 
 function applyBindChanges(i){
-    if(i != bindChangeArray.length){    
+    if(i != bindChangeArray.length){
         if (bindChangeArray[i][1] == "Back") { bindChangeArray[i][1] = "Select"; }
         if (bindChangeArray[i][1]) { bindChangeArray[i][1] = "\"" + bindChangeArray[i][1] + "\""; }
         dew.command("Input.ControllerAction \"" + bindChangeArray[i][0] + "\" " + bindChangeArray[i][1], {}).then(function(){
             i++;
-            applyBindChanges(i);            
+            applyBindChanges(i);
         }).catch(function (error){
             console.log(error);
             i++;
-            applyBindChanges(i);  
+            applyBindChanges(i);
         });
     }else{
         bindChangeArray = [];
@@ -740,20 +748,20 @@ function applyBindChanges(i){
 function applyButton(){
     if(window.location.hash == '#page5'){
         applyBinds();
-        switchPage('#page2'); 
+        switchPage('#page2');
         if(!changeArray.length && !bindChangeArray.length){
             $('#applyButton').hide();
         }
     }else if(window.location.hash == '#page4'){
         applySettings(0);
-        switchPage('#page3');     
-    }else if(window.location.hash == '#page11'){ 
-        switchPage('#page8');        
+        switchPage('#page3');
+    }else if(window.location.hash == '#page11'){
+        switchPage('#page8');
     }else{
         if(changeArray.length || bindChangeArray.length){
-            applySettings(0); 
-            applyBindChanges(0);              
-            setButtons();            
+            applySettings(0);
+            applyBindChanges(0);
+            setButtons();
         }else{
             effectReset();
         }
@@ -763,9 +771,10 @@ function applyButton(){
 function resetButton(){
     if(window.location.hash == '#page5' || window.location.hash == '#page8' || window.location.hash == '#page9'){
         dew.command('Input.ResetBindings').then(function(){
-            initializeBindings(); 
+            initializeBindings();
         });
     }else{
+		alertBoxReset("Are you sure you want to reset the settings?", function() {	
         dew.command('Settings.Reset').then(function(){
             setControlValues();
             initGamepad();
@@ -775,8 +784,8 @@ function resetButton(){
 
 function cancelButton(){
     if(window.location.hash == '#page5'){
-        initializeBindings(); 
-        switchPage('#page2'); 
+        initializeBindings();
+        switchPage('#page2');
         $('#cancelButton').html('<img class="button">Close');
         if(!changeArray.length){
             $('#applyButton').hide();
@@ -784,15 +793,15 @@ function cancelButton(){
         if(hasGP){
             setButtons();
             $('button img,.tabs img').show();
-        }        
+        }
     }else if(window.location.hash == '#page4'){
-        setControlValues();      
+        setControlValues();
         switchPage('#page3');
-    }else if(window.location.hash == '#page9'){ 
+    }else if(window.location.hash == '#page9'){
         switchPage('#page8');
-    }else if(window.location.hash == '#page8'){ 
+    }else if(window.location.hash == '#page8'){
         switchPage('#page2');
-    }else if(window.location.hash == '#page11'){ 
+    }else if(window.location.hash == '#page11'){
         switchPage('#page8');
     }else if(changeArray.length || bindChangeArray.length){
         alertBox('You have unapplied settings', true);
@@ -803,7 +812,7 @@ function cancelButton(){
 }
 
 function dismissButton(){
-    hideAlert(false);  
+    hideAlert(false);
     itemNumber = 0;
     effectReset();
     setControlValues();
@@ -822,7 +831,7 @@ function effectReset(){
         return;
     exiting = true;
 
-    dew.command('Game.PlaySound 0x0B04');
+    dew.command('Game.PlaySound sound\\game_sfx\\ui\\back1.snd!');
     dew.getSessionInfo().then(function(i){
         if(i.mapName == "mainmenu"){
             $('#blackLayer').fadeIn(200, function(){
@@ -866,7 +875,7 @@ function setOptionList(ElementID, ArrayVar){
 
 function applyBindString(bindString){
     var bindArray = new Array(bindString.split(','));
-    for (i = 0; i < bindArray[0].length; i++) { 
+    for (i = 0; i < bindArray[0].length; i++) {
         $('#'+binds[i][0]).val(bindArray[0][i]);
         queueBindChange([binds[i][0],bindArray[0][i]])
     }
@@ -886,9 +895,9 @@ function initializeBindings(){
                 bindDump[i].controllerButton="Back";
             }
             $('#'+bindDump[i].actionName).val(bindDump[i].controllerButton);
-            $.grep(binds, function(result, index){   
+            $.grep(binds, function(result, index){
                 if(result){
-                if(result[0] == bindDump[i].actionName){            
+                if(result[0] == bindDump[i].actionName){
                     var primaryBind = bindDump[i].primaryKey;
                     if(bindDump[i].primaryMouseButton != 'none'){
                         primaryBind = bindDump[i].primaryMouseButton;
@@ -902,7 +911,7 @@ function initializeBindings(){
                 }
             })
         }
-        
+
         updateBindLabels();
         getCurrentBindString();
 
@@ -914,7 +923,7 @@ function initializeBindings(){
                 document.activeElement.value = 'Mouse4';
             }else{
                 document.activeElement.value = 'Mouse5';
-            }; 
+            };
             document.activeElement.blur();
         });
 
@@ -944,13 +953,13 @@ function initializeBindings(){
 
                 if(e.keyCode >= 96 && e.keyCode <=105)
                     this_.val('Numpad'+String(parseInt(e.keyCode)-96))
-                
+
                 switch(e.keyCode){
-                    case 8: 
-                        this_.val('Back'); 
+                    case 8:
+                        this_.val('Back');
                     break;
-                    case 9: 
-                        this_.val('Tab'); 
+                    case 9:
+                        this_.val('Tab');
                     break;
                     case 13:
                         if(e.originalEvent.location === KeyboardEvent.DOM_KEY_LOCATION_NUMPAD){
@@ -959,92 +968,92 @@ function initializeBindings(){
                             this_.val('Enter');
                         }
                     break;
-                    case 16: 
+                    case 16:
                         if(e.originalEvent.location === KeyboardEvent.DOM_KEY_LOCATION_LEFT){
-                           this_.val('LShift'); 
+                           this_.val('LShift');
                         }else{
-                           this_.val('RShift'); 
-                        }   
+                           this_.val('RShift');
+                        }
                     break
                     case 17:
                         if(e.originalEvent.location === KeyboardEvent.DOM_KEY_LOCATION_LEFT){
-                           this_.val('LControl'); 
+                           this_.val('LControl');
                         }else{
-                           this_.val('RControl'); 
-                        }   
+                           this_.val('RControl');
+                        }
                     break;
                     case 18:
                         if(e.originalEvent.location === KeyboardEvent.DOM_KEY_LOCATION_LEFT){
-                           this_.val('LAlt'); 
+                           this_.val('LAlt');
                         }else{
-                           this_.val('RAlt'); 
-                        }  
+                           this_.val('RAlt');
+                        }
                     break;
-                    case 20: 
-                        this_.val('CapsLock'); 
+                    case 20:
+                        this_.val('CapsLock');
                     break;
-                    case 32: 
-                        this_.val('Space'); 
+                    case 32:
+                        this_.val('Space');
                     break;
-                    case 37: 
-                        this_.val('Left'); 
+                    case 37:
+                        this_.val('Left');
                     break;
-                    case 38: 
-                        this_.val('Up'); 
+                    case 38:
+                        this_.val('Up');
                     break;
-                    case 39: 
-                        this_.val('Right'); 
+                    case 39:
+                        this_.val('Right');
                     break;
-                    case 40: 
-                        this_.val('Down'); 
+                    case 40:
+                        this_.val('Down');
                     break;
-                    case 46: 
-                        this_.val('Delete'); 
+                    case 46:
+                        this_.val('Delete');
                     break;
-                    case 106: 
-                        this_.val('Multiply'); 
+                    case 106:
+                        this_.val('Multiply');
                     break;
-                    case 107: 
-                        this_.val('Add'); 
+                    case 107:
+                        this_.val('Add');
                     break;
-                    case 109: 
-                        this_.val('Subtract'); 
+                    case 109:
+                        this_.val('Subtract');
                     break;
-                    case 110: 
-                        this_.val('Decimal'); 
+                    case 110:
+                        this_.val('Decimal');
                     break;
-                    case 111: 
-                        this_.val('Divide'); 
+                    case 111:
+                        this_.val('Divide');
                     break;
-                    case 186: 
-                        this_.val('Colon'); 
+                    case 186:
+                        this_.val('Colon');
                     break;
-                    case 187: 
-                        this_.val('Plus'); 
+                    case 187:
+                        this_.val('Plus');
                     break;
-                    case 188: 
-                        this_.val('Comma'); 
+                    case 188:
+                        this_.val('Comma');
                     break;
-                    case 189: 
-                        this_.val('Minus'); 
+                    case 189:
+                        this_.val('Minus');
                     break;
-                    case 190: 
-                        this_.val('Period'); 
+                    case 190:
+                        this_.val('Period');
                     break;
-                    case 191: 
-                        this_.val('Question'); 
+                    case 191:
+                        this_.val('Question');
                     break;
-                    case 219: 
-                        this_.val('LBracket'); 
+                    case 219:
+                        this_.val('LBracket');
                     break;
-                    case 220: 
-                        this_.val('Pipe'); 
+                    case 220:
+                        this_.val('Pipe');
                     break;
-                    case 221: 
-                        this_.val('RBracket'); 
+                    case 221:
+                        this_.val('RBracket');
                     break;
-                    case 222: 
-                        this_.val('Quote'); 
+                    case 222:
+                        this_.val('Quote');
                     break;
                     default:
                         //console.log(e.keyCode);
@@ -1056,7 +1065,7 @@ function initializeBindings(){
                 e.preventDefault();
                 e.stopPropagation();
                 if(e.type == 'mousewheel'){
-                    
+
                     if(e.originalEvent.wheelDelta > 0){
                         this_.val('MouseWheelUp');
                     }else{
@@ -1107,7 +1116,7 @@ function initializeBindings(){
 
 function updateBindLabels(){
     $('#controllerGraphic').children('div').empty();
-    for (i = 0; i < binds.length-8; i++) { 
+    for (i = 0; i < binds.length-8; i++) {
         var bind = document.getElementById(binds[i][0]).value;
         var action = binds[i][1];
         if(document.getElementById(bind)){
@@ -1156,7 +1165,7 @@ function updateSelection(item, sound, move, controller){
         $('#'+selectedItem).parent()[0].scrollIntoView(false);
     }
     if(sound){
-        dew.command('Game.PlaySound 0xAFE');
+        dew.command('Game.PlaySound sound\\game_sfx\\ui\\button_based_ui_sounds\\cursor_horzontal.snd!');
     }
     setInfoBox(selectedItem);
 }
@@ -1164,14 +1173,14 @@ function updateSelection(item, sound, move, controller){
 function prevPage(){
     if(tabIndex > 0){
         $('.tabs li:visible a').eq(tabIndex-1).click();
-    }        
+    }
 }
 
 function nextPage(){
     var tabLength = $('.tabs li').length-1;
     if(tabIndex < tabLength){
         $('.tabs li:visible a').eq(tabIndex+1).click();
-    }        
+    }
 }
 
 function upNav(){
@@ -1185,7 +1194,7 @@ function downNav(){
     if(itemNumber < $(activePage + ' label:visible').length-1){
         itemNumber++;
         updateSelection(itemNumber, true, true, true);
-    }           
+    }
 }
 
 function onControllerConnect(){
@@ -1194,7 +1203,7 @@ function onControllerConnect(){
 }
 
 function onControllerDisconnect(){
-    $('.selectedItem').removeClass(); 
+    $('.selectedItem').removeClass();
     $('button img, .tabs img').hide();
 }
 
@@ -1210,17 +1219,17 @@ function leftToggle(){
     if(document.getElementById(selectedItem).computedRole == "slider"){
         if(parseFloat(document.getElementById(selectedItem).value) > document.getElementById(selectedItem).min){
             document.getElementById(selectedItem).stepDown();
-            document.querySelector('#'+selectedItem +'Text').value = document.getElementById(selectedItem).value; 
+            document.querySelector('#'+selectedItem +'Text').value = document.getElementById(selectedItem).value;
             $('#'+selectedItem).trigger('change');
         }
     }
     if($('#'+selectedItem).hasClass('color')){
         colorIndex = $.inArray($('#'+selectedItem).val(), h3ColorArray);
-        if(colorIndex == -1){ colorIndex = 0 };       
+        if(colorIndex == -1){ colorIndex = 0 };
         if($('#'+selectedItem).val()==h3ColorArray[colorIndex]){
             if(colorIndex > 0){
                 colorIndex--;
-            }    
+            }
         }
         setColor(h3ColorArray[colorIndex]);
     }
@@ -1234,12 +1243,12 @@ function rightToggle(){
             var newElement = elementIndex + 1;
             $('#'+selectedItem+' option').eq(newElement).prop('selected', true);
             $('#'+selectedItem).trigger('change');
-        } 
+        }
     }
     if(document.getElementById(selectedItem).computedRole == "slider"){
         if(parseFloat(document.getElementById(selectedItem).value) < document.getElementById(selectedItem).max){
             document.getElementById(selectedItem).stepUp();
-            document.querySelector('#'+selectedItem +'Text').value = document.getElementById(selectedItem).value;   
+            document.querySelector('#'+selectedItem +'Text').value = document.getElementById(selectedItem).value;
             $('#'+selectedItem).trigger('change');
         }
     }
@@ -1249,7 +1258,7 @@ function rightToggle(){
         if($('#'+selectedItem).val()==h3ColorArray[colorIndex]){
             if(colorIndex < h3ColorArray.length-1){
                 colorIndex++;
-            }      
+            }
         }
         setColor(h3ColorArray[colorIndex]);
     }
@@ -1262,8 +1271,8 @@ function toggleSetting(){
         }else{
             document.getElementById(selectedItem).checked = true;
         }
-        $('#'+selectedItem).trigger('change'); 
-    }       
+        $('#'+selectedItem).trigger('change');
+    }
 }
 
 function queueChange(changeBlock){
@@ -1284,6 +1293,9 @@ function queueChange(changeBlock){
 }
 
 function alertBox(alertText, dismissButton){
+	$('#okButton').show();
+	$('#acceptButton').hide();
+	$('#denyButton').hide();
     if(dismissButton){
         $('#dismissButton').show();
     }else{
@@ -1292,14 +1304,33 @@ function alertBox(alertText, dismissButton){
     $('#wDescription').text(alertText);
     $('#alertBox').fadeIn(100);
     activePage = activePage+'alertBox';
+    dew.command('Game.PlaySound sound\\game_sfx\\ui\\button_based_ui_sounds\\x_button.snd!');
+}
+
+function alertBoxReset(alertText, callback){
+	$('#okButton').hide();
+	$('#dismissButton').hide();
+	$('#acceptButton').show();
+	$('#denyButton').show();
+	$("#acceptButton").off('click').on('click', function(e){
+		console.log("reset settings");
+		callback();	
+		hideAlert(true);
+	});
+	$("#denyButton").off('click').on('click', function(e){
+		hideAlert(true);
+	});
+    $('#wDescription').text(alertText);
+    $('#alertBox').fadeIn(100);
+    activePage = activePage+'alertBox';
     dew.command('Game.PlaySound 0x0B02');
 }
 
 function hideAlert(sound){
     $('#alertBox').hide();
-    activePage = activePage.replace('alertBox', ''); 
+    activePage = activePage.replace('alertBox', '');
     if(sound){
-        dew.command('Game.PlaySound 0x0B04');
+        dew.command('Game.PlaySound sound\\game_sfx\\ui\\back1.snd!');
     }
 }
 
@@ -1328,7 +1359,7 @@ function setInfoBox(ID){
                 $('#infoText').text(result[3]);
             };
         }
-    });    
+    });
 }
 
 Number.prototype.isFloat = function() {

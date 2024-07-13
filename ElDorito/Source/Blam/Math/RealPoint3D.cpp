@@ -1,4 +1,4 @@
-#include "RealPoint3D.hpp"
+#include "Blam\Math\RealPoint3D.hpp"
 
 namespace Blam::Math
 {

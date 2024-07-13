@@ -1,45 +1,53 @@
-#include "Ui.hpp"
-
-#include "../ElDorito.hpp"
-#include "../Patch.hpp"
-#include "../Patches/Core.hpp"
-#include "../Patches/Input.hpp"
-#include "../Blam/BlamInput.hpp"
-#include "../Blam/Tags/TagInstance.hpp"
-#include "../Blam/Tags/UI/ChudGlobalsDefinition.hpp"
-#include "../Blam/Tags/UI/ChudDefinition.hpp"
-#include "../Blam/Tags/Globals/CacheFileGlobalTags.hpp"
-#include "../Blam/Tags/Game/Globals.hpp"
-#include "../Blam//Tags/Objects/Biped.hpp"
-#include "../Blam/Tags/Items/DefinitionWeapon.hpp"
-#include "../Blam/Tags/Globals/CacheFileGlobalTags.hpp"
-#include "../Blam/Tags/Game/Globals.hpp"
-#include "../Blam/Tags/Game/MultiplayerGlobals.hpp"
-#include "../Blam/Tags/UI/GfxTexturesList.hpp"
-#include "../Blam/BlamNetwork.hpp"
-#include "../Blam/BlamObjects.hpp"
-#include "../Blam/BlamTime.hpp"
-#include "../Modules/ModuleGraphics.hpp"
-#include "../Modules/ModuleInput.hpp"
-#include "../Modules/ModuleGame.hpp"
-#include "../Modules/ModuleVoIP.hpp"
-#include "../Web/Ui/ScreenLayer.hpp"
-#include "../Blam/Tags/UI/MultilingualUnicodeStringList.hpp"
-#include "../Modules/ModuleTweaks.hpp"
-#include "../Modules/ModuleCamera.hpp"
 #include <iostream>
 #include <string>
 #include <iomanip>
 #include <cassert>
 #include <vector>
 #include <unordered_map>
-#include "../Web/Ui/ScreenLayer.hpp"
+
+#include "Patches\Ui.hpp"
+
+#include "ElDorito.hpp"
+#include "Patch.hpp"
+#include "Patches\Core.hpp"
+#include "Patches\Input.hpp"
+#include "Patches\Events.hpp"
+#include "Blam\BlamEvents.hpp"
+#include "Blam\BlamInput.hpp"
+#include "Blam\BlamNetwork.hpp"
+#include "Blam\BlamObjects.hpp"
+#include "Blam\BlamTime.hpp"
+#include "Blam\Tags\TagInstance.hpp"
+#include "Blam\Tags\UI\ChudGlobalsDefinition.hpp"
+#include "Blam\Tags\UI\ChudDefinition.hpp"
+#include "Blam\Tags\Globals\CacheFileGlobalTags.hpp"
+#include "Blam\Tags\Game\Globals.hpp"
+#include "Blam\\Tags\Objects\Biped.hpp"
+#include "Blam\Tags\Items\DefinitionWeapon.hpp"
+#include "Blam\Tags\Globals\CacheFileGlobalTags.hpp"
+#include "Blam\Tags\Game\Globals.hpp"
+#include "Blam\Tags\Game\MultiplayerGlobals.hpp"
+#include "Blam\Tags\UI\GfxTexturesList.hpp"
+#include "Blam\Tags\UI\MultilingualUnicodeStringList.hpp"
+#include "Modules\ModuleGraphics.hpp"
+#include "Modules\ModuleInput.hpp"
+#include "Modules\ModuleGame.hpp"
+#include "Modules\ModuleVoIP.hpp"
+#include "Web\Ui\ScreenLayer.hpp"
+#include "Modules\ModuleTweaks.hpp"
+#include "Modules\ModuleCamera.hpp"
+#include "Patches\Tweaks.hpp"
+#include "Web\Ui\ScreenLayer.hpp"
+
+#include "new\game\game.hpp"
 
 using namespace Patches::Ui;
 
 namespace
 {
 	void __fastcall UI_MenuUpdateHook(void* a1, int unused, int menuIdToLoad);
+
+	void OnEvent(Blam::DatumHandle player, const Blam::Events::Event *event, const Blam::Events::EventDefinition *definition);
 
 	int UI_ShowHalo3PauseMenu(uint32_t a1, uint32_t a2, uint32_t a3, uint32_t a4, uint32_t a5);
 	void UI_EndGame();
@@ -57,7 +65,7 @@ namespace
 	void UI_GetHUDGlobalsIndexHook();
 	void __fastcall UI_GameVariantSavePromptFix(void *thisptr, void *unused, int a2);
 
-	void __fastcall c_main_menu_screen_widget_item_select_hook(void* thisptr, void* unused, int a2, int a3, void* a4, void* a5);
+	void __fastcall c_main_menu_screen_widget_item_select_hook(void* thisptr, void* unused, int a2, Blam::Text::StringID a3, void* a4, void* a5);
 	void __fastcall c_start_menu_pane_screen_widget__handle_spinner_chosen_hook(void *thisptr, void *unused, uint8_t *widget);
 	void __fastcall c_ui_view_draw_hook(void* thisptr, void* unused);
 	void __fastcall c_gui_bitmap_widget_update_render_data_hook(void* thisptr, void* unused, void* renderData, int a3, int a4, int a5, int a6, int a7);
@@ -67,6 +75,11 @@ namespace
 
 	void chud_talking_player_name_hook();
 	void __fastcall chud_add_player_marker_hook(void *thisptr, void *unused, uint8_t *data);
+	void chud_update_player_marker_state_hook();
+	void chud_update_player_marker_sprite_hook();
+	void chud_update_marker_sprite_hook();
+	void chud_update_player_marker_icon_height_hook();
+	void chud_update_player_marker_name_height_hook();
 
 	template <int MaxItems>
 	struct c_gui_generic_category_datasource
@@ -104,9 +117,11 @@ namespace
 	int GetBrokenChudStateFlags21Values();
 	int GetBrokenChudStateFlags31Values();
 	int GetBrokenChudStateFlags33Values();
-	void MenuSelectedMapIDChangedHook();
+	void c_gui_map_subitem_selectable_item_datasource__vftable01__player_select_actions();
 	void GetGlobalDynamicColorHook();
 	void GetWeaponOutlineColorHook();
+
+	bool HUDStateDisplayHook(int hudIndex, wchar_t* buff, int len, int a4);
 
 	void FindUiTagIndices();
 	void FindHUDDistortionTagData();
@@ -120,9 +135,6 @@ namespace
 	std::vector<CreateWindowCallback> createWindowCallbacks;
 
 	Patch unused; // for some reason a patch field is needed here (on release builds) otherwise the game crashes while loading map/game variants, wtf?
-
-	static auto IsMapLoading = (bool(*)())(0x005670E0);
-	static auto IsMainMenu = (bool(*)())(0x00531E90);
 
 	uint32_t hudMessagesUnicIndex;
 	uint32_t spartanChdtIndex;
@@ -158,10 +170,13 @@ namespace
 
 namespace Patches::Ui
 {
+	PlayerMarkersOption playerMarkers;
+
 	bool enableCustomHUDColors = false;
-	bool enableAllyBlueWaypointsFix = false;
 	int customPrimaryHUDColor = -1;
 	int customSecondaryHUDColor = 0;
+
+	int chudIndex = -1;
 
 	void ApplyAfterTagsLoaded()
 	{
@@ -275,33 +290,51 @@ namespace Patches::Ui
 		//Fix HUD Distortion in third person.
 		Hook(0x193370, CameraModeChangedHook, HookFlags::IsCall).Apply();
 
-		//Fix Chud Widget State Data
-		Hook(0x686FA4, StateDataFlags2Hook).Apply();
+		// use the correct hud globals for the player representation
+		Hook(0x6895E7, UI_GetHUDGlobalsIndexHook, HookFlags::IsJmpIfEqual).Apply();
+		Hook(0x6895FF, UI_GetHUDGlobalsIndexHook, HookFlags::IsJmpIfEqual).Apply();
+
+		/* TODO: Fix these: Various color fixes.
+		Hook(0x6D5B5F, GetGlobalDynamicColorHook).Apply();
+		Hook(0x6CA009, GetWeaponOutlineColorHook).Apply();*/
+
+            //Show the talking player's name on the HUD
+		Hook(0x6CA978, chud_talking_player_name_hook, HookFlags::IsCall).Apply();
+
+		Hook(0x686FA4, StateDataFlags2Hook, HookFlags::IsJmpIfEqual).Apply();
 		Hook(0x686E7B, StateDataFlags3Hook).Apply();
 		Hook(0x687094, StateDataFlags5Hook).Apply();
 		Hook(0x687BF0, StateDataFlags21Hook).Apply();
 		Hook(0x685A5A, StateDataFlags31Hook).Apply();
 
-		//Various color fixes.
-		Hook(0x6D5B5F, GetGlobalDynamicColorHook).Apply();
-		Hook(0x6CA009, GetWeaponOutlineColorHook).Apply();
+		//Show speaking player markers
+		Hook(0x349450, chud_update_player_marker_state_hook).Apply();
 
-		// use the correct hud globals for the player representation
-		Hook(0x6895E7, UI_GetHUDGlobalsIndexHook).Apply();
+		//Restore player marker waypoints1 bitmap.
+		Hook(0x349469, chud_update_player_marker_sprite_hook).Apply();
+		Hook(0x6CED6A, chud_update_marker_sprite_hook).Apply();
 
-		//Show the talking player's name on the HUD
-		Hook(0x6CA978, chud_talking_player_name_hook, HookFlags::IsCall).Apply();
-		// allow hiding nametags
-		Hook(0x68AA21, chud_add_player_marker_hook, HookFlags::IsCall).Apply();
+		//Jump over player marker waypoints2 bitmap code.
+		Patch(0x6C6A11, { 0xEB }).Apply();
 
-		//Fixes monitor crosshair position.
-		Patch(0x25F9D5, { 0x4c }).Apply();
+		// TODO: FIX THIS: Stop the assault bomb from overwriting the player marker bitmap sprite index.
+		//Patch(0x2E805F, { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 }).Apply();
+
+		// TODO: FIX THESE: Moves the icon above the name on player markers.
+		//Patch(0x6CF0B3, { 0x90, 0x90, 0x90 }).Apply(); //Keep name at bottom
+		//Hook(0x6CF0A0, chud_update_player_marker_icon_height_hook).Apply(); //Move icon above name if necessary
+
+		// TODO: FIX THIS: allow hiding nametags
+		//Hook(0x68AA21, chud_add_player_marker_hook, HookFlags::IsCall).Apply();
+
+		// TODO: FIX THIS: Fixes monitor crosshair position.
+		//Patch(0x25F9D5, { 0x4c }).Apply();
+
+		// Fix map images in the selection menu.
+		Hook(0x6DA0FE, c_gui_map_subitem_selectable_item_datasource__vftable01__player_select_actions).Apply();
 
 		//Fix map images in lobby.
 		Pointer(0x016A6240).Write(uint32_t(&c_gui_bitmap_widget_update_render_data_hook));
-
-		//Fix map images in the selection menu.
-		Hook(0x6DA0FE, MenuSelectedMapIDChangedHook).Apply();
 
 		// remove recent maps, fileshare menu items
 		Pointer(0x0169E270).Write(uint32_t(&c_gui_map_category_datasource_init));
@@ -319,6 +352,13 @@ namespace Patches::Ui
 
 		// fix 'none' game variant weapon option
 		Patch(0x1CE52D, { 0xEB }).Apply();
+
+		// Fixes some broken hud state strings, including the respawn timer. 
+		Hook(0x6963C6, HUDStateDisplayHook, HookFlags::IsCall).Apply();
+
+		Patch::NopFill(Pointer::Base(0x207D1F), 7);
+		
+		Patches::Events::OnEvent(OnEvent);
 	}
 
 	const auto UI_Alloc = reinterpret_cast<void *(__cdecl *)(int32_t)>(0xAB4ED0);
@@ -356,7 +396,7 @@ namespace Patches::Ui
 	bool isPttSoundPlaying;
 	void TogglePTTSound(bool enabled)
 	{
-		if (IsMapLoading() || IsMainMenu())
+		if (blam::game_is_map_loading() || blam::game_is_mainmenu())
 			return;
 
 		if (Modules::ModuleVoIP::Instance().VarPTTSoundEnabled->ValueInt == 0)
@@ -371,7 +411,7 @@ namespace Patches::Ui
 		//Make sure the sound exists before playing
 		if (Blam::Tags::TagInstance::IsLoaded('lsnd', pttLsndIndex))
 		{
-			if(enabled)
+			if (enabled)
 				Sound_LoopingSound_Start(pttLsndIndex, -1, 1065353216, 0, 0);
 			else
 				Sound_LoopingSound_Stop(pttLsndIndex, -1);
@@ -400,6 +440,9 @@ namespace Patches::Ui
 		//If someone is talking it will be reassigned below.
 		memset(chud_talking_player_name, 0, sizeof(chud_talking_player_name));
 
+		if (Modules::ModuleVoIP::Instance().VarSpeakingPlayerOnHUD->ValueInt == 0)
+			return;
+
 		//Setup HUD string.
 		if (speakingPlayers.size() < 1)
 			return;
@@ -409,7 +452,7 @@ namespace Patches::Ui
 			for (size_t i = 0; i < hud_name.length(); i++)
 				chud_talking_player_name[i] = hud_name[i];
 		}
-		else 
+		else
 			return;
 	}
 
@@ -441,7 +484,7 @@ namespace Patches::Ui
 			// H3UI Resolution
 			int* UIResolution = reinterpret_cast<int*>(0x19106C8);
 
-			if (((float)gameResolution[0] / (float)gameResolution[1] >  16.0f / 9.0f)) {
+			if (((float)gameResolution[0] / (float)gameResolution[1] > 16.0f / 9.0f)) {
 				// On aspect ratios with a greater width than 16:9 center the UI on the screen
 				globals->HudGlobals[0].HudAttributes[0].ResolutionHeight = HUDResolutionHeight;
 				globals->HudGlobals[0].HudAttributes[0].HorizontalScale = (globals->HudGlobals[0].HudAttributes[0].ResolutionWidth / (float)gameResolution[0]) * HUDResolutionScaleX;
@@ -462,7 +505,7 @@ namespace Patches::Ui
 
 			// Adjust motion sensor blip to match the UI resolution
 			globals->HudGlobals[0].HudAttributes[0].MotionSensorOffsetX = HUDMotionSensorOffsetX;
-			globals->HudGlobals[0].HudAttributes[0].MotionSensorOffsetY = (float)(globals->HudGlobals[0].HudAttributes[0].ResolutionHeight - (globals->HudGlobals[0].HudAttributes[0].MotionSensorRadius - globals->HudGlobals[0].HudAttributes[0].MotionSensorScale));
+			globals->HudGlobals[0].HudAttributes[0].MotionSensorOffsetY = (float)(globals->HudGlobals[0].HudAttributes[0].ResolutionHeight - (globals->HudGlobals[0].HudAttributes[0].MotionSensorRadius - globals->HudGlobals[0].HudAttributes[0].MotionSensorScale) - 4);
 
 			// Search for the visor bottom and fix it if found
 			for (auto &widget : spartanChud->HudWidgets)
@@ -606,10 +649,10 @@ namespace
 							spartanChdtIndex = bipd->Unit.HudInterfaces[0].UnitHudInterface.TagIndex;
 							break;
 							//case 4377: //mp_elite
-							//	eliteChdtIndex = bipd->HudInterfaces[0].UnitHudInterface.TagIndex;
+							//	eliteChdtIndex = bipd->Unit.HudInterfaces[0].UnitHudInterface.TagIndex;
 							//	break;
 							//case 4379: //monitor
-							//	monitorChdtIndex = bipd->HudInterfaces[0].UnitHudInterface.TagIndex;
+							//	monitorChdtIndex = bipd->Unit.HudInterfaces[0].UnitHudInterface.TagIndex;
 							//	break;
 						default:
 							continue;
@@ -831,7 +874,7 @@ namespace
 		return buttonHandler(a1, controllerStruct);
 	}
 
-	bool LocalizedStringHookImpl(int tagIndex, int stringId, wchar_t *outputBuffer)
+	bool LocalizedStringHookImpl(int tagIndex, int stringId, wchar_t* outputBuffer)
 	{
 		const size_t MaxStringLength = 0x400;
 
@@ -843,7 +886,7 @@ namespace
 			std::string version = Utils::Version::GetVersionString();
 			std::transform(version.begin(), version.end(), version.begin(), toupper);
 			std::wstring unicodeVersion(version.begin(), version.end());
-			swprintf(outputBuffer, MaxStringLength, L"ELDEWRITO %s", unicodeVersion.c_str());
+			swprintf(outputBuffer, MaxStringLength, L"UNOFFICIAL ELDEWRITO %s", unicodeVersion.c_str());
 			return true;
 		}
 		}
@@ -876,11 +919,11 @@ namespace
 			pop ebp
 			ret
 
-		fallback:
+			fallback :
 			// Execute replaced code and jump back to original function
 			sub esp, 0x800
-			mov edx, 0x51E049
-			jmp edx
+				mov edx, 0x51E049
+				jmp edx
 		}
 	}
 
@@ -890,7 +933,7 @@ namespace
 		{
 			// call sub that handles showing game options
 			mov ecx, esi
-			push [edi+0x10]
+			push[edi + 0x10]
 			mov eax, 0xB225B0
 			call eax
 			// jump back to original function
@@ -899,50 +942,8 @@ namespace
 		}
 	}
 
-	void __fastcall c_main_menu_screen_widget_item_select_hook(void* thisptr, void* unused, int a2, int a3, void* a4, void* a5)
-	{
-		static auto  c_main_menu_screen_widget_item_select = (void(__thiscall*)(void* thisptr, int a2, int a3, void* dataSource, void* a5))(0xAE77D0);
-
-		if (a3 == 0x10083) // main_menu
-		{
-			uint32_t id;
-			auto itemIndex = (*(int(__thiscall **)(void*))(*(uint8_t**)a4 + 0x18))(a4);
-			if ((*(bool(__thiscall **)(void*, uint32_t, uint32_t, uint32_t*))(*(uint8_t**)a5 + 0x34))(a5, itemIndex, 0x2AA, &id))
-			{
-				// TODO: Maybe check the menu item's text over the index?
-
-				switch (itemIndex)
-				{
-				case 0: // Server Browser
-					Web::Ui::ScreenLayer::Show("browser", "{}");
-					return;
-
-				case 1: // Host Multiplayer
-					break;
-
-				case 2: // Host Forge
-					break;
-
-				case 3: // Local Games
-					ShowLanBrowser();
-					return;
-
-				case 4: // Customization
-					Web::Ui::ScreenLayer::Show("profile_settings", "{}");
-					return;
-
-				case 5: // Exit
-					Web::Ui::ScreenLayer::Show("exit", "{}");
-					return;
-				}
-			}
-		}
-
-		c_main_menu_screen_widget_item_select(thisptr, a2, a3, a4, a5);
-	}
-
 	unsigned int selectionMenuMapID = 0;
-	__declspec(naked) void MenuSelectedMapIDChangedHook()
+	__declspec(naked) void c_gui_map_subitem_selectable_item_datasource__vftable01__player_select_actions()
 	{
 		__asm
 		{
@@ -967,7 +968,7 @@ namespace
 		if (!foundMapImages)
 			return;
 
-		if (name != 67196 && name != 67149) // unknown_film_image, woohoo!
+		if (name != 67196 && name != 67149) // unknown_film_image, map_image_type
 			return;
 
 		static int bitmapIndex = 0;
@@ -975,10 +976,7 @@ namespace
 
 		if (name == 67196)
 		{
-			auto session = Blam::Network::GetActiveSession();
-
-			if (session && session->IsEstablished())
-				mapID = session->Parameters.MapVariant.MapID;
+			mapID = Pointer(0x18603F0).Read<uint32_t>();
 		}
 		else if (name == 67149)
 		{
@@ -1258,16 +1256,68 @@ namespace
 			mov esp, ebp
 			pop ebp
 			retn
-			DEFAULT:
+			DEFAULT :
 			mov eax, 0xABCA79
-			jmp eax
+				jmp eax
 		}
+	}
+
+	void __fastcall c_main_menu_screen_widget_item_select_hook(void* thisptr, void* unused, int a2, Blam::Text::StringID screenName, void* a4, void* a5)
+	{
+		static const auto c_main_menu_screen_widget_item_select = (void(__thiscall*)(void* thisptr, int a2, int a3, void* dataSource, void* a5))0xAE77D0;
+
+		if (screenName == 0x10083) // main_menu
+		{
+			uint32_t id;
+			auto itemIndex = (*(int(__thiscall **)(void*))(*(uint8_t**)a4 + 0x18))(a4);
+			if ((*(bool(__thiscall **)(void*, uint32_t, uint32_t, uint32_t*))(*(uint8_t**)a5 + 0x34))(a5, itemIndex, 0x2AA, &id))
+			{
+				// TODO: Maybe check the menu item's text over the index?
+
+				switch (itemIndex)
+				{
+				case 0: // Server Browser
+					Web::Ui::ScreenLayer::Show("browser", "{}");
+					return;
+
+				case 1: // Host Multiplayer
+					break;
+
+				case 2: // Host Forge
+					break;
+
+				case 3: // Local Games
+					ShowLanBrowser();
+					return;
+
+				case 4: // Customization
+					Web::Ui::ScreenLayer::Show("profile_settings", "{}");
+					return;
+
+				case 5: // Exit
+					Web::Ui::ScreenLayer::Show("exit", "{}");
+					return;
+
+				case 6: // Settings
+					Web::Ui::ScreenLayer::Show("settings", "{}");
+					return;
+				}
+			}
+		}
+
+		c_main_menu_screen_widget_item_select(thisptr, a2, screenName, a4, a5);
 	}
 
 	int GetHUDGlobalsIndexForRepresentation(void* playerRepresentation)
 	{
 		if (!playerRepresentation)
 			return 0;
+
+		using Blam::Tags::UI::ChudGlobalsDefinition;
+		auto *chgd = Blam::Tags::TagInstance(chgdIndex).GetDefinition<ChudGlobalsDefinition>();
+
+		if (chudIndex > 0 && chudIndex <= chgd->HudGlobals.Count)
+			return chudIndex - 1;
 
 		auto nameId = *(uint32_t*)playerRepresentation;
 		switch (nameId)
@@ -1396,9 +1446,8 @@ namespace
 			return 4;
 		case 0x1119: //mp_elite
 		case 0xCC: // dervish
-			return 2;
 		default:
-			return 1;
+			return chudIndex + 1;
 		}
 	}
 
@@ -1443,7 +1492,7 @@ namespace
 	{
 		int flags = 0;
 
-		if (speakingPlayers.size() > 0)
+		if (speakingPlayers.size() > 0 && Modules::ModuleVoIP::Instance().VarSpeakingPlayerOnHUD->ValueInt == 1)
 			flags |= 8; //SomeoneIsTalking
 
 		return flags;
@@ -1543,48 +1592,39 @@ namespace
 	{
 		_asm
 		{
-			ally_blue:
-				cmp enableAllyBlueWaypointsFix, 1
-				jne custom_colors
-				cmp[ebp + 0xC], 0xF
-				jne custom_colors
-				mov eax, [eax + 19 * 4 + 4]
+			cmp enableCustomHUDColors, 1
+			jne tag_color
+			cmp[ebp + 0xC], 0x0
+			je secondary_color
+			cmp[ebp + 0xC], 0x1
+			je secondary_color
+			cmp[ebp + 0xC], 0x2
+			je primary_color
+			cmp[ebp + 0xC], 0x4
+			je primary_color
+			cmp[ebp + 0xC], 0x8
+			je primary_color
+			cmp[ebp + 0xC], 0xA
+			je primary_color
+			cmp[ebp + 0xC], 0xB
+			je primary_color
+			cmp[ebp + 0xC], 0xF
+			je primary_color
+
+			tag_color :
+			mov eax, [eax + edi * 4 + 4]
 				jmp eldorado_return
 
-			custom_colors:
-				cmp enableCustomHUDColors, 1
-				jne tag_color
-				cmp[ebp + 0xC], 0x0
-				je secondary_color
-				cmp[ebp + 0xC], 0x1
-				je secondary_color
-				cmp[ebp + 0xC], 0x2
-				je primary_color
-				cmp[ebp + 0xC], 0x4
-				je primary_color
-				cmp[ebp + 0xC], 0x8
-				je primary_color
-				cmp[ebp + 0xC], 0xA
-				je primary_color
-				cmp[ebp + 0xC], 0xB
-				je primary_color
-				cmp[ebp + 0xC], 0xF
-				je primary_color
-
-			tag_color:
-				mov eax, [eax + edi * 4 + 4]
+				primary_color :
+			mov eax, Patches::Ui::customPrimaryHUDColor
 				jmp eldorado_return
 
-			primary_color :
-				mov eax, Patches::Ui::customPrimaryHUDColor
+				secondary_color :
+			mov eax, Patches::Ui::customSecondaryHUDColor
 				jmp eldorado_return
 
-			secondary_color :
-				mov eax, Patches::Ui::customSecondaryHUDColor
-				jmp eldorado_return
-
-			eldorado_return :
-				pop edi
+				eldorado_return :
+			pop edi
 				pop esi
 				pop ebx
 				pop ebp
@@ -1596,21 +1636,20 @@ namespace
 	{
 		_asm
 		{
-			custom_colors:
-				cmp enableCustomHUDColors, 1
-				jne tag_color
-				cmp ecx, 0
-				je secondary_color
+			cmp enableCustomHUDColors, 1
+			jne tag_color
+			cmp ecx, 0
+			je secondary_color
 
-			tag_color:
-				push [eax+ecx*4+0x7C]
+			tag_color :
+			push[eax + ecx * 4 + 0x7C]
 				jmp eldorado_return
 
-			secondary_color:
-				push customSecondaryHUDColor
+				secondary_color :
+			push customSecondaryHUDColor
 
-			eldorado_return:
-				mov ebx, 0xAC9AA0
+				eldorado_return :
+			mov ebx, 0xAC9AA0
 				call ebx
 				add esp, 0xC
 				pop ebp
@@ -1882,13 +1921,405 @@ namespace
 				{
 					auto unitObject = Blam::Objects::Get(player->SlaveUnit);
 					if (unitObject)
-						data->position.K = data->position.K - 0.05f +  std::pow(unitObject->Scale, 1.0f) * 0.05f;
+						data->position.K = data->position.K - 0.05f + std::pow(unitObject->Scale, 1.0f) * 0.05f;
 				}
 			}
 
 			auto existingState = &((s_chud_player_marker_state*)thisptr)[index];
 			memcpy(&existingState->data, data, sizeof(s_chud_player_marker_data));
 			existingState->time = Blam::Time::GetGameTicks();
+		}
+	}
+
+	unsigned int __stdcall IsPlayerSpeaking(int handle)
+	{
+		Blam::Players::PlayerDatum* player = Blam::Players::GetPlayers().Get(Blam::DatumHandle(handle));
+		std::string playerName(Utils::String::ThinString(player->Properties.DisplayName));
+
+		if (std::find(speakingPlayers.begin(), speakingPlayers.end(), playerName) != speakingPlayers.end())
+			return 1;
+
+		return 0;
+	}
+
+	__declspec(naked) void chud_update_player_marker_state_hook()
+	{
+		int _ebx, _ecx, _edx, _ebp, _edi, _esp;
+		int markerSecondary;
+
+		__asm
+		{
+			mov markerSecondary, eax
+
+			//preserve registers 
+			mov _ebx, ebx
+			mov _ecx, ecx
+			mov _edx, edx
+			mov _ebp, ebp
+			mov _edi, edi
+			mov _esp, esp
+
+			//check if player is speaking 
+			mov eax, [ebp + 0xC]
+			push eax
+			call IsPlayerSpeaking
+
+			//check result from is player speaking 
+			cmp eax, 0
+			je check_marker_secondary
+			mov eax, 2
+			mov markerSecondary, eax //1 = shooting, 2 = speaking, 3 = taking damage 
+
+			check_marker_secondary :
+
+			//restore registers 
+			mov ebx, _ebx
+				mov edx, _edx
+				mov ebp, _ebp
+				mov edi, _edi
+				mov esp, _esp
+				mov eax, markerSecondary
+
+				dec eax
+				jz shooting
+
+				dec eax
+				jz speaking
+
+				//taking_damage: 
+				dec eax
+				mov al, byte ptr[ebp + 0xB]
+				jnz loc_749469
+				or dword ptr[ebx + 0x10], 8
+				jmp loc_749469
+
+				shooting :
+			mov esi, 0x74947F
+				jmp esi
+
+				speaking :
+			mov esi, 0x749462
+				jmp esi
+
+				loc_749469 :
+			mov esi, 0x749469
+				jmp esi
+		}
+	}
+
+	//TODO:  
+	//Refactor 
+	enum class PlayerMarkerIconIndex : int
+	{
+		None = -1,
+		Speaker,
+		DeathCross,
+		Tick,
+		Juggernaut,
+		Unknown,
+		Bomb,
+		Flag,
+		Skull,
+		King,
+		VIP,
+		Padlock,
+		One,
+		Two,
+		Three,
+		Four,
+		Five,
+		Six,
+		Seven,
+		Eight,
+		Nine
+	};
+
+	enum PlayerMarkerBitmapSpriteIndex : int
+	{
+		Ally,
+		Enemy,
+		Objective,
+		None
+	};
+
+	enum class WaypointTrait : int8_t
+	{
+		Unchanged,
+		NoMarker,
+		MarkerVisibleToAllies,
+		MarkerVisibleToEveryone,
+		NoName, //Added by Unk 
+		MarkerVisibleToAlliesNameInvisibleToEnemies //Added by Unk 
+	};
+
+	PlayerMarkerBitmapSpriteIndex __stdcall GetPlayerMarkerSpriteIndex(int handle, int markerColorIndex)
+	{
+		using Blam::GameType;
+
+		auto player = Blam::Players::GetPlayers().Get(handle);
+		if (!player)
+			return PlayerMarkerBitmapSpriteIndex::None;
+
+		auto session = Blam::Network::GetActiveSession();
+		if (!session || !session->IsEstablished())
+			return PlayerMarkerBitmapSpriteIndex::None;
+
+		GameType gamemode = (GameType)session->Parameters.GameVariant.Get()->GameType;
+
+		WaypointTrait playerWaypointTrait = *(WaypointTrait*)((uint8_t*)player + 0x2DC1);
+
+		//TODO: add armour colors fix. 
+		if (markerColorIndex == 0)
+		{
+			switch (playerWaypointTrait)
+			{
+			case WaypointTrait::MarkerVisibleToAllies:
+			case WaypointTrait::MarkerVisibleToAlliesNameInvisibleToEnemies:
+			case WaypointTrait::MarkerVisibleToEveryone:
+			case WaypointTrait::Unchanged:
+				return PlayerMarkerBitmapSpriteIndex::Ally;
+			default:
+				return PlayerMarkerBitmapSpriteIndex::None;
+			}
+		}
+		else
+		{
+			switch (playerWaypointTrait)
+			{
+			case WaypointTrait::MarkerVisibleToAllies:
+			case WaypointTrait::MarkerVisibleToAlliesNameInvisibleToEnemies:
+			case WaypointTrait::NoMarker:
+			case WaypointTrait::NoName:
+				return PlayerMarkerBitmapSpriteIndex::None;
+			case WaypointTrait::MarkerVisibleToEveryone:
+				return PlayerMarkerBitmapSpriteIndex::Enemy;
+			case WaypointTrait::Unchanged:
+			{
+				//Any unchanged players holding objectives have icons above their head,  
+				//so another hook can check the icon and give them a marker. 
+				//The exception to this is infection, which gives the last man standing a marker. 
+				//So that's handled here. 
+				if (gamemode == GameType::eGameTypeInfection)
+				{
+					bool thereIsALastManStanding = Pointer(ElDorito::GetMainTls(0x48 + 0xE6DC)).Read<uint16_t>() == 1;
+					bool iAmAlive = Pointer(0x2161808).Read<uint8_t>() == 1;
+					bool iAmAZombie = Pointer(ElDorito::GetMainTls(0x48 + 0xE190)).Read<uint16_t>() == 1;
+					if (thereIsALastManStanding && (iAmAlive || iAmAZombie))
+						return PlayerMarkerBitmapSpriteIndex::Enemy;
+				}
+
+				return PlayerMarkerBitmapSpriteIndex::None;
+			}
+			}
+		}
+		return PlayerMarkerBitmapSpriteIndex::None;
+	}
+
+	bool __stdcall DoesPlayerMarkerHaveObjective(PlayerMarkerIconIndex markerIconIndex)
+	{
+		using Blam::GameType;
+
+		auto session = Blam::Network::GetActiveSession();
+		if (!session || !session->IsEstablished())
+			return false;
+
+		GameType gamemode = (GameType)session->Parameters.GameVariant.Get()->GameType;
+
+		switch (gamemode)
+		{
+		default:
+			break;
+		case GameType::eGameTypeAssault:
+			if (markerIconIndex == PlayerMarkerIconIndex::Bomb)
+				return true;
+			break;
+		case GameType::eGameTypeCTF:
+			if (markerIconIndex == PlayerMarkerIconIndex::Flag)
+				return true;
+			break;
+		case GameType::eGameTypeOddball:
+			if (markerIconIndex == PlayerMarkerIconIndex::Skull)
+				return true;
+			break;
+		case GameType::eGameTypeJuggernaut:
+			if (markerIconIndex == PlayerMarkerIconIndex::Juggernaut)
+				return true;
+			break;
+		case GameType::eGameTypeVIP:
+			if (markerIconIndex == PlayerMarkerIconIndex::VIP)
+				return true;
+			break;
+		}
+
+		return false;
+	}
+
+
+	__declspec(naked) void chud_update_player_marker_sprite_hook()
+	{
+		int _ebx, _ecx, _edx, _ebp, _edi, _esp;
+		__asm
+		{
+			//preserve registers 
+			mov _ebx, ebx
+			mov _ecx, ecx
+			mov _edx, edx
+			mov _ebp, ebp
+			mov _edi, edi
+			mov _esp, esp
+
+			cmp dword ptr[ebx + 8], 0xFFFFFFFF
+			jnz ed_return
+
+
+			mov _ebp, ebp
+			mov ebx, _ebx
+			mov eax, [ebx + 0xC] //color 
+			push eax
+			mov eax, [ebp + 0xC] //handle 
+			push eax
+			call GetPlayerMarkerSpriteIndex
+
+			//restore registers 
+			mov edx, _edx
+			mov ebp, _ebp
+			mov edi, _edi
+			mov esp, _esp
+
+			mov dword ptr[ebx + 4], eax
+			mov eax, 1 //Not sure why this is required, but if 0 waypoints hide. 
+
+			ed_return:
+			mov esi, 0x749476
+				jmp esi
+		}
+	}
+
+	__declspec(naked) void chud_update_marker_sprite_hook()
+	{
+		__asm
+		{
+			push eax
+
+			cmp[esi - 0x2C], 3 //3 = no marker 
+			jne fix_armour_colors
+
+			mov eax, [esi - 0x28]
+			push eax
+			call DoesPlayerMarkerHaveObjective
+
+			cmp eax, 0
+			je fix_armour_colors
+
+			cmp[esi - 0x24], 2 //enemy color 
+			jne is_ally_with_objective
+			mov[esi - 0x2C], 1 //enemy marker 
+			jmp fix_armour_colors
+
+			is_ally_with_objective :
+			cmp[esi - 0x24], 0 //ally color 
+				jne fix_armour_colors
+				mov[esi - 0x2C], 0 //ally marker 
+
+				fix_armour_colors :
+				cmp playerMarkers, 2
+				jne fix_alt_ally_color
+				cmp[esi - 0x24], 3
+				je eldorado_return
+				cmp[esi - 0x2C], 0
+				je is_player_marker
+				cmp[esi - 0x2C], 1
+				je is_player_marker
+				cmp[esi - 0x2C], 3
+				je is_player_marker
+				jmp eldorado_return
+				is_player_marker :
+			mov[esi - 0x24], 5 //armour colors 
+
+				fix_alt_ally_color : //ally_blue 
+				cmp playerMarkers, 1
+				jne eldorado_return
+				cmp[esi - 0x24], 0
+				jne eldorado_return
+				mov[esi - 0x24], 4
+
+
+				eldorado_return :
+				pop eax
+				//perform original instruction 
+				lea ecx, [esi + 0xC]
+				push ecx
+				mov byte ptr[ecx], 01
+
+				mov eax, 0xACED71
+				jmp eax
+		}
+	}
+
+	__declspec(naked) void chud_update_player_marker_icon_height_hook()
+	{
+		__asm
+		{
+			movss xmm0, [ebp - 0xC]
+
+			pop ecx
+
+			push eax
+			push ebx
+			push ecx
+			push edx
+
+			lea     ebx, [esi - 0x18]
+
+			mov     ecx, 5
+			xor eax, eax
+			test    ecx, ecx
+			jz      short loc_4ECBEC
+			nop
+			loc_4ECBE0 :
+			cmp     word ptr[ebx + eax * 2], 0
+				jz      short loc_4ECBEC
+				inc     eax
+				cmp     eax, ecx
+				jb      short loc_4ECBE0
+				loc_4ECBEC :
+
+			test    eax, eax
+				mov     al, [ebp - 1]
+				jne		raise_icon
+				test    al, al
+				je      eldorado_return
+
+				raise_icon :
+			mov eax, 0x40300000 //2.75f, may need adjustment 
+				movd xmm1, eax
+				movss xmm0, [ebp - 0xC]
+				mulss xmm0, xmm1
+
+				eldorado_return :
+
+			pop edx
+				pop ecx
+				pop ebx
+				pop eax
+
+				lea ecx, [ebp - 0x1A64]
+				push ecx
+
+				mov edx, 0xACF0A5
+				jmp edx
+		}
+
+	}
+
+	__declspec(naked) void chud_update_player_marker_name_height_hook()
+	{
+		__asm
+		{
+			mov[ebp - 0xC], 0xC1C00000
+
+			mov ebx, 0xACF0D3
+			jmp ebx
 		}
 	}
 
@@ -1956,5 +2387,177 @@ namespace
 		auto name = *(uint32_t*)((uint8_t*)thisptr + 0x40);
 		if (name != 0x103A9) // game_options
 			c_gui_screen_widget__transition_out(thisptr, a2);
+	}
+
+
+	std::string teamNames[8] = { "Red", "Blue", "Green", "Orange", "Purple", "Gold", "Brown", "Pink" };
+
+	const float winnereDisplayTime = 5;
+	uint32_t winnerDisplayed;
+	std::wstring winnerString;
+
+	const float welcomeDisplayTime = 5;
+	uint32_t welcomeDisplayed;
+	bool welcome;
+	//TODO: Find a better way to determine this. 
+	//It defaults to true because it's set to false in game if the game hasn't started, 
+	//but remains true if the player joins a game that has already started. 
+	bool gameHasStarted = true;
+
+	bool respawning;
+
+	void OnEvent(Blam::DatumHandle player, const Blam::Events::Event *event, const Blam::Events::EventDefinition *definition)
+	{
+		if (event->NameStringId == 0x4004D) // "general_event_game_over" 
+		{
+			winnerDisplayed = Blam::Time::GetGameTicks();
+			auto session = Blam::Network::GetActiveSession();
+			auto get_multiplayer_scoreboard = (Blam::MutiplayerScoreboard*(*)())(0x00550B80);
+			auto* scoreboard = get_multiplayer_scoreboard();
+
+			if (!session || !session->IsEstablished() || !scoreboard)
+				return;
+
+			std::wstringstream ss;
+
+			if (session->HasTeams())
+			{
+				bool tied = false;
+				int prevHighTeam = 0;
+				int16_t prevHighScore = scoreboard->TeamScores[0].TotalScore;
+				for (int t = 1; t < 8; t++)
+				{
+					uint16_t currentScore = scoreboard->TeamScores[t].TotalScore;
+					if (prevHighScore == currentScore)
+					{
+						tied = true;
+					}
+					else if (currentScore > prevHighScore)
+					{
+						prevHighTeam = t;
+						prevHighScore = currentScore;
+						tied = false;
+					}
+				}
+
+				std::string teamName = teamNames[prevHighTeam];
+
+				if (tied)
+					ss << L"Tie game!";
+				else
+					ss << Utils::String::WidenString(teamName) << L" Team wins!";
+			}
+			else
+			{
+				int playerIdx = session->MembershipInfo.FindFirstPlayer();
+				std::wstring prevHighPlayer;
+				std::uint16_t prevHighScore;
+				bool tied = false;
+
+				if (playerIdx == -1)
+					return;
+
+				auto player = session->MembershipInfo.PlayerSessions[playerIdx];
+				prevHighPlayer = player.Properties.DisplayName;
+				prevHighScore = scoreboard->PlayerScores[playerIdx].TotalScore;
+
+				playerIdx = session->MembershipInfo.FindNextPlayer(playerIdx);
+
+				while (playerIdx != -1)
+				{
+					uint16_t currentScore = scoreboard->PlayerScores[playerIdx].TotalScore;
+					if (currentScore == prevHighScore)
+					{
+						tied = true;
+					}
+					else if (currentScore > prevHighScore)
+					{
+						player = session->MembershipInfo.PlayerSessions[playerIdx];
+						prevHighScore = currentScore;
+						prevHighPlayer = player.Properties.DisplayName;
+					}
+					playerIdx = session->MembershipInfo.FindNextPlayer(playerIdx);
+				}
+
+				if (tied)
+					ss << L"Tie game!";
+				else
+					ss << prevHighPlayer << L" wins!";
+			}
+
+			winnerString = ss.str();
+		}
+	}
+
+	bool HUDStateDisplayHook(int hudIndex, wchar_t* buff, int len, int a4)
+	{
+		const auto game_engine_round_in_progress = (bool(*)())(0x00550F90);
+		const auto sub_6E4AA0 = (bool(__cdecl *)(int a1, wchar_t *DstBuf, int bufflen, char a4))(0x6E4AA0);
+		if (sub_6E4AA0(hudIndex, buff, len, a4))
+			return true;
+		auto playerIndex = Blam::Players::GetLocalPlayer(0);
+		if (playerIndex == Blam::DatumHandle::Null)
+			return false;
+		auto player = Blam::Players::GetPlayers().Get(playerIndex);
+		if (!player)
+			return false;
+
+		//TODO:
+		//Use strings from tags as templates, rather than hardcoding.
+
+		//mp_respawn_timer 
+		auto secondsUntilSpawn = Pointer(player)(0x2CBC).Read<int>();
+		auto firstTimeSpawning = Pointer(player)(0x4).Read<uint32_t>() & 8;
+		if (player->SlaveUnit == Blam::DatumHandle::Null && secondsUntilSpawn > 0)
+		{
+			if (!game_engine_round_in_progress())
+			{
+				return false;
+			}
+
+			respawning = true;
+
+			if (firstTimeSpawning)
+			{
+				swprintf(buff, L"Spawn in %d", secondsUntilSpawn);
+				gameHasStarted = false; //Make sure it's reset after games. 
+			}
+			else
+				swprintf(buff, L"Respawn in %d", secondsUntilSpawn);
+
+			return true;
+		}
+
+		//state_recently_started 
+		if (!firstTimeSpawning && !gameHasStarted)
+		{
+			welcome = true;
+			welcomeDisplayed = Blam::Time::GetGameTicks();
+			gameHasStarted = true;
+			swprintf(buff, L"Welcome!");
+			return true;
+		}
+		if (welcome)
+		{
+			swprintf(buff, L"Welcome!");
+
+			if (Blam::Time::TicksToSeconds(Blam::Time::GetGameTicks() - welcomeDisplayed) > welcomeDisplayTime)
+				welcome = false;
+
+			return true;
+		}
+
+		//state_game_over_lost_* 
+		if (winnerString != L"")
+		{
+			swprintf(buff, winnerString.c_str());
+
+			if (Blam::Time::TicksToSeconds(Blam::Time::GetGameTicks() - winnerDisplayed) > winnereDisplayTime)
+				winnerString = L"";
+
+			return true;
+		}
+
+		return false;
 	}
 }

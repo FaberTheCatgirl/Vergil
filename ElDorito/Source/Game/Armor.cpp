@@ -2,21 +2,21 @@
 #include <unordered_map>
 #include <map>
 
-#include "Armor.hpp"
-#include "../Patch.hpp"
-#include "../Modules/ModulePlayer.hpp"
+#include "Game\Armor.hpp"
+#include "Patch.hpp"
+#include "Modules\ModulePlayer.hpp"
 
-#include "../Blam/Cache/StringIdCache.hpp"
-#include "../Blam/Tags/Tags.hpp"
-#include "../Blam/Tags/TagInstance.hpp"
-#include "../Blam/Tags/Game/Globals.hpp"
-#include "../Blam/Tags/Game/MultiplayerGlobals.hpp"
-#include "../Blam/Tags/Globals/CacheFileGlobalTags.hpp"
-#include "../Blam/Tags/Scenario/Scenario.hpp"
-#include "../Modules/ModulePlayer.hpp"
-#include "../Blam/BlamObjects.hpp"
-#include "../Blam/Math/RealQuaternion.hpp"
-#include <boost/regex.hpp>
+#include "Blam\Cache\StringIdCache.hpp"
+#include "Blam\Tags\Tags.hpp"
+#include "Blam\Tags\TagInstance.hpp"
+#include "Blam\Tags\Game\Globals.hpp"
+#include "Blam\Tags\Game\MultiplayerGlobals.hpp"
+#include "Blam\Tags\Globals\CacheFileGlobalTags.hpp"
+#include "Blam\Tags\Scenario\Scenario.hpp"
+#include "Modules\ModulePlayer.hpp"
+#include "Blam\BlamObjects.hpp"
+#include "Blam\Math\RealQuaternion.hpp"
+#include <boost\regex.hpp>
 
 using namespace Blam::Players;
 
@@ -44,6 +44,10 @@ namespace
 	std::map<std::string, uint8_t> chestIndices;
 	std::map<std::string, uint8_t> rightShoulderIndices;
 	std::map<std::string, uint8_t> leftShoulderIndices;
+	std::map<std::string, uint8_t> armsIndices;
+	std::map<std::string, uint8_t> legsIndices;
+	std::map<std::string, uint8_t> pelvisIndices;
+	std::map<std::string, uint8_t> upperBodyIndices;
 
 	bool updateUiPlayerArmor = false; // Set to true to update the Spartan on the main menu
 
@@ -71,11 +75,17 @@ namespace
 			out->Colors[ColorIndices::Lights] = std::stoi(playerVars.VarColorsLights->ValueString.substr(1), 0, 16);
 		if (boost::regex_match(playerVars.VarColorsVisor->ValueString.c_str(), what, expression))
 			out->Colors[ColorIndices::Visor] = std::stoi(playerVars.VarColorsVisor->ValueString.substr(1), 0, 16);
+		if (boost::regex_match(playerVars.VarColorsHolo->ValueString.c_str(), what, expression))
+			out->Colors[ColorIndices::Holo] = std::stoi(playerVars.VarColorsHolo->ValueString.substr(1), 0, 16);
 
 		out->Armor[ArmorIndices::Helmet] = GetArmorIndex(playerVars.VarArmorHelmet->ValueString, helmetIndices);
 		out->Armor[ArmorIndices::Chest] = GetArmorIndex(playerVars.VarArmorChest->ValueString, chestIndices);
 		out->Armor[ArmorIndices::RightShoulder] = GetArmorIndex(playerVars.VarArmorRightShoulder->ValueString, rightShoulderIndices);
 		out->Armor[ArmorIndices::LeftShoulder] = GetArmorIndex(playerVars.VarArmorLeftShoulder->ValueString, leftShoulderIndices);
+		out->Armor[ArmorIndices::Arms] = GetArmorIndex(playerVars.VarArmorArms->ValueString, armsIndices);
+		out->Armor[ArmorIndices::Legs] = GetArmorIndex(playerVars.VarArmorLegs->ValueString, legsIndices);
+		out->Armor[ArmorIndices::Pelvis] = GetArmorIndex(playerVars.VarArmorPelvis->ValueString, pelvisIndices);
+		out->Armor[ArmorIndices::UpperBody] = GetArmorIndex(playerVars.VarArmorUpperBody->ValueString, upperBodyIndices);
 	}
 
 	uint8_t ValidateArmorPiece(const std::map<std::string, uint8_t> &indices, const uint8_t index)
@@ -104,6 +114,10 @@ namespace Game::Armor
 		armorSessionData->Armor[ArmorIndices::Chest] = ValidateArmorPiece(chestIndices, data.Armor[ArmorIndices::Chest]);
 		armorSessionData->Armor[ArmorIndices::RightShoulder] = ValidateArmorPiece(rightShoulderIndices, data.Armor[ArmorIndices::RightShoulder]);
 		armorSessionData->Armor[ArmorIndices::LeftShoulder] = ValidateArmorPiece(leftShoulderIndices, data.Armor[ArmorIndices::LeftShoulder]);
+		armorSessionData->Armor[ArmorIndices::Arms] = ValidateArmorPiece(armsIndices, data.Armor[ArmorIndices::Arms]);
+		armorSessionData->Armor[ArmorIndices::Legs] = ValidateArmorPiece(legsIndices, data.Armor[ArmorIndices::Legs]);
+		armorSessionData->Armor[ArmorIndices::Pelvis] = ValidateArmorPiece(pelvisIndices, data.Armor[ArmorIndices::Pelvis]);
+		armorSessionData->Armor[ArmorIndices::UpperBody] = ValidateArmorPiece(upperBodyIndices, data.Armor[ArmorIndices::UpperBody]);
 		memcpy(armorSessionData->Colors, data.Colors, sizeof(data.Colors));
 	}
 
@@ -113,16 +127,9 @@ namespace Game::Armor
 		for (int i = 0; i < ColorIndices::Count; i++)
 			stream->WriteUnsigned<uint32_t>(data.Colors[i], 24);
 
-		// Unused
-		stream->WriteUnsigned<uint32_t>(0, 32);
-
 		// Armor
 		for (int i = 0; i < ArmorIndices::Count; i++)
 			stream->WriteUnsigned<uint8_t>(data.Armor[i], 0, MaxArmorIndices[i]);
-
-		// Unused
-		for (int i = 0; i < 3; i++)
-			stream->WriteUnsigned<uint8_t>(0, 8);
 
 		stream->WriteUnsigned<uint32_t>(data.Unknown1C, 0, 0xFFFFFFFF);
 	}
@@ -135,16 +142,9 @@ namespace Game::Armor
 		for (int i = 0; i < ColorIndices::Count; i++)
 			out->Colors[i] = stream->ReadUnsigned<uint32_t>(24);
 
-		// Unused
-		stream->ReadUnsigned<uint32_t>(32);
-
 		// Armor
 		for (int i = 0; i < ArmorIndices::Count; i++)
 			out->Armor[i] = stream->ReadUnsigned<uint8_t>(0, MaxArmorIndices[i]);
-
-		// Unused
-		for (int i = 0; i < 3; i++)
-			stream->ReadUnsigned<uint8_t>(8);
 
 		out->Unknown1C = stream->ReadUnsigned<uint32_t>(0, 0xFFFFFFFF);
 	}
@@ -190,6 +190,34 @@ namespace Game::Armor
 				AddArmorPermutations(element, rightShoulderIndices);
 			else if (string == "leftshoulder")
 				AddArmorPermutations(element, leftShoulderIndices);
+			else if (string == "arms")
+				AddArmorPermutations(element, armsIndices);
+			else if (string == "legs")
+				AddArmorPermutations(element, legsIndices);
+			else if (string == "pelvis")
+				AddArmorPermutations(element, pelvisIndices);
+		}
+
+		for (auto& element : mulg->Universal->EliteArmorCustomization)
+		{
+			auto string = std::string(Blam::Cache::StringIDCache::Instance.GetString(element.PieceRegion));
+
+			if (string == "helmet")
+				AddArmorPermutations(element, helmetIndices);
+			else if (string == "chest")
+				AddArmorPermutations(element, chestIndices);
+			else if (string == "rightshoulder")
+				AddArmorPermutations(element, rightShoulderIndices);
+			else if (string == "leftshoulder")
+				AddArmorPermutations(element, leftShoulderIndices);
+			else if (string == "arms")
+				AddArmorPermutations(element, armsIndices);
+			else if (string == "legs")
+				AddArmorPermutations(element, legsIndices);
+			else if (string == "pelvis")
+				AddArmorPermutations(element, pelvisIndices);
+			else if (string == "upper_body")
+				AddArmorPermutations(element, upperBodyIndices);
 		}
 	}
 
@@ -254,8 +282,10 @@ namespace Game::Armor
 	{
 		using namespace Blam::Math;
 
+		auto isElite = Modules::ModulePlayer::Instance().VarRepresentation->ValueString == "elite";
+
 		// Try to get the UI player biped
-		uint32_t uiPlayerBiped = GetCharPlatformBiped(2);
+		uint32_t uiPlayerBiped = GetCharPlatformBiped(isElite ? 3 : 2);
 		if (uiPlayerBiped == 0xFFFFFFFF)
 			return;
 

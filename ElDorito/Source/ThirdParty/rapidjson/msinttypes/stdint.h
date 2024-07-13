@@ -47,7 +47,7 @@
 
 // miloyip: Originally Visual Studio 2010 uses its own stdint.h. However it generates warning with INT64_C(), so change to use this file for vs2010.
 #if _MSC_VER >= 1600 // [
-#include <stdint.h>
+#include "ThirdParty\rapidjson\msinttypes\stdint.h"
 
 #if !defined(__cplusplus) || defined(__STDC_CONSTANT_MACROS) // [   See footnote 224 at page 260
 

@@ -1,14 +1,14 @@
 #include <cstdint>
-#include "../Blam/BlamData.hpp"
-#include "../Blam/BlamPlayers.hpp"
-#include "../Blam/Tags/Game/Globals.hpp"
+#include "Blam\BlamData.hpp"
+#include "Blam\BlamPlayers.hpp"
+#include "Blam\Tags\Game\Globals.hpp"
 #include "PlayerRepresentation.hpp"
-#include "../Patches/PlayerPropertiesExtension.hpp"
-#include "../Blam/BlamNetwork.hpp"
-#include "../Modules/ModulePlayer.hpp"
-#include "../Blam/Cache/StringIdCache.hpp"
-#include "../Patch.hpp"
-#include "../Utils/String.hpp"
+#include "Patches\PlayerPropertiesExtension.hpp"
+#include "Blam\BlamNetwork.hpp"
+#include "Modules\ModulePlayer.hpp"
+#include "Blam\Cache\StringIdCache.hpp"
+#include "Patch.hpp"
+#include "Utils\String.hpp"
 
 namespace
 {
@@ -41,8 +41,6 @@ namespace
 
 		void ApplyData(int playerIndex, Blam::Players::PlayerProperties *properties, const RepresentationData &data) override
 		{
-		#ifdef _DEBUG
-			// just elite for now...
 			switch (data.RepresentationNameId)
 			{
 			case 0xCC:
@@ -52,7 +50,7 @@ namespace
 				properties->PlayerRepresentation = 0; // spartan
 				break;
 			}
-		#endif
+			
 			if(Modules::ModulePlayer::ValidServiceTag(data.ServiceTag))
 			{
 				auto wtag = Utils::String::WidenString(data.ServiceTag);

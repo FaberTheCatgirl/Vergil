@@ -1,7 +1,7 @@
 #pragma once
-#include "..\Tags.hpp"
-#include "../../Text/StringID.hpp"
-#include "../../Math/RealColorRGB.hpp"
+#include "Blam\Tags\Tags.hpp"
+#include "Blam\Text\StringID.hpp"
+#include "Blam\Math\RealColorRGB.hpp"
 
 namespace Blam::Tags::Camera
 {

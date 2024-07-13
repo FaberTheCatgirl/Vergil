@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ModuleBase.hpp"
+#include "Modules\ModuleBase.hpp"
 
 namespace Modules
 {
@@ -23,6 +23,8 @@ namespace Modules
 		Command* VarCustomHUDColorsSecondary;
 
 		Command* VarUIScaling;
+
+		Command* VarCinematicDebugMode;
 
 		ModuleGraphics();
 	};

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ModuleBase.hpp"
+#include "Modules\ModuleBase.hpp"
 
 namespace Modules
 {
@@ -12,6 +12,29 @@ namespace Modules
 		Command* VarSkipIntroVideos;
 		Command* VarLogName;
 		Command* VarMenuURL;
+		Command* VarLoadingURL;
+		Command* VarScoreboardURL;
+		Command* VarKeyboardURL;
+		Command* VarConsoleURL;
+		Command* VarChatURL;
+		Command* VarMedalsURL;
+		Command* VarVotingURL;
+		Command* VarTitleURL;
+		Command* VarAlertURL;
+		Command* VarSettingsURL;
+		Command* VarServerSettingsURL;
+		Command* ProfileSettingsURL;
+		Command* ForgeObjectPropertiesURL;
+		Command* VarForgeObjectCreationURL;
+		Command* VarSpectateURL;
+		Command* VarVoipURL;
+		Command* VarWeaponOffsetURL;
+		Command* VarScreenshotNoticeURL;
+		Command* VarExitURL;
+		Command* VarDiscordURL;
+		Command* VarReportURL;
+		Command* VarInGameVotingURL;
+
 		Command* VarRconPort;
 		Command* VarMedalPack;
 		Command* VarFirstRun;
@@ -23,6 +46,7 @@ namespace Modules
 		Command* VarScreenshotsFolder;
 		Command *VarScreenshotNoticeDisabled;
 		Command* VarCefMedals;
+		Command* VarFpsLimiter;
 		Command* VarDiscordEnable;
 		Command* VarDiscordAutoAccept;
 

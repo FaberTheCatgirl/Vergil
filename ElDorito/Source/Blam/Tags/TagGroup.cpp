@@ -1,4 +1,4 @@
-#include "TagGroup.hpp"
+#include "Blam\Tags\TagGroup.hpp"
 
 namespace Blam::Tags
 {

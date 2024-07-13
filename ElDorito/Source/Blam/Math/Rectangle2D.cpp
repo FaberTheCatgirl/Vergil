@@ -1,4 +1,4 @@
-#include "Rectangle2D.hpp"
+#include "Blam\Math\Rectangle2D.hpp"
 
 namespace Blam::Math
 {

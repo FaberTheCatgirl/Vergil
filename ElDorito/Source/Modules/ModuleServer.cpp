@@ -2,35 +2,35 @@
 #include <WS2tcpip.h>
 #include <Windows.h>
 
-#include "ModuleServer.hpp"
+#include "Modules\ModuleServer.hpp"
 #include <sstream>
 #include <fstream>
 #include <algorithm>
 #include <random>
 #include <iomanip>
-#include "../ElDorito.hpp"
-#include "../Patches/Network.hpp"
-#include "../Patches/PlayerUid.hpp"
+#include "ElDorito.hpp"
+#include "Patches\Network.hpp"
+#include "Patches\PlayerUid.hpp"
 
-#include "../ThirdParty/HttpRequest.hpp"
-#include "../ThirdParty/rapidjson/document.h"
-#include "../ThirdParty/rapidjson/writer.h"
-#include "../ThirdParty/rapidjson/stringbuffer.h"
-#include "../Blam/BlamNetwork.hpp"
-#include "../Console.hpp"
-#include "../Server/Signaling.hpp"
-#include "../Server/VariableSynchronization.hpp"
-#include "../Patches/Assassination.hpp"
-#include "../Web/Ui/VotingScreen.hpp"
-#include "../Patches/Sprint.hpp"
-#include "../Patches/Tweaks.hpp"
-#include "../Patches/BottomlessClip.hpp"
-#include "../Server/BanList.hpp"
-#include "../Server/ServerChat.hpp"
-#include "ModulePlayer.hpp"
-#include "../Server/Voting.hpp"
-#include "../Utils/Logger.hpp"
-#include "../Discord/DiscordRPC.h"
+#include "ThirdParty\HttpRequest.hpp"
+#include "ThirdParty\rapidjson\document.h"
+#include "ThirdParty\rapidjson\writer.h"
+#include "ThirdParty\rapidjson\stringbuffer.h"
+#include "Blam\BlamNetwork.hpp"
+#include "Console.hpp"
+#include "Server\Signaling.hpp"
+#include "Server\VariableSynchronization.hpp"
+#include "Patches\Assassination.hpp"
+#include "Web\Ui\VotingScreen.hpp"
+#include "Patches\Sprint.hpp"
+#include "Patches\Tweaks.hpp"
+#include "Patches\BottomlessClip.hpp"
+#include "Server\BanList.hpp"
+#include "Server\ServerChat.hpp"
+#include "Modules\ModulePlayer.hpp"
+#include "Server\Voting.hpp"
+#include "Utils\Logger.hpp"
+//#include "Discord\DiscordRPC.h"
 
 namespace
 {
@@ -403,13 +403,11 @@ namespace
 			return false;
 		}
 
-#if defined(ELDEWRITO_RELEASE)
 		if (ourEdVer.compare(edVer))
 		{
 			returnInfo = "Server is running a different ElDewrito version.";
 			return false;
 		}
-#endif
 
 		std::string xnkid = json["xnkid"].GetString();
 		std::string xnaddr = json["xnaddr"].GetString();
@@ -446,7 +444,7 @@ namespace
 
 		std::stringstream discordStringStream;
 		discordStringStream << host << ":" << httpPort << " " << password;
-		Discord::DiscordRPC::Instance().joinString = discordStringStream.str();
+		//Discord::DiscordRPC::Instance().joinString = discordStringStream.str();
 
 		returnInfo = "Attempting connection to " + address + "...";
 		return true;
@@ -859,17 +857,20 @@ namespace
 		}
 
 		auto previous = std::to_string(Blam::Network::GetNetworkMode());
-		auto serverMode = -1;
+		auto serverMode = (Blam::NetworkMode)-1;
 		try
 		{
-			serverMode = std::atoi(Arguments[0].c_str());
+			serverMode = (Blam::NetworkMode)std::atoi(Arguments[0].c_str());
 		}
 		catch (std::logic_error&)
 		{
 		}
 
-		if (serverMode < 0 || serverMode > 4) {
-			returnInfo = "0 = Xbox Live (Open Party); 1 = Xbox Live (Friends Only); 2 = Xbox Live (Invite Only); 3 = Online; 4 = Offline;";
+		if (serverMode < Blam::eNetworkModeOpenToPublic || serverMode > Blam::eNetworkModeCount) {
+			std::stringstream ss;
+			for (size_t i = 0; i < Blam::eNetworkModeCount; i++)
+				ss << i << " = " << Blam::NetworkModeNames[i] << "; ";
+			returnInfo = ss.str();
 			return false;
 		}
 
@@ -894,17 +895,21 @@ namespace
 		}
 
 		auto previous = std::to_string(Blam::Network::GetLobbyType());
-		auto lobbyType = -1;
+		auto lobbyType = (Blam::LobbyType)-1;
 		try
 		{
-			lobbyType = std::atoi(Arguments[0].c_str());
+			lobbyType = (Blam::LobbyType)std::atoi(Arguments[0].c_str());
 		}
 		catch (std::logic_error&)
 		{
 		}
 
-		if (lobbyType < 0 || lobbyType > 4) {
-			returnInfo = "0 = Campaign; 1 = Matchmaking; 2 = Multiplayer; 3 = Forge; 4 = Theater;";
+		if (lobbyType < Blam::eLobbyTypeCampaign || lobbyType > Blam::eLobbyTypeCount) {
+			std::stringstream ss;
+			for (size_t i = 0; i < Blam::eLobbyTypeCount; i++)
+				ss << i << " = " << Blam::LobbyTypeNames[i] << "; ";
+
+			returnInfo = ss.str();
 			return false;
 		}
 
@@ -1391,9 +1396,18 @@ namespace Modules
 		VarChatCommandEndGameEnabled->ValueIntMin = 0;
 		VarChatCommandEndGameEnabled->ValueIntMax = 1;
 
-		VarChatCommandSkipRoundEnabled = AddVariableInt("ChatCommandSkipRoundEnabled", "chat_command_skip_round_enabled", "Controls whether or not players can vote to end the round. ", eCommandFlagsArchived, 1);
-		VarChatCommandSkipRoundEnabled->ValueIntMin = 0;
-		VarChatCommandSkipRoundEnabled->ValueIntMax = 1;
+		VarChatVotesNeeded = AddVariableInt("ChatVotesNeeded", "chat_votes_needed", "Current number of chat votes needed to pass", CommandFlags(eCommandFlagsReplicated | eCommandFlagsInternal), 0);
+		VarChatVotesNeededClient = AddVariableInt("ChatVotesNeededClient", "chat_votes_needed_client", "Current number of chat votes needed to pass", eCommandFlagsInternal, 0);
+		Server::VariableSynchronization::Synchronize(VarChatVotesNeeded, VarChatVotesNeededClient);
+		VarChatVoteAction = AddVariableString("ChatVoteAction", "chat_vote_action", "Current chat vote action", CommandFlags(eCommandFlagsReplicated | eCommandFlagsInternal), "");
+		VarChatVoteActionClient = AddVariableString("ChatVoteActionClient", "chat_vote_action_client", "Current chat vote action", eCommandFlagsInternal, "");
+		Server::VariableSynchronization::Synchronize(VarChatVoteAction, VarChatVoteActionClient);
+		VarChatVoteStarted = AddVariableInt("ChatVoteStarted", "chat_vote_started", "Current status of a chat vote", CommandFlags(eCommandFlagsReplicated | eCommandFlagsInternal), 0);
+		VarChatVoteStartedClient = AddVariableInt("ChatVoteStartedClient", "chat_vote_started_client", "Current status of a chat vote", eCommandFlagsInternal, 0);
+		Server::VariableSynchronization::Synchronize(VarChatVoteStarted, VarChatVoteStartedClient);
+		VarChatVoteStartedByUid = AddVariableString("ChatVoteStartedByUid", "chat_vote_started_by_uid", "Uid of the player who started the vote", CommandFlags(eCommandFlagsReplicated | eCommandFlagsInternal), "");
+		VarChatVoteStartedByUidClient = AddVariableString("ChatVoteStartedByUidClient", "chat_vote_started_by_uid_client", "Uid of the player who started the vote", eCommandFlagsInternal, "");
+		Server::VariableSynchronization::Synchronize(VarChatVoteStartedByUid, VarChatVoteStartedByUidClient);
 
 		VarSendChatToRconClients = AddVariableInt("SendChatToRconClients", "send_chat_to_rcon", "Controls whether or not chat should be sent through rcon", eCommandFlagsArchived, 0);
 		VarSendChatToRconClients->ValueIntMin = 0;
@@ -1424,7 +1438,7 @@ namespace Modules
 		VarServerTeamShuffleEnabled->ValueIntMax = 1;
 
 		VarVotingJsonPath = AddVariableString("VotingJsonPath", "voting_json_path", "Voting Json Path", eCommandFlagsArchived, "mods/server/voting.json");
-		VarVetoJsonPath = AddVariableString("VetoJsonPath", "veto_json_path", "Veto Json Path", eCommandFlagsArchived, "mods/server/veto.json");
+		VarVetoJsonPath = AddVariableString("VetoJsonPath", "veto_json_path", "VetoJsonPath", eCommandFlagsArchived, "mods/server/veto.json");
 
 		AddCommand("ReloadVotingJson", "reload_voting_json", "Manually Reloads Json", eCommandFlagsNone, ReloadVotingJson);
 		AddCommand("ReloadVetoJson", "reload_veto_json", "Manually Reloads Json", eCommandFlagsNone, ReloadVetoJson);
@@ -1459,6 +1473,9 @@ namespace Modules
 		VarVetoSystemSelectionType = AddVariableInt("VetoSystemSelectionType", "veto_system_selection_type", "0 for random, 1 for ordered ", eCommandFlagsArchived, 0);
 		VarVetoSystemSelectionType->ValueIntMin = 0;
 		VarVetoSystemSelectionType->ValueIntMax = 1;
+
+		VarBanListSyncIntervalSeconds = AddVariableInt("BanListSyncIntervalSeconds", "server_banlist_sync_internval", "The interval at which banlists synced and enforced", CommandFlags(eCommandFlagsHostOnly | eCommandFlagsArchived), 20);
+		VarReturnToLobbyTimeoutSeconds = AddVariableInt("ReturnToLobbyTimeout", "server_return_to_lobby_timeout", "Controls the maximum duration of blackscreens postgame", CommandFlags(eCommandFlagsHostOnly | eCommandFlagsArchived), 10);
 
 		AddCommand("CancelVote", "cancelvote", "Cancels the vote", eCommandFlagsHostOnly, CommandServerCancelVote);
 		VarHttpServerCacheTime = AddVariableInt("Http.CacheTime", "http.cache_time", "Time in seconds the server should cache the http server response", eCommandFlagsArchived, 5);

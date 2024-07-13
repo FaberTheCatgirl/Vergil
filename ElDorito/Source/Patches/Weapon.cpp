@@ -6,35 +6,37 @@
 #include <stdio.h>
 #include <boost\filesystem.hpp>
 
-#include "../ElDorito.hpp"
-#include "../Patch.hpp"
-#include "../Console.hpp"
+#include "ElDorito.hpp"
+#include "Patch.hpp"
+#include "Console.hpp"
 
-#include "../Modules/ModuleWeapon.hpp"
-#include "../Modules/ModuleServer.hpp"
+#include "Modules\ModuleWeapon.hpp"
+#include "Modules\ModuleServer.hpp"
 
-#include "../Blam/BlamNetwork.hpp"
-#include "../Blam/BlamObjects.hpp"
-#include "../Blam/BlamPlayers.hpp"
-#include "../Blam/BlamTime.hpp"
+#include "Blam\BlamNetwork.hpp"
+#include "Blam\BlamObjects.hpp"
+#include "Blam\BlamPlayers.hpp"
+#include "Blam\BlamTime.hpp"
 
-#include "../Blam/Cache/StringIdCache.hpp"
+#include "Blam\Cache\StringIdCache.hpp"
 
-#include "../Blam/Math/RealVector3D.hpp"
+#include "Blam\Math\RealVector3D.hpp"
 
-#include "../Blam/Tags/Tags.hpp"
-#include "../Blam/Tags/TagInstance.hpp"
-#include "../Blam/Tags/Game/Globals.hpp"
-#include "../Blam/Tags/Game/MultiplayerGlobals.hpp"
-#include "../Blam/Tags/Globals/CacheFileGlobalTags.hpp"
-#include "../Blam/Tags/Items/DefinitionWeapon.hpp"
+#include "Blam\Tags\Tags.hpp"
+#include "Blam\Tags\TagInstance.hpp"
+#include "Blam\Tags\Game\Globals.hpp"
+#include "Blam\Tags\Game\MultiplayerGlobals.hpp"
+#include "Blam\Tags\Globals\CacheFileGlobalTags.hpp"
+#include "Blam\Tags\Items\DefinitionWeapon.hpp"
 
-#include "../Patches/Core.hpp"
-#include "../Patches/Weapon.hpp"
+#include "Patches\Core.hpp"
+#include "Patches\Weapon.hpp"
 
-#include "../ThirdParty/rapidjson/document.h"
-#include "../ThirdParty/rapidjson/stringbuffer.h"
-#include "../ThirdParty/rapidjson/prettywriter.h"
+#include "ThirdParty\rapidjson\document.h"
+#include "ThirdParty\rapidjson\stringbuffer.h"
+#include "ThirdParty\rapidjson\prettywriter.h"
+
+#include "new\game\game.hpp"
 
 namespace
 {
@@ -81,8 +83,6 @@ namespace Patches::Weapon
 	using Blam::Math::RealVector3D;
 	using Blam::Tags::TagInstance;
 
-	bool IsMainMenu;
-
 	bool AddSupportedWeapons();
 	std::vector<WeaponInfo> weapon_infos;
 
@@ -95,14 +95,8 @@ namespace Patches::Weapon
 		auto separatorIndex = currentMap.find_first_of("\\/");
 		auto mapName = currentMap.substr(separatorIndex + 1);
 
-		if (mapName == "mainmenu")
+		if (!blam::game_is_mainmenu())
 		{
-			IsMainMenu = true;
-		}
-		else
-		{
-			IsMainMenu = false;
-
 			AddSupportedWeapons();
 			SetOffsetDefaultAll();
 
@@ -326,7 +320,8 @@ namespace Patches::Weapon
 
 	bool SetOffsetDefaultAll()
 	{
-		if (IsMainMenu) return false;
+		if (blam::game_is_mainmenu())
+			return false;
 
 		for (auto &weapon : weapon_infos)
 			SetOffsetModified(weapon.Name, weapon.Offset.Default);
@@ -336,7 +331,8 @@ namespace Patches::Weapon
 
 	bool SetOffsetDefault(std::string &weaponName)
 	{
-		if (IsMainMenu) return false;
+		if (blam::game_is_mainmenu())
+			return false;
 
 		for (auto &weapon : weapon_infos)
 			if (weapon.Name == weaponName)
@@ -347,8 +343,8 @@ namespace Patches::Weapon
 
 	bool SetOffsetModified(std::string &weaponName, RealVector3D &weaponOffset)
 	{
-
-		if (IsMainMenu) return false;
+		if (blam::game_is_mainmenu())
+			return false;
 
 		for (auto &weapon : weapon_infos)
 		{

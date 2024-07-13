@@ -1,4 +1,4 @@
-#include "Network.hpp"
+#include "Patches\Network.hpp"
 
 #define _WINSOCK_DEPRECATED_NO_WARNINGS // TODO: Remove this and fix the deprecated calls
 #include <WinSock2.h>
@@ -8,23 +8,26 @@
 #include <fstream>
 #include <iomanip>
 
-#include "PlayerPropertiesExtension.hpp"
-#include "../Patch.hpp"
-#include "../Utils/VersionInfo.hpp"
-#include "../Modules/ModuleServer.hpp"
-#include "../ElDorito.hpp"
-#include "../ThirdParty/rapidjson/writer.h"
-#include "../ThirdParty/rapidjson/stringbuffer.h"
-#include "../Blam/BlamNetwork.hpp"
-#include "../Server/BanList.hpp"
-#include "../Modules/ModulePlayer.hpp"
-#include "../Modules/ModuleServer.hpp"
-#include "../Modules/ModuleUPnP.hpp"
-#include "../Server/Voting.hpp"
-#include "../Server/Stats.hpp"
-#include "../Utils/Logger.hpp"
-#include "../Web/Ui/ScreenLayer.hpp"
-#include "../Server/Signaling.hpp"
+#include "Patches\PlayerPropertiesExtension.hpp"
+#include "Patch.hpp"
+#include "Utils\VersionInfo.hpp"
+#include "Modules\ModuleServer.hpp"
+#include "ElDorito.hpp"
+#include "ThirdParty\rapidjson\writer.h"
+#include "ThirdParty\rapidjson\stringbuffer.h"
+#include "Blam\BlamNetwork.hpp"
+#include "Server\BanList.hpp"
+#include "Modules\ModulePlayer.hpp"
+#include "Modules\ModuleServer.hpp"
+#include "Modules\ModuleUPnP.hpp"
+#include "Server\Voting.hpp"
+#include "Server\Stats.hpp"
+#include "Utils\Logger.hpp"
+#include "Web\Ui\ScreenLayer.hpp"
+#include "Server\Signaling.hpp"
+
+#include "new\game\game.hpp"
+#include "new\game\game_globals.hpp"
 
 namespace
 {
@@ -166,10 +169,8 @@ namespace Patches::Network
 					Utils::String::BytesToHexString((char*)Pointer(0x2247b80), 0x10, xnkid);
 					Utils::String::BytesToHexString((char*)Pointer(0x2247b90), 0x10, xnaddr);
 
-					Pointer &gameModePtr = ElDorito::GetMainTls(GameGlobals::GameInfo::TLSOffset)[0](GameGlobals::GameInfo::GameMode);
-					uint32_t gameMode = gameModePtr.Read<uint32_t>();
 					int32_t variantType = Pointer(0x023DAF18).Read<int32_t>();
-					if (gameMode == 3)
+					if (blam::game_globals().current_game_mode == blam::game_mode::mainmenu)
 					{
 						if (mapName == "mainmenu")
 						{
@@ -214,7 +215,7 @@ namespace Patches::Network
 					writer.String(mapName.c_str());
 					writer.Key("variant");
 					writer.String(Utils::String::ThinString(variantName).c_str());
-					if (variantType >= 0 && variantType < Blam::GameTypeCount)
+					if (variantType >= 0 && variantType < Blam::eGameTypeCount)
 					{
 						writer.Key("variantType");
 						writer.String(Blam::GameTypeNames[variantType].c_str());
@@ -224,7 +225,7 @@ namespace Patches::Network
 					writer.Key("numPlayers");
 					writer.Int(GetNumPlayers());
 
-					std::ifstream file("fmmRequired.dat");
+					std::ifstream file("fmm.dat");
 					std::string temp;
 
 					writer.Key("mods");
@@ -450,6 +451,9 @@ namespace Patches::Network
 		// skip over end_game_write_stats. stops host from getting booted due to people with bad connections
 		Patch(0x92F7B, { 0xB8, 0x01, 0x00, 0x00, 0x00 }).Apply();
 		Patch(0x92E3B, { 0x90, 0x90 }).Apply();
+
+        // connection initiation retry count
+		*(uint32_t*)0x19A71F4 = 10;
 	}
 
 
@@ -787,6 +791,8 @@ namespace
 			if (IsNameNotAllowed(lowercasename))
 				wcscpy_s(name, 16, L"Filtered");
 		}
+			
+		
 	}
 
 	// Applies player properties data including extended properties
@@ -810,15 +816,16 @@ namespace
 			isNewMember = true;
 		}
 
+
 		auto packetProperties = reinterpret_cast<Blam::Players::ClientPlayerProperties*>(data);
+
+
 		if (session->HasTeams() && session->MembershipInfo.PlayerSessions[playerIndex].Properties.TeamIndex != packetProperties->TeamIndex)
 		{
-			uint8_t teamSizes[8];
 			auto numPlayers = 0;
 			int playerIdx = session->MembershipInfo.FindFirstPlayer();
 			while (playerIdx > -1)
 			{
-				teamSizes[session->MembershipInfo.PlayerSessions[playerIdx].Properties.TeamIndex]++;
 				numPlayers++;
 				playerIdx = session->MembershipInfo.FindNextPlayer(playerIdx);
 			}
@@ -831,7 +838,7 @@ namespace
 			auto minTeams = int(std::ceil(numPlayers / float(minTeamSize)));
 			auto numTeams = std::min<int>(minTeams, moduleServer.VarNumTeams->ValueInt);
 
-			if (packetProperties->TeamIndex >= 8)
+			if (packetProperties->TeamIndex < 0 || packetProperties->TeamIndex >= 8)
 				packetProperties->TeamIndex = currentTeamIndex;
 		}
 
@@ -846,11 +853,14 @@ namespace
 				auto numPlayers = 0;
 				while (playerIdx > -1)
 				{
-					teamSizes[session->MembershipInfo.PlayerSessions[playerIdx].Properties.TeamIndex]++;
+					auto teamIndex = session->MembershipInfo.PlayerSessions[playerIdx].Properties.TeamIndex;
+					if (teamIndex > -1 && teamIndex < 8)
+						teamSizes[teamIndex]++;
 					numPlayers++;
 					playerIdx = session->MembershipInfo.FindNextPlayer(playerIdx);
 				}
-				teamSizes[prop->TeamIndex]--; //ignore one place for the default team they were placed on
+				if (prop->TeamIndex > -1 && prop->TeamIndex < 8)
+					teamSizes[prop->TeamIndex]--; //ignore one place for the default team they were placed on
 
 				auto &moduleServer = Modules::ModuleServer::Instance();
 				auto maxPlayers = moduleServer.VarServerMaxPlayers->ValueInt;
@@ -869,7 +879,8 @@ namespace
 						smallIndex = i;
 					}
 				}
-				packetProperties->TeamIndex = smallIndex;
+				if (smallIndex > -1 && smallIndex < 8)
+					packetProperties->TeamIndex = smallIndex;
 			}
 		}
 
@@ -880,6 +891,35 @@ namespace
 
 		// Apply the extended properties
 		Patches::Network::PlayerPropertiesExtender::Instance().ApplyData(playerIndex, properties, data + PlayerPropertiesSize);
+
+		{
+			auto banList = Server::LoadDefaultBanList();
+			auto uid = thisPtr->PlayerSessions[playerIndex].Properties.Uid;
+
+
+			char uidst[17];
+			Blam::Players::FormatUid(uidst, uid);
+			std::string uidStr(uidst);
+
+			auto name = Utils::String::ThinString(packetProperties->DisplayName);
+
+			if (banList.ContainsUid(uidStr) || Server::HalostatsBanList::Instance().ContainsUID(uidStr))
+			{
+				if (!Blam::Network::BootPlayer(playerIndex, 4))
+					Utils::Logger::Instance().Log(Utils::LogTypes::Network, Utils::LogLevel::Error, "Failed to Kick Banned UID: " + uidStr);
+				else
+					Utils::Logger::Instance().Log(Utils::LogTypes::Network, Utils::LogLevel::Error, "Successfully Kicked Banned UID: " + uidStr);
+
+			}
+
+			if (banList.ContainsName(name) || Server::HalostatsBanList::Instance().ContainsName(name)) {
+				if (!Blam::Network::BootPlayer(playerIndex, 4))
+					Utils::Logger::Instance().Log(Utils::LogTypes::Network, Utils::LogLevel::Error, "Failed to Kick Banned Name: " + name);
+				else
+					Utils::Logger::Instance().Log(Utils::LogTypes::Network, Utils::LogLevel::Error, "Successfully Kicked Banned Name: " + name);
+
+			}
+		}
 	}
 
 	bool __fastcall Network_leader_request_boot_machineHook(void* thisPtr, void* unused, Blam::Network::PeerInfo* peer, int reason)
@@ -910,7 +950,7 @@ namespace
 		{
 			// Check if the IP is in the ban list
 			auto banList = Server::LoadDefaultBanList();
-			if (banList.ContainsIp(ipStr) || Server::TempBanList::Instance().ContainsIp(ipStr))
+			if (banList.ContainsIp(ipStr) || Server::TempBanList::Instance().ContainsIp(ipStr) || Server::HalostatsBanList::Instance().ContainsIp(ipStr))
 			{
 				// Send a join refusal
 				typedef void(__thiscall *Network_session_acknowledge_join_requestFunc)(Blam::Network::Session *thisPtr, const Blam::Network::NetworkAddress &address, int reason);
@@ -1057,8 +1097,24 @@ namespace
 		}
 	}
 
-	void LifeCycleStateChangedHookImpl(Blam::Network::LifeCycleState newState)
+	void LifeCycleStateChangedHookImpl(Blam::LifeCycleState newState)
 	{
+		switch (newState)
+		{
+		case Blam::LifeCycleState::eLifeCycleStateEndGameWriteStats:
+		case Blam::LifeCycleState::eLifeCycleStateLeaving:
+			std::string previousValue;
+			Modules::CommandMap::Instance().SetVariable2(Modules::ModuleServer::Instance().VarChatVoteStarted, std::string("0"), previousValue);
+			Modules::CommandMap::Instance().SetVariable2(Modules::ModuleServer::Instance().VarChatVoteStartedByUid, std::string(""), previousValue);
+			Modules::CommandMap::Instance().SetVariable2(Modules::ModuleServer::Instance().VarChatVoteAction, std::string(""), previousValue);
+			Modules::CommandMap::Instance().SetVariable2(Modules::ModuleServer::Instance().VarChatVotesNeeded, std::string("0"), previousValue);
+			Modules::CommandMap::Instance().SetVariable2(Modules::ModuleServer::Instance().VarChatVoteStartedClient, std::string("0"), previousValue);
+			Modules::CommandMap::Instance().SetVariable2(Modules::ModuleServer::Instance().VarChatVoteStartedByUidClient, std::string(""), previousValue);
+			Modules::CommandMap::Instance().SetVariable2(Modules::ModuleServer::Instance().VarChatVoteActionClient, std::string(""), previousValue);
+			Modules::CommandMap::Instance().SetVariable2(Modules::ModuleServer::Instance().VarChatVotesNeededClient, std::string("0"), previousValue);
+			break;
+		}
+
 		for (auto &&callback : lifeCycleStateChangedCallbacks)
 			callback(newState);
 	}

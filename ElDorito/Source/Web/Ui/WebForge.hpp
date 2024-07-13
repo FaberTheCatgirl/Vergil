@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Bridge/WebRendererQuery.hpp"
+#include "Web\Bridge\WebRendererQuery.hpp"
 
 namespace Web::Ui::WebForge
 {

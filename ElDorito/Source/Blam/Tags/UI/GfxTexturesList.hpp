@@ -1,6 +1,6 @@
 #pragma once
 #include <cstdint>
-#include "../Tags.hpp"
+#include "Blam\Tags\Tags.hpp"
 
 namespace Blam::Tags::UI
 {

@@ -1,6 +1,6 @@
 #pragma once
-#include "RealPoint3D.hpp"
-#include "RealQuaternion.hpp"
+#include "Blam\Math\RealPoint3D.hpp"
+#include "Blam\Math\RealQuaternion.hpp"
 
 namespace Blam::Math
 {

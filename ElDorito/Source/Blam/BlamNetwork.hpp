@@ -1,9 +1,9 @@
 #pragma once
 
 #include <cstdint>
-#include "BlamTypes.hpp"
-#include "BlamPlayers.hpp"
-#include "BitStream.hpp"
+#include "Blam\BlamTypes.hpp"
+#include "Blam\BlamPlayers.hpp"
+#include "Blam\BitStream.hpp"
 
 namespace Blam::Network
 {
@@ -12,19 +12,6 @@ namespace Blam::Network
 
 	// The maximum number of players in a network session.
 	const int MaxPlayers = 16;
-
-	enum PeerConnectionState
-	{
-		ePeerConnectionStateNone,
-		ePeerConnectionStateRejoining,
-		ePeerConnectionStateReserved,
-		ePeerConnectionStateDisconnected,
-		ePeerConnectionStateConnected,
-		ePeerConnectionStateJoining,
-		ePeerConnectionStateJoined,
-		ePeerConnectionStateWaiting,
-		ePeerConnectionStateEstablished
-	};
 
 	struct PeerInfo
 	{
@@ -263,7 +250,42 @@ namespace Blam::Network
 	{
 		ePacketIDPing,
 		ePacketIDPong,
-		// TODO: Finish
+		ePacketIDBroadcastSearch,
+		ePacketIDBroadcastReply,
+		ePacketIDConnectRequest,
+		ePacketIDConnectRefuse,
+		ePacketIDConnectEstablish,
+		ePacketIDConnectClosed,
+		ePacketIDJoinRequest,
+		ePacketIDPeerConnect,
+		ePacketIDJoinAbort,
+		ePacketIDJoinRefuse,
+		ePacketIDLeaveSession,
+		ePacketIDLeaveAcknowledge,
+		ePacketIDSessionDisband,
+		ePacketIDSessionBoot,
+		ePacketIDHostDecline,
+		ePacketIDPeerEstablish,
+		ePacketIDTimeSynchronize,
+		ePacketIDMembershipUpdate,
+		ePacketIDPeerProperties,
+		ePacketIDDelegateLeadership,
+		ePacketIDBootMachine,
+		ePacketIDPlayerAdd,
+		ePacketIDPlayerRefuse,
+		ePacketIDPlayerRemove,
+		ePacketIDPlayerProperties,
+		ePacketIDParametersUpdate,
+		ePacketIDParametersRequest,
+		ePacketIDViewEstablishment,
+		ePacketIDPlayerAcknowledge,
+		ePacketIDSynchronousUpdate,
+		ePacketIDSynchronousPlaybackControl,
+		ePacketIDSynchronousActions,
+		ePacketIDSynchronousAcknowledge,
+		ePacketIDSynchronousGamestate,
+		ePacketIDDistributedGameResults,
+		ePacketIDSynchronousClientReady,
 	};
 
 	// c_network_observer
@@ -292,7 +314,7 @@ namespace Blam::Network
 		// Sends a ping to a network address. ID can be anything.
 		// Once a pong is received back, callbacks registered with
 		// Patches::Network::OnPong() will be invoked.
-		bool Ping(NetworkAddress &address, uint16_t id);
+		bool Ping(const NetworkAddress &address, uint16_t id);
 	};
 	static_assert(sizeof(MessageGateway) == 0x688, "Invalid c_network_message_gateway size");
 
@@ -331,34 +353,12 @@ namespace Blam::Network
 		bool HasTeams() const;
 
 		// Gets the network address of a peer.
+		bool Session::GetPeerAddress(int peerIndex, NetworkAddress &address) const;
 		NetworkAddress GetPeerAddress(int peerIndex) const;
 
 		NetworkAddress GetServerIPAddress() const;
 	};
 	static_assert(sizeof(Session) == 0x25BC40, "Invalid c_network_session size");
-
-	// Lifecycle states.
-	enum LifeCycleState
-	{
-		eLifeCycleStateNone,
-		eLifeCycleStatePreGame,
-		eLifeCycleStateStartGame,
-		eLifeCycleStateInGame,
-		eLifeCycleStateEndGameWriteStats,
-		eLifeCycleStateLeaving,
-		eLifeCycleStateJoining,
-		eLifeCycleStateMatchmakingStart,
-		eLifeCycleStateMatchmakingFindMatchClient,
-		eLifeCycleStateMatchmakingFindMatch,
-		eLifeCycleStateMatchmakingFindAndAssembleMatch,
-		eLifeCycleStateMatchmakingAssembleMatch,
-		eLifeCycleStateMatchmakingArbitration,
-		eLifeCycleStateMatchmakingSelectHost,
-		eLifeCycleStateMatchmakingPrepareMap,
-		eLifeCycleStateInMatch,
-		eLifeCycleStateEndMatchWriteStats,
-		eLifeCycleStatePostMatch,
-	};
 
 	// Gets a pointer to the active network session.
 	// Can be null!
@@ -376,16 +376,16 @@ namespace Blam::Network
 	bool BootPlayer(int playerIndex, int reason);
 
 	// Gets the lobby type. Also known as GetUiGameMode
-	int GetLobbyType();
+	LobbyType GetLobbyType();
 
 	// Gets the network mode
-	int GetNetworkMode();
+	NetworkMode GetNetworkMode();
 
 	//Sets the lobbyType
-	bool SetLobbyType(int type);
+	bool SetLobbyType(LobbyType type);
 
 	//Sets the Network Mode.
-	bool SetNetworkMode(int mode);
+	bool SetNetworkMode(NetworkMode mode);
 
 	// Requests to end the game.
 	bool EndGame();

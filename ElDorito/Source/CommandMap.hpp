@@ -5,7 +5,7 @@
 #include <Windows.h>
 #include <functional>
 
-#include "Utils/Singleton.hpp"
+#include "Utils\Singleton.hpp"
 
 enum VariableSetReturnValue
 {
@@ -116,6 +116,7 @@ namespace Modules
 
 		VariableSetReturnValue SetVariable(const std::string& name, std::string& value, std::string& previousValue);
 		VariableSetReturnValue SetVariable(Command* command, std::string& value, std::string& previousValue);
+		VariableSetReturnValue SetVariable2(Command* command, std::string& value, std::string& previousValue);
 
 		std::string GenerateHelpText(std::string moduleFilter = "");
 

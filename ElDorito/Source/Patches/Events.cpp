@@ -1,8 +1,8 @@
-#include "Events.hpp"
-#include "../Blam/BlamEvents.hpp"
-#include "../Patch.hpp"
-#include "../Web/Ui/WebScoreboard.hpp"
-#include "../Web/Ui/ScreenLayer.hpp"
+#include "Patches\Events.hpp"
+#include "Blam\BlamEvents.hpp"
+#include "Patch.hpp"
+#include "Web\Ui\WebScoreboard.hpp"
+#include "Web\Ui\ScreenLayer.hpp"
 
 #include <vector>
 

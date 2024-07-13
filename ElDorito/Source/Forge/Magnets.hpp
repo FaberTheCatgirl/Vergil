@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Blam/Math/RealVector3D.hpp"
+#include "Blam\Math\RealVector3D.hpp"
 
 namespace Forge::Magnets
 {

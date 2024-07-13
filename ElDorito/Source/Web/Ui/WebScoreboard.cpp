@@ -1,25 +1,28 @@
-#include "WebScoreboard.hpp"
-#include "ScreenLayer.hpp"
-#include "../../Blam/BlamNetwork.hpp"
-#include "../../Blam/BlamEvents.hpp"
-#include "../../Blam/BlamTypes.hpp"
-#include "../../Blam/Tags/Objects/Damage.hpp"
-#include "../../Patches/Events.hpp"
-#include "../../Patches/Scoreboard.hpp"
-#include "../../Patches/Input.hpp"
-#include "../../Pointer.hpp"
-#include "../../Modules/ModuleInput.hpp"
-#include "../../Modules/ModuleServer.hpp"
-#include "../../ThirdParty/rapidjson/writer.h"
-#include "../../ThirdParty/rapidjson/stringbuffer.h"
-#include "../../Utils/String.hpp"
-#include "../../ElDorito.hpp"
+#include "Web\Ui\WebScoreboard.hpp"
+#include "Web\Ui\ScreenLayer.hpp"
+#include "Blam\BlamNetwork.hpp"
+#include "Blam\BlamEvents.hpp"
+#include "Blam\BlamTypes.hpp"
+#include "Blam\Tags\Objects\Damage.hpp"
+#include "Patches\Events.hpp"
+#include "Patches\Scoreboard.hpp"
+#include "Patches\Input.hpp"
+#include "Pointer.hpp"
+#include "Modules\ModuleInput.hpp"
+#include "Modules\ModuleServer.hpp"
+#include "ThirdParty\rapidjson\writer.h"
+#include "ThirdParty\rapidjson\stringbuffer.h"
+#include "Utils\String.hpp"
+#include "ElDorito.hpp"
 
 #include <iomanip>
-#include "../../Blam/BlamObjects.hpp"
-#include "../../Blam/Tags/Items/DefinitionWeapon.hpp"
-#include "../../Blam/BlamTime.hpp"
-#include "../../Modules/ModuleGame.hpp"
+#include "Blam\BlamObjects.hpp"
+#include "Blam\Tags\Items\DefinitionWeapon.hpp"
+#include "Blam\BlamTime.hpp"
+#include "Modules\ModuleGame.hpp"
+#include "Console.hpp"
+
+#include "new\game\game.hpp"
 
 using namespace Blam::Input;
 using namespace Blam::Events;
@@ -33,13 +36,14 @@ namespace
 	bool postgame = false;
 	bool pregame = false;
 	bool returningToLobby = false;
+	bool forcedBackToLobby = false;
 	bool acceptsInput = true;
 	bool pressedLastTick = false;
 	bool spawningSoon = false;
 	bool roundInProgress = false;
 	int lastPressedTime = 0;
-	uint32_t postgameDisplayed;
-	const float postgameDelayTime = 2;
+	time_t postgameDisplayed;
+	const uint32_t postgameDelayTime = 2;
 	uint32_t scoreboardSentTime = 0;
 
 	void OnEvent(Blam::DatumHandle player, const Event *event, const EventDefinition *definition);
@@ -85,19 +89,18 @@ namespace Web::Ui::WebScoreboard
 	void Tick()
 	{
 		const auto game_engine_round_in_progress = (bool(*)())(0x00550F90);
-		const auto is_main_menu = (bool(*)())(0x00531E90);
-		const auto is_multiplayer = (bool(*)())(0x00531C00);
 		static auto previousMapLoadingState = 0;
 		static auto previousEngineState = 0;
 		static bool previousHasUnit = false;
 
-		if (!is_multiplayer() && !is_main_menu())
+		if (!blam::game_is_multiplayer() && !blam::game_is_mainmenu())
 			return;
 
-
+		time_t curTime;
+		time(&curTime);
 		if (postgame)
 		{
-			if (Blam::Time::TicksToSeconds(Blam::Time::GetGameTicks() - postgameDisplayed) > postgameDelayTime)
+			if (((curTime - postgameDisplayed) > postgameDelayTime))
 			{
 				Web::Ui::WebScoreboard::Show(locked, postgame);
 				acceptsInput = false;
@@ -105,9 +108,22 @@ namespace Web::Ui::WebScoreboard
 				returningToLobby = true;
 			}
 		}
-		auto isMainMenu = is_main_menu();
 
-		if (!postgame && !isMainMenu) {
+		if (returningToLobby && !forcedBackToLobby)
+		{
+			auto timeout = Modules::ModuleServer::Instance().VarReturnToLobbyTimeoutSeconds->ValueInt;
+			if ((curTime - postgameDisplayed) > (timeout + postgameDelayTime))
+			{
+				auto session = Blam::Network::GetActiveSession();
+				if (session && session->IsEstablished())
+				{
+					session->Parameters.SetSessionMode(1);
+					forcedBackToLobby = true;
+				}
+			}
+		}
+
+		if (!postgame && !blam::game_is_mainmenu()) {
 			time_t curTime1;
 			time(&curTime1);
 
@@ -115,14 +131,13 @@ namespace Web::Ui::WebScoreboard
 			{
 				scoreboardSentTime = 0;
 				Web::Ui::ScreenLayer::NotifyScreen("scoreboard", "scoreboard", getScoreboard());
-				
 			}
 		}
 
 		auto currentMapLoadingState = *(bool*)0x023917F0;
 		if (previousMapLoadingState && !currentMapLoadingState)
 		{
-			if (isMainMenu)
+			if (blam::game_is_mainmenu())
 			{
 				returningToLobby = false;
 				acceptsInput = true;
@@ -137,7 +152,7 @@ namespace Web::Ui::WebScoreboard
 				Web::Ui::WebScoreboard::Show(locked, postgame);
 			}
 		}
-		else if (!previousMapLoadingState && currentMapLoadingState && isMainMenu && !returningToLobby)
+		else if (!previousMapLoadingState && currentMapLoadingState && blam::game_is_mainmenu() && !returningToLobby)
 		{
 			locked = false;
 			postgame = false;
@@ -149,7 +164,7 @@ namespace Web::Ui::WebScoreboard
 		if (!engineGlobals)
 			return;
 
-		auto currentEngineState = engineGlobals(0xE110).Read<uint8_t>();	
+		auto currentEngineState = engineGlobals(0xE110).Read<uint8_t>();
 		if (previousEngineState & 8 && !(currentEngineState & 8)) // summary ui
 		{
 			locked = false;
@@ -212,6 +227,7 @@ namespace
 		if (event->NameStringId == 0x4004D || event->NameStringId == 0x4005A) // "general_event_game_over" / "general_event_round_over"
 		{
 			postgameDisplayed = Blam::Time::GetGameTicks();
+			time(&postgameDisplayed);
 			postgame = true;
 
 			Web::Ui::ScreenLayer::NotifyScreen("scoreboard", "scoreboard", Web::Ui::WebScoreboard::getScoreboard());
@@ -232,14 +248,25 @@ namespace
 
 			if (strcmp((char*)Pointer(0x22AB018)(0x1A4), "mainmenu") != 0)
 			{
+				locked = false;
+
+				auto values = reinterpret_cast<float*>(0x244D1F0 + 0x2FC);
+				auto movementAmount = 0.0f;
+				for (auto i = 0; i < 8; i++)
+					movementAmount += values[i] * values[i];
+
 				//If shift is held down or was pressed again within the repeat delay, lock the scoreboard
-				locked = GetKeyTicks(eKeyCodeShift, eInputTypeUi) || ((GetTickCount() - lastPressedTime) < 250
-					&& Modules::ModuleInput::Instance().VarTapScoreboard->ValueInt == 1);
+				if (GetKeyTicks(eKeyCodeShift, eInputTypeUi) || ((GetTickCount() - lastPressedTime) < 250
+					&& Modules::ModuleInput::Instance().VarTapScoreboard->ValueInt == 1))
+				{
+					locked = true;
+				}
+
 
 				Web::Ui::WebScoreboard::Show(locked, postgame);
 
 				lastPressedTime = GetTickCount();
-				pressedLastTick = true;	
+				pressedLastTick = true;
 			}
 			else
 			{
@@ -247,10 +274,10 @@ namespace
 			}
 		}
 		//Hide the scoreboard when you release tab. Only check when the scoreboard isn't locked.
-		else if(!locked && !postgame && pressedLastTick && uiSelect->Ticks == 0)
-		{		
+		else if (!locked && !postgame && pressedLastTick && uiSelect->Ticks == 0)
+		{
 			Web::Ui::WebScoreboard::Hide();
-			pressedLastTick = false;		
+			pressedLastTick = false;
 		}
 	}
 
@@ -319,7 +346,7 @@ namespace
 
 		int32_t variantType = Pointer(0x023DAF18).Read<int32_t>();
 
-		if (variantType >= 0 && variantType < Blam::GameTypeCount)
+		if (variantType >= 0 && variantType < Blam::eGameTypeCount)
 		{
 			writer.Key("gameType");
 			writer.String(Blam::GameTypeNames[variantType].c_str());
@@ -398,20 +425,20 @@ namespace
 			writer.Key("bestStreak");
 			writer.Int(playerStats.BestStreak);
 
-			
+
 
 			writer.Key("hasObjective");
 			writer.Bool(hasObjective);
 
 			//gametype specific stats
-			if (variantType == Blam::GameType::CTF || variantType == Blam::GameType::Assault || variantType == Blam::GameType::Oddball)
+			if (variantType == Blam::eGameTypeCTF || variantType == Blam::eGameTypeAssault || variantType == Blam::eGameTypeOddball)
 			{
 				writer.Key("flagKills");
 				writer.Int(playerStats.WeaponStats[Blam::Tags::Objects::DamageReportingType::Flag].Kills);
 				writer.Key("ballKills");
 				writer.Int(playerStats.WeaponStats[Blam::Tags::Objects::DamageReportingType::Ball].Kills);
 			}
-			else if (variantType == Blam::GameType::KOTH)
+			else if (variantType == Blam::eGameTypeKOTH)
 			{
 				writer.Key("kingsKilled");
 				writer.Int(playerStats.KingsKilled);
@@ -420,7 +447,7 @@ namespace
 				writer.Key("timeControllingHill");
 				writer.Int(playerStats.TimeControllingHill);
 			}
-			else if (variantType == Blam::GameType::Infection)
+			else if (variantType == Blam::eGameTypeInfection)
 			{
 				writer.Key("humansInfected");
 				writer.Int(playerStats.HumansInfected);

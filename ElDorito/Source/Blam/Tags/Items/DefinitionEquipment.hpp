@@ -1,15 +1,15 @@
 #pragma once
-#include "../Tags.hpp"
-#include "../../Math/Angle.hpp"
-#include "../../Math/Bounds.hpp"
-#include "../../Math/RealEulerAngles2D.hpp"
-#include "../../Math/RealPoint3D.hpp"
-#include "../../Math/RealVector2D.hpp"
-#include "../../Math/RealVector3D.hpp"
-#include "../../Text/StringID.hpp"
-#include "../Objects/Damage.hpp"
-#include "../Sounds/Noise.hpp"
-#include "Item.hpp"
+#include "Blam\Tags\Tags.hpp"
+#include "Blam\Math\Angle.hpp"
+#include "Blam\Math\Bounds.hpp"
+#include "Blam\Math\RealEulerAngles2D.hpp"
+#include "Blam\Math\RealPoint3D.hpp"
+#include "Blam\Math\RealVector2D.hpp"
+#include "Blam\Math\RealVector3D.hpp"
+#include "Blam\Text\StringID.hpp"
+#include "Blam\Tags\Objects\Damage.hpp"
+#include "Blam\Tags\Sounds\Noise.hpp"
+#include "Blam\Tags\Items\Item.hpp"
 
 namespace Blam
 {
@@ -48,6 +48,7 @@ namespace Blam
 				struct InvisibilityBlock;
 				struct InvincibilityBlock;
 				struct RegeneratorBlock;
+				struct AtlasHealthPackBlock;
 				struct ForcedReloadBlock;
 				struct ConcussiveBlastBlock;
 				struct TankModeBlock;
@@ -83,9 +84,7 @@ namespace Blam
 				TagBlock<InvisibilityBlock> Invisibility;
 				TagBlock<InvincibilityBlock> Invincibility;
 				TagBlock<RegeneratorBlock> Regenerator;
-				unsigned int Unknown15;
-				unsigned int Unknown16;
-				unsigned int  Unknown17;
+				TagBlock<AtlasHealthPackBlock> AtlasHealthPack;
 				TagBlock<ForcedReloadBlock> ForcedReload;
 				TagBlock<ConcussiveBlastBlock> ConcussiveBlast;
 				TagBlock<TankModeBlock> TankMode;
@@ -236,6 +235,13 @@ namespace Blam
 					TagReference RegeneratingEffect;
 				};
 				TAG_STRUCT_SIZE_ASSERT(RegeneratorBlock, 0x10);
+
+				struct AtlasHealthPackBlock
+				{
+					float Unknown;
+					float Unknown2;
+				};
+				TAG_STRUCT_SIZE_ASSERT(AtlasHealthPackBlock, 0x8);
 
 				struct ForcedReloadBlock
 				{
