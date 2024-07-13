@@ -83,14 +83,14 @@ namespace
 		SHGetKnownFolderPath(FOLDERID_LocalAppData, NULL, NULL, &localAppdata);
 		auto wide_ed_appdata = std::wstring(localAppdata);
 		auto ed_appdata = Utils::String::ThinString(wide_ed_appdata);
-		ed_appdata += "\\ElDewrito";
+		ed_appdata += "\\HaloOnline";
 
 		std::string keyFile;
-		std::string prefsName = "dewrito_prefs.cfg";
+		std::string prefsName = "eldorado_prefs.cfg";
 		if (ElDorito::Instance().GetInstanceName() != "")
 		{
 			std::stringstream ss;
-			ss << "dewrito_prefs_" << ElDorito::Instance().GetInstanceName() << ".cfg";
+			ss << "eldorado_prefs_" << ElDorito::Instance().GetInstanceName() << ".cfg";
 			prefsName = ss.str();
 			std::stringstream keystream;
 			keystream << ed_appdata << "\\keys_" << ElDorito::Instance().GetInstanceName() << ".cfg";
@@ -150,7 +150,7 @@ namespace Modules
 
 		AddCommand("Help", "help", "Displays this help text", eCommandFlagsNone, CommandHelp);
 		AddCommand("Execute", "exec", "Executes a list of commands", eCommandFlagsNone, CommandExecute, { "filename(string) The list of commands to execute" });
-		AddCommand("WriteConfig", "config_write", "Writes the ElDewrito config file", eCommandFlagsNone, CommandWriteConfig, { "filename(string) Optional, the filename to write the config to" });
+		AddCommand("WriteConfig", "config_write", "Writes the Halo Online config file", eCommandFlagsNone, CommandWriteConfig, { "filename(string) Optional, the filename to write the config to" });
 
 		CommandMap::Instance().FinishAddCommands(); // call this so that the default values can be applied to the game
 	}

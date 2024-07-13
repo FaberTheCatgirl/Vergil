@@ -9,19 +9,20 @@ namespace
 		uint8_t DamageResistance;
 		uint8_t ShieldRechargeRate;
 		uint8_t ShieldMultiplier;
+		uint8_t OvershieldRechargeRate;
 		uint8_t HeadshotImmunity;
 		uint8_t ShieldVampirism;
-		uint8_t field_5;
-		uint8_t field_6;
-		uint8_t field_7;
+		uint8_t AssassinationImmunity;
 
 		void Serialize(Blam::BitStream &stream)
 		{
 			stream.WriteUnsigned(DamageResistance, 4);
 			stream.WriteUnsigned(ShieldRechargeRate, 4);
 			stream.WriteUnsigned(ShieldMultiplier, 3);
+			stream.WriteUnsigned(OvershieldRechargeRate, 4);
 			stream.WriteUnsigned(HeadshotImmunity, 2);
 			stream.WriteUnsigned(ShieldVampirism, 3);
+			stream.WriteUnsigned(AssassinationImmunity, 2);
 		}
 
 		void Deserialize(Blam::BitStream &stream)
@@ -35,12 +36,18 @@ namespace
 			ShieldMultiplier = stream.ReadUnsigned<uint8_t>(3);
 			if (ShieldMultiplier > 5)
 				ShieldMultiplier = 0;
+			OvershieldRechargeRate = stream.ReadUnsigned<uint8_t>(4);
+			if (OvershieldRechargeRate > 9)
+				OvershieldRechargeRate = 0;
 			HeadshotImmunity = stream.ReadUnsigned<uint8_t>(2);
 			if (HeadshotImmunity > 2)
 				HeadshotImmunity = 0;
 			ShieldVampirism = stream.ReadUnsigned<uint8_t>(3);
 			if (ShieldVampirism > 5)
 				ShieldVampirism = 0;
+			AssassinationImmunity = stream.ReadUnsigned<uint8_t>(2);
+			if (AssassinationImmunity > 2)
+				AssassinationImmunity = 0;
 		}
 	};
 	static_assert(sizeof(c_player_health_traits) == 0x8, "c_player_health_traits invalid");
@@ -109,13 +116,14 @@ namespace
 		uint8_t PlayerSpeed;
 		uint8_t PlayerGravity;
 		uint8_t VehicleUse;
-		uint8_t field_3;
+		uint8_t DoubleJump;
 
 		void Serialize(Blam::BitStream &stream)
 		{
 			stream.WriteUnsigned(PlayerSpeed, 4);
 			stream.WriteUnsigned(PlayerGravity, 4);
 			stream.WriteUnsigned(VehicleUse, 2);
+			stream.WriteUnsigned(DoubleJump, 2);
 		}
 
 		void Deserialize(Blam::BitStream &stream)
@@ -129,6 +137,9 @@ namespace
 			VehicleUse = stream.ReadUnsigned<uint8_t>(2);
 			if (VehicleUse > 3)
 				VehicleUse = 0;
+			DoubleJump = stream.ReadUnsigned < uint8_t(2);
+			if (DoubleJump > 3)
+				DoubleJump = 0;
 		}
 	};
 	static_assert(sizeof(c_player_movement_traits) == 0x4, "c_player_movement_traits invalid");

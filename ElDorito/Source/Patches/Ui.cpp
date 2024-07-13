@@ -231,12 +231,12 @@ namespace Patches::Ui
 		}
 
 		// Remove Xbox Live from the network menu
-		Patch::NopFill(Pointer::Base(0x723D85), 0x17);
-		Pointer::Base(0x723DA1).Write<uint8_t>(0);
-		Pointer::Base(0x723DB8).Write<uint8_t>(1);
-		Patch::NopFill(Pointer::Base(0x723DFF), 0x3);
-		Pointer::Base(0x723E07).Write<uint8_t>(0);
-		Pointer::Base(0x723E1C).Write<uint8_t>(0);
+		//Patch::NopFill(Pointer::Base(0x723D85), 0x17);
+		//Pointer::Base(0x723DA1).Write<uint8_t>(0);
+		//Pointer::Base(0x723DB8).Write<uint8_t>(1);
+		//Patch::NopFill(Pointer::Base(0x723DFF), 0x3);
+		//Pointer::Base(0x723E07).Write<uint8_t>(0);
+		//Pointer::Base(0x723E1C).Write<uint8_t>(0);
 
 		// Localized string override hook
 		Hook(0x11E040, LocalizedStringHook).Apply();
@@ -264,9 +264,9 @@ namespace Patches::Ui
 		Hook(0x622057, CreateGameWindowHook, HookFlags::IsCall).Apply();
 
 		// disable saber's weapon hud
-		Patch(0x6866F2, { 0xEB }).Apply();
+		//Patch(0x6866F2, { 0xEB }).Apply();
 		// restore h3 weapon hud
-		Hook(0x006970BB, UI_UpdateH3HUDHook, HookFlags::IsCall).Apply();
+		//Hook(0x006970BB, UI_UpdateH3HUDHook, HookFlags::IsCall).Apply();
 		// fix equipment swap message
 		Pointer(0xABD324).Write<uint32_t>(0xABD2F7);
 		// fix dual-wield message
@@ -337,9 +337,9 @@ namespace Patches::Ui
 		Pointer(0x016A6240).Write(uint32_t(&c_gui_bitmap_widget_update_render_data_hook));
 
 		// remove recent maps, fileshare menu items
-		Pointer(0x0169E270).Write(uint32_t(&c_gui_map_category_datasource_init));
+		//Pointer(0x0169E270).Write(uint32_t(&c_gui_map_category_datasource_init));
 		// remove game variants, fileshare menu items
-		Pointer(0x0169E510).Write(uint32_t(&c_gui_game_variant_category_datasource_init));
+		//Pointer(0x0169E510).Write(uint32_t(&c_gui_game_variant_category_datasource_init));
 
 		Hook(0x721F03, c_gui_screen_pregame_lobby_switch_network_hook).Apply();
 
@@ -538,7 +538,7 @@ namespace Patches::Ui
 			//Unknown cameras:
 			//01672130 - c_camera
 			//01672920 - c_authored_camera
-			//0165A64C - c_director?
+		case 0x165A64C: //c_director?
 
 		case 0x16724D4: //c_following_camera
 		case 0x16725DC: //c_dead_camera
@@ -886,7 +886,7 @@ namespace
 			std::string version = Utils::Version::GetVersionString();
 			std::transform(version.begin(), version.end(), version.begin(), toupper);
 			std::wstring unicodeVersion(version.begin(), version.end());
-			swprintf(outputBuffer, MaxStringLength, L"UNOFFICIAL ELDEWRITO %s", unicodeVersion.c_str());
+			swprintf(outputBuffer, MaxStringLength, L"Halo Online %s", unicodeVersion.c_str());
 			return true;
 		}
 		}
@@ -895,7 +895,7 @@ namespace
 
 	void WindowTitleSprintfHook(char* destBuf, char* format, char* version)
 	{
-		std::string windowTitle = "ElDewrito | Version: " + Utils::Version::GetVersionString() + " | Build Date: " __DATE__;
+		std::string windowTitle = "Halo Online | Version: " + Utils::Version::GetVersionString() + " | Build Date: " __DATE__;
 		strcpy_s(destBuf, 0x40, windowTitle.c_str());
 	}
 

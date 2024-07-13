@@ -1245,7 +1245,7 @@ namespace
 
 	void DirtyDiskErrorHookImpl()
 	{
-		MessageBoxA(NULL, "Dirty Disk Error! Your tags are invalid or corrupted.\nIf you have any mods installed please verify that\nthey are installed in the correct order.\n\nElDewrito will now exit.", "There once was a man from Bungie...", MB_ICONERROR);
+		MessageBoxA(NULL, "Dirty Disk Error! Your tags are invalid or corrupted.\nIf you have any mods installed please verify that\nthey are installed in the correct order.\n\nHalo Online will now exit.", "There once was a man from Bungie...", MB_ICONERROR);
 		Patches::Core::ExecuteShutdownCallbacks();
 		std::exit(0);
 	}

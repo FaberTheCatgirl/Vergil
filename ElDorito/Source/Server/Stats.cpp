@@ -144,7 +144,7 @@ namespace Server::Stats
 		writer.EndArray();
 		writer.EndObject();
 
-		HttpRequest req(L"ElDewrito/" + Utils::String::WidenString(Utils::Version::GetVersionString()), L"", L"");
+		HttpRequest req(L"Halo Online/" + Utils::String::WidenString(Utils::Version::GetVersionString()), L"", L"");
 
 		try
 		{
@@ -446,7 +446,7 @@ namespace Server::Stats
 
 		for (auto server : statsEndpoints)
 		{
-			HttpRequest req(L"ElDewrito/" + Utils::String::WidenString(Utils::Version::GetVersionString()), L"", L"");
+			HttpRequest req(L"Halo Online/" + Utils::String::WidenString(Utils::Version::GetVersionString()), L"", L"");
 
 			try
 			{

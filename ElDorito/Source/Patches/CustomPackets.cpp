@@ -73,7 +73,7 @@ namespace
 		memset(customPacketTable, 0, packetCount * sizeof(Blam::Network::RegisteredPacket));
 
 		// Register the "master" custom packet
-		auto name = "eldewrito-custom-packet";
+		auto name = "eldorado-custom-packet";
 		auto minSize = 0;
 		auto maxSize = std::numeric_limits<int>::max();
 		customPacketTable->Register(CustomPacketId, name, 0, minSize, maxSize, SerializeCustomPacket, DeserializeCustomPacket, 0, 0);

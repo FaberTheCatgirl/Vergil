@@ -19,6 +19,21 @@ namespace Server::DedicatedServer
 				Blam::Network::SetLobbyType(Blam::eLobbyTypeMultiplayer);
 				needToSetMode = true;
 			}
+			// Faber: Code Written for Dynamic Gamemode Switching
+			//else
+			//
+			//if (Blam::Network::GetLobbyType() != Blam::eLobbyTypeCampaign) {
+			//	Blam::Network::SetLobbyType(Blam::eLobbyTypeCampaign);
+			//	needToSetMode = true;
+			//}
+			//
+			//else
+			//
+			//if (Blam::Network::GetLobbyType() != Blam::eLobbyTypeFireFight) {
+			//	Blam::Network::SetLobbyType(Blam::eLobbyTypeFireFight);
+			//	needToSetMode = true;
+			//}
+
 			return;
 		}
 

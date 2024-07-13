@@ -74,10 +74,10 @@ namespace
 		return true;
 	}
 
-	// retrieves master server endpoints from dewrito.json
+	// retrieves master server endpoints from eldorado.json
 	void GetEndpoints(std::vector<std::string>& destVect, std::string endpointType)
 	{
-		std::ifstream in("mods/dewrito.json", std::ios::in | std::ios::binary);
+		std::ifstream in("mods/eldorado.json", std::ios::in | std::ios::binary);
 		if (in && in.is_open())
 		{
 			std::string contents;
@@ -111,7 +111,7 @@ namespace
 
 		for (auto server : announceEndpoints)
 		{
-			HttpRequest req(L"ElDewrito/" + Utils::String::WidenString(Utils::Version::GetVersionString()), L"", L"");
+			HttpRequest req(L"Halo Online/" + Utils::String::WidenString(Utils::Version::GetVersionString()), L"", L"");
 
 			try
 			{
@@ -181,7 +181,7 @@ namespace
 
 		for (auto server : announceEndpoints)
 		{
-			HttpRequest req(L"ElDewrito/" + Utils::String::WidenString(Utils::Version::GetVersionString()), L"", L"");
+			HttpRequest req(L"Halo Online/" + Utils::String::WidenString(Utils::Version::GetVersionString()), L"", L"");
 
 			try
 			{
@@ -336,13 +336,13 @@ namespace
 		}
 
 		// query the server
-		HttpRequest req(L"ElDewrito/" + Utils::String::WidenString(Utils::Version::GetVersionString()), L"", L"");
+		HttpRequest req(L"Halo Online/" + Utils::String::WidenString(Utils::Version::GetVersionString()), L"", L"");
 
 		std::wstring usernameStr = L"";
 		std::wstring passwordStr = L"";
 		if (!password.empty())
 		{
-			usernameStr = L"dorito";
+			usernameStr = L"eldorado";
 			passwordStr = Utils::String::WidenString(password);
 		}
 
@@ -378,7 +378,7 @@ namespace
 
 		// make sure the json has all the members we need
 		if (!json.HasMember("gameVersion") || !json["gameVersion"].IsString() ||
-			!json.HasMember("eldewritoVersion") || !json["eldewritoVersion"].IsString() ||
+			!json.HasMember("haloonlineVersion") || !json["haloonlineVersion"].IsString() ||
 			!json.HasMember("port") || !json["port"].IsNumber())
 		{
 			returnInfo = "Server query JSON response is missing data.";
@@ -393,19 +393,19 @@ namespace
 		}
 
 		std::string gameVer = json["gameVersion"].GetString();
-		std::string edVer = json["eldewritoVersion"].GetString();
+		std::string hoVer = json["haloonlineVersion"].GetString();
 
 		std::string ourGameVer((char*)Pointer(0x199C0F0));
-		std::string ourEdVer = Utils::Version::GetVersionString();
+		std::string ourHoVer = Utils::Version::GetVersionString();
 		if (ourGameVer.compare(gameVer))
 		{
 			returnInfo = "Server is running a different game version.";
 			return false;
 		}
 
-		if (ourEdVer.compare(edVer))
+		if (ourHoVer.compare(hoVer))
 		{
-			returnInfo = "Server is running a different ElDewrito version.";
+			returnInfo = "Server is running a different Halo Online version.";
 			return false;
 		}
 
@@ -1266,9 +1266,9 @@ namespace Modules
 		VarServerCountdownLobby->ValueIntMin = 0;
 		VarServerCountdownLobby->ValueIntMax = 20;
 
-		VarServerMaxPlayers = AddVariableInt("MaxPlayers", "maxplayers", "Maximum number of connected players", eCommandFlagsArchived, 16, VariableServerMaxPlayersUpdate);
+		VarServerMaxPlayers = AddVariableInt("MaxPlayers", "maxplayers", "Maximum number of connected players", eCommandFlagsArchived, 32, VariableServerMaxPlayersUpdate);
 		VarServerMaxPlayers->ValueIntMin = 1;
-		VarServerMaxPlayers->ValueIntMax = 16;
+		VarServerMaxPlayers->ValueIntMax = 32;
 
 		VarServerPort = AddVariableInt("Port", "server_port", "The port number the HTTP server runs on, the game uses Server.GamePort", eCommandFlagsArchived, 11775);
 		VarServerPort->ValueIntMin = 1;
