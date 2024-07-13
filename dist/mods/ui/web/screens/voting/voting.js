@@ -128,7 +128,7 @@ function vote(number) {
         } else {
             $('.vetoBox').html('<a onclick="veto();"><img class="button">Veto Map and Game</a>');
         }
-        $(".vetoBox img").attr('src', 'dew://assets/buttons/' + settingsArray['Game.IconSet'] + '_X.png');
+        $(".vetoBox img").attr('src', 's3d://assets/buttons/' + settingsArray['Game.IconSet'] + '_X.png');
     }
     if (WinnerChosen.length <= 0) {
         dew.command('Game.PlaySound sound\\game_sfx\\ui\\button_based_ui_sounds\\a_button.snd!');
@@ -136,11 +136,11 @@ function vote(number) {
 }
 
 function initGamepad() {
-    $("#scoreboardButton img").attr('src', 'dew://assets/buttons/' + settingsArray['Game.IconSet'] + '_Back.png');
-    $("#settingsButton img").attr('src', 'dew://assets/buttons/' + settingsArray['Game.IconSet'] + '_Start.png');
-    $("#vetoButton img").attr('src', 'dew://assets/buttons/' + settingsArray['Game.IconSet'] + '_X.png');
-    $("#closeButton img").attr('src', 'dew://assets/buttons/' + settingsArray['Game.IconSet'] + '_B.png');
-    $(".vetoBox img").attr('src', 'dew://assets/buttons/' + settingsArray['Game.IconSet'] + '_X.png');
+    $("#scoreboardButton img").attr('src', 's3d://assets/buttons/' + settingsArray['Game.IconSet'] + '_Back.png');
+    $("#settingsButton img").attr('src', 's3d://assets/buttons/' + settingsArray['Game.IconSet'] + '_Start.png');
+    $("#vetoButton img").attr('src', 's3d://assets/buttons/' + settingsArray['Game.IconSet'] + '_X.png');
+    $("#closeButton img").attr('src', 's3d://assets/buttons/' + settingsArray['Game.IconSet'] + '_B.png');
+    $(".vetoBox img").attr('src', 's3d://assets/buttons/' + settingsArray['Game.IconSet'] + '_X.png');
     if (settingsArray['Settings.Gamepad'] == 1) {
         if (!repGP) {
             repGP = window.setInterval(checkGamepad, 1000 / 60);
@@ -262,7 +262,7 @@ dew.on("VetoOptionsUpdated", function (event) {
         $('#vetoButton, #vetoCount').show();
         $('#votingDesc').html('Vote to veto game and map... <span id="timer"></span>');
         $("<div class='vetoBox'><a onclick='veto()'><img class='button'>Veto Map and Game</a></div>").appendTo($("#votingOptions"));
-        $(".vetoBox img").attr('src', 'dew://assets/buttons/' + settingsArray['Game.IconSet'] + '_X.png');
+        $(".vetoBox img").attr('src', 's3d://assets/buttons/' + settingsArray['Game.IconSet'] + '_X.png');
     } else {
         votingType = "ended";
         voting = false;
@@ -305,7 +305,7 @@ dew.on("VotingOptionsUpdated", function (event) {
                     dlc: (map.hasOwnProperty('dlc')) ? map.dlc : false,
                     image: map.image
                 })
-                .html('<span class="votebox"></span><img class="mapImage" src="dew://assets/maps/small/' + map.image + '.png"><span class="gameType">' + entry.typename + '</span><span class="mapName">' + entry.mapname + '</span><span class="selector">0</span>')
+                .html('<span class="votebox"></span><img class="mapImage" src="s3d://assets/maps/small/' + map.image + '.png"><span class="gameType">' + entry.typename + '</span><span class="mapName">' + entry.mapname + '</span><span class="selector">0</span>')
                 .appendTo($("#votingOptions"));
         }
     });
@@ -466,7 +466,7 @@ function loadMapImage(map) {
 
 let GameDLCMaps = [];
 function loadMapImages() {
-    $.getJSON('dew://assets/maps/images.json', (images) => {
+    $.getJSON('s3d://assets/maps/images.json', (images) => {
         $.each(images, (i, map) => {           
             GameDLCMaps.push({
                 name: map.mapName,

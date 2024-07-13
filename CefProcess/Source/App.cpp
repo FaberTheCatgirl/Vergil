@@ -5,8 +5,8 @@ App::App()
 	// Create the renderer-side message router
 	// These functions must be named the same as the ones defined by ED
 	CefMessageRouterConfig config;
-	config.js_query_function = "dewQuery";
-	config.js_cancel_function = "dewQueryCancel";
+	config.js_query_function = "s3dQuery";
+	config.js_cancel_function = "s3dQueryCancel";
 	router = CefMessageRouterRendererSide::Create(config);
 }
 
@@ -17,7 +17,7 @@ CefRefPtr<CefRenderProcessHandler> App::GetRenderProcessHandler()
 
 void App::OnRegisterCustomSchemes(CefRawPtr<CefSchemeRegistrar> registrar)
 {
-	registrar->AddCustomScheme("dew", true, false, false, true, true, false);
+	registrar->AddCustomScheme("s3d", true, false, false, true, true, false);
 	registrar->AddCustomScheme("medals", true, false, false, true, true, false);
 }
 

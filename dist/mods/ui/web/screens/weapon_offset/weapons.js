@@ -198,10 +198,10 @@ function rightToggle(){
 function onControllerConnect(){
     updateSelection(itemNumber); 
     dew.command('Game.IconSet', {}).then(function(controllerType){
-        $("#buttonBar img").eq(0).attr("src","dew://assets/buttons/"+controllerType+"_Y.png");
-        $("#buttonBar img").eq(1).attr("src","dew://assets/buttons/"+controllerType+"_X.png");
-        $("#buttonBar img").eq(2).attr("src","dew://assets/buttons/"+controllerType+"_A.png");
-        $("#buttonBar img").eq(3).attr("src","dew://assets/buttons/"+controllerType+"_B.png");
+        $("#buttonBar img").eq(0).attr("src","s3d://assets/buttons/"+controllerType+"_Y.png");
+        $("#buttonBar img").eq(1).attr("src","s3d://assets/buttons/"+controllerType+"_X.png");
+        $("#buttonBar img").eq(2).attr("src","s3d://assets/buttons/"+controllerType+"_A.png");
+        $("#buttonBar img").eq(3).attr("src","s3d://assets/buttons/"+controllerType+"_B.png");
         $('#buttonBar img').show();
     });
 }

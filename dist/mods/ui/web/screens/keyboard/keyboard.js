@@ -32,8 +32,8 @@ dew.on("show", function (event) {
     };
     
     if(settingsArray['Settings.Gamepad'] == 1){
-        $('#ok .button').attr('src','dew://assets/buttons/'+settingsArray['Game.IconSet']+'_A.png');
-        $('#cancel .button').attr('src','dew://assets/buttons/'+settingsArray['Game.IconSet']+'_B.png');
+        $('#ok .button').attr('src','s3d://assets/buttons/'+settingsArray['Game.IconSet']+'_A.png');
+        $('#cancel .button').attr('src','s3d://assets/buttons/'+settingsArray['Game.IconSet']+'_B.png');
         $('.button').show();   
     }else{
         $('.button').hide();   

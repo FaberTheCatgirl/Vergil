@@ -1,4 +1,4 @@
-dew.makeColorPicker = function(elem) {
+s3d.makeColorPicker = function(elem) {
     var _container = elem,
         _callbacks = {},
         _hueSliderElement = null,

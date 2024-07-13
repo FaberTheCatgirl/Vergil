@@ -1,4 +1,4 @@
-﻿@font-face{font-family:"Conduit ITC";src:url(dew://lib/Conduit-ITC.woff);}
+﻿@font-face{font-family:"Conduit ITC";src:url(s3d://lib/Conduit-ITC.woff);}
 
 html {
     color: #FFF;
@@ -114,7 +114,7 @@ html {
 
 
 .selected{
-	background-image: url(dew://assets/ux/buttonhover.svg);
+	background-image: url(s3d://assets/ux/buttonhover.svg);
 	background-position: center;
 	background-repeat: no-repeat;
 }

@@ -1,5 +1,5 @@
 (function () {
-    let _screenManager = dew.makeScreenManager();
+    let _screenManager = s3d.makeScreenManager();
     let itemDatasource = makeItemDatasource();
     let _containerElement = document.getElementById('container');
     let _footerElement = _containerElement.querySelector('.window-footer');
@@ -23,7 +23,7 @@
         if (e.target == _containerElement) {
             e.preventDefault();
             e.stopPropagation();
-            dew.ui.playSound(dew.ui.Sounds.B);
+            s3d.ui.playSound(s3d.ui.Sounds.B);
             hide();
         }
     }, false);
@@ -32,7 +32,7 @@
         _screenManager.push('main', { items: items.firstChild });
     });
 
-    dew.on('show', function (e) {
+    s3d.on('show', function (e) {
         updateObjectQuotaText();
         _hidden = false;
         _budget = {};
@@ -41,7 +41,7 @@
             _budget[tagIndex] = item;
         }
 
-        dew.command('Settings.Gamepad').then(response => {
+        s3d.command('Settings.Gamepad').then(response => {
             if (parseInt(response) == 1)
                 _containerElement.classList.add('using-controller');
             else
@@ -55,7 +55,7 @@
         let _categoryTreeElement = _screenElement.querySelector('.category-tree');
         let _infoBoxElement = _screenElement.querySelector('.window-info-box');
         let _legendElement = _footerElement.querySelector('.main-legend');
-        let _categoryTree = dew.makeTreeList(_categoryTreeElement);
+        let _categoryTree = s3d.makeTreeList(_categoryTreeElement);
         let _active = false;
         let _path = [];
 
@@ -84,8 +84,8 @@
             } else if (id === 'recent') {
                 _screenManager.push('items', { path: ['RECENTLY USED ITEMS'], items: _itemHistory, shouldDisplayType: true });
             } else if(id === 'map_options') {
-                dew.hide();
-                dew.command('Forge.MapOptions');
+                s3d.hide();
+                s3d.command('Forge.MapOptions');
             }
             else {
                 var itemNodes = path.getElementsByTagName('item');
@@ -139,18 +139,18 @@
                     return;
 
                 switch (action) {
-                    case dew.ui.Actions.X:
+                    case s3d.ui.Actions.X:
                         hide();
-                        dew.ui.playSound(dew.ui.Sounds.B);
+                        s3d.ui.playSound(s3d.ui.Sounds.B);
                         break;
-                    case dew.ui.Actions.B:
+                    case s3d.ui.Actions.B:
                         if (_categoryTree.atRoot()) {
                             hide();
                         }
                         break;
-                    case dew.ui.Actions.Y:
+                    case s3d.ui.Actions.Y:
                         screenManager.push('tool_settings');
-                        dew.ui.playSound(dew.ui.Sounds.X);
+                        s3d.ui.playSound(s3d.ui.Sounds.X);
                         break;
                 }
 
@@ -164,18 +164,18 @@
                 case 'back':
                     if (_categoryTree.atRoot()) {
                         hide();
-                        dew.ui.playSound(dew.ui.Sounds.B);
+                        s3d.ui.playSound(s3d.ui.Sounds.B);
                     }
                     else {
                         _categoryTree.pop();
                     }
                     break;
                 case 'hide':
-                    dew.ui.playSound(dew.ui.Sounds.B);
+                    s3d.ui.playSound(s3d.ui.Sounds.B);
                     hide();
                     break;
                 case 'tool_settings':
-                    dew.ui.playSound(dew.ui.Sounds.A);
+                    s3d.ui.playSound(s3d.ui.Sounds.A);
                     screenManager.push('tool_settings');
                     break;
                 default:
@@ -213,7 +213,7 @@
         let _infoBoxElement = _screenElement.querySelector('.window-info-box');
         let _pathElement = _screenElement.querySelector('.category-path');
 
-        let _itemList = dew.makeListWidget(_itemListElement, {
+        let _itemList = s3d.makeListWidget(_itemListElement, {
             itemSelector: '.item',
             hoverSelection: true,
             hoverClass: 'selected',
@@ -233,7 +233,7 @@
             setHelpText(_items[index].help || '');
         });
 
-        dew.on('show', function (e) {
+        s3d.on('show', function (e) {
             if (_active) {
                 // hack: wait on the next tick the budget will be updated, as to execute synchronously
                 setTimeout(function () {
@@ -289,13 +289,13 @@
                 if (!_active)
                     return false;
                 switch (action) {
-                    case dew.ui.Actions.X:
+                    case s3d.ui.Actions.X:
                         hide();
-                        dew.ui.playSound(dew.ui.Sounds.B);
+                        s3d.ui.playSound(s3d.ui.Sounds.B);
                         break;
-                    case dew.ui.Actions.B:
+                    case s3d.ui.Actions.B:
                         setHelpText('');
-                        dew.ui.playSound(dew.ui.Sounds.B);
+                        s3d.ui.playSound(s3d.ui.Sounds.B);
                         screenManager.pop();
                         break;
                 }
@@ -340,11 +340,11 @@
                 case 'place':
                     break;
                 case 'back':
-                    dew.ui.playSound(dew.ui.Sounds.B);
+                    s3d.ui.playSound(s3d.ui.Sounds.B);
                     screenManager.pop();
                     break;
                 case 'hide':
-                    dew.ui.playSound(dew.ui.Sounds.B);
+                    s3d.ui.playSound(s3d.ui.Sounds.B);
                     hide();
                     break;
                 default:
@@ -361,7 +361,7 @@
         let _screenElement = document.querySelector('.search-screen');
         let _searchResultListElement = _screenElement.querySelector('.search-results');
         let _searchInputElement = _screenElement.querySelector('.search-textbox');
-        let _searchResultList = dew.makeListWidget(_searchResultListElement, {
+        let _searchResultList = s3d.makeListWidget(_searchResultListElement, {
             itemSelector: '.item',
             hoverSelection: true,
             hoverClass: 'selected',
@@ -402,7 +402,7 @@
 
         });
 
-        dew.ui.on('scroll', function (type, axis, direction) {
+        s3d.ui.on('scroll', function (type, axis, direction) {
             if (!_active)
                 return;
 
@@ -411,7 +411,7 @@
                     _searchInputElement.blur();
                     _searchResultList.focus();
                     if (_searchResultList.setSelected(0) != -1)
-                        dew.ui.playSound(dew.ui.Sounds.VerticalNavigation);
+                        s3d.ui.playSound(s3d.ui.Sounds.VerticalNavigation);
                     return false;
                 }
             }
@@ -449,12 +449,12 @@
                 if (!_active)
                     return;
                 switch (action) {
-                    case dew.ui.Actions.X:
+                    case s3d.ui.Actions.X:
                         hide();
-                        dew.ui.playSound(dew.ui.Sounds.B);
+                        s3d.ui.playSound(s3d.ui.Sounds.B);
                         break;
-                    case dew.ui.Actions.B:
-                        dew.ui.playSound(dew.ui.Sounds.B);
+                    case s3d.ui.Actions.B:
+                        s3d.ui.playSound(s3d.ui.Sounds.B);
                         screenManager.pop();
                         break;
                 }
@@ -580,7 +580,7 @@
         const _screenElement = document.querySelector('.prefabs-screen');
         let _prefabListElement = _screenElement.querySelector('.prefab-list');
         let _legendElement = _footerElement.querySelector('.prefab-legend');
-        let _prefabList = dew.makeListWidget(_prefabListElement, {
+        let _prefabList = s3d.makeListWidget(_prefabListElement, {
             wrapAround: true,
             selectedClass: 'selected',
             hoverClass: 'selected',
@@ -590,7 +590,7 @@
         let _lastSelectedIndex = -1;
 
         _prefabList.on('select', ({ index, element }) => {
-            dew.command(`Forge.LoadPrefab "${_prefabs[index].filename}"`).then(hide);
+            s3d.command(`Forge.LoadPrefab "${_prefabs[index].filename}"`).then(hide);
         });
 
         return {
@@ -626,15 +626,15 @@
             },
             onAction: function ({ action }) {
                 switch (action) {
-                    case dew.ui.Actions.X:
+                    case s3d.ui.Actions.X:
                         hide();
-                        dew.ui.playSound(dew.ui.Sounds.B);
+                        s3d.ui.playSound(s3d.ui.Sounds.B);
                         break;
-                    case dew.ui.Actions.B:
-                        dew.ui.playSound(dew.ui.Sounds.B);
+                    case s3d.ui.Actions.B:
+                        s3d.ui.playSound(s3d.ui.Sounds.B);
                         screenManager.pop();
                         break;
-                    case dew.ui.Actions.Y:
+                    case s3d.ui.Actions.Y:
                         handleDelete();
                         break;
                 }
@@ -654,19 +654,19 @@
                 body: `You are about to delete prefab &quot${prefab.name}&quot;`,
                 onAction: ({ action }) => {
                     switch (action) {
-                        case dew.ui.Actions.A:
+                        case s3d.ui.Actions.A:
                             confirmDelete(selected.index);
-                            dew.ui.playSound(dew.ui.Sounds.A);
+                            s3d.ui.playSound(s3d.ui.Sounds.A);
                             screenManager.pop();
                             break;
-                        case dew.ui.Actions.B:
-                            dew.ui.playSound(dew.ui.Sounds.B);
+                        case s3d.ui.Actions.B:
+                            s3d.ui.playSound(s3d.ui.Sounds.B);
                             screenManager.pop();
                             break;
                     }
                 }
             });
-            dew.ui.playSound(dew.ui.Sounds.X);
+            s3d.ui.playSound(s3d.ui.Sounds.X);
 
         }
 
@@ -674,7 +674,7 @@
             let prefab = _prefabs[index];
             _prefabs = null;
             _lastSelectedIndex = index;
-            dew.command(`Forge.DeletePrefab "${prefab.filename}"`).then(response => {
+            s3d.command(`Forge.DeletePrefab "${prefab.filename}"`).then(response => {
                 showToast(`Prefab \"${prefab.name}\" deleted`);
             })
             .catch(response => showToast(response.message));
@@ -701,7 +701,7 @@
             if (_prefabs)
                 return callback(_prefabs);
 
-            dew.command('Forge.DumpPrefabs').then(result => {
+            s3d.command('Forge.DumpPrefabs').then(result => {
                 _prefabs = JSON.parse(result);
                 callback(_prefabs);
             });
@@ -710,14 +710,14 @@
         function onLegendClick(e) {
             switch (e.target.rel) {
                 case 'place':
-                    dew.ui.playSound(dew.ui.Sounds.A);
+                    s3d.ui.playSound(s3d.ui.Sounds.A);
                     break;
                 case 'back':
-                    dew.ui.playSound(dew.ui.Sounds.B);
+                    s3d.ui.playSound(s3d.ui.Sounds.B);
                     screenManager.pop();
                     break;
                 case 'hide':
-                    dew.ui.playSound(dew.ui.Sounds.B);
+                    s3d.ui.playSound(s3d.ui.Sounds.B);
                     hide();
                     break;
                 case 'delete':
@@ -737,19 +737,19 @@
             _itemHistory.unshift(item);
 
         if (item.properties) {
-            dew.callMethod('forgeaction', {
+            s3d.callMethod('forgeaction', {
                 type: 2,
                 data: item.properties
             });
         }
 
-        dew.command(`Forge.SpawnItem 0x${item.tagIndex.toString(16)}`, () => { });
+        s3d.command(`Forge.SpawnItem 0x${item.tagIndex.toString(16)}`, () => { });
         hide();
     }
 
     function hide() {
         _hidden = true;
-        dew.hide();
+        s3d.hide();
     }
 
     function makeModalScreen() {
@@ -789,10 +789,10 @@
         function onLegendClick(e) {
             switch (e.target.rel) {
                 case 'confirm':
-                    _onAction({ inputType: 'legend', action: dew.ui.Actions.A });
+                    _onAction({ inputType: 'legend', action: s3d.ui.Actions.A });
                     break;
                 case 'cancel':
-                    _onAction({ inputType: 'legend', action: dew.ui.Actions.B });
+                    _onAction({ inputType: 'legend', action: s3d.ui.Actions.B });
                     break;
             }
 
@@ -808,7 +808,7 @@
         let _screenElement = _containerElement.querySelector('.tool-settings-screen');
         let _propertyGridElement = _screenElement.querySelector('.property-grid');
         let _legendElement = _containerElement.querySelector('.tool-settings-legend');
-        let _propertyGrid = dew.makePropertyGrid(_propertyGridElement);
+        let _propertyGrid = s3d.makePropertyGrid(_propertyGridElement);
         let _saving = false;
 
 
@@ -829,13 +829,13 @@
         let data = {};
 
 
-        function makeDewProperty(variable, label, type, meta, description) {
+        function makeS3dProperty(variable, label, type, meta, description) {
             return {
                 label: label,
                 type: type,
                 getValue: () => data[variable] || 0,
                 setValue: (value) => {
-                    dew.command(`${variable} ${value}`);
+                    s3d.command(`${variable} ${value}`);
                 },
                 meta: meta,
                 description: description
@@ -844,7 +844,7 @@
 
         let model = _propertyGrid.createModel();
         model.group('Monitor', m => {
-            m.add(makeDewProperty('Forge.MonitorSpeed', 'Monitor Speed', 'spinner', [
+            m.add(makeS3dProperty('Forge.MonitorSpeed', 'Monitor Speed', 'spinner', [
                 { label: 'Z-Fight Fixer', value: 0 },
                 { label: 'Slower', value: 1 },
                 { label: 'Slow', value: 2 },
@@ -852,15 +852,15 @@
                 { label: 'Fast', value: 4 },
                 { label: 'Faster', value: 5 }
             ]));
-            m.add(makeDewProperty('Forge.MonitorNoclip', 'Noclip', 'spinner', [
+            m.add(makeS3dProperty('Forge.MonitorNoclip', 'Noclip', 'spinner', [
                 { label: 'Disabled', value: 0 },
                 { label: 'Enabled', value: 1 }
             ]));
 
 
-            m.add(makeDewProperty('Forge.GrabDistance', 'Grab Distance', 'range', { min: 1, max: 60, step: 0.1 }));
-            m.add(makeDewProperty('Forge.RotationSensitivity', 'Rotation Sensitvity', 'range', { min: 0, max: 4, step: 0.05 }));
-            m.add(makeDewProperty('Forge.RotationSnap', 'Rotation Snap', 'spinner', [
+            m.add(makeS3dProperty('Forge.GrabDistance', 'Grab Distance', 'range', { min: 1, max: 60, step: 0.1 }));
+            m.add(makeS3dProperty('Forge.RotationSensitivity', 'Rotation Sensitvity', 'range', { min: 0, max: 4, step: 0.05 }));
+            m.add(makeS3dProperty('Forge.RotationSnap', 'Rotation Snap', 'spinner', [
                 { label: 'Off', value: 0 },
                 { label: '3', value: 1 },
                 { label: '5', value: 2 },
@@ -870,22 +870,22 @@
                 { label: '90', value: 6 },
             ]));
 
-            m.add(makeDewProperty('Forge.SelectionRenderer', 'Selection Renderer', 'spinner', [
+            m.add(makeS3dProperty('Forge.SelectionRenderer', 'Selection Renderer', 'spinner', [
                 { label: 'Default', value: 0 },
                 { label: 'Box', value: 1 }
             ]))
 
-            m.add(makeDewProperty('Forge.ShowInvisibles', 'Show Invisibles', 'spinner', toggleOptions));
+            m.add(makeS3dProperty('Forge.ShowInvisibles', 'Show Invisibles', 'spinner', toggleOptions));
         });
 
         model.group('Magnets', m => {
-            m.add(makeDewProperty('Forge.Magnets', 'Magnets', 'spinner', toggleOptions));
-            m.add(makeDewProperty('Forge.MagnetsStrength', 'Magnet Strength', 'range', { min: 0, max: 5, step: 0.01 }));
+            m.add(makeS3dProperty('Forge.Magnets', 'Magnets', 'spinner', toggleOptions));
+            m.add(makeS3dProperty('Forge.MagnetsStrength', 'Magnet Strength', 'range', { min: 0, max: 5, step: 0.01 }));
         });
 
         model.group('Duplicating', m => {
-            m.add(makeDewProperty('Forge.CloneMultiplier', 'Multiplier', 'range', { min: 1, max: 50, step: 1, isInteger: true }));
-            m.add(makeDewProperty('Forge.CloneDepth', 'Depth', 'range', { min: 0, max: 5, step: 0.01 }));
+            m.add(makeS3dProperty('Forge.CloneMultiplier', 'Multiplier', 'range', { min: 1, max: 50, step: 1, isInteger: true }));
+            m.add(makeS3dProperty('Forge.CloneDepth', 'Depth', 'range', { min: 0, max: 5, step: 0.01 }));
         });
 
 
@@ -896,7 +896,7 @@
             activate: function (props) {
                 setTitle('Tool Settings');
 
-                dew.getCommands().then(function (commands) {
+                s3d.getCommands().then(function (commands) {
                     for (let cmd of commands) {
                         if (preload[cmd.name]) {
                             data[cmd.name] = cmd.value;
@@ -926,17 +926,17 @@
             },
             onAction: function ({ action }) {
                 switch (action) {
-                    case dew.ui.Actions.B:
+                    case s3d.ui.Actions.B:
                         screenManager.pop();
-                        dew.ui.playSound(dew.ui.Sounds.B);
+                        s3d.ui.playSound(s3d.ui.Sounds.B);
                         break;
-                    case dew.ui.Actions.X:
+                    case s3d.ui.Actions.X:
                         hide();
-                        dew.ui.playSound(dew.ui.Sounds.B);
+                        s3d.ui.playSound(s3d.ui.Sounds.B);
                         break;
-                    case dew.ui.Actions.Y:
+                    case s3d.ui.Actions.Y:
                         saveSettings();
-                        dew.ui.playSound(dew.ui.Sounds.A);
+                        s3d.ui.playSound(s3d.ui.Sounds.A);
                         break;
                 }
             }
@@ -947,15 +947,15 @@
                 case 'select':
                     break;
                 case 'back':
-                    dew.ui.playSound(dew.ui.Sounds.B);
+                    s3d.ui.playSound(s3d.ui.Sounds.B);
                     screenManager.pop();
                     break;
                 case 'hide':
-                    dew.ui.playSound(dew.ui.Sounds.B);
+                    s3d.ui.playSound(s3d.ui.Sounds.B);
                     hide();
                     break;
                 case 'save_settings':
-                    dew.ui.playSound(dew.ui.Sounds.A);
+                    s3d.ui.playSound(s3d.ui.Sounds.A);
                     saveSettings();
                     break;
                 default:
@@ -972,7 +972,7 @@
                 return;
 
             _saving = true;
-            dew.command('WriteConfig').then(response => {
+            s3d.command('WriteConfig').then(response => {
                 showToast('Settings Saved');
             })
                 .catch(response => {
@@ -986,7 +986,7 @@
     }
 
     function updateObjectQuotaText() {
-        dew.command('Forge.Budget', {}).then(response => {
+        s3d.command('Forge.Budget', {}).then(response => {
             var quota = JSON.parse(response);
             _objectQuotaElement.innerHTML = `${quota.total_used} / ${quota.total_available}`;
         });
@@ -998,7 +998,7 @@
     }
 
     function showToast(message) {
-        dew.toast({body: `<div style="font-size: 1.2em; padding: 4px">${message}</div>`});
+        s3d.toast({body: `<div style="font-size: 1.2em; padding: 4px">${message}</div>`});
     }
 
 })();

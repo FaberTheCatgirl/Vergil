@@ -21,7 +21,7 @@
 
 @font-face {
     font-family: 'Conduit ITC';
-    src: url(dew://lib/Conduit-ITC.woff);
+    src: url(s3d://lib/Conduit-ITC.woff);
 }
 
 * {

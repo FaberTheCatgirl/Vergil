@@ -1,4 +1,4 @@
-@font-face{font-family:"Conduit ITC";src:url(dew://lib/Conduit-ITC.woff);}
+@font-face{font-family:"Conduit ITC";src:url(s3d://lib/Conduit-ITC.woff);}
 
 html {
     cursor: default;    
@@ -15,7 +15,7 @@ body {
     margin: 0;
     width: 100%;
     height: 100%;
-    background-image: url(dew://assets/haloonline/title_bg.jpg);
+    background-image: url(s3d://assets/haloonline/title_bg.jpg);
     background-size: cover;
     background-position: 50% 0%;
     background-repeat: no-repeat;
@@ -27,7 +27,7 @@ body {
     bottom: 42%;
     width: 100%;
     height: 20%;
-    background-image: url(dew://assets/haloonline/ho_logo.png);
+    background-image: url(s3d://assets/haloonline/ho_logo.png);
     background-size: auto 100%;
     background-position: 50%;
     background-repeat: no-repeat;
@@ -39,7 +39,7 @@ body {
     right: 10%;
     height: 7vh;
     width: 25vh;
-    background-image: url(dew://assets/haloonline/ed-logo.png);
+    background-image: url(s3d://assets/haloonline/ed-logo.png);
     background-size: auto 100%;
     background-position: 50%;
     background-repeat: no-repeat;
@@ -177,7 +177,7 @@ body {
     width: 100%;
     height: 396px;
     background-color: #14234a;
-		background-image: url(dew://assets/announcements/welcome_01.jpg);
+		background-image: url(s3d://assets/announcements/welcome_01.jpg);
 		background-size: 100% auto;
 		background-repeat: no-repeat;
     padding-left: 120px;

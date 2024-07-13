@@ -1,0 +1,20 @@
+{
+  "updateServiceUrl": "http://constituent.systems/anvil-updates/update.json",
+  "updateChannelsUrl": "",
+  "stats": {
+    "submitUrls": [
+      "http://constituent.systems/anvil-api/submit"
+    ],
+    "playerInfo": "http://constituent.systems/anvil-api/playersinfo"
+  },
+  "banlistUrls": [
+    "http://constituent.systems/anvil-api/banlist"
+  ],
+  "playerReportUrls": [],
+  "masterServers": [
+    {
+      "list": "http://constituent.systems:8080/anvil/list",
+      "announce": "http://constituent.systems:8080/anvil/announce",
+      "stats": "http://constituent.systems:8080/anvil/stats"
+    }
+}

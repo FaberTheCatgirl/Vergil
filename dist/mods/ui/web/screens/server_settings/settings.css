@@ -1,4 +1,4 @@
-@font-face{font-family:"Conduit ITC";src:url(dew://lib/Conduit-ITC.woff);}
+@font-face{font-family:"Conduit ITC";src:url(s3d://lib/Conduit-ITC.woff);}
 
 html {
 	color: 98b3d3;
@@ -408,7 +408,7 @@ textarea.setting{
     right: 25.5vh;    
 }
 .selectedElement {
-	background-image: url(dew://assets/ux/buttonhover.svg);
+	background-image: url(s3d://assets/ux/buttonhover.svg);
 	background-position: center;
 	background-repeat: no-repeat;
 	color: white;
@@ -417,7 +417,7 @@ textarea.setting{
 	color: white;
 }
 .selectedElement select, .selectedElement .colorBox{
-	background-image: url(dew://assets/ux/arrow_right.svg), url(dew://assets/ux/arrow_left.svg);
+	background-image: url(s3d://assets/ux/arrow_right.svg), url(s3d://assets/ux/arrow_left.svg);
 	background-position: 100% 50%, 0% 50%;
 	background-repeat: no-repeat, no-repeat;
 	background-size: 1.2vh 1.2vh, 1.2vh 1.2vh;
@@ -535,7 +535,7 @@ span button.tinySetting:hover{
 }
 .selectedElement select:hover{
 	color: white;
-	background-image: url(dew://assets/ux/arrow_down.svg);
+	background-image: url(s3d://assets/ux/arrow_down.svg);
 	background-position: 98% 50%;
 	background-repeat: no-repeat;
 	background-size: 1.2vh 1.2vh;

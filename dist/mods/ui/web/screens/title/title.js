@@ -82,19 +82,19 @@ dew.on("show", function(e){
              }
         });
        if(settingsArray['Settings.Gamepad'] == 1){
-            $('#dpad').attr('src','dew://assets/buttons/'+settingsArray['Game.IconSet']+'_Dpad.png');
+            $('#dpad').attr('src','s3d://assets/buttons/'+settingsArray['Game.IconSet']+'_Dpad.png');
             $("#dpad").show();
             $( "#up, #down, #left, #right" ).hide();
-            $(".instructionText img").attr("src","dew://assets/buttons/"+settingsArray['Game.IconSet']+"_Start.png");
-            $("#esc").attr("src","dew://assets/buttons/"+settingsArray['Game.IconSet']+"_B.png");
-            $("#enter").attr("src","dew://assets/buttons/"+settingsArray['Game.IconSet']+"_A.png");
+            $(".instructionText img").attr("src","s3d://assets/buttons/"+settingsArray['Game.IconSet']+"_Start.png");
+            $("#esc").attr("src","s3d://assets/buttons/"+settingsArray['Game.IconSet']+"_B.png");
+            $("#enter").attr("src","s3d://assets/buttons/"+settingsArray['Game.IconSet']+"_A.png");
         }else{
             $("#dpad").hide();
-			$("#closeAnnounceButton").attr("src","dew://assets/buttons/Keyboard_White_Enter.png");
+			$("#closeAnnounceButton").attr("src","s3d://assets/buttons/Keyboard_White_Enter.png");
             $( "#up, #down, #left, #right" ).show();
-            $(".instructionText img").attr("src","dew://assets/buttons/Keyboard_White_Enter.png");
-            $("#esc").attr("src","dew://assets/buttons/Keyboard_White_Esc.png");
-            $("#enter").attr("src","dew://assets/buttons/Keyboard_White_Enter.png");
+            $(".instructionText img").attr("src","s3d://assets/buttons/Keyboard_White_Enter.png");
+            $("#esc").attr("src","s3d://assets/buttons/Keyboard_White_Esc.png");
+            $("#enter").attr("src","s3d://assets/buttons/Keyboard_White_Enter.png");
         }
     }
 });

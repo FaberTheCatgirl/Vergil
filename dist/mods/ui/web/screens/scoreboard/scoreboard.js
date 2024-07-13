@@ -399,12 +399,12 @@ function updateScoreboardPlayer(rowElement, player, playersInfo, gameType) {
         if(aliveStatusChanged && cellName === 'name') {
             var emblemPath = null;
             if(!player.isAlive){
-                emblemPath = 'dew://assets/emblems/dead.png';   
+                emblemPath = 's3d://assets/emblems/dead.png';   
             } else{
                 if(playersInfo[player.playerIndex]){
                     emblemPath = playersInfo[player.playerIndex].e;
                 }else{
-                    emblemPath = 'dew://assets/emblems/generic.png'; 
+                    emblemPath = 's3d://assets/emblems/generic.png'; 
                 }                
             }
             $(element.find('.player-emblem')[0]).attr('src',emblemPath);
@@ -524,13 +524,13 @@ dew.on("voip-user-volume", function(e){
 		if(isVisible){
 			var escapedName = escapeElementID(e.data.user); //make names with spaces safe for selector
 			if (playerVoip.volume == 0) {
-				$('#' + escapedName).find('.speaker').attr('src', 'dew://assets/emblems/speaker-mute.png');
+				$('#' + escapedName).find('.speaker').attr('src', 's3d://assets/emblems/speaker-mute.png');
 			} else if (e.data.volume < -75) {
-				$('#' + escapedName).find('.speaker').attr('src', 'dew://assets/emblems/speaker-off.png');
+				$('#' + escapedName).find('.speaker').attr('src', 's3d://assets/emblems/speaker-off.png');
 			} else if (e.data.volume < -50) {
-				$('#' + escapedName).find('.speaker').attr('src', 'dew://assets/emblems/speaker-low.png');
+				$('#' + escapedName).find('.speaker').attr('src', 's3d://assets/emblems/speaker-low.png');
 			} else {
-				$('#' + escapedName).find('.speaker').attr('src', 'dew://assets/emblems/speaker-full.png');
+				$('#' + escapedName).find('.speaker').attr('src', 's3d://assets/emblems/speaker-full.png');
 			}
 		}
     }
@@ -697,8 +697,8 @@ function displayScoreboard(){
 
 function buildScoreboard(lobby, teamGame, scoreArray, gameType, playersInfo,expandedScoreboard, teamHasObjective, totalArray){
     var emblemPath;
-	var hostPath = 'dew://assets/emblems/crown.png';
-	var rankPath = "dew://assets/ranks/0.png"
+	var hostPath = 's3d://assets/emblems/crown.png';
+	var rankPath = "s3d://assets/ranks/0.png"
     var where = '#singlePlayers';
     if(lobby.length > 0){
         $('#singlePlayers').empty();
@@ -717,7 +717,7 @@ function buildScoreboard(lobby, teamGame, scoreArray, gameType, playersInfo,expa
                     teamHeader+='<td class="score" data-name="score">'+scoreArray[lobby[i].team]+'</td></tr></tbody>';
                     $('#window table').append(teamHeader);    
                     if((teamHasObjective & (1 << lobby[i].team))) {
-                        $('#'+teamArray[lobby[i].team].name+' .teamHeader').append('<img class="emblem objective" src="dew://assets/emblems/'+gameType+'.png">')                    
+                        $('#'+teamArray[lobby[i].team].name+' .teamHeader').append('<img class="emblem objective" src="s3d://assets/emblems/'+gameType+'.png">')                    
                     }
                 }    
             } 
@@ -750,15 +750,15 @@ function buildScoreboard(lobby, teamGame, scoreArray, gameType, playersInfo,expa
                 .append($('<td class="name" data-name="name">').text(lobby[i].name)) //name
             );   
 			if(playersInfo[lobby[i].playerIndex]){
-				rankPath = "dew://assets/ranks/" + playersInfo[lobby[i].playerIndex].r + ".png";
+				rankPath = "s3d://assets/ranks/" + playersInfo[lobby[i].playerIndex].r + ".png";
 			}
             if(!lobby[i].isAlive && mapName != 'mainmenu'){
-                emblemPath = 'dew://assets/emblems/dead.png';   
+                emblemPath = 's3d://assets/emblems/dead.png';   
             }else{
 				if(playersInfo[lobby[i].playerIndex]){
 					emblemPath = playersInfo[lobby[i].playerIndex].e;
 				}else{
-					emblemPath = 'dew://assets/emblems/generic.png'; 
+					emblemPath = 's3d://assets/emblems/generic.png'; 
 				}                
             } 
             $("[data-playerIndex='" + lobby[i].playerIndex + "'] .name").prepend('<img class="emblem player-emblem" src="'+emblemPath+'">');
@@ -819,13 +819,13 @@ function buildScoreboard(lobby, teamGame, scoreArray, gameType, playersInfo,expa
 			    volumeLevel = playerVoip.volume;
 			    isInVoip = true;
 			    if (playerVoip.volume == 0)
-			        thisSpeakerIcon = 'dew://assets/emblems/speaker-mute.png';
+			        thisSpeakerIcon = 's3d://assets/emblems/speaker-mute.png';
 			    else if (playerVoip.currentVoice < -75)
-			        thisSpeakerIcon = 'dew://assets/emblems/speaker-off.png';
+			        thisSpeakerIcon = 's3d://assets/emblems/speaker-off.png';
 			    else if (playerVoip.currentVoice < -50)
-			        thisSpeakerIcon = 'dew://assets/emblems/speaker-low.png';
+			        thisSpeakerIcon = 's3d://assets/emblems/speaker-low.png';
 			    else
-			        thisSpeakerIcon = 'dew://assets/emblems/speaker-full.png'
+			        thisSpeakerIcon = 's3d://assets/emblems/speaker-full.png'
 			}
 			if(isInVoip){
 			    $("[data-playerIndex='" + lobby[i].playerIndex + "'] .name").prepend($('<img class="emblem speaker talking" src="' + thisSpeakerIcon + '"><input class="volSlider" type="range" min="0" max="200" step="1" value="' + volumeLevel + '"></input>')) //voip speaking indicator
@@ -835,7 +835,7 @@ function buildScoreboard(lobby, teamGame, scoreArray, gameType, playersInfo,expa
             if(lobby[i].hasObjective){
                 $('.objective').remove();
                 if(gameType == "oddball"||gameType == "assault"||gameType == "ctf"){
-                    $("[data-playerIndex='" + lobby[i].playerIndex + "']").append($('<img class="emblem objective" src="dew://assets/emblems/'+gameType+'.png">')) //objective (flag/oddball) indicator
+                    $("[data-playerIndex='" + lobby[i].playerIndex + "']").append($('<img class="emblem objective" src="s3d://assets/emblems/'+gameType+'.png">')) //objective (flag/oddball) indicator
                 }
             }
         }
@@ -941,7 +941,7 @@ function playerBreakdown(name){
     if(cachedPlayersInfo[playerIndex]){
         emblemPath = cachedPlayersInfo[playerIndex].e;
     }else{
-        emblemPath = 'dew://assets/emblems/generic.png'; 
+        emblemPath = 's3d://assets/emblems/generic.png'; 
     }     
     
     if(playerIndex==0){
@@ -1121,10 +1121,10 @@ function adjustColor(color, amount){
 function onControllerConnect(){
     $('#closeButton').css('padding-right', '1.75vw');
     controllerType = settingsArray['Game.IconSet'];
-    $('#closeButton .button').attr('src','dew://assets/buttons/'+controllerType+'_Back.png');
-    $('#previousPlayer .button').attr('src','dew://assets/buttons/'+controllerType+'_LB.png');
-    $('#nextPlayer .button').attr('src','dew://assets/buttons/'+controllerType+'_RB.png');
-    $('#windowClose .button').attr('src','dew://assets/buttons/'+controllerType+'_B.png');
+    $('#closeButton .button').attr('src','s3d://assets/buttons/'+controllerType+'_Back.png');
+    $('#previousPlayer .button').attr('src','s3d://assets/buttons/'+controllerType+'_LB.png');
+    $('#nextPlayer .button').attr('src','s3d://assets/buttons/'+controllerType+'_RB.png');
+    $('#windowClose .button').attr('src','s3d://assets/buttons/'+controllerType+'_B.png');
     $('.button').show();
 }
 

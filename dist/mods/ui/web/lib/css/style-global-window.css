@@ -14,7 +14,7 @@ span {
 	box-sizing: border-box;
 }
 .button-list.selectedElement{
-  background-image: url(dew://assets/ux/buttonhover.svg);
+  background-image: url(s3d://assets/ux/buttonhover.svg);
   background-position: center;
   background-repeat: no-repeat;
 }

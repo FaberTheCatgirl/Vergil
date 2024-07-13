@@ -1,6 +1,6 @@
 var settingsArray = { 'Settings.Gamepad': '0' , 'Game.IconSet': '360'};
 
-dew.on("variable_update", function(e){
+s3d.on("variable_update", function(e){
     for(i = 0; i < e.data.length; i++){
         if(e.data[i].name in settingsArray){
             settingsArray[e.data[i].name] = e.data[i].value;
@@ -10,7 +10,7 @@ dew.on("variable_update", function(e){
 
 function loadSettings(i){
 	if (i != Object.keys(settingsArray).length) {
-		dew.command(Object.keys(settingsArray)[i], {}).then(function(response) {
+		s3d.command(Object.keys(settingsArray)[i], {}).then(function(response) {
 			settingsArray[Object.keys(settingsArray)[i]] = response;
 			i++;
 			loadSettings(i);
@@ -22,7 +22,7 @@ $(document).ready(function(){
         loadSettings(0);
 });
 
-dew.on("show", function (event) {   
+s3d.on("show", function (event) {   
     var form = $("<form>");
     
     form.append( 
@@ -59,14 +59,14 @@ dew.on("show", function (event) {
 						window.open(event.data.url, '_blank');
 					}else if(event.data.type == "update"){
 						
-                        dew.command('Game.Update', function() {
+                        s3d.command('Game.Update', function() {
                             //Update go!
                         }).catch(function (error) {
-                             dew.show('alert',{"title":"Error", "body":error.message});
+                             s3d.show('alert',{"title":"Error", "body":error.message});
                         });
                     }
-					dew.command('Game.PlaySound sound\\game_sfx\\ui\\button_based_ui_sounds\\a_button.snd!');
-                    dew.hide();
+					s3d.command('Game.PlaySound sound\\game_sfx\\ui\\button_based_ui_sounds\\a_button.snd!');
+                    s3d.hide();
                 };
             }
         }));
@@ -81,8 +81,8 @@ dew.on("show", function (event) {
 					e.preventDefault();
 					$(this).parent().parent().parent().remove();
 					if(!$('.dialog').length){
-						dew.command('Game.PlaySound sound\\game_sfx\\ui\\button_based_ui_sounds\\b_button.snd!');
-						dew.hide();
+						s3d.command('Game.PlaySound sound\\game_sfx\\ui\\button_based_ui_sounds\\b_button.snd!');
+						s3d.hide();
 					};
 				}
 			})
@@ -100,15 +100,15 @@ dew.on("show", function (event) {
     $(".container").append(form.parent());
     
     if(settingsArray['Settings.Gamepad'] == 1){
-        $('#ok .button').attr('src','dew://assets/buttons/'+settingsArray['Game.IconSet']+'_A.png');
-        $('#cancel .button').attr('src','dew://assets/buttons/'+settingsArray['Game.IconSet']+'_B.png');
+        $('#ok .button').attr('src','s3d://assets/buttons/'+settingsArray['Game.IconSet']+'_A.png');
+        $('#cancel .button').attr('src','s3d://assets/buttons/'+settingsArray['Game.IconSet']+'_B.png');
         $('.button').show();   
     }else{
         $('.button').hide();   
     }
 });
 
-dew.on("hide", function (event) {
+s3d.on("hide", function (event) {
     $(".container").empty();
 });
 
@@ -125,7 +125,7 @@ $(document).ready(function(){
     });
 });
 
-dew.on('controllerinput', function(e){       
+s3d.on('controllerinput', function(e){       
     if(settingsArray['Settings.Gamepad'] == 1){
         if(e.data.A == 1){
             $('.dialog:eq(0) #ok').click(); 

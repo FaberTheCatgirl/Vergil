@@ -4,7 +4,7 @@
     let _descriptionElement = _windowElement.querySelector('.window-info-box');
     let _titleElement = _windowElement.querySelector('.window-title');
     let _subtitleElement = _windowElement.querySelector('.window-subtitle');
-    let _screenManager = dew.makeScreenManager();
+    let _screenManager = s3d.makeScreenManager();
     let _hidden = false;
     let _lastObjectIndex = -1;
     let _recentMaterials = [];
@@ -28,9 +28,9 @@
         }
     }, false);
 
-    dew.ui.on('action', function (action) {
+    s3d.ui.on('action', function (action) {
         switch (action) {
-            case dew.ui.Actions.X:
+            case s3d.ui.Actions.X:
                 hide();
                 break;
         }
@@ -38,14 +38,14 @@
 
     function makeMainScreen(screenManager) {
         let _screenElement = document.getElementById('main_screen');
-        let _propertryGrid = dew.makePropertyGrid(document.querySelector('.property-grid'));
+        let _propertryGrid = s3d.makePropertyGrid(document.querySelector('.property-grid'));
         let _active = false;
         let _materialsDOM = null;
         let _data = null;
         let _items = null;
         let _lastSelected = false;
 
-        dew.on('show', e => {
+        s3d.on('show', e => {
             if (_hidden && _lastObjectIndex === e.data.object_index && _lastSelected === e.data.is_selected)
                 return;
             _lastSelected = e.data.is_selected;
@@ -82,13 +82,13 @@
             },
             onAction: function ({ action }) {
                 switch (action) {
-                    case dew.ui.Actions.X:
+                    case s3d.ui.Actions.X:
                         hide();
                         break;
-                    case dew.ui.Actions.B:
-                        dew.ui.playSound(dew.ui.Sounds.B);
+                    case s3d.ui.Actions.B:
+                        s3d.ui.playSound(s3d.ui.Sounds.B);
                         addRecentMaterial();
-                        dew.hide();
+                        s3d.hide();
                         break;
                 }
             }
@@ -96,7 +96,7 @@
 
         function onPropertyChange(properties) {
             Object.assign(_data.properties, properties);
-            dew.callMethod('forgeaction', {
+            s3d.callMethod('forgeaction', {
                 type: 1,
                 data: properties
             });
@@ -201,7 +201,7 @@
             if (!data.is_selected) {
                 model.add({
                     type: 'action', label: '{Select All}', meta: {}, action: () => {
-                        dew.command('Forge.SelectAll');
+                        s3d.command('Forge.SelectAll');
                         data.is_selected = true;
                         _propertryGrid.setModel(buildModel(_data));
                     },
@@ -211,7 +211,7 @@
             } else {
                 model.add({
                     type: 'action', label: '{Deselect All}', meta: {}, action: () => {
-                        dew.command('Forge.DeselectAllOf');
+                        s3d.command('Forge.DeselectAllOf');
                         data.is_selected = false;
                         _propertryGrid.setModel(buildModel(_data));
                     },
@@ -878,8 +878,8 @@
         let _active = false;
         let _onColorSelected;
 
-        let _colorPicker = dew.makeColorPicker(_screenElement.querySelector('.color-picker'));
-        dew.on('controllerinput', function (e) {
+        let _colorPicker = s3d.makeColorPicker(_screenElement.querySelector('.color-picker'));
+        s3d.on('controllerinput', function (e) {
             if (!_active)
                 return;
             _colorPicker.controllerInput(e.data);
@@ -907,11 +907,11 @@
             },
             onAction: function ({ action }) {
                 switch (action) {
-                    case dew.ui.Actions.B:
-                        dew.ui.playSound(dew.ui.Sounds.B);
+                    case s3d.ui.Actions.B:
+                        s3d.ui.playSound(s3d.ui.Sounds.B);
                         screenManager.pop();
                         break;
-                    case dew.ui.Actions.X:
+                    case s3d.ui.Actions.X:
                         hide();
                         break;
                 }
@@ -921,7 +921,7 @@
 
     function makeSummaryScreen(screenManager) {
         let _screenElement = document.querySelector('.summary-screen');
-        let _grid = dew.makePropertyGrid(_screenElement.querySelector('.summary-property-grid'));
+        let _grid = s3d.makePropertyGrid(_screenElement.querySelector('.summary-property-grid'));
         let _active = false;
         let _summaryData = {};
 
@@ -943,11 +943,11 @@
             },
             onAction: function ({ action }) {
                 switch (action) {
-                    case dew.ui.Actions.X:
+                    case s3d.ui.Actions.X:
                         hide();
                         break;
-                    case dew.ui.Actions.B:
-                        dew.ui.playSound(dew.ui.Sounds.B);
+                    case s3d.ui.Actions.B:
+                        s3d.ui.playSound(s3d.ui.Sounds.B);
                         screenManager.pop();
                         break;
                 }
@@ -956,7 +956,7 @@
 
         function onPropertyChange(properties) {
             Object.assign(_summaryData, properties);
-            dew.callMethod('forgeaction', {
+            s3d.callMethod('forgeaction', {
                 type: 1,
                 data: properties
             });
@@ -990,7 +990,7 @@
     function makeMaterialCategoryScreen(screenManager) {
         let _screenElement = document.querySelector('#material_picker_screen');
         let _categoryTreeElement = _screenElement.querySelector('.material-category-tree');
-        let _treeList = dew.makeTreeList(_categoryTreeElement);
+        let _treeList = s3d.makeTreeList(_categoryTreeElement);
         let _onMaterialSelected = null;
 
         _treeList.on('select', function ({ index, element, path }) {
@@ -1028,11 +1028,11 @@
             },
             onAction: function ({ action }) {
                 switch (action) {
-                    case dew.ui.Actions.B:
+                    case s3d.ui.Actions.B:
                         if (_treeList.atRoot())
                             screenManager.pop();
                         break;
-                    case dew.ui.Actions.X:
+                    case s3d.ui.Actions.X:
                         hide();
                         break;
                 }
@@ -1044,7 +1044,7 @@
         let _screenElement = document.querySelector('.material-picker-list-screen');
         let _materialListElement = _screenElement.querySelector('.material-list');
         let _materials = [];
-        let _materialList = dew.makeListWidget(_materialListElement, {
+        let _materialList = s3d.makeListWidget(_materialListElement, {
             itemSelector: 'li',
             hoverClass: 'selected',
             hoverSelection: true,
@@ -1080,11 +1080,11 @@
             },
             onAction: function ({ action }) {
                 switch (action) {
-                    case dew.ui.Actions.B:
-                        dew.ui.playSound(dew.ui.Sounds.B);
+                    case s3d.ui.Actions.B:
+                        s3d.ui.playSound(s3d.ui.Sounds.B);
                         screenManager.pop();
                         break;
-                    case dew.ui.Actions.X:
+                    case s3d.ui.Actions.X:
                         hide();
                         break;
                 }
@@ -1125,7 +1125,7 @@
         let _engineListElement = _screenElement.querySelector('.engine-list');
         let _onChange = null;
         let _engineFlags = 0;
-        let _engineList = dew.makeListWidget(_engineListElement, {
+        let _engineList = s3d.makeListWidget(_engineListElement, {
             itemSelector: 'li',
             hoverClass: 'selected',
             hoverSelection: true,
@@ -1164,11 +1164,11 @@
             },
             onAction: function ({ action }) {
                 switch (action) {
-                    case dew.ui.Actions.B:
-                        dew.ui.playSound(dew.ui.Sounds.B);
+                    case s3d.ui.Actions.B:
+                        s3d.ui.playSound(s3d.ui.Sounds.B);
                         screenManager.pop();
                         break;
-                    case dew.ui.Actions.X:
+                    case s3d.ui.Actions.X:
                         hide();
                         break;
                 }
@@ -1211,11 +1211,11 @@
             },
             onAction: function ({ inputType, action }) {
                 switch (action) {
-                    case dew.ui.Actions.A:
+                    case s3d.ui.Actions.A:
                         if (inputType === 'controller')
                             onConfirm();
                         break;
-                    case dew.ui.Actions.B:
+                    case s3d.ui.Actions.B:
                         onReject();
                         break;
                 }
@@ -1234,7 +1234,7 @@
                 return;
             }
 
-            dew.command(`Forge.SavePrefab "${_nameInputElement.value}"`)
+            s3d.command(`Forge.SavePrefab "${_nameInputElement.value}"`)
                 .then(response => {
                     showToast('Prefab Saved');
                     setTimeout(() => screenManager.pop(), 1);
@@ -1243,7 +1243,7 @@
         }
 
         function onReject() {
-            dew.ui.playSound(dew.ui.Sounds.B);
+            s3d.ui.playSound(s3d.ui.Sounds.B);
             screenManager.pop();
         }
 
@@ -1256,7 +1256,7 @@
             _errorStatusElement.textContent = message;
             _screenElement.classList.add('shake');
             _errorStatusElement.classList.remove('hidden');
-            dew.ui.playSound(dew.ui.Sounds.Error);
+            s3d.ui.playSound(s3d.ui.Sounds.Error);
         }
     }
 
@@ -1274,8 +1274,8 @@
 
     function hide() {
         _hidden = true;
-        dew.ui.playSound(dew.ui.Sounds.B);
-        dew.hide();
+        s3d.ui.playSound(s3d.ui.Sounds.B);
+        s3d.hide();
     }
 
     function showToast(message) {

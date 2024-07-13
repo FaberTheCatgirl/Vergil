@@ -3,7 +3,7 @@
 base, basefont, datalist, head, meta, script, style, title, noembed, param, template {display: none;}
 
 /*Fonts*/
-@font-face{font-family:"Conduit ITC";src:url(dew://lib/Conduit-ITC.woff);}
+@font-face{font-family:"Conduit ITC";src:url(s3d://lib/Conduit-ITC.woff);}
 * {
 	font-family: "Conduit ITC", sans-serif;
 	-webkit-backface-visibility: hidden;

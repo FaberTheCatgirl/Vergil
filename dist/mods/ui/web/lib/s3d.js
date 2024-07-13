@@ -1,12 +1,12 @@
 /**
- * Creates a new DewError object which represents an ElDewrito communication error.
+ * Creates a new S3dError object which represents an Halo Online communication error.
  *
  * @class
  * @param {string} message - The error message.
- * @param {DewErrorCode} [code] - The error code.
+ * @param {S3dErrorCode} [code] - The error code.
  * @param {string} [method] - The internal method name.
  */
-function DewError(message, code, method) {
+function S3dError(message, code, method) {
     Error.captureStackTrace(this, this.constructor);
 
     /**
@@ -22,9 +22,9 @@ function DewError(message, code, method) {
 
     /**
      * The error code.
-     * @member {DewErrorCode}
+     * @member {S3dErrorCode}
      */
-    this.code = (typeof code === "number") ? code : DewErrorCode.UNKNOWN_ERROR;
+    this.code = (typeof code === "number") ? code : S3dErrorCode.UNKNOWN_ERROR;
 
     /**
      * The internal method name.
@@ -38,9 +38,9 @@ function DewError(message, code, method) {
  *
  * @returns {string} A string representing the error's code.
  */
-DewError.prototype.getCodeName = function () {
-    for (var name in DewErrorCode) {
-        if (DewErrorCode.hasOwnProperty(name) && DewErrorCode[name] === this.code) {
+S3dError.prototype.getCodeName = function () {
+    for (var name in S3dErrorCode) {
+        if (S3dErrorCode.hasOwnProperty(name) && S3dErrorCode[name] === this.code) {
             return name;
         }
     }
@@ -53,7 +53,7 @@ DewError.prototype.getCodeName = function () {
  * @readonly
  * @enum {number}
  */
-DewErrorCode = {
+S3dErrorCode = {
     /**
      * The method ran successfully.
      */
@@ -191,7 +191,7 @@ CommandType = {
 };
 
 (function () {
-    window.dew = window.dew || {};
+    window.s3d = window.s3d || {};
 
     // Default 1:1 result mapping.
     function defaultResultMapping(result) {
@@ -204,13 +204,13 @@ CommandType = {
     }
 
     // Calls a native method and returns a Promise for it.
-    dew.callMethod = function (method, args, resultMapping) {
+    s3d.callMethod = function (method, args, resultMapping) {
         resultMapping = resultMapping || defaultResultMapping;
         args = args || {};
         return new Promise(function (resolve, reject) {
             // Ensure that we have a function to send queries to ED
-            if (!window.dewQuery) {
-                reject(new DewError("Unsupported method: window.dewQuery() is not available", DewErrorCode.UNSUPPORTED_METHOD, method));
+            if (!window.s3dQuery) {
+                reject(new S3dError("Unsupported method: window.s3dQuery() is not available", S3dErrorCode.UNSUPPORTED_METHOD, method));
                 return;
             }
 
@@ -221,7 +221,7 @@ CommandType = {
             }
 
             // Send a CEF query
-            window.dewQuery({
+            window.s3dQuery({
                 request: JSON.stringify({
                     method: method,
                     args: args
@@ -242,7 +242,7 @@ CommandType = {
                     if(method=="command"){
                         method = method+": "+args.command;
                     }
-                    reject(new DewError(message, code, method));
+                    reject(new S3dError(message, code, method));
                 }
             });
         });
@@ -252,7 +252,7 @@ CommandType = {
     function registerEvent(name, callback) {
         window.addEventListener("message", function (event) {
             var origin = event.origin;
-            if (!origin.startsWith("dew:")) {
+            if (!origin.startsWith("s3d:")) {
                 return; // Only recognize messages sent by the UI
             }
             var data = event.data;
@@ -268,7 +268,7 @@ CommandType = {
     // Posts a message to the UI.
     function postUiMessage(message, data) {
         // If this is running in the UI layer, then post to the current window, otherwise post to the parent
-        var targetWindow = (window.location.href.startsWith("dew://ui/")) ? window : window.parent;
+        var targetWindow = (window.location.href.startsWith("s3d://ui/")) ? window : window.parent;
         if (targetWindow) {
             targetWindow.postMessage({
                 message: message,
@@ -277,8 +277,8 @@ CommandType = {
         }
     }
 
-    // displays a toast. example: dew.toast({body:'<b>Hello World</b>'})
-    dew.toast = function(toast) {
+    // displays a toast. example: s3d.toast({body:'<b>Hello World</b>'})
+    s3d.toast = function(toast) {
         postUiMessage('toast', toast);
     }
 
@@ -290,28 +290,28 @@ CommandType = {
     /**
      * Methods for interfacing with ElDewrito.
      *
-     * @namespace dew
+     * @namespace s3d
      */
 
     /**
      * A promise made by an asynchronous ElDewrito method.
      *
-     * If the promise is rejected for a reason related to ElDewrito, it will be rejected with a {@link DewError} object.
-     * This object includes an [error code]{@link DewErrorCode} which can be used to easily figure out what went wrong.
+     * If the promise is rejected for a reason related to ElDewrito, it will be rejected with a {@link S3dError} object.
+     * This object includes an [error code]{@link S3dErrorCode} which can be used to easily figure out what went wrong.
      *
      * If the promise is rejected for any other reason, it may be rejected with a generic Error.
-     * Therefore, you must use `instanceof DewError` to check that the error is actually an ElDewrito error before getting specific information.
+     * Therefore, you must use `instanceof S3dError` to check that the error is actually an ElDewrito error before getting specific information.
      *
-     * @typedef {Promise<*|Error>} DewPromise
+     * @typedef {Promise<*|Error>} S3dPromise
      */
 
     /**
      * (ASYNCHRONOUS) Retrieves the current version of ElDewrito.
      *
-     * @returns {DewPromise<string>} - A promise for the version string.
+     * @returns {S3dPromise<string>} - A promise for the version string.
      */
-    dew.getVersion = function () {
-        return dew.callMethod("version");
+    s3d.getVersion = function () {
+        return s3d.callMethod("version");
     }
 
     /**
@@ -325,7 +325,7 @@ CommandType = {
      * @param {string} [id] - The ID of the screen to show. If this is null or omitted, the current screen will be shown.
      * @param {object} [data] - Data to pass to the screen's [show]{@link event:show} event.
      */
-    dew.show = function (id, data) {
+    s3d.show = function (id, data) {
         postUiMessage("show", {
             screen: id || null,
             data: data || {}
@@ -339,19 +339,19 @@ CommandType = {
      *
      * @param {string} [id] - The ID of the screen to hide. If this is null or omitted, the current screen will be hidden.
      */
-    dew.hide = function (id) {
+    s3d.hide = function (id) {
         postUiMessage("hide", {
             screen: id || null
         });
     }
 	
 	/**
-     * Sends a dew event to another screen
+     * Sends a s3d event to another screen
      *
 	 * @param {string} [eventName] - The name of the event for another screen to receive.
 	 * @param {object} [data] - Data to pass to the screen.
      */
-	dew.notify = function(eventName, data){
+	s3d.notify = function(eventName, data){
 		postUiMessage(eventName, {
 			data: data || {}
 		});
@@ -362,7 +362,7 @@ CommandType = {
      *
      * @param {boolean} capture - true to capture mouse and keyboard input, false to release.
      */
-    dew.captureInput = function (capture) {
+    s3d.captureInput = function (capture) {
         postUiMessage("captureInput", {
             capture: !!capture
         });
@@ -370,11 +370,11 @@ CommandType = {
 	
 	/**
      * Requests to change this screen's pointer capture state.
-     * This is overridden by dew.captureInput
+     * This is overridden by s3d.captureInput
      *
      * @param {boolean} capture - true to only capture mouse input, false to release.
      */
-    dew.capturePointer = function (capture) {
+    s3d.capturePointer = function (capture) {
         postUiMessage("capturePointer", {
             capture: !!capture
         });
@@ -383,16 +383,16 @@ CommandType = {
     /**
      * (ASYNCHRONOUS) Runs a console command.
      *
-     * If the command does not run successfully, the promise will be rejected with a [DewErrorCode.COMMAND_FAILED]{@link DewErrorCode} error.
+     * If the command does not run successfully, the promise will be rejected with a [S3dErrorCode.COMMAND_FAILED]{@link S3dErrorCode} error.
      * The error message will be the command output.
      *
      * @param {string} command - The command and its arguments, separated by spaces.
      * @param {object} [options] - Additional options that control how the command should run.
      * @param {boolean} [options.internal=false] - If set to true, then internal commands can be executed.
-     * @returns {DewPromise<string>} A promise for the command output.
+     * @returns {S3dPromise<string>} A promise for the command output.
      */
-    dew.command = function (command, options) {
-        return dew.callMethod("command", function () {
+    s3d.command = function (command, options) {
+        return s3d.callMethod("command", function () {
             options = options || {};
             return {
                 command: command.toString(),
@@ -409,10 +409,10 @@ CommandType = {
      * **This method is currently broken and will report ping times that are much higher than they should be.**
      *
      * @param {string} address - The IPv4 address of the server to ping. Must not include a port number.
-     * @returns {DewPromise} A promise that will be resolved once the ping is sent.
+     * @returns {S3dPromise} A promise that will be resolved once the ping is sent.
      */
-	 dew.ping = function (address, port=11774) {
-        return dew.callMethod("ping", function () {
+	 s3d.ping = function (address, port=11774) {
+        return s3d.callMethod("ping", function () {
             return {
                 address: address.toString(),
 				port: port
@@ -423,12 +423,12 @@ CommandType = {
     /**
      * (ASYNCHRONOUS) Gets info about the current map variant.
      *
-     * If map variant info is not available, the promise will be rejected with a [DewErrorCode.NOT_AVAILABLE]{@link DewErrorCode} error.
+     * If map variant info is not available, the promise will be rejected with a [S3dErrorCode.NOT_AVAILABLE]{@link S3dErrorCode} error.
      *
-     * @returns {DewPromise<MapVariantInfo>} A promise for the map variant info.
+     * @returns {S3dPromise<MapVariantInfo>} A promise for the map variant info.
      */
-    dew.getMapVariantInfo = function () {
-        return dew.callMethod("mapVariantInfo", {}, jsonResultMapping);
+    s3d.getMapVariantInfo = function () {
+        return s3d.callMethod("mapVariantInfo", {}, jsonResultMapping);
     }
 
     /**
@@ -439,18 +439,18 @@ CommandType = {
      * @property {string} description - The description. Can be empty.
      * @property {string} author - The author. Can be empty.
      * @property {number} mapId - The map ID.
-     * @see dew.getMapVariantInfo
+     * @see s3d.getMapVariantInfo
      */
 
     /**
      * (ASYNCHRONOUS) Gets info about the current game variant.
      *
-     * If game variant info is not available, the promise will be rejected with a [DewErrorCode.NOT_AVAILABLE]{@link DewErrorCode} error.
+     * If game variant info is not available, the promise will be rejected with a [S3dErrorCode.NOT_AVAILABLE]{@link S3dErrorCode} error.
      *
-     * @returns {DewPromise<GameVariantInfo>} A promise for the game variant info.
+     * @returns {S3dPromise<GameVariantInfo>} A promise for the game variant info.
      */
-    dew.getGameVariantInfo = function () {
-        return dew.callMethod("gameVariantInfo", {}, jsonResultMapping);
+    s3d.getGameVariantInfo = function () {
+        return s3d.callMethod("gameVariantInfo", {}, jsonResultMapping);
     }
 
     /**
@@ -465,16 +465,16 @@ CommandType = {
      * @property {number} timeLimit - The time limit in minutes (0 if unlimited).
      * @property {number} rounds - The number of rounds.
      * @property {number} scoreToWin - The score-to-win (-1 if unlimited).
-     * @see dew.getGameVariantInfo
+     * @see s3d.getGameVariantInfo
      */
 
     /**
      * (ASYNCHRONOUS) Gets a list of available console commands.
      *
-     * @returns {DewPromise<ConsoleCommand[]>} A promise for the list of available console commands.
+     * @returns {S3dPromise<ConsoleCommand[]>} A promise for the list of available console commands.
      */
-    dew.getCommands = function () {
-        return dew.callMethod("commands", {}, jsonResultMapping);
+    s3d.getCommands = function () {
+        return s3d.callMethod("commands", {}, jsonResultMapping);
     }
 
     /**
@@ -497,7 +497,7 @@ CommandType = {
      * @property {boolean} hideValue - `true` if the variable's value should be omitted from a help listing.
      * @property {boolean} internal - `true` if the command or variable can only be set internally.
      * @property {string[]} arguments - A list of arguments for the command. Each string will contain a value name, a space, and then a description. For variables, this will be empty.
-     * @see dew.getCommands
+     * @see s3d.getCommands
      */
 
     /**
@@ -505,10 +505,10 @@ CommandType = {
      *
      * @param {string} message - The chat message to send.
      * @param {boolean} teamChat - If true the message is sent to team chat instead of global.
-     * @returns {DewPromise<boolean>} A promise for the success of sending the message.
+     * @returns {S3dPromise<boolean>} A promise for the success of sending the message.
      */
-    dew.sendChat = function (message, teamChat) {
-        return dew.callMethod("sendChat", function () {
+    s3d.sendChat = function (message, teamChat) {
+        return s3d.callMethod("sendChat", function () {
             return {
                 message: message.toString(),
                 teamChat: teamChat
@@ -521,10 +521,10 @@ CommandType = {
      *
      * @param {string} message - The chat message to send.
      * @param {boolean} teamChat - If true the message is sent to team chat instead of global.
-     * @returns {DewPromise<SessionInfo>} A promise for the game multiplayer session information.
+     * @returns {S3dPromise<SessionInfo>} A promise for the game multiplayer session information.
      */
-    dew.getSessionInfo = function () {
-        return dew.callMethod("sessionInfo", {}, jsonResultMapping);
+    s3d.getSessionInfo = function () {
+        return s3d.callMethod("sessionInfo", {}, jsonResultMapping);
     }
 
     /**
@@ -535,17 +535,17 @@ CommandType = {
      * @property {boolean} hasTeams - `true` if the current session has teams.
      * @property {boolean} isHost - `true` if the player is the host of the session.
      * @property {string} mapName - Name of the currently loaded map.
-     * @see dew.getSessionInfo
+     * @see s3d.getSessionInfo
      */
 
     /**
      * (ASYNCHRONOUS) Gets information about a player's stats.
      *
      * @param {string} playerName - The name of the player.
-     * @returns {DewPromise<StatsInfo>} A promise for the player's stats.
+     * @returns {S3dPromise<StatsInfo>} A promise for the player's stats.
      */
-     dew.getStats = function (playerName) {
-         return dew.callMethod("stats", { playerName: playerName }, jsonResultMapping);
+     s3d.getStats = function (playerName) {
+         return s3d.callMethod("stats", { playerName: playerName }, jsonResultMapping);
      }
 
     /**
@@ -554,7 +554,7 @@ CommandType = {
      * @typedef {object} StatsInfo
      * @property {number[]} medals - The medals earned during this game.
      * @property {WeaponStats[]} weapons - Information about the weapons used during this game.
-     * @see dew.getStats
+     * @see s3d.getStats
      */
 
     /**
@@ -572,11 +572,11 @@ CommandType = {
 	/**		
      * (ASYNCHRONOUS) Gets information about the current game's scoreboard.		
      *		
-     * @returns {DewPromise<ScoreboardInfo>} A promise for the scoreboard information.		
+     * @returns {S3dPromise<ScoreboardInfo>} A promise for the scoreboard information.		
      */	
 	 
-    dew.getScoreboard = function () {		
-       return dew.callMethod("scoreboard", {}, jsonResultMapping);		
+    s3d.getScoreboard = function () {		
+       return s3d.callMethod("scoreboard", {}, jsonResultMapping);		
     }		
 	
    /**		
@@ -587,7 +587,7 @@ CommandType = {
     * @property {number[]} teamScores - The scores of all of the teams in the game.		
     * @property {string} gameType - The gamemode type.		
     * @property {ScoreboardPlayer[]} players - Players listed on the scoreboard.		
-    * @see dew.getScoreboard		
+    * @see s3d.getScoreboard		
     */		
 	
    /**		
@@ -609,10 +609,10 @@ CommandType = {
      * (ASYNCHRONOUS) Requests to submit the currently-active virtual keyboard.
      * 
      * @param {string} value - The value to submit.
-     * @returns {DewPromise} A promise that will be resolved once the keyboard is submitted.
+     * @returns {S3dPromise} A promise that will be resolved once the keyboard is submitted.
      */
-    dew.submitVirtualKeyboard = function (value) {
-        return dew.callMethod("submitVirtualKeyboard", function () {
+    s3d.submitVirtualKeyboard = function (value) {
+        return s3d.callMethod("submitVirtualKeyboard", function () {
             return {
                 value: value.toString(),
             };
@@ -622,16 +622,16 @@ CommandType = {
     /**
      * (ASYNCHRONOUS) Requests to cancel the currently-active virtual keyboard.
      * 
-     * @returns {DewPromise} A promise that will be resolved once the keyboard is cancelled.
+     * @returns {S3dPromise} A promise that will be resolved once the keyboard is cancelled.
      */
-    dew.cancelVirtualKeyboard = function (value) {
-        return dew.callMethod("cancelVirtualKeyboard");
+    s3d.cancelVirtualKeyboard = function (value) {
+        return s3d.callMethod("cancelVirtualKeyboard");
     }
 
     /**
      * Registers a callback to be run when an event occurs.
      *
-     * @name dew.on
+     * @name s3d.on
      * @function
      * @param {string} event - The name of the event to register a callback for (e.g. "show").
      * @param {EventCallback} callback - The callback to register.
@@ -643,7 +643,7 @@ CommandType = {
      * @see event:loadprogress
 	 * @see event:signal-ready
      */
-    dew.on = function (event, callback) {
+    s3d.on = function (event, callback) {
         registerEvent(event, callback);
     }
 	
@@ -652,14 +652,14 @@ CommandType = {
      *
      * @param {integer} actionIndex - The index of the game action to be pressed.
      */
-	dew.gameaction = function(actionIndex) {
-		return dew.callMethod("gameaction", {
+	s3d.gameaction = function(actionIndex) {
+		return s3d.callMethod("gameaction", {
 			key: actionIndex
 		});
 	}
 	
 	//This is a workaround for a bug in jsdoc. Event definitions must be inside a named function
-	dew.functionforevents = function() {
+	s3d.functionforevents = function() {
 		/**
 		 * A callback function for responding to events.
 		 *
@@ -672,7 +672,7 @@ CommandType = {
 
 		/**
 		 * Fired after the current screen is shown.
-		 * The data passed to this event is the data that was passed to {@link dew.show}.
+		 * The data passed to this event is the data that was passed to {@link s3d.show}.
 		 *
 		 * @event show
 		 * @type {object}
@@ -686,7 +686,7 @@ CommandType = {
 		 */
 
 		/**
-		 * Fired when a server replies to a [ping]{@link dew.ping}.
+		 * Fired when a server replies to a [ping]{@link s3d.ping}.
 		 * This can only be received while the screen is active.
 		 *
 		 * @event pong

@@ -679,7 +679,7 @@ function runCommand(command) {
                     showHelp(commandValue[1]);
                     break;
                 }
-                dew.command(command).then(function (output) {
+                s3d.command(command).then(function (output) {
                     appendLine("command-line", "> " + command);
                     if (output !== "") {
                         appendLine("", output);
@@ -700,11 +700,11 @@ function runCommand(command) {
 }
 
 $(window).load(function () {
-    dew.getVersion().then(function (version) {
+    s3d.getVersion().then(function (version) {
         $("#version").text(version);
     });
 
-    dew.getCommands().then(function (commands) {
+    s3d.getCommands().then(function (commands) {
         commandList = commands;
     }).catch(function () {
         appendLine("error-line", "Could not retrieve list of commands!");
@@ -725,17 +725,17 @@ $(window).load(function () {
     $(document).keyup(function (e) {
         if (e.keyCode === 27) {
             // Hide when escape is released (keeps from triggering pause menu)
-            dew.hide();
+            s3d.hide();
         }
         if (e.keyCode == 44) {
-            dew.command('Game.TakeScreenshot');  
+            s3d.command('Game.TakeScreenshot');  
         }
     });
     $(document).keydown(function (e) {
         if(e.keyCode == 192 || e.keyCode == 112 || e.keyCode == 223){
             // Hide when tilde is pressed (and text is empty)
             if($('#command').val().length === 0){
-                dew.hide();
+                s3d.hide();
             }
         }
     });
@@ -769,14 +769,14 @@ $(window).load(function () {
         }
     });
 
-    dew.on("show", function (e) {
+    s3d.on("show", function (e) {
         focusInput();
     
         if(!memoryUsageInterval)
             memoryUsageInterval = setInterval(showMemoryUsage, 1000);
     });
 
-    dew.on("hide", function (e) {
+    s3d.on("hide", function (e) {
         clearInput();
         scrollToBottom();
 
@@ -787,7 +787,7 @@ $(window).load(function () {
             
     });
 
-    dew.on("console", function (e) {
+    s3d.on("console", function (e) {
         appendLine("", e.data.line);
     });
 
@@ -832,7 +832,7 @@ $(window).load(function () {
     });
 
     $("html").on("click", "#button-hide", function () {
-        dew.hide();
+        s3d.hide();
     });
 
     sizeConsole(consoleSize, true);

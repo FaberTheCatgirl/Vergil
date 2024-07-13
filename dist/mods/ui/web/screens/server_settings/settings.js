@@ -268,14 +268,14 @@ function checkGamepad(){
 
 function setButtons(){
     dew.command('Game.IconSet', {}).then(function(response){
-        $('#randomArmor img').attr('src','dew://assets/buttons/' + response + '_X.png');
-        $('#randomColors img').attr('src','dew://assets/buttons/' + response + '_Y.png');
-        $('#applyButton img').attr('src','dew://assets/buttons/' + response + '_Start.png');
-        $('#cancelButton img').attr('src','dew://assets/buttons/' + response + '_B.png');
-        $('#dismissButton img').attr('src','dew://assets/buttons/' + response + '_B.png');
-        $('#okButton img').attr('src','dew://assets/buttons/' + response + '_A.png');
-        $('.tabs img').eq(0).attr('src','dew://assets/buttons/' + response + '_LB.png');
-        $('.tabs img').eq(1).attr('src','dew://assets/buttons/' + response + '_RB.png');
+        $('#randomArmor img').attr('src','s3d://assets/buttons/' + response + '_X.png');
+        $('#randomColors img').attr('src','s3d://assets/buttons/' + response + '_Y.png');
+        $('#applyButton img').attr('src','s3d://assets/buttons/' + response + '_Start.png');
+        $('#cancelButton img').attr('src','s3d://assets/buttons/' + response + '_B.png');
+        $('#dismissButton img').attr('src','s3d://assets/buttons/' + response + '_B.png');
+        $('#okButton img').attr('src','s3d://assets/buttons/' + response + '_A.png');
+        $('.tabs img').eq(0).attr('src','s3d://assets/buttons/' + response + '_LB.png');
+        $('.tabs img').eq(1).attr('src','s3d://assets/buttons/' + response + '_RB.png');
     });
 }
 

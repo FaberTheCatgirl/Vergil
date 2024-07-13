@@ -168,7 +168,7 @@ bool WebRenderer::Init(const std::string &p_Url, bool p_EnableDebugging)
 
 	// Register our custom handlers
 	RegisterScheme("dew", GetUIDirectory());
-	CefAddCrossOriginWhitelistEntry("dew://ui", "http", "", true);
+	CefAddCrossOriginWhitelistEntry("s3d://ui", "http", "", true);
 
 	// Register a medals:// scheme to point to mods\medals (and ensure the directory for a default pack exists)
 	boost::system::error_code error;
@@ -509,9 +509,9 @@ bool WebRenderer::RegisterScheme(const std::string &p_Name, const std::string &p
 	if (!CefRegisterSchemeHandlerFactory(p_Name, "", s_SchemeHandlerFactory))
 		return false;
 
-	// Allow additional protocols to be accessed from dew://
+	// Allow additional protocols to be accessed from s3d://
 	if (p_Name != "dew")
-		CefAddCrossOriginWhitelistEntry("dew://*", p_Name, "", true);
+		CefAddCrossOriginWhitelistEntry("s3d://*", p_Name, "", true);
 
 	return true;
 }

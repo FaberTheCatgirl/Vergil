@@ -1,6 +1,6 @@
 
-dew.ingameVoting = {};
-dew.ingameVoting.makeWidget = function (containerElement) {
+s3d.ingameVoting = {};
+s3d.ingameVoting.makeWidget = function (containerElement) {
     return (function () {
         let voteAction = '';
         let votesNeeded = 0;
@@ -12,7 +12,7 @@ dew.ingameVoting.makeWidget = function (containerElement) {
         render();
 
         var voted = false;
-        dew.on('variable_update', function (e) {
+        s3d.on('variable_update', function (e) {
             let voteKickWidget = document.getElementById('chatVoteWidget');
 
             for (let v of e.data) {
@@ -31,7 +31,7 @@ dew.ingameVoting.makeWidget = function (containerElement) {
                         render();
                         break;
                     case 'chat_vote_started_by_uid_client':
-                        dew.getSessionInfo().then(result => {
+                        s3d.getSessionInfo().then(result => {
                             hasVoted = result.playerInfo.Uid === v.value;
                             render();
                         });
@@ -69,7 +69,7 @@ dew.ingameVoting.makeWidget = function (containerElement) {
                 <span class="chat_vote_text_secondary">${escapeHtml(voteAction)}</span>
             </span>
                 <button data-target="chatVoteButton" class="chat_vote_button" ${(!hasFocus || hasVoted) ? 'style="display:none"' : ''}>
-                <img style="height:20px; margin-right:5px" src="dew://assets/buttons/360_Y.png"> Vote</button>
+                <img style="height:20px; margin-right:5px" src="s3d://assets/buttons/360_Y.png"> Vote</button>
             `;
 
 
@@ -96,7 +96,7 @@ dew.ingameVoting.makeWidget = function (containerElement) {
         function submitVote() {
             hasVoted = true;
             render();
-            dew.sendChat('!yes', false);
+            s3d.sendChat('!yes', false);
         }
     })();
 }

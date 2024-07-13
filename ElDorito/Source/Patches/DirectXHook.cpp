@@ -64,7 +64,7 @@ namespace
 
 		auto webRenderer = WebRenderer::GetInstance();
 		auto webDebugging = ElDorito::Instance().IsWebDebuggingEnabled();
-		return webRenderer->InitRenderer(device) && webRenderer->Init("dew://ui/", webDebugging);
+		return webRenderer->InitRenderer(device) && webRenderer->Init("s3d://ui/", webDebugging);
 	}
 
 	HRESULT __stdcall EndSceneHook(LPDIRECT3DDEVICE9 device)

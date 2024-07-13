@@ -1192,29 +1192,29 @@ namespace Modules
 
 		VarMenuURL = AddVariableString("MenuURL", "menu_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "http://rabidsquabbit.github.io/");
 
-		VarLoadingURL = AddVariableString("LoadingURL", "loading_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/loading/");
+		VarLoadingURL = AddVariableString("LoadingURL", "loading_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "s3d://screens/loading/");
 
 		VarScoreboardURL = AddVariableString("ScoreboardURL", "scoreboard_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "http://rabidsquabbit.github.io/screens/scoreboard/");
-		VarKeyboardURL = AddVariableString("KeyboardURL", "keyboard_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/keyboard/");
-		VarConsoleURL = AddVariableString("ConsoleURL", "console_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/console/");
-		VarChatURL = AddVariableString("ChatURL", "chat_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/chat/");
-		VarMedalsURL = AddVariableString("MedalsURL", "madals_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/medals/");
-		VarVotingURL = AddVariableString("VotingURL", "voting_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/voting/");
-		VarTitleURL = AddVariableString("TitleURL", "title_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/title/");
-		VarAlertURL = AddVariableString("AlertURL", "alert_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/alert/");
-		VarSettingsURL = AddVariableString("SettingsURL", "settings_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/settings/");
-		VarServerSettingsURL = AddVariableString("ServerSettingsURL", "server_settings_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/server_settings/");
-		ProfileSettingsURL = AddVariableString("ProfileSettingsURL", "profile_settings_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/profile_settings/");
-		ForgeObjectPropertiesURL = AddVariableString("ForgeObjectPropertiesURL", "forge_properties_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/object_properties/");
-		VarForgeObjectCreationURL = AddVariableString("ForgeObjectCreationURL", "forge_object_creation_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/object_creation/");
-		VarSpectateURL = AddVariableString("SpectateURL", "spectate_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/spectate/");
-		VarVoipURL = AddVariableString("VoipURL", "voip_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/voip/");
-		VarWeaponOffsetURL = AddVariableString("WeaponOffsetURL", "weapon_offset_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/weapon_offset/");
-		VarScreenshotNoticeURL = AddVariableString("ScreenshotNoticeURL", "weapon_offset_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/screenshot_notice/");
-		VarExitURL = AddVariableString("ExitURL", "exit_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/exit/");
-		VarDiscordURL = AddVariableString("DiscordURL", "discord_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/discord/");
+		VarKeyboardURL = AddVariableString("KeyboardURL", "keyboard_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "s3d://screens/keyboard/");
+		VarConsoleURL = AddVariableString("ConsoleURL", "console_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "s3d://screens/console/");
+		VarChatURL = AddVariableString("ChatURL", "chat_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "s3d://screens/chat/");
+		VarMedalsURL = AddVariableString("MedalsURL", "madals_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "s3d://screens/medals/");
+		VarVotingURL = AddVariableString("VotingURL", "voting_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "s3d://screens/voting/");
+		VarTitleURL = AddVariableString("TitleURL", "title_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "s3d://screens/title/");
+		VarAlertURL = AddVariableString("AlertURL", "alert_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "s3d://screens/alert/");
+		VarSettingsURL = AddVariableString("SettingsURL", "settings_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "s3d://screens/settings/");
+		VarServerSettingsURL = AddVariableString("ServerSettingsURL", "server_settings_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "s3d://screens/server_settings/");
+		ProfileSettingsURL = AddVariableString("ProfileSettingsURL", "profile_settings_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "s3d://screens/profile_settings/");
+		ForgeObjectPropertiesURL = AddVariableString("ForgeObjectPropertiesURL", "forge_properties_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "s3d://screens/object_properties/");
+		VarForgeObjectCreationURL = AddVariableString("ForgeObjectCreationURL", "forge_object_creation_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "s3d://screens/object_creation/");
+		VarSpectateURL = AddVariableString("SpectateURL", "spectate_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "s3d://screens/spectate/");
+		VarVoipURL = AddVariableString("VoipURL", "voip_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "s3d://screens/voip/");
+		VarWeaponOffsetURL = AddVariableString("WeaponOffsetURL", "weapon_offset_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "s3d://screens/weapon_offset/");
+		VarScreenshotNoticeURL = AddVariableString("ScreenshotNoticeURL", "weapon_offset_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "s3d://screens/screenshot_notice/");
+		VarExitURL = AddVariableString("ExitURL", "exit_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "s3d://screens/exit/");
+		VarDiscordURL = AddVariableString("DiscordURL", "discord_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "s3d://screens/discord/");
 		VarReportURL = AddVariableString("ReportURL", "report_url", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "http://rabidsquabbit.github.io/screens/report/");
-		VarInGameVotingURL = AddVariableString("InGameVotingURL", "ingame_voting", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "dew://screens/ingame_voting/");
+		VarInGameVotingURL = AddVariableString("InGameVotingURL", "ingame_voting", "url(string) The URL of the page you want to load inside the menu", eCommandFlagsArchived, "s3d://screens/ingame_voting/");
 		VarLanguage = AddVariableString("Language", "language", "The language to use", eCommandFlagsArchived, "english", VariableLanguageUpdated);
 
 		VarSkipTitleSplash = AddVariableInt("SkipTitleSplash", "titlesplash", "Skip the ElDewrito splash screen and go straight to the main menu", eCommandFlagsArchived, 1);

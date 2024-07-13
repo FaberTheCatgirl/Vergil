@@ -595,18 +595,18 @@ function checkGamepad(){
 
 function setButtons(){
     dew.command('Game.IconSet', {}).then(function(response){
-        $('#randomArmor img').attr('src','dew://assets/buttons/' + response + '_Y.png');
-        $('#randomColors img').attr('src','dew://assets/buttons/' + response + '_Y.png');
-        $('#applyButton img').attr('src','dew://assets/buttons/' + response + '_Start.png');
-        $('#cancelButton img').attr('src','dew://assets/buttons/' + response + '_B.png');
-		$('#backButton img').attr('src','dew://assets/buttons/' + response + '_B.png');
-		$('#toggleIconButton img').attr('src','dew://assets/buttons/'+ response + '_X.png');
-		$('#randomEmblem img').attr('src','dew://assets/buttons/'+ response + '_Y.png');
-        $('#dismissButton img').attr('src','dew://assets/buttons/' + response + '_B.png');
-        $('#namePrompt img').attr('src','dew://assets/buttons/' + response + '_Y.png');
-        $('#okButton img').attr('src','dew://assets/buttons/' + response + '_A.png');
-        $('.tabs img').eq(0).attr('src','dew://assets/buttons/' + response + '_LB.png');
-        $('.tabs img').eq(1).attr('src','dew://assets/buttons/' + response + '_RB.png');
+        $('#randomArmor img').attr('src','s3d://assets/buttons/' + response + '_Y.png');
+        $('#randomColors img').attr('src','s3d://assets/buttons/' + response + '_Y.png');
+        $('#applyButton img').attr('src','s3d://assets/buttons/' + response + '_Start.png');
+        $('#cancelButton img').attr('src','s3d://assets/buttons/' + response + '_B.png');
+		$('#backButton img').attr('src','s3d://assets/buttons/' + response + '_B.png');
+		$('#toggleIconButton img').attr('src','s3d://assets/buttons/'+ response + '_X.png');
+		$('#randomEmblem img').attr('src','s3d://assets/buttons/'+ response + '_Y.png');
+        $('#dismissButton img').attr('src','s3d://assets/buttons/' + response + '_B.png');
+        $('#namePrompt img').attr('src','s3d://assets/buttons/' + response + '_Y.png');
+        $('#okButton img').attr('src','s3d://assets/buttons/' + response + '_A.png');
+        $('.tabs img').eq(0).attr('src','s3d://assets/buttons/' + response + '_LB.png');
+        $('.tabs img').eq(1).attr('src','s3d://assets/buttons/' + response + '_RB.png');
     });
 }
 
@@ -802,7 +802,7 @@ function setRadioList(ElementID, ArrayVar,hasImage){
         span.appendChild(label);
         if(hasImage){
             var img = document.createElement("img");
-            img.setAttribute('src', 'dew://assets/armor/'+ElementID+'/'+ArrayVar[i][1]+'.png');
+            img.setAttribute('src', 's3d://assets/armor/'+ElementID+'/'+ArrayVar[i][1]+'.png');
             span.appendChild(img);
         }
         sel.appendChild(span);

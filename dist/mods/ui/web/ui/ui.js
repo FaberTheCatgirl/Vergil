@@ -1,5 +1,5 @@
 (function () {
-    var screenJsonUrl = "dew://screens/screens.json";
+    var screenJsonUrl = "s3d://screens/screens.json";
     var jsonQuery = null;
     var screens = {};
 
@@ -142,7 +142,7 @@
         // Send a HEAD request to the screen's URL to make sure that it can be accessed
         $.ajax(screen.url, {
             method: "HEAD",
-            crossDomain: false, // dew://ui/ is whitelisted to bypass the same-origin restriction for HTTP
+            crossDomain: false, // s3d://ui/ is whitelisted to bypass the same-origin restriction for HTTP
             cache: false
         }).done(function (data, textStatus, jqXHR) {
             // URL is accessible - navigate to it

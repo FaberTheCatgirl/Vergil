@@ -1,4 +1,4 @@
-@font-face{font-family:"Conduit ITC";src:url(dew://lib/Conduit-ITC.woff);}
+@font-face{font-family:"Conduit ITC";src:url(s3d://lib/Conduit-ITC.woff);}
 
 html, body {
     width: 100%;
@@ -194,7 +194,7 @@ progress::-webkit-progress-value {
     margin: 0;
     width: 100%;
     height: 100%;
-    background-image: url(dew://assets/haloonline/title_bg.jpg);
+    background-image: url(s3d://assets/haloonline/title_bg.jpg);
     background-size: cover;
     background-position: 50% 0%;
     background-repeat: no-repeat;
@@ -206,13 +206,13 @@ progress::-webkit-progress-value {
     bottom: 42%;
     width: 100%;
     height: 15%;
-    background-image: url(dew://assets/ed//EldoritoLogoFinalSmall.png);
+    background-image: url(s3d://assets/ho//HaloOnlineLogoFinalSmall.png);
     background-size: auto 100%;
     background-position: 50%;
     background-repeat: no-repeat;
 }
 
 .genericLoader .eldorito.loading {
-    background-image: url(dew://assets/ed//EldoritoLogoFinalBlueSmall.png);
+    background-image: url(s3d://assets/ho//HaloOnlineLogoFinalBlueSmall.png);
     -webkit-clip-path: inset(100% 0 0 0);
 }

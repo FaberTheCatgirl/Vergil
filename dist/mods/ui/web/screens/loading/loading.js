@@ -45,14 +45,14 @@ function updateProgress(progress) {
 
 function loadMap(mapName) {
     $(".mapLoader").show();
-    $(".mapLoader").css({backgroundImage: "url('dew://assets/maps/large/" + ((mapImage && mapImage != '') ? mapImage : mapName)  + ".jpg'), url('dew://assets/maps/large/unknown.jpg')"});
+    $(".mapLoader").css({backgroundImage: "url('s3d://assets/maps/large/" + ((mapImage && mapImage != '') ? mapImage : mapName)  + ".jpg'), url('s3d://assets/maps/large/unknown.jpg')"});
     $(".genericLoader").hide();
     dew.getMapVariantInfo().then(function (info) {
         $("#title").text(info.name);
         $("#desc").text(info.description);
     });
     dew.getGameVariantInfo().then(function (info) {
-        $("#gametypeicon").attr("src", "dew://assets/gametypes/" + gameModes[info.mode] + ".png");
+        $("#gametypeicon").attr("src", "s3d://assets/gametypes/" + gameModes[info.mode] + ".png");
         $("#gametype").text(info.name);  
         if(info.rounds > 0){
             $("#gamerounds").text(info.rounds);  

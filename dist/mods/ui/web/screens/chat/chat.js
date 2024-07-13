@@ -64,12 +64,12 @@ $(document).ready(function(){
             chatboxHide();
         }
         if (e.keyCode == 44) {
-            dew.command('Game.TakeScreenshot');  
+            s3d.command('Game.TakeScreenshot');  
         }
     });
     $(document).keydown(function(e){
         if (e.keyCode === 13){ //Enter
-            dew.sendChat($("#chatBox").val(), isTeamChat);
+            s3d.sendChat($("#chatBox").val(), isTeamChat);
             $("#chatBox").val("");
             chatboxHide();
         }else{
@@ -130,7 +130,7 @@ $(document).ready(function(){
 
 function loadSettings(i){
 	if (i != Object.keys(settingsArray).length) {
-		dew.command(Object.keys(settingsArray)[i], {}).then(function(response) {
+		s3d.command(Object.keys(settingsArray)[i], {}).then(function(response) {
 			settingsArray[Object.keys(settingsArray)[i]] = response;
 			i++;
 			loadSettings(i);
@@ -138,14 +138,14 @@ function loadSettings(i){
 	}
 }
 
-dew.on("show", function(e){
+s3d.on("show", function(e){
     if(settingsArray['Game.HideChat'] == 0){
         playerName = new RegExp("@"+settingsArray['Player.Name'], "ig");
         clearTimeout(hideTimer);
         if(e.data.hasOwnProperty('teamChat')){
             isTeamChat = e.data.teamChat;
         }
-        dew.getSessionInfo().then(function(i){
+        s3d.getSessionInfo().then(function(i){
             if(i.established){
                 if(isTeamChat && !i.hasTeams){
                     isTeamChat = false;
@@ -164,7 +164,7 @@ dew.on("show", function(e){
                     $("#chatBox").attr("placeholder", "GLOBAL");
                 }
                 if(!stayOpen){
-                    dew.captureInput(e.data.captureInput);
+                    s3d.captureInput(e.data.captureInput);
                     if (e.data.captureInput) {
                         stayOpen = true;
                         $("#chatBox").show(0, "linear", function(){
@@ -172,7 +172,7 @@ dew.on("show", function(e){
                             $("#chatWindow").css("bottom", "26px");
                             $("#chatWindow").removeClass("hide-scrollbar");
                         });
-                        dew.command('Server.ListPlayersJSON', {}).then(function (e) {
+                        s3d.command('Server.ListPlayersJSON', {}).then(function (e) {
                             cachedPlayerJSON = e;
                         });
                     }else{
@@ -186,13 +186,13 @@ dew.on("show", function(e){
                     $("#chatWindow p").last()[0].scrollIntoView(false);
                 }
             }else{
-                dew.hide();
+                s3d.hide();
             }
         });
     }
 });
 
-dew.on("chat", function(e){
+s3d.on("chat", function(e){
     if(e.data.hasOwnProperty('color')){
         var bgColor =  e.data.color;
         if (e.data.hasTeams){
@@ -225,12 +225,12 @@ dew.on("chat", function(e){
     .wrap($('<p>', { class: chatClass })).parent().append(messageHtml));
     
     if(settingsArray['Game.HideChat'] == 0){
-        dew.show();
+        s3d.show();
     }
     
     $("a").on("click",function(e){				
         e.preventDefault();
-        dew.show('alert', {
+        s3d.show('alert', {
             icon: 0,
             title: "Warning",
             body: "This link goes to " + this.href + " Are you sure you want to open this?",
@@ -240,13 +240,13 @@ dew.on("chat", function(e){
     });
 });
 
-dew.on('controllerinput', function(e){       
+s3d.on('controllerinput', function(e){       
     if(e.data.B == 1){
         chatboxHide();  
     }
 });
 
-dew.on("variable_update", function(e){
+s3d.on("variable_update", function(e){
     for(i = 0; i < e.data.length; i++){
         if(e.data[i].name in settingsArray){
             settingsArray[e.data[i].name] = e.data[i].value;
@@ -258,13 +258,13 @@ function fadeAway(){
     clearTimeout(hideTimer);
     hideTimer = setTimeout(function(){
         $("#chat").fadeOut(fadeTime, function(){
-            dew.hide();
+            s3d.hide();
         });
     }, hideDelay);
 }
 
 function chatboxHide(){
-    dew.captureInput(false);
+    s3d.captureInput(false);
     fadeAway();
     stayOpen = false;
     $("#chatBox").val('');

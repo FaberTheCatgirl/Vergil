@@ -60,7 +60,7 @@ dew.on("spectate_end", function(e){
 
 function showSpectateOverlay(i, lobby, teamGame, playersInfo){
     var emblemPath;
-	var hostPath = 'dew://assets/emblems/crown.png';
+	var hostPath = 's3d://assets/emblems/crown.png';
     if(lobby.length > 0){
         $('#spectatingOverlay').empty();
         var bgColor = lobby[i].color;
@@ -87,7 +87,7 @@ function showSpectateOverlay(i, lobby, teamGame, playersInfo){
 		if(playersInfo[lobby[i].playerIndex]){
 			emblemPath = playersInfo[lobby[i].playerIndex].e;
 		}else{
-			emblemPath = 'dew://assets/emblems/generic.png'; 
+			emblemPath = 's3d://assets/emblems/generic.png'; 
 		}                
         $("[data-playerIndex='" + lobby[i].playerIndex + "'] .name").prepend('<img class="emblem" src="'+emblemPath+'">');
         $("[data-playerIndex='" + lobby[i].playerIndex + "'] .name").append('<img class="arrows" src="sort_both.png">');
